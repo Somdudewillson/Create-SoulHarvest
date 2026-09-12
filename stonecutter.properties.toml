@@ -1,0 +1,56 @@
+loomx.loom_version="1.16-SNAPSHOT"
+
+
+mod.id = "create_soul_harvest"
+mod.name = "Create: Soul Harvest"
+mod.group = "com.github.somdudewillson"
+mod.version = "0.1.0"
+mod.channel_tag = ""
+mod.description = "Entity-less mob grinding for Create"
+mod.authors = ["Somdudewillson"]
+mod.contributors = []
+mod.inception_year = "2026"
+mod.license.name = "MIT"
+mod.license.url = "https://opensource.org/licenses/MIT"
+mod.license.dist = "repo"
+mod.sources_url = "https://github.com/rotgruengelb/stonecutter-mod-template"
+mod.homepage_url = "https://github.com/rotgruengelb/stonecutter-mod-template"
+mod.issues_url = "https://github.com/rotgruengelb/stonecutter-mod-template/issues"
+mod.discord_url = ""
+mod.environment = "client_and_server"
+
+[[mod.pom.developers]]
+id = "somdudewillson"
+name = "Somdudewillson"
+url = "https://github.com/ghost"
+
+[fabric]
+deps.fabric-loader = "0.16.10"
+
+[fabric."1.20.1"]
+deps.minecraft = "1.20.1"
+deps.fabric-loader = "0.16.10"
+deps.fabric-api = "0.92.2+1.20.1"
+deps.modmenu = "7.2.2"
+deps.create = "6.0.8.1+build.1744-mc1.20.1"
+
+[forge]
+
+[forge."1.20.1"]
+deps.minecraft = "1.20.1"
+deps.forge = "47.3.0"
+deps.create = "6.0.8-291"
+deps.ponder = "1.0.91"
+deps.flywheel = "1.0.5"
+deps.registrate = "MC1.20-1.3.3"
+
+[neoforge]
+
+[neoforge."1.21.1"]
+deps.minecraft = "1.21.1"
+deps.neoforge = "21.1.219"
+deps.create = "6.0.11-300"
+deps.ponder = "1.0.85"
+deps.flywheel = "1.0.6"
+deps.registrate = "MC1.21-1.3.0+67"
+
