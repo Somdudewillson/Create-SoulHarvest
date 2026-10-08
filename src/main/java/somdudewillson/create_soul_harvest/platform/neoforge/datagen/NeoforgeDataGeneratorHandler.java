@@ -8,11 +8,11 @@ import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import somdudewillson.create_soul_harvest.ModTemplate;
+import somdudewillson.create_soul_harvest.SoulHarvestMod;
 
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(modid = ModTemplate.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = SoulHarvestMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class NeoforgeDataGeneratorHandler {
 
 	@SubscribeEvent

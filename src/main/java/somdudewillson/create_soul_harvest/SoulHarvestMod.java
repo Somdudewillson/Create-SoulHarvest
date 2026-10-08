@@ -6,9 +6,7 @@ import somdudewillson.create_soul_harvest.platform.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//? fabric {
-/*import somdudewillson.create_soul_harvest.platform.fabric.FabricPlatform;
-*///?} neoforge {
+//? neoforge {
 import somdudewillson.create_soul_harvest.platform.neoforge.NeoforgePlatform;
  //?} forge {
 /*import somdudewillson.create_soul_harvest.platform.forge.ForgePlatform;
@@ -38,9 +36,7 @@ public class SoulHarvestMod {
 	}
 
 	private static Platform createPlatformInstance() {
-		//? fabric {
-		/*return new FabricPlatform();
-		*///?} neoforge {
+		//? neoforge {
 		return new NeoforgePlatform();
 		 //?} forge {
 		/*return new ForgePlatform();
