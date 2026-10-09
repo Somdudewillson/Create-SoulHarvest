@@ -26,14 +26,15 @@
       "item": "create_soul_harvest:organic_mulch"
     },
     {
-      "fluid": "minecraft:water",
-      "amount": 250
+      "type": "neoforge:single",
+      "amount": 250,
+      "fluid": "minecraft:water"
     }
   ],
   "results": [
     {
-      "fluid": "create_soul_harvest:bioslurry",
-      "amount": 250
+      "amount": 250,
+      "id": "create_soul_harvest:bioslurry"
     }
   ]
 }

@@ -1,0 +1,23 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "tag": "minecraft:flowers"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 125,
+      "fluid": "create_soul_harvest:wither_slurry"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 125,
+      "fluid": "minecraft:lava"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:wither_rose"
+    }
+  ]
+}

@@ -1,6 +1,5 @@
 {
   "type": "create:deploying",
-  "keep_held_item": true,
   "ingredients": [
     {
       "item": "minecraft:bone_block"
@@ -9,10 +8,10 @@
       "tag": "minecraft:axes"
     }
   ],
+  "keep_held_item": true,
   "results": [
     {
-      "id": "create_soul_harvest:carved_bone_block",
-      "count": 1
+      "id": "create_soul_harvest:carved_bone_block"
     }
   ]
 }

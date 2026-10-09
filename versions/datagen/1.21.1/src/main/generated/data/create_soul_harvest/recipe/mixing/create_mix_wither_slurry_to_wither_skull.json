@@ -1,0 +1,23 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "create_soul_harvest:carved_bone_block"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 1000,
+      "fluid": "create_soul_harvest:wither_slurry"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 1000,
+      "fluid": "minecraft:lava"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:wither_skeleton_skull"
+    }
+  ]
+}

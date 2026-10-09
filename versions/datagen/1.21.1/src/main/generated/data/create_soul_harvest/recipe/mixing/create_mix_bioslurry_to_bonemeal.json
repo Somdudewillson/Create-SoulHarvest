@@ -1,0 +1,19 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:sand"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 500,
+      "fluid": "create_soul_harvest:bioslurry"
+    }
+  ],
+  "results": [
+    {
+      "count": 8,
+      "id": "minecraft:bone_meal"
+    }
+  ]
+}

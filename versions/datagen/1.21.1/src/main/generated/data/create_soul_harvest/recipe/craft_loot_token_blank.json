@@ -3,11 +3,11 @@
   "accept_mirrored": false,
   "category": "misc",
   "key": {
-    "N": {
-      "item": "minecraft:netherite_ingot"
-    },
     "G": {
       "item": "minecraft:gold_nugget"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
     }
   },
   "pattern": [
@@ -18,7 +18,8 @@
     " GGG "
   ],
   "result": {
-    "id": "create_soul_harvest:loot_token_blank",
-    "count": 1
-  }
+    "count": 1,
+    "id": "create_soul_harvest:loot_token_blank"
+  },
+  "show_notification": false
 }

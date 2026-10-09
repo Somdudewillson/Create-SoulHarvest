@@ -3,9 +3,12 @@
   "ingredient": {
     "item": "create_soul_harvest:loot_token_blank"
   },
-  "transitional_item": {
-    "id": "create_soul_harvest:loot_token_blank"
-  },
+  "loops": 2,
+  "results": [
+    {
+      "id": "create_soul_harvest:loot_token"
+    }
+  ],
   "sequence": [
     {
       "type": "create:filling",
@@ -14,8 +17,9 @@
           "item": "create_soul_harvest:loot_token_blank"
         },
         {
-          "fluid": "minecraft:lava",
-          "amount": 1000
+          "type": "neoforge:single",
+          "amount": 1000,
+          "fluid": "minecraft:lava"
         }
       ],
       "results": [
@@ -67,11 +71,7 @@
       ]
     }
   ],
-  "results": [
-    {
-      "id": "create_soul_harvest:loot_token",
-      "count": 1
-    }
-  ],
-  "loops": 2
+  "transitional_item": {
+    "id": "create_soul_harvest:loot_token_blank"
+  }
 }

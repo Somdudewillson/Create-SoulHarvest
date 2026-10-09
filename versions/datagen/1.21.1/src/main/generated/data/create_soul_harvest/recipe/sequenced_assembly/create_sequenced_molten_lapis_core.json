@@ -3,9 +3,12 @@
   "ingredient": {
     "item": "create_soul_harvest:polished_inlaid_lapis"
   },
-  "transitional_item": {
-    "id": "create_soul_harvest:polished_inlaid_lapis"
-  },
+  "loops": 8,
+  "results": [
+    {
+      "id": "create_soul_harvest:molten_lapis_core"
+    }
+  ],
   "sequence": [
     {
       "type": "create:deploying",
@@ -30,8 +33,9 @@
           "item": "create_soul_harvest:polished_inlaid_lapis"
         },
         {
-          "fluid": "minecraft:lava",
-          "amount": 250
+          "type": "neoforge:single",
+          "amount": 250,
+          "fluid": "minecraft:lava"
         }
       ],
       "results": [
@@ -41,11 +45,7 @@
       ]
     }
   ],
-  "results": [
-    {
-      "id": "create_soul_harvest:molten_lapis_core",
-      "count": 1
-    }
-  ],
-  "loops": 8
+  "transitional_item": {
+    "id": "create_soul_harvest:polished_inlaid_lapis"
+  }
 }

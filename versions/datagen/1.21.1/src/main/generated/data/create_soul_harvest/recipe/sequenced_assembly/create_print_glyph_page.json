@@ -1,0 +1,75 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "minecraft:paper"
+  },
+  "loops": 2,
+  "results": [
+    {
+      "chance": 0.125,
+      "id": "create_soul_harvest:glyph_1"
+    },
+    {
+      "chance": 0.125,
+      "id": "create_soul_harvest:glyph_2"
+    },
+    {
+      "chance": 0.125,
+      "id": "create_soul_harvest:glyph_3"
+    },
+    {
+      "chance": 0.125,
+      "id": "create_soul_harvest:glyph_4"
+    },
+    {
+      "chance": 0.125,
+      "id": "create_soul_harvest:glyph_5"
+    },
+    {
+      "chance": 0.125,
+      "id": "create_soul_harvest:glyph_6"
+    },
+    {
+      "chance": 0.125,
+      "id": "create_soul_harvest:glyph_7"
+    },
+    {
+      "chance": 0.125,
+      "id": "create_soul_harvest:glyph_8"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "minecraft:paper"
+        },
+        {
+          "item": "create_soul_harvest:inlaid_lapis"
+        }
+      ],
+      "results": [
+        {
+          "id": "minecraft:paper"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "minecraft:paper"
+        }
+      ],
+      "results": [
+        {
+          "id": "minecraft:paper"
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "minecraft:paper"
+  }
+}

@@ -22,6 +22,23 @@ import somdudewillson.create_soul_harvest.registry.ModItems;
 
 import java.util.concurrent.CompletableFuture;
 
+import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeBuilder;
+import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
+import com.simibubi.create.content.fluids.transfer.FillingRecipe;
+import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
+import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipe;
+import com.simibubi.create.content.kinetics.mixer.CompactingRecipe;
+import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
+import com.simibubi.create.content.kinetics.press.PressingRecipe;
+import com.simibubi.create.content.processing.recipe.HeatCondition;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
+import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluids;
+import somdudewillson.create_soul_harvest.registry.ModFluids;
+
 public class NeoforgeRecipeProvider extends RecipeProvider {
 
 	public NeoforgeRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
@@ -219,6 +236,162 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.requires(Items.SAND)
 				.unlockedBy("has_soul_shard", has(ModItems.SOUL_SHARD.get()))
 				.save(recipeOutput, SoulHarvestMod.id("soul_deposit_seed_from_shard"));
+
+		// Create Processing Recipes
+		buildCreateRecipes(recipeOutput);
+	}
+
+	private void buildCreateRecipes(RecipeOutput recipeOutput) {
+		// 1. Mechanical Crafting: Loot Token Blank
+		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.LOOT_TOKEN_BLANK.get(), 1)
+				.key('N', Items.NETHERITE_INGOT)
+				.key('G', Items.GOLD_NUGGET)
+				.patternLine(" GGG ")
+				.patternLine("GGNGG")
+				.patternLine("GNNNG")
+				.patternLine("GGNGG")
+				.patternLine(" GGG ")
+				.disallowMirrored()
+				.build(recipeOutput, SoulHarvestMod.id("craft_loot_token_blank"));
+
+		// 2. Compacting: Absolute Ice
+		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_absolute_ice"))
+				.require(ModItems.POLISHED_INLAID_LAPIS.get())
+				.require(Blocks.BLUE_ICE)
+				.require(Blocks.BLUE_ICE)
+				.require(Blocks.BLUE_ICE)
+				.require(Blocks.BLUE_ICE)
+				.require(Blocks.BLUE_ICE)
+				.require(Blocks.BLUE_ICE)
+				.require(Blocks.BLUE_ICE)
+				.require(Blocks.BLUE_ICE)
+				.output(ModBlocks.ABSOLUTE_ICE.get())
+				.build(recipeOutput);
+
+		// 3. Compacting: Biofuel Block (Heated)
+		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_bioslurry_to_biofuel"))
+				.require(ModFluids.BIOSLURRY.get(), 1000)
+				.requiresHeat(HeatCondition.HEATED)
+				.output(ModBlocks.BIOFUEL_BLOCK.get())
+				.build(recipeOutput);
+
+		// 4. Compacting: Midas Core
+		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_midas_core"))
+				.require(ModItems.POLISHED_INLAID_LAPIS.get())
+				.require(Blocks.GOLD_BLOCK)
+				.require(Blocks.GOLD_BLOCK)
+				.require(Blocks.GOLD_BLOCK)
+				.require(Blocks.GOLD_BLOCK)
+				.require(Blocks.GOLD_BLOCK)
+				.require(Blocks.GOLD_BLOCK)
+				.require(Blocks.GOLD_BLOCK)
+				.require(Blocks.GOLD_BLOCK)
+				.output(ModBlocks.MIDAS_CORE.get())
+				.build(recipeOutput);
+
+		// 5. Compacting: Silica Solution (Heated)
+		TagKey<Item> smeltsToGlass = TagKey.create(Registries.ITEM, ResourceLocation.withDefaultNamespace("smelts_to_glass"));
+		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_silica_solution"))
+				.require(smeltsToGlass)
+				.require(smeltsToGlass)
+				.require(smeltsToGlass)
+				.require(smeltsToGlass)
+				.require(Fluids.WATER, 1000)
+				.requiresHeat(HeatCondition.HEATED)
+				.output(ModFluids.SILICA_SOLUTION.get(), 1000)
+				.build(recipeOutput);
+
+		// 6. Deploying: Carve Bone Block
+		new ItemApplicationRecipe.Builder<>(DeployerApplicationRecipe::new, SoulHarvestMod.id("create_deploy_carve_bone_block"))
+				.require(Blocks.BONE_BLOCK)
+				.require(ItemTags.AXES)
+				.toolNotConsumed()
+				.output(ModBlocks.CARVED_BONE_BLOCK.get())
+				.build(recipeOutput);
+
+		// 7. Mixing: Bioslurry to Bonemeal
+		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_bioslurry_to_bonemeal"))
+				.require(Items.SAND)
+				.require(ModFluids.BIOSLURRY.get(), 500)
+				.output(Items.BONE_MEAL, 8)
+				.build(recipeOutput);
+
+		// 8. Mixing: Bioslurry to Wither Slurry
+		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_bioslurry_to_wither_slurry"))
+				.require(Items.WITHER_ROSE)
+				.require(ModFluids.BIOSLURRY.get(), 250)
+				.output(ModFluids.WITHER_SLURRY.get(), 250)
+				.build(recipeOutput);
+
+		// 9. Mixing: Mulch to Bioslurry
+		var mulchMix = new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_mulch_to_bioslurry"));
+		for (int i = 0; i < 8; i++) {
+			mulchMix.require(ModItems.ORGANIC_MULCH.get());
+		}
+		mulchMix.require(Fluids.WATER, 250)
+				.output(ModFluids.BIOSLURRY.get(), 250)
+				.build(recipeOutput);
+
+		// 10. Mixing: Wither Slurry to Wither Rose
+		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_wither_slurry_to_wither_rose"))
+				.require(ItemTags.FLOWERS)
+				.require(ModFluids.WITHER_SLURRY.get(), 125)
+				.require(Fluids.LAVA, 125)
+				.output(Items.WITHER_ROSE, 1)
+				.build(recipeOutput);
+
+		// 11. Mixing: Wither Slurry to Wither Skull
+		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_wither_slurry_to_wither_skull"))
+				.require(ModBlocks.CARVED_BONE_BLOCK.get())
+				.require(ModFluids.WITHER_SLURRY.get(), 1000)
+				.require(Fluids.LAVA, 1000)
+				.output(Items.WITHER_SKELETON_SKULL, 1)
+				.build(recipeOutput);
+
+		// 12. Sandpaper Polishing: Inlaid Lapis
+		new StandardProcessingRecipe.Builder<>(SandPaperPolishingRecipe::new, SoulHarvestMod.id("create_polish_inlaid_lapis"))
+				.require(ModItems.INLAID_LAPIS.get())
+				.output(ModItems.POLISHED_INLAID_LAPIS.get())
+				.build(recipeOutput);
+
+		// 13. Sequenced Assembly: Assemble Loot Token
+		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_assemble_loot_token"))
+				.require(ModItems.LOOT_TOKEN_BLANK.get())
+				.transitionTo(ModItems.LOOT_TOKEN_BLANK.get())
+				.loops(2)
+				.addStep(FillingRecipe::new, rb -> rb.require(Fluids.LAVA, 1000))
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ModItems.ENCHANTED_INLAID_LAPIS.get()))
+				.addStep(PressingRecipe::new, rb -> rb)
+				.addStep(PressingRecipe::new, rb -> rb)
+				.addOutput(ModItems.LOOT_TOKEN.get(), 1.0f)
+				.build(recipeOutput);
+
+		// 14. Sequenced Assembly: Print Glyph Page
+		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_print_glyph_page"))
+				.require(Items.PAPER)
+				.transitionTo(Items.PAPER)
+				.loops(2)
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ModItems.INLAID_LAPIS.get()))
+				.addStep(PressingRecipe::new, rb -> rb)
+				.addOutput(ModItems.GLYPH_1.get(), 0.125f)
+				.addOutput(ModItems.GLYPH_2.get(), 0.125f)
+				.addOutput(ModItems.GLYPH_3.get(), 0.125f)
+				.addOutput(ModItems.GLYPH_4.get(), 0.125f)
+				.addOutput(ModItems.GLYPH_5.get(), 0.125f)
+				.addOutput(ModItems.GLYPH_6.get(), 0.125f)
+				.addOutput(ModItems.GLYPH_7.get(), 0.125f)
+				.addOutput(ModItems.GLYPH_8.get(), 0.125f)
+				.build(recipeOutput);
+
+		// 15. Sequenced Assembly: Molten Lapis Core
+		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_sequenced_molten_lapis_core"))
+				.require(ModItems.POLISHED_INLAID_LAPIS.get())
+				.transitionTo(ModItems.POLISHED_INLAID_LAPIS.get())
+				.loops(8)
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(Items.BLAZE_POWDER))
+				.addStep(FillingRecipe::new, rb -> rb.require(Fluids.LAVA, 250))
+				.addOutput(ModItems.MOLTEN_LAPIS_CORE.get(), 1.0f)
+				.build(recipeOutput);
 	}
 }
 //?}
