@@ -43,9 +43,6 @@ public class ModBlocks {
 	public static final DeferredHolder<Block, Block> BIOFUEL_BLOCK = BLOCKS.register("biofuel_block",
 			() -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).sound(SoundType.GRAVEL).strength(4.0f, 5.0f)));
 
-	public static final DeferredHolder<Block, Block> CHARCOAL_BLOCK = BLOCKS.register("charcoal_block",
-			() -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).sound(SoundType.STONE).strength(5.0f, 6.0f).requiresCorrectToolForDrops()));
-
 	public static final DeferredHolder<Block, CarvedBoneBlock> CARVED_BONE_BLOCK = BLOCKS.register("carved_bone_block",
 			() -> new CarvedBoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.SAND).sound(SoundType.BONE_BLOCK).strength(2.0f).requiresCorrectToolForDrops()));
 

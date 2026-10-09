@@ -35,8 +35,6 @@ public class ModItems {
 			() -> new BlockItem(ModBlocks.SOUL_CRYSTAL_BLOCK.get(), new Item.Properties()));
 	public static final DeferredHolder<Item, FuelBlockItem> BIOFUEL_BLOCK = ITEMS.register("biofuel_block",
 			() -> new FuelBlockItem(ModBlocks.BIOFUEL_BLOCK.get(), 16000, new Item.Properties()));
-	public static final DeferredHolder<Item, FuelBlockItem> CHARCOAL_BLOCK = ITEMS.register("charcoal_block",
-			() -> new FuelBlockItem(ModBlocks.CHARCOAL_BLOCK.get(), 16000, new Item.Properties()));
 	public static final DeferredHolder<Item, BlockItem> CARVED_BONE_BLOCK = ITEMS.register("carved_bone_block",
 			() -> new BlockItem(ModBlocks.CARVED_BONE_BLOCK.get(), new Item.Properties()));
 	public static final DeferredHolder<Item, BlockItem> ABSOLUTE_ICE = ITEMS.register("absolute_ice",

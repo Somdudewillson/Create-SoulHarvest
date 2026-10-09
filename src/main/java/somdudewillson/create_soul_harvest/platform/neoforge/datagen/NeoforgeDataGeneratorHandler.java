@@ -23,7 +23,6 @@ public class NeoforgeDataGeneratorHandler {
 		// Queue simple blocks with block items using RedSparkLib
 		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.BlockDatagenTaskBuilder.unchained(ModBlocks.SOUL_CRYSTAL_BLOCK).blockItem().build());
 		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.BlockDatagenTaskBuilder.unchained(ModBlocks.BIOFUEL_BLOCK).blockItem().build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.BlockDatagenTaskBuilder.unchained(ModBlocks.CHARCOAL_BLOCK).blockItem().build());
 		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.BlockDatagenTaskBuilder.unchained(ModBlocks.ABSOLUTE_ICE).blockItem().build());
 		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.BlockDatagenTaskBuilder.unchained(ModBlocks.GOLD_FOAM).blockItem().build());
 		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.BlockDatagenTaskBuilder.unchained(ModBlocks.MIDAS_CORE).blockItem().build());

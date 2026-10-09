@@ -31,7 +31,6 @@ public class ModCreativeTabs {
 						output.accept(ModItems.SOUL_CLUSTER.get());
 						output.accept(ModItems.SOUL_CRYSTAL_BLOCK.get());
 						output.accept(ModItems.BIOFUEL_BLOCK.get());
-						output.accept(ModItems.CHARCOAL_BLOCK.get());
 						output.accept(ModItems.CARVED_BONE_BLOCK.get());
 						output.accept(ModItems.ABSOLUTE_ICE.get());
 						output.accept(ModItems.GOLD_FOAM.get());

@@ -62,20 +62,6 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.unlockedBy("has_biofuel_block", has(ModBlocks.BIOFUEL_BLOCK.get()))
 				.save(recipeOutput, SoulHarvestMod.id("biofuel_block_uncraft"));
 
-		// Charcoal block & uncraft
-		ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.CHARCOAL_BLOCK.get())
-				.pattern("###")
-				.pattern("###")
-				.pattern("###")
-				.define('#', Items.CHARCOAL)
-				.unlockedBy("has_charcoal", has(Items.CHARCOAL))
-				.save(recipeOutput, SoulHarvestMod.id("charcoal_block"));
-
-		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.CHARCOAL, 9)
-				.requires(ModBlocks.CHARCOAL_BLOCK.get())
-				.unlockedBy("has_charcoal_block", has(ModBlocks.CHARCOAL_BLOCK.get()))
-				.save(recipeOutput, SoulHarvestMod.id("charcoal_block_uncraft"));
-
 		// Fuel pellets
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.FUEL_PELLET.get(), 8)
 				.requires(Items.COAL)
