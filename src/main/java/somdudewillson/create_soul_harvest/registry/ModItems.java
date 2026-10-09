@@ -39,8 +39,6 @@ public class ModItems {
 			() -> new FuelBlockItem(ModBlocks.CHARCOAL_BLOCK.get(), 16000, new Item.Properties()));
 	public static final DeferredHolder<Item, BlockItem> CARVED_BONE_BLOCK = ITEMS.register("carved_bone_block",
 			() -> new BlockItem(ModBlocks.CARVED_BONE_BLOCK.get(), new Item.Properties()));
-	public static final DeferredHolder<Item, BlockItem> ANIMA_MOSS = ITEMS.register("anima_moss",
-			() -> new BlockItem(ModBlocks.ANIMA_MOSS.get(), new Item.Properties()));
 	public static final DeferredHolder<Item, BlockItem> ABSOLUTE_ICE = ITEMS.register("absolute_ice",
 			() -> new BlockItem(ModBlocks.ABSOLUTE_ICE.get(), new Item.Properties()));
 	public static final DeferredHolder<Item, BlockItem> GOLD_FOAM = ITEMS.register("gold_foam",

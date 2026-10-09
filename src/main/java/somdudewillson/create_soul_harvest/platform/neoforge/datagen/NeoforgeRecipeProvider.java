@@ -48,16 +48,6 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 
 	@Override
 	protected void buildRecipes(@NotNull RecipeOutput recipeOutput) {
-		// Anima moss
-		ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.ANIMA_MOSS.get(), 8)
-				.pattern("MMM")
-				.pattern("MSM")
-				.pattern("MMM")
-				.define('M', Items.MOSS_BLOCK)
-				.define('S', ModItems.SOUL_SHARD.get())
-				.unlockedBy("has_soul_shard", has(ModItems.SOUL_SHARD.get()))
-				.save(recipeOutput, SoulHarvestMod.id("anima_moss"));
-
 		// Biofuel block & uncraft
 		ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.BIOFUEL_BLOCK.get())
 				.pattern("###")

@@ -49,9 +49,6 @@ public class ModBlocks {
 	public static final DeferredHolder<Block, CarvedBoneBlock> CARVED_BONE_BLOCK = BLOCKS.register("carved_bone_block",
 			() -> new CarvedBoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.SAND).sound(SoundType.BONE_BLOCK).strength(2.0f).requiresCorrectToolForDrops()));
 
-	public static final DeferredHolder<Block, AnimaMossBlock> ANIMA_MOSS = BLOCKS.register("anima_moss",
-			() -> new AnimaMossBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).sound(SoundType.MOSS).strength(0.2f, 1.0f).lightLevel(s -> 1)));
-
 	public static final DeferredHolder<Block, AbsoluteIceBlock> ABSOLUTE_ICE = BLOCKS.register("absolute_ice",
 			() -> new AbsoluteIceBlock(BlockBehaviour.Properties.of().mapColor(MapColor.ICE).sound(SoundType.GLASS).strength(2.8f, 10.0f).lightLevel(s -> 13).requiresCorrectToolForDrops()));
 
