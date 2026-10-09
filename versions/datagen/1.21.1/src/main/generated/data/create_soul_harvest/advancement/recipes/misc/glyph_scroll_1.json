@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_glyph_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create_soul_harvest:glyph_1"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create_soul_harvest:glyph_scroll_1"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_glyph_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create_soul_harvest:glyph_scroll_1"
+    ]
+  }
+}

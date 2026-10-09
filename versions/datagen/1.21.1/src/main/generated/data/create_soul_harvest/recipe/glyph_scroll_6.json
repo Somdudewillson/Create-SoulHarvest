@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "minecraft:gold_nugget"
+    },
+    "P": {
+      "item": "create_soul_harvest:glyph_6"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "GSG",
+    " P ",
+    "GSG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_soul_harvest:glyph_scroll_6"
+  }
+}

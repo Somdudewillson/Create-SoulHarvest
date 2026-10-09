@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_soul_shard": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create_soul_harvest:soul_shard"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create_soul_harvest:anima_moss"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_soul_shard"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create_soul_harvest:anima_moss"
+    ]
+  }
+}

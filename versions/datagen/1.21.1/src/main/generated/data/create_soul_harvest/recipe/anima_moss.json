@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "M": {
+      "item": "minecraft:moss_block"
+    },
+    "S": {
+      "item": "create_soul_harvest:soul_shard"
+    }
+  },
+  "pattern": [
+    "MMM",
+    "MSM",
+    "MMM"
+  ],
+  "result": {
+    "count": 8,
+    "id": "create_soul_harvest:anima_moss"
+  }
+}
