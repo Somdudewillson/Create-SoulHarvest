@@ -63,22 +63,6 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.unlockedBy("has_biofuel_block", has(ModBlocks.BIOFUEL_BLOCK.get()))
 				.save(recipeOutput, SoulHarvestMod.id("biofuel_block_uncraft"));
 
-		// Fuel pellets
-		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.FUEL_PELLET.get(), 8)
-				.requires(Items.COAL)
-				.unlockedBy("has_coal", has(Items.COAL))
-				.save(recipeOutput, SoulHarvestMod.id("fuel_pellet"));
-
-		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.FUEL_PELLET.get(), 8)
-				.requires(ModItems.BIOFUEL_CHUNK.get())
-				.unlockedBy("has_biofuel_chunk", has(ModItems.BIOFUEL_CHUNK.get()))
-				.save(recipeOutput, SoulHarvestMod.id("fuel_pellet_from_biofuel"));
-
-		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.FUEL_PELLET.get(), 8)
-				.requires(Items.CHARCOAL)
-				.unlockedBy("has_charcoal", has(Items.CHARCOAL))
-				.save(recipeOutput, SoulHarvestMod.id("fuel_pellet_from_charcoal"));
-
 		// Inlaid lapis
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.INLAID_LAPIS.get(), 2)
 				.pattern("LG")

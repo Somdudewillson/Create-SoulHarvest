@@ -38,7 +38,6 @@ public class ModCreativeTabs {
 						output.accept(ModItems.MAGIC_GLASS.get());
 
 						// Materials & Fuels
-						output.accept(ModItems.FUEL_PELLET.get());
 						output.accept(ModItems.ORGANIC_MULCH.get());
 						output.accept(ModItems.BIOFUEL_CHUNK.get());
 						output.accept(ModItems.BLANK_TABLET.get());

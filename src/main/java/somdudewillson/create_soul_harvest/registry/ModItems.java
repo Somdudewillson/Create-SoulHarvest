@@ -47,8 +47,6 @@ public class ModItems {
 			() -> new BlockItem(ModBlocks.MAGIC_GLASS.get(), new Item.Properties()));
 
 	// Fuels and organics
-	public static final DeferredHolder<Item, FuelItem> FUEL_PELLET = ITEMS.register("fuel_pellet",
-			() -> new FuelItem(200, new Item.Properties()));
 	public static final DeferredHolder<Item, Item> ORGANIC_MULCH = ITEMS.register("organic_mulch",
 			() -> new Item(new Item.Properties()));
 	public static final DeferredHolder<Item, FuelItem> BIOFUEL_CHUNK = ITEMS.register("biofuel_chunk",
