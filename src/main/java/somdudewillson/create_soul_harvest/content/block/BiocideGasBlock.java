@@ -26,7 +26,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import somdudewillson.create_soul_harvest.registry.ModItems;
 
-import static somdudewillson.create_soul_harvest.registry.ModTags.Biocide.Blocks.*;
+import static somdudewillson.create_soul_harvest.registry.ModTags.Blocks.*;
 
 public class BiocideGasBlock extends Block {
 
@@ -103,7 +103,7 @@ public class BiocideGasBlock extends Block {
 		// Convert ground below to dirt
 		BlockPos belowPos = pos.below();
 		BlockState belowState = level.getBlockState(belowPos);
-		if (belowState.is(CONVERT_TO_DIRT)) {
+		if (belowState.is(BIOCIDE_CONVERT_TO_DIRT)) {
 			level.setBlockAndUpdate(belowPos, Blocks.DIRT.defaultBlockState());
 			density += Math.round(random.nextFloat() * 2.2f);
 		}
@@ -125,11 +125,11 @@ public class BiocideGasBlock extends Block {
 					if (spreadState.getValue(AGE) >= spreadDensity) {
 						continue;
 					}
-				} else if (spreadState.is(HIGH_CONSUME)) {
+				} else if (spreadState.is(BIOCIDE_HIGH_CONSUME)) {
 					spreadDensity = Math.max(spreadDensity, random.nextInt(6) + 4);
-				} else if (spreadState.is(MEDIUM_CONSUME)) {
+				} else if (spreadState.is(BIOCIDE_MEDIUM_CONSUME)) {
 					spreadDensity = Math.max(spreadDensity, random.nextInt(5) + 2);
-				} else if (spreadState.is(LOW_CONSUME)) {
+				} else if (spreadState.is(BIOCIDE_LOW_CONSUME)) {
 					spreadDensity = Math.max(spreadDensity, random.nextInt(5));
 				} else if (!spreadState.isAir()) {
 					continue;

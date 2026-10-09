@@ -21,17 +21,13 @@ public final class ModTags {
 		public static final TagKey<Block> FLATTEN_CAN_DISPLACE = modTag("flatten_can_displace");
 		public static final TagKey<Block> CONSIDER_REPLACEABLE = modTag("consider_replaceable");
 
-		public static final TagKey<Block> BIOCIDE_CONVERT_TO_DIRT = biocideTag("convert_to_dirt");
-		public static final TagKey<Block> BIOCIDE_LOW_CONSUME = biocideTag("low_consume");
-		public static final TagKey<Block> BIOCIDE_MEDIUM_CONSUME = biocideTag("medium_consume");
-		public static final TagKey<Block> BIOCIDE_HIGH_CONSUME = biocideTag("high_consume");
+		public static final TagKey<Block> BIOCIDE_CONVERT_TO_DIRT = modTag("biocide_convert_to_dirt");
+		public static final TagKey<Block> BIOCIDE_LOW_CONSUME = modTag("biocide_low_consume");
+		public static final TagKey<Block> BIOCIDE_MEDIUM_CONSUME = modTag("biocide_medium_consume");
+		public static final TagKey<Block> BIOCIDE_HIGH_CONSUME = modTag("biocide_high_consume");
 
 		private static TagKey<Block> modTag(String path) {
 			return TagKey.create(Registries.BLOCK, SoulHarvestMod.id(path));
-		}
-
-		private static TagKey<Block> biocideTag(String path) {
-			return TagKey.create(Registries.BLOCK, SoulHarvestMod.id("biocide", path));
 		}
 	}
 
@@ -42,14 +38,10 @@ public final class ModTags {
 		public static final TagKey<Item> GLYPH_SCROLLS = modTag("glyph_scrolls");
 		public static final TagKey<Item> SOUL_BOOKS = modTag("soul_books");
 
-		public static final TagKey<Item> BIOCIDE_GAS_PROTECTION = biocideTag("gas_protection");
+		public static final TagKey<Item> BIOCIDE_GAS_PROTECTION = modTag("biocide_gas_protection");
 
 		private static TagKey<Item> modTag(String path) {
 			return TagKey.create(Registries.ITEM, SoulHarvestMod.id(path));
-		}
-
-		private static TagKey<Item> biocideTag(String path) {
-			return TagKey.create(Registries.ITEM, SoulHarvestMod.id("biocide", path));
 		}
 	}
 
@@ -66,25 +58,6 @@ public final class ModTags {
 
 		private static TagKey<EntityType<?>> modTag(String path) {
 			return TagKey.create(Registries.ENTITY_TYPE, SoulHarvestMod.id(path));
-		}
-	}
-
-	public static final class Biocide {
-		private Biocide() {}
-
-		public static final class Blocks {
-			private Blocks() {}
-
-			public static final TagKey<Block> CONVERT_TO_DIRT = ModTags.Blocks.BIOCIDE_CONVERT_TO_DIRT;
-			public static final TagKey<Block> LOW_CONSUME = ModTags.Blocks.BIOCIDE_LOW_CONSUME;
-			public static final TagKey<Block> MEDIUM_CONSUME = ModTags.Blocks.BIOCIDE_MEDIUM_CONSUME;
-			public static final TagKey<Block> HIGH_CONSUME = ModTags.Blocks.BIOCIDE_HIGH_CONSUME;
-		}
-
-		public static final class Items {
-			private Items() {}
-
-			public static final TagKey<Item> GAS_PROTECTION = ModTags.Items.BIOCIDE_GAS_PROTECTION;
 		}
 	}
 }

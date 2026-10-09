@@ -16,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.util.AdvancementHelper;
 
 //? >= 1.21 {
 import net.minecraft.core.component.DataComponents;
@@ -70,17 +71,7 @@ public class LootTokenItem extends Item {
 			}
 
 			if (player instanceof ServerPlayer serverPlayer) {
-				//? >= 1.21 {
-				var adv = serverPlayer.server.getAdvancements().get(SoulHarvestMod.id("used_loot_token"));
-				if (adv != null) {
-					serverPlayer.getAdvancements().award(adv, "use_loot_token");
-				}
-				//?} else {
-				/*var adv = serverPlayer.server.getAdvancements().getAdvancement(SoulHarvestMod.id("used_loot_token"));
-				if (adv != null) {
-					serverPlayer.getAdvancements().award(adv, "use_loot_token");
-				}
-				*///?}
+				AdvancementHelper.grantAdvancement(serverPlayer, "used_loot_token", "use_loot_token");
 			}
 		}
 

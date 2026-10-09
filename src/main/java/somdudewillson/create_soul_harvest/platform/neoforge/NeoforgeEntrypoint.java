@@ -23,7 +23,7 @@ public class NeoforgeEntrypoint {
 		ModFluids.FLUID_TYPES.register(modBus);
 		ModFluids.FLUIDS.register(modBus);
 
-		NeoForge.EVENT_BUS.register(SoulHarvestGameEvents.class);
+		SoulHarvestGameEvents.register(NeoForge.EVENT_BUS);
 	}
 }
 //?}
