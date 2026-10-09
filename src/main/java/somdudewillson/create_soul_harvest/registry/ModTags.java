@@ -26,6 +26,8 @@ public final class ModTags {
 		public static final TagKey<Block> BIOCIDE_MEDIUM_CONSUME = modTag("biocide_medium_consume");
 		public static final TagKey<Block> BIOCIDE_HIGH_CONSUME = modTag("biocide_high_consume");
 
+		public static final TagKey<Block> SOUL_BUD_GROWTH_BLOCKS = modTag("soul_bud_growth_blocks");
+
 		private static TagKey<Block> modTag(String path) {
 			return TagKey.create(Registries.BLOCK, SoulHarvestMod.id(path));
 		}

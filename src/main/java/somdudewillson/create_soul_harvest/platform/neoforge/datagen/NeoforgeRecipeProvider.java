@@ -23,6 +23,7 @@ import somdudewillson.create_soul_harvest.registry.ModTags;
 
 import java.util.concurrent.CompletableFuture;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeBuilder;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
@@ -118,14 +119,6 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
 				.save(recipeOutput, SoulHarvestMod.id("magic_gold_to_copper"));
 
-		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.GOLD_INGOT)
-				.pattern("MMM")
-				.pattern("M M")
-				.pattern(" M ")
-				.define('M', ModItems.MAGIC_GOLD.get())
-				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
-				.save(recipeOutput, SoulHarvestMod.id("magic_gold_to_gold"));
-
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.IRON_INGOT)
 				.pattern(" M ")
 				.pattern("M M")
@@ -134,7 +127,15 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
 				.save(recipeOutput, SoulHarvestMod.id("magic_gold_to_iron"));
 
-		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, com.simibubi.create.AllItems.ZINC_INGOT.get())
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.GOLD_INGOT)
+				.pattern("MMM")
+				.pattern("M M")
+				.pattern(" M ")
+				.define('M', ModItems.MAGIC_GOLD.get())
+				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
+				.save(recipeOutput, SoulHarvestMod.id("magic_gold_to_gold"));
+
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, AllItems.ZINC_INGOT.get())
 				.pattern("M M")
 				.pattern("   ")
 				.pattern("M M")
@@ -146,7 +147,7 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.POLYCLAY.get(), 8)
 				.pattern("NC")
 				.pattern("CN")
-				.define('N', com.simibubi.create.AllItems.EXP_NUGGET.get())
+				.define('N', AllItems.EXP_NUGGET.get())
 				.define('C', Items.CLAY_BALL)
 				.unlockedBy("has_clay_ball", has(Items.CLAY_BALL))
 				.save(recipeOutput, SoulHarvestMod.id("polyclay"));

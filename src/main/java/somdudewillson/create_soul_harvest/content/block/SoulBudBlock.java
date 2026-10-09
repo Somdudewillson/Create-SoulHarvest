@@ -24,6 +24,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.function.Supplier;
+import somdudewillson.create_soul_harvest.registry.ModTags;
 
 public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 
@@ -110,7 +111,7 @@ public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 		BlockPos attachedPos = pos.relative(attachedFace);
 		BlockState attachedState = level.getBlockState(attachedPos);
 
-		if (attachedState.is(Blocks.SPAWNER)) {
+		if (attachedState.is(ModTags.Blocks.SOUL_BUD_GROWTH_BLOCKS)) {
 			Block nextBlock = nextStageBlock.get();
 			if (nextBlock != null) {
 				BlockState nextState = nextBlock.defaultBlockState()
