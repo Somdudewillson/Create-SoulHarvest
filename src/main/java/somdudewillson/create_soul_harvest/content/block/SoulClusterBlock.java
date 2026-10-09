@@ -15,7 +15,7 @@ import somdudewillson.create_soul_harvest.registry.ModTags;
 
 //? >= 1.21 {
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.EnchantmentTags;
+import net.minecraft.tags.EnchantmentTags;
 //?} else {
 /*import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
