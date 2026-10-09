@@ -5,14 +5,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -28,7 +25,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 
 //? neoforge {
 import net.neoforged.bus.api.SubscribeEvent;
@@ -51,22 +47,17 @@ import somdudewillson.create_soul_harvest.content.block.AnimaGlassBlockEntity;
 import somdudewillson.create_soul_harvest.content.block.BiocideGasBlock;
 import somdudewillson.create_soul_harvest.content.block.CarvedBoneBlock;
 import somdudewillson.create_soul_harvest.content.item.SoulBookItem;
-import somdudewillson.create_soul_harvest.content.spell.RunicSpells;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 import somdudewillson.create_soul_harvest.registry.ModFluids;
 import somdudewillson.create_soul_harvest.registry.ModMobEffects;
+import somdudewillson.create_soul_harvest.registry.ModTags;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SoulHarvestGameEvents {
+import static somdudewillson.create_soul_harvest.registry.ModTags.EntityTypes.*;
 
-	public static final TagKey<EntityType<?>> T1_MOB = TagKey.create(Registries.ENTITY_TYPE, SoulHarvestMod.id("t1_mob"));
-	public static final TagKey<EntityType<?>> T2_MOB = TagKey.create(Registries.ENTITY_TYPE, SoulHarvestMod.id("t2_mob"));
-	public static final TagKey<EntityType<?>> T3_MOB = TagKey.create(Registries.ENTITY_TYPE, SoulHarvestMod.id("t3_mob"));
-	public static final TagKey<EntityType<?>> REQUIRES_LOW = TagKey.create(Registries.ENTITY_TYPE, SoulHarvestMod.id("requires_low_kills"));
-	public static final TagKey<EntityType<?>> REQUIRES_MEDIUM = TagKey.create(Registries.ENTITY_TYPE, SoulHarvestMod.id("requires_medium_kills"));
-	public static final TagKey<EntityType<?>> REQUIRES_HIGH = TagKey.create(Registries.ENTITY_TYPE, SoulHarvestMod.id("requires_high_kills"));
+public class SoulHarvestGameEvents {
 
 	@SubscribeEvent
 	public static void onLivingDeath(LivingDeathEvent event) {
@@ -327,14 +318,14 @@ public class SoulHarvestGameEvents {
 						findingGround = false;
 						raisePos = searchPos.above();
 					}
-					if (!isFlattenReplaceable(searchState) && searchState.is(RunicSpells.FLATTEN_CAN_GENERATE)) {
+					if (!isFlattenReplaceable(searchState) && searchState.is(ModTags.Blocks.FLATTEN_CAN_GENERATE)) {
 						raiseState = searchState;
 					}
 					if (!findingGround && raiseState != null) break;
 				}
 
 				BlockState raiseReplacedState = serverLevel.getBlockState(raisePos);
-				if (!findingGround && raiseState != null && (raiseReplacedState.is(RunicSpells.FLATTEN_CAN_DISPLACE) || isFlattenReplaceable(raiseReplacedState))) {
+				if (!findingGround && raiseState != null && (raiseReplacedState.is(ModTags.Blocks.FLATTEN_CAN_DISPLACE) || isFlattenReplaceable(raiseReplacedState))) {
 					serverLevel.setBlockAndUpdate(raisePos, raiseState);
 				} else {
 					flattenStep++;
@@ -362,7 +353,7 @@ public class SoulHarvestGameEvents {
 						}
 					}
 
-					if (!foundTop || !pullState.is(RunicSpells.FLATTEN_CAN_DISPLACE)) {
+					if (!foundTop || !pullState.is(ModTags.Blocks.FLATTEN_CAN_DISPLACE)) {
 						flattenStep++;
 					} else {
 						List<BlockState> pullStates = new ArrayList<>();
@@ -370,7 +361,7 @@ public class SoulHarvestGameEvents {
 						BlockPos crushedPos = pullPos.below();
 						for (int i = 0; i < downshiftMaxSize; i++) {
 							BlockState crushedState = serverLevel.getBlockState(crushedPos);
-							if (isFlattenReplaceable(crushedState) || crushedState.is(RunicSpells.FLATTEN_CAN_CRUSH)) {
+							if (isFlattenReplaceable(crushedState) || crushedState.is(ModTags.Blocks.FLATTEN_CAN_CRUSH)) {
 								for (int s = pullStates.size() - 1; s >= 0; s--) {
 									serverLevel.setBlockAndUpdate(crushedPos, pullStates.get(s));
 									crushedPos = crushedPos.above();
@@ -383,7 +374,7 @@ public class SoulHarvestGameEvents {
 							}
 
 							if (i >= downshiftMaxSize - 1) {
-								if (isFlattenReplaceable(pullState) || pullState.is(RunicSpells.FLATTEN_CAN_CRUSH)) {
+								if (isFlattenReplaceable(pullState) || pullState.is(ModTags.Blocks.FLATTEN_CAN_CRUSH)) {
 									serverLevel.setBlockAndUpdate(pullPos, Blocks.AIR.defaultBlockState());
 								} else {
 									flattenStep++;
@@ -399,7 +390,7 @@ public class SoulHarvestGameEvents {
 	}
 
 	private static boolean isFlattenReplaceable(BlockState state) {
-		return state.canBeReplaced() || state.is(RunicSpells.CONSIDER_REPLACEABLE);
+		return state.canBeReplaced() || state.is(ModTags.Blocks.CONSIDER_REPLACEABLE);
 	}
 
 	private static List<BlockPos> generateSpiral(BlockPos center, int radius) {

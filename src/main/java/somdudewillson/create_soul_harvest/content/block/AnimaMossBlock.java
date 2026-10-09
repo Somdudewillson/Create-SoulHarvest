@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -107,7 +108,7 @@ public class AnimaMossBlock extends Block {
 	}
 
 	@Override
-	public void wasExploded(Level level, BlockPos pos, net.minecraft.world.level.Explosion explosion) {
+	public void wasExploded(Level level, BlockPos pos, Explosion explosion) {
 		triggerSurrounding(level, pos);
 		super.wasExploded(level, pos, explosion);
 	}

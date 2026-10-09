@@ -2,18 +2,13 @@ package somdudewillson.create_soul_harvest.content.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 //? >= 1.21 {
 import net.minecraft.world.ItemInteractionResult;
 //?}
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
@@ -29,19 +24,14 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.registry.ModItems;
+
+import static somdudewillson.create_soul_harvest.registry.ModTags.Biocide.Blocks.*;
 
 public class BiocideGasBlock extends Block {
 
 	public static final IntegerProperty AGE = BlockStateProperties.AGE_15;
 	public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
-
-	public static final TagKey<Block> CONVERT_TO_DIRT = TagKey.create(Registries.BLOCK, SoulHarvestMod.id("biocide", "convert_to_dirt"));
-	public static final TagKey<Block> LOW_CONSUME = TagKey.create(Registries.BLOCK, SoulHarvestMod.id("biocide", "low_consume"));
-	public static final TagKey<Block> MEDIUM_CONSUME = TagKey.create(Registries.BLOCK, SoulHarvestMod.id("biocide", "medium_consume"));
-	public static final TagKey<Block> HIGH_CONSUME = TagKey.create(Registries.BLOCK, SoulHarvestMod.id("biocide", "high_consume"));
-	public static final TagKey<Item> GAS_PROTECTION = TagKey.create(Registries.ITEM, SoulHarvestMod.id("biocide", "gas_protection"));
 
 	public BiocideGasBlock(Properties properties) {
 		super(properties);

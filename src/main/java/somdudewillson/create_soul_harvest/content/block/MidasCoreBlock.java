@@ -2,22 +2,18 @@ package somdudewillson.create_soul_harvest.content.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MidasCoreBlock extends Block {
+import static somdudewillson.create_soul_harvest.registry.ModTags.Blocks.*;
 
-	public static final TagKey<Block> MIDAS_CAN_CONVERT = TagKey.create(Registries.BLOCK, SoulHarvestMod.id("midas_can_convert"));
+public class MidasCoreBlock extends Block {
 
 	public MidasCoreBlock(Properties properties) {
 		super(properties);

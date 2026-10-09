@@ -16,7 +16,7 @@ import somdudewillson.redsparklib.common.data.task.DatagenTaskBuilder;
 
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(modid = SoulHarvestMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = SoulHarvestMod.MOD_ID)
 public class NeoforgeDataGeneratorHandler {
 
 	static {

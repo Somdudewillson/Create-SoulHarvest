@@ -5,7 +5,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
@@ -67,14 +66,14 @@ public class AnimaGlassBlock extends Block implements EntityBlock {
 		if (be instanceof AnimaGlassBlockEntity animaBe) {
 			UUID owner = animaBe.getOwnerId();
 			if (owner != null && !player.getUUID().equals(owner)) {
-				return 0.0f; // Unbreakable by non-owners
+				return 0.0f;
 			}
 		}
 		return super.getDestroyProgress(state, player, level, pos);
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(AGE);
 	}
 }

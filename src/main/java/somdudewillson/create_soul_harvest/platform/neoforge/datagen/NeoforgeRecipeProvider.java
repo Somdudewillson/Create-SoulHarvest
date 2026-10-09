@@ -19,6 +19,7 @@ import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.item.GlyphScrollItem;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 import somdudewillson.create_soul_harvest.registry.ModItems;
+import somdudewillson.create_soul_harvest.registry.ModTags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -111,10 +112,12 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.save(recipeOutput, SoulHarvestMod.id("inlaid_lapis"));
 
 		// Glyph Scrolls 1..8
+		@SuppressWarnings("unchecked")
 		DeferredHolder<Item, Item>[] glyphs = new DeferredHolder[] {
 				ModItems.GLYPH_1, ModItems.GLYPH_2, ModItems.GLYPH_3, ModItems.GLYPH_4,
 				ModItems.GLYPH_5, ModItems.GLYPH_6, ModItems.GLYPH_7, ModItems.GLYPH_8
 		};
+		@SuppressWarnings("unchecked")
 		DeferredHolder<Item, GlyphScrollItem>[] scrolls = new DeferredHolder[] {
 				ModItems.GLYPH_SCROLL_1, ModItems.GLYPH_SCROLL_2, ModItems.GLYPH_SCROLL_3, ModItems.GLYPH_SCROLL_4,
 				ModItems.GLYPH_SCROLL_5, ModItems.GLYPH_SCROLL_6, ModItems.GLYPH_SCROLL_7, ModItems.GLYPH_SCROLL_8
@@ -173,7 +176,7 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.save(recipeOutput, SoulHarvestMod.id("polyclay"));
 
 		// Soul Books
-		TagKey<Item> glyphPagesTag = TagKey.create(Registries.ITEM, SoulHarvestMod.id("glyph_pages"));
+		TagKey<Item> glyphPagesTag = ModTags.Items.GLYPH_PAGES;
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOUL_BOOK_SIMPLE.get())
 				.requires(Items.BOOK)
 				.requires(glyphPagesTag)
