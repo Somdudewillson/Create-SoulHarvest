@@ -1,0 +1,21 @@
+{
+  "parent": "create_soul_harvest:root",
+  "display": {
+    "icon": {
+      "id": "create_soul_harvest:biocide_gas_bottle"
+    },
+    "title": "Catastrophic Reaction",
+    "description": "Triggered a biocide gas pipe rupture.",
+    "frame": "challenge"
+  },
+  "criteria": {
+    "made_biocide_gas": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "made_biocide_gas"
+    ]
+  ]
+}

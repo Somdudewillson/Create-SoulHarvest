@@ -1,0 +1,20 @@
+{
+  "parent": "create_soul_harvest:captured_soul",
+  "display": {
+    "icon": {
+      "id": "create_soul_harvest:soul_book_standard"
+    },
+    "title": "Monster Hunter",
+    "description": "Captured the soul of a hostile monster."
+  },
+  "criteria": {
+    "captured_t2_soul": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "captured_t2_soul"
+    ]
+  ]
+}

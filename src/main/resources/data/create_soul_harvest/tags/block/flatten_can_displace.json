@@ -1,0 +1,15 @@
+{
+  "values": [
+    "#create_soul_harvest:flatten_can_crush",
+    "#minecraft:pressure_plates",
+    "minecraft:dirt_path",
+    "minecraft:torch",
+    "minecraft:soul_torch",
+    "minecraft:short_grass",
+    "minecraft:tall_grass",
+    "minecraft:fern",
+    "#minecraft:flowers",
+    "minecraft:sweet_berry_bush",
+    "minecraft:sugar_cane"
+  ]
+}

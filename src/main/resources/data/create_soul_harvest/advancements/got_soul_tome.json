@@ -1,0 +1,27 @@
+{
+  "parent": "create_soul_harvest:got_glyph_page",
+  "display": {
+    "icon": {
+      "id": "create_soul_harvest:soul_book_simple"
+    },
+    "title": "The Vessel",
+    "description": "Bound glyph pages into a Soul Book."
+  },
+  "criteria": {
+    "got_book": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#create_soul_harvest:soul_books"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got_book"
+    ]
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "create_soul_harvest:loot_token_blank"
+  },
+  "transitional_item": {
+    "id": "create_soul_harvest:loot_token_blank"
+  },
+  "sequence": [
+    {
+      "type": "create:filling",
+      "ingredients": [
+        {
+          "item": "create_soul_harvest:loot_token_blank"
+        },
+        {
+          "fluid": "minecraft:lava",
+          "amount": 1000
+        }
+      ],
+      "results": [
+        {
+          "id": "create_soul_harvest:loot_token_blank"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_soul_harvest:loot_token_blank"
+        },
+        {
+          "item": "create_soul_harvest:enchanted_inlaid_lapis"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_soul_harvest:loot_token_blank"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "create_soul_harvest:loot_token_blank"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_soul_harvest:loot_token_blank"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "create_soul_harvest:loot_token_blank"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_soul_harvest:loot_token_blank"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "create_soul_harvest:loot_token",
+      "count": 1
+    }
+  ],
+  "loops": 2
+}

@@ -1,0 +1,18 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:sand"
+    },
+    {
+      "fluid": "create_soul_harvest:bioslurry",
+      "amount": 500
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:bone_meal",
+      "count": 8
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " M ",
+    "M M",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "item": "create_soul_harvest:magic_gold"
+    }
+  },
+  "result": {
+    "id": "minecraft:iron_ingot",
+    "count": 1
+  }
+}

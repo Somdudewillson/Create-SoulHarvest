@@ -1,0 +1,101 @@
+{
+  "variants": {
+    "age=0,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_0"
+    },
+    "age=1,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_0"
+    },
+    "age=2,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_0"
+    },
+    "age=3,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_1"
+    },
+    "age=4,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_1"
+    },
+    "age=5,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_1"
+    },
+    "age=6,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_1"
+    },
+    "age=7,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_1"
+    },
+    "age=8,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_1"
+    },
+    "age=9,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_1"
+    },
+    "age=10,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_1"
+    },
+    "age=11,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_2"
+    },
+    "age=12,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_2"
+    },
+    "age=13,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_2"
+    },
+    "age=14,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_2"
+    },
+    "age=15,triggered=true": {
+      "model": "create_soul_harvest:block/biocide_gas_2"
+    },
+    
+    "age=0,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_0_active"
+    },
+    "age=1,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_0_active"
+    },
+    "age=2,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_0_active"
+    },
+    "age=3,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_1_active"
+    },
+    "age=4,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_1_active"
+    },
+    "age=5,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_1_active"
+    },
+    "age=6,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_1_active"
+    },
+    "age=7,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_1_active"
+    },
+    "age=8,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_1_active"
+    },
+    "age=9,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_1_active"
+    },
+    "age=10,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_1_active"
+    },
+    "age=11,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_2_active"
+    },
+    "age=12,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_2_active"
+    },
+    "age=13,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_2_active"
+    },
+    "age=14,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_2_active"
+    },
+    "age=15,triggered=false": {
+      "model": "create_soul_harvest:block/biocide_gas_2_active"
+    }
+  }
+}

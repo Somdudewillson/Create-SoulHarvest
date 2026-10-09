@@ -1,0 +1,21 @@
+{
+  "parent": "create_soul_harvest:got_loot_token",
+  "display": {
+    "icon": {
+      "id": "create_soul_harvest:loot_token"
+    },
+    "title": "Claiming the Spoils",
+    "description": "Redeemed a Loot Token for its rewards.",
+    "frame": "goal"
+  },
+  "criteria": {
+    "use_loot_token": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "use_loot_token"
+    ]
+  ]
+}

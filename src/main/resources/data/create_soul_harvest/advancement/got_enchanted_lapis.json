@@ -1,0 +1,27 @@
+{
+  "parent": "create_soul_harvest:got_polished_lapis",
+  "display": {
+    "icon": {
+      "id": "create_soul_harvest:enchanted_inlaid_lapis"
+    },
+    "title": "Resonant Frequency",
+    "description": "Infused Polished Lapis with pure experience."
+  },
+  "criteria": {
+    "got_enchanted_lapis": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "create_soul_harvest:enchanted_inlaid_lapis"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got_enchanted_lapis"
+    ]
+  ]
+}

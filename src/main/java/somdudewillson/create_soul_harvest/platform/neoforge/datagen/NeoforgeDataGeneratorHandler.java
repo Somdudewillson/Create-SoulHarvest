@@ -22,6 +22,8 @@ public class NeoforgeDataGeneratorHandler {
 		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
 		generator.addProvider(event.includeServer(), new NeoforgeRecipeProvider(packOutput, lookupProvider));
+		generator.addProvider(event.includeClient(), new ModBlockStateProvider(packOutput, event.getExistingFileHelper()));
+		generator.addProvider(event.includeClient(), new ModItemModelProvider(packOutput, event.getExistingFileHelper()));
 	}
 }
 //?}

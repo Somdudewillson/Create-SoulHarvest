@@ -1,0 +1,20 @@
+{
+  "parent": "create_soul_harvest:captured_soul",
+  "display": {
+    "icon": {
+      "id": "create_soul_harvest:soul_book_simple"
+    },
+    "title": "Gentle Harvester",
+    "description": "Captured the soul of a passive creature."
+  },
+  "criteria": {
+    "captured_t1_soul": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "captured_t1_soul"
+    ]
+  ]
+}

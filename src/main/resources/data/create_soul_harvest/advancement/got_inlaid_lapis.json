@@ -1,0 +1,49 @@
+{
+  "parent": "create_soul_harvest:root",
+  "display": {
+    "icon": {
+      "id": "create_soul_harvest:inlaid_lapis"
+    },
+    "title": "Gold-Anima Compound",
+    "description": "Acquired Inlaid Lapis Lazuli."
+  },
+  "criteria": {
+    "got_inlaid_lapis": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "create_soul_harvest:inlaid_lapis"
+          }
+        ]
+      }
+    },
+    "got_polished_lapis": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "create_soul_harvest:polished_inlaid_lapis"
+          }
+        ]
+      }
+    },
+    "got_enchanted_lapis": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "create_soul_harvest:enchanted_inlaid_lapis"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got_inlaid_lapis",
+      "got_polished_lapis",
+      "got_enchanted_lapis"
+    ]
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:wither_rose"
+    },
+    {
+      "fluid": "create_soul_harvest:bioslurry",
+      "amount": 250
+    }
+  ],
+  "results": [
+    {
+      "fluid": "create_soul_harvest:wither_slurry",
+      "amount": 250
+    }
+  ]
+}

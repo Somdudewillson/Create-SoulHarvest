@@ -1,0 +1,28 @@
+{
+  "type": "create:compacting",
+  "heat_requirement": "heated",
+  "ingredients": [
+    {
+      "tag": "minecraft:smelts_to_glass"
+    },
+    {
+      "tag": "minecraft:smelts_to_glass"
+    },
+    {
+      "tag": "minecraft:smelts_to_glass"
+    },
+    {
+      "tag": "minecraft:smelts_to_glass"
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 1000
+    }
+  ],
+  "results": [
+    {
+      "fluid": "create_soul_harvest:silica_solution",
+      "amount": 1000
+    }
+  ]
+}

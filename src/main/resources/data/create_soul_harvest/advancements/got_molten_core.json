@@ -1,0 +1,27 @@
+{
+  "parent": "create_soul_harvest:got_polished_lapis",
+  "display": {
+    "icon": {
+      "id": "create_soul_harvest:molten_lapis_core"
+    },
+    "title": "Eternal Embers",
+    "description": "Crafted a Molten Lapis Core to superheat blaze burners."
+  },
+  "criteria": {
+    "got_molten_core": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "create_soul_harvest:molten_lapis_core"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got_molten_core"
+    ]
+  ]
+}

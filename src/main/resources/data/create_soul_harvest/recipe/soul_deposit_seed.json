@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "ALA",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "L": {
+      "item": "create_soul_harvest:inlaid_lapis"
+    }
+  },
+  "result": {
+    "id": "create_soul_harvest:soul_deposit_seed",
+    "count": 1
+  }
+}

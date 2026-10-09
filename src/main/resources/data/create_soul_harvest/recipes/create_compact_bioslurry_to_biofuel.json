@@ -1,0 +1,16 @@
+{
+  "type": "create:compacting",
+  "heat_requirement": "heated",
+  "ingredients": [
+    {
+      "fluid": "create_soul_harvest:bioslurry",
+      "amount": 1000
+    }
+  ],
+  "results": [
+    {
+      "id": "create_soul_harvest:biofuel_block",
+      "count": 1
+    }
+  ]
+}

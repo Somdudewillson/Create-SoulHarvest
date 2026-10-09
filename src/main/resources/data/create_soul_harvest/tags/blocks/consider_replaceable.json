@@ -1,0 +1,13 @@
+{
+  "values": [
+    "minecraft:sweet_berry_bush",
+    "#minecraft:pressure_plates",
+    "#minecraft:buttons",
+    "#minecraft:flowers",
+    "minecraft:short_grass",
+    "minecraft:tall_grass",
+    "minecraft:fern",
+    "minecraft:snow",
+    "minecraft:sugar_cane"
+  ]
+}

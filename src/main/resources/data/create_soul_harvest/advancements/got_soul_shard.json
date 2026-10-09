@@ -1,0 +1,27 @@
+{
+  "parent": "create_soul_harvest:got_inlaid_lapis",
+  "display": {
+    "icon": {
+      "id": "create_soul_harvest:soul_shard"
+    },
+    "title": "Crystallized Souls",
+    "description": "Harvested a Soul Crystal."
+  },
+  "criteria": {
+    "got_soul_crystal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "create_soul_harvest:soul_shard"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got_soul_crystal"
+    ]
+  ]
+}

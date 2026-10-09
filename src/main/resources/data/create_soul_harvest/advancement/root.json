@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": {
+      "id": "create_soul_harvest:soul_shard"
+    },
+    "title": "Create: Soul Harvest",
+    "description": "Harness the power of souls and alchemy",
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "automatic": {
+      "trigger": "minecraft:tick",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "automatic"
+    ]
+  ]
+}

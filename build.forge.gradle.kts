@@ -80,16 +80,38 @@ dependencies {
 	compileOnly("dev.engine-room.flywheel:flywheel-forge-api-${prop("deps.minecraft")}:${prop("deps.flywheel")}")
 	runtimeOnly("dev.engine-room.flywheel:flywheel-forge-${prop("deps.minecraft")}:${prop("deps.flywheel")}")
 	implementation("com.tterrag.registrate:Registrate:${prop("deps.registrate")}")
+	implementation(fileTree(mapOf(
+		"dir" to "${rootDir}/../RedSparkLib/RedSparkLib/versions/${sc.current.project}/build/libs",
+		"include" to listOf("redsparklib-*-SNAPSHOT.jar"),
+		"exclude" to listOf("*-sources.jar", "*-javadoc.jar")
+	)))
 }
 
 sourceSets {
 	main {
 		resources.srcDir(
-			"${rootDir}/versions/datagen/${sc.current.version.split("-")[0]}/src/main/generated"
+			file("${rootDir}/versions/datagen/1.21.1/src/main/generated")
 		)
 	}
 }
 
 tasks.named("createMinecraftArtifacts") {
 	dependsOn(tasks.named("stonecutterGenerate"))
+}
+
+val generateEmptyTsrg = tasks.register("generateEmptyTsrg") {
+	val tsrgFile = layout.buildDirectory.file("mixin/${prop("mod.id")}.mixins.refmap.json.mappings.tsrg")
+	outputs.file(tsrgFile)
+	mustRunAfter("jar", "compileJava")
+	doLast {
+		val file = tsrgFile.get().asFile
+		if (!file.exists()) {
+			file.parentFile.mkdirs()
+			file.createNewFile()
+		}
+	}
+}
+
+tasks.named("reobfJar") {
+	dependsOn(generateEmptyTsrg)
 }

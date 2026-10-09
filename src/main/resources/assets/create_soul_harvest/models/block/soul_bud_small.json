@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "create_soul_harvest:block/soul_bud_small"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "parent": "create_soul_harvest:captured_t3_soul",
+  "display": {
+    "icon": {
+      "id": "create_soul_harvest:soul_book_superior"
+    },
+    "title": "Tricked the Trickster",
+    "description": "Harvested the soul of a Mimic.",
+    "frame": "challenge"
+  },
+  "criteria": {
+    "captured_mimic_soul": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "captured_mimic_soul"
+    ]
+  ]
+}

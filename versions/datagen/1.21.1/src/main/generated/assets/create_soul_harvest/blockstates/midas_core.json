@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "create_soul_harvest:block/midas_core"
+    }
+  }
+}

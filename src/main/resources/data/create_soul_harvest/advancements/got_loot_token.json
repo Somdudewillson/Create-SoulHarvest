@@ -1,0 +1,27 @@
+{
+  "parent": "create_soul_harvest:got_enchanted_lapis",
+  "display": {
+    "icon": {
+      "id": "create_soul_harvest:loot_token"
+    },
+    "title": "Token of Destiny",
+    "description": "Assembled an enchanted Loot Token."
+  },
+  "criteria": {
+    "got_loot_token": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "create_soul_harvest:loot_token"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got_loot_token"
+    ]
+  ]
+}

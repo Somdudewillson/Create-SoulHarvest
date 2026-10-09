@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create_soul_harvest:biofuel_chunk"
+    }
+  ],
+  "result": {
+    "id": "create_soul_harvest:fuel_pellet",
+    "count": 8
+  }
+}

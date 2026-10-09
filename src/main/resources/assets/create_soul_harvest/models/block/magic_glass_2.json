@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "create_soul_harvest:block/magic_glass_2"
+  }
+}

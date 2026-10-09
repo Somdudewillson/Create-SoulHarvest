@@ -1,0 +1,27 @@
+{
+  "parent": "create_soul_harvest:got_inlaid_lapis",
+  "display": {
+    "icon": {
+      "id": "create_soul_harvest:glyph_1"
+    },
+    "title": "Ancient Script",
+    "description": "Printed a Runic Glyph Page."
+  },
+  "criteria": {
+    "got_glyph": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#create_soul_harvest:glyph_pages"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got_glyph"
+    ]
+  ]
+}

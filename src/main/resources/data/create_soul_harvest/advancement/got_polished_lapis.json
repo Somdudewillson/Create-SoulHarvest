@@ -1,0 +1,27 @@
+{
+  "parent": "create_soul_harvest:got_inlaid_lapis",
+  "display": {
+    "icon": {
+      "id": "create_soul_harvest:polished_inlaid_lapis"
+    },
+    "title": "Smooth Conductance",
+    "description": "Polished Inlaid Lapis Lazuli with sandpaper."
+  },
+  "criteria": {
+    "got_polished_lapis": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "create_soul_harvest:polished_inlaid_lapis"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got_polished_lapis"
+    ]
+  ]
+}
