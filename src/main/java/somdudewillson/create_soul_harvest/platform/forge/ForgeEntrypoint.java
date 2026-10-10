@@ -24,6 +24,9 @@ public class ForgeEntrypoint {
 		ModCreativeTabs.CREATIVE_MODE_TABS.register(modBus);
 		ModFluids.FLUID_TYPES.register(modBus);
 		ModFluids.FLUIDS.register(modBus);
+		ModFanProcessingTypes.FAN_PROCESSING_TYPES.register(modBus);
+		ModRecipeTypes.register(modBus);
+		ModParticleTypes.PARTICLE_TYPES.register(modBus);
 
 		SoulHarvestGameEvents.register(MinecraftForge.EVENT_BUS);
 	}

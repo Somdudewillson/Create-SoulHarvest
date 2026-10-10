@@ -17,6 +17,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.item.GlyphScrollItem;
+import somdudewillson.create_soul_harvest.content.recipe.SoulInfusionRecipe;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 import somdudewillson.create_soul_harvest.registry.ModItems;
 import somdudewillson.create_soul_harvest.registry.ModTags;
@@ -355,6 +356,12 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(Items.BLAZE_POWDER))
 				.addStep(FillingRecipe::new, rb -> rb.require(Fluids.LAVA, 250))
 				.addOutput(ModItems.MOLTEN_LAPIS_CORE.get(), 1.0f)
+				.build(recipeOutput);
+
+		// 16. Soul Infusion: Soul Shard from Amethyst Shard (35% success chance)
+		new StandardProcessingRecipe.Builder<>(SoulInfusionRecipe::new, SoulHarvestMod.id("soul_infusion_soul_shard"))
+				.require(Items.AMETHYST_SHARD)
+				.output(0.35f, ModItems.SOUL_SHARD.get())
 				.build(recipeOutput);
 	}
 }
