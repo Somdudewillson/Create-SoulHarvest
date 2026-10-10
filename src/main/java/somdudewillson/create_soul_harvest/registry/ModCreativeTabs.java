@@ -67,6 +67,7 @@ public class ModCreativeTabs {
 						output.accept(ModItems.GLYPH_6.get());
 						output.accept(ModItems.GLYPH_7.get());
 						output.accept(ModItems.GLYPH_8.get());
+						output.accept(ModItems.GLYPH_OVERLOADED.get());
 
 						// Glyph Scrolls
 						output.accept(ModItems.GLYPH_SCROLL_1.get());

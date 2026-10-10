@@ -10,9 +10,11 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
@@ -28,8 +30,10 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeBuilder;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
+import com.simibubi.create.content.kinetics.crusher.CrushingRecipe;
 import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipe;
+import com.simibubi.create.content.kinetics.fan.processing.SplashingRecipe;
 import com.simibubi.create.content.kinetics.mixer.CompactingRecipe;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
@@ -90,7 +94,7 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 					.pattern("GSG")
 					.pattern(" P ")
 					.pattern("GSG")
-					.define('G', Items.GOLD_NUGGET)
+					.define('G', ModItems.MAGIC_GOLD.get())
 					.define('S', Items.STICK)
 					.define('P', glyphs[i].get())
 					.unlockedBy("has_glyph_" + index, has(glyphs[i].get()))
@@ -168,7 +172,7 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.requires(ModItems.GLYPH_6.get())
 				.requires(ModItems.GLYPH_7.get())
 				.requires(ModItems.GLYPH_8.get())
-				.unlockedBy("has_glyph_1", has(ModItems.GLYPH_1.get()))
+				.unlockedBy("has_glyph_pages", has(glyphPagesTag))
 				.save(recipeOutput, SoulHarvestMod.id("soul_book_superior"));
 
 		// Soul crystal block & uncraft
@@ -201,13 +205,24 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.requires(Items.SAND)
 				.unlockedBy("has_soul_shard", has(ModItems.SOUL_SHARD.get()))
 				.save(recipeOutput, SoulHarvestMod.id("soul_deposit_seed_from_shard"));
+		
+		// Recycle glyph pages
+		SimpleCookingRecipeBuilder.smelting(
+					Ingredient.of(ModTags.Items.GLYPH_PAGES), 
+					RecipeCategory.MISC, 
+					ModItems.INLAID_LAPIS.get(), 
+					0.0f, 
+					200
+				)
+				.unlockedBy("has_glyph_pages", has(glyphPagesTag))
+				.save(recipeOutput, SoulHarvestMod.id("recycle_glyph_page"));
 
 		// Create Processing Recipes
 		buildCreateRecipes(recipeOutput);
 	}
 
 	private void buildCreateRecipes(RecipeOutput recipeOutput) {
-		// 1. Mechanical Crafting: Loot Token Blank
+		// Mechanical Crafting: Loot Token Blank
 		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.LOOT_TOKEN_BLANK.get(), 1)
 				.key('N', Items.NETHERITE_INGOT)
 				.key('G', Items.GOLD_NUGGET)
@@ -218,10 +233,23 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.patternLine(" GGG ")
 				.disallowMirrored()
 				.build(recipeOutput, SoulHarvestMod.id("craft_loot_token_blank"));
+		
+		// Mechanical Crafting: Midas Core
+		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.MIDAS_CORE.get(), 1)
+				.key('I', ModItems.ENCHANTED_INLAID_LAPIS.get())
+				.key('G', Items.GOLD_BLOCK)
+				.key('B', com.simibubi.create.AllItems.BRASS_INGOT)
+				.patternLine(" BBB ")
+				.patternLine("BGGGB")
+				.patternLine("BGIGB")
+				.patternLine("BGGGB")
+				.patternLine(" BBB ")
+				.disallowMirrored()
+				.build(recipeOutput, SoulHarvestMod.id("craft_midas_core"));
 
-		// 2. Compacting: Absolute Ice
+		// Compacting: Absolute Ice
 		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_absolute_ice"))
-				.require(ModItems.POLISHED_INLAID_LAPIS.get())
+				.require(ModItems.ENCHANTED_INLAID_LAPIS.get())
 				.require(Blocks.BLUE_ICE)
 				.require(Blocks.BLUE_ICE)
 				.require(Blocks.BLUE_ICE)
@@ -233,28 +261,14 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.output(ModBlocks.ABSOLUTE_ICE.get())
 				.build(recipeOutput);
 
-		// 3. Compacting: Biofuel Block (Heated)
+		// Compacting: Biofuel Block (Heated)
 		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_bioslurry_to_biofuel"))
 				.require(ModFluids.BIOSLURRY.get(), 1000)
 				.requiresHeat(HeatCondition.HEATED)
 				.output(ModBlocks.BIOFUEL_BLOCK.get())
 				.build(recipeOutput);
 
-		// 4. Compacting: Midas Core
-		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_midas_core"))
-				.require(ModItems.POLISHED_INLAID_LAPIS.get())
-				.require(Blocks.GOLD_BLOCK)
-				.require(Blocks.GOLD_BLOCK)
-				.require(Blocks.GOLD_BLOCK)
-				.require(Blocks.GOLD_BLOCK)
-				.require(Blocks.GOLD_BLOCK)
-				.require(Blocks.GOLD_BLOCK)
-				.require(Blocks.GOLD_BLOCK)
-				.require(Blocks.GOLD_BLOCK)
-				.output(ModBlocks.MIDAS_CORE.get())
-				.build(recipeOutput);
-
-		// 5. Compacting: Silica Solution (Heated)
+		// Compacting: Silica Solution (Heated)
 		TagKey<Item> smeltsToGlass = TagKey.create(Registries.ITEM, ResourceLocation.withDefaultNamespace("smelts_to_glass"));
 		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_silica_solution"))
 				.require(smeltsToGlass)
@@ -266,7 +280,7 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.output(ModFluids.SILICA_SOLUTION.get(), 1000)
 				.build(recipeOutput);
 
-		// 6. Deploying: Carve Bone Block
+		// Deploying: Carve Bone Block
 		new ItemApplicationRecipe.Builder<>(DeployerApplicationRecipe::new, SoulHarvestMod.id("create_deploy_carve_bone_block"))
 				.require(Blocks.BONE_BLOCK)
 				.require(ItemTags.AXES)
@@ -274,21 +288,21 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.output(ModBlocks.CARVED_BONE_BLOCK.get())
 				.build(recipeOutput);
 
-		// 7. Mixing: Bioslurry to Bonemeal
+		// Mixing: Bioslurry to Bonemeal
 		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_bioslurry_to_bonemeal"))
 				.require(Items.SAND)
 				.require(ModFluids.BIOSLURRY.get(), 500)
 				.output(Items.BONE_MEAL, 8)
 				.build(recipeOutput);
 
-		// 8. Mixing: Bioslurry to Wither Slurry
+		// Mixing: Bioslurry to Wither Slurry
 		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_bioslurry_to_wither_slurry"))
 				.require(Items.WITHER_ROSE)
 				.require(ModFluids.BIOSLURRY.get(), 250)
 				.output(ModFluids.WITHER_SLURRY.get(), 250)
 				.build(recipeOutput);
 
-		// 9. Mixing: Mulch to Bioslurry
+		// Mixing: Mulch to Bioslurry
 		var mulchMix = new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_mulch_to_bioslurry"));
 		for (int i = 0; i < 8; i++) {
 			mulchMix.require(ModItems.ORGANIC_MULCH.get());
@@ -297,7 +311,7 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.output(ModFluids.BIOSLURRY.get(), 250)
 				.build(recipeOutput);
 
-		// 10. Mixing: Wither Slurry to Wither Rose
+		// Mixing: Wither Slurry to Wither Rose
 		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_wither_slurry_to_wither_rose"))
 				.require(ItemTags.FLOWERS)
 				.require(ModFluids.WITHER_SLURRY.get(), 125)
@@ -305,7 +319,7 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.output(Items.WITHER_ROSE, 1)
 				.build(recipeOutput);
 
-		// 11. Mixing: Wither Slurry to Wither Skull
+		// Mixing: Wither Slurry to Wither Skull
 		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_wither_slurry_to_wither_skull"))
 				.require(ModBlocks.CARVED_BONE_BLOCK.get())
 				.require(ModFluids.WITHER_SLURRY.get(), 1000)
@@ -313,13 +327,13 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.output(Items.WITHER_SKELETON_SKULL, 1)
 				.build(recipeOutput);
 
-		// 12. Sandpaper Polishing: Inlaid Lapis
+		// Sandpaper Polishing: Inlaid Lapis
 		new StandardProcessingRecipe.Builder<>(SandPaperPolishingRecipe::new, SoulHarvestMod.id("create_polish_inlaid_lapis"))
 				.require(ModItems.INLAID_LAPIS.get())
 				.output(ModItems.POLISHED_INLAID_LAPIS.get())
 				.build(recipeOutput);
 
-		// 13. Sequenced Assembly: Assemble Loot Token
+		// Sequenced Assembly: Assemble Loot Token
 		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_assemble_loot_token"))
 				.require(ModItems.LOOT_TOKEN_BLANK.get())
 				.transitionTo(ModItems.LOOT_TOKEN_BLANK.get())
@@ -331,7 +345,7 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.addOutput(ModItems.LOOT_TOKEN.get(), 1.0f)
 				.build(recipeOutput);
 
-		// 14. Sequenced Assembly: Print Glyph Page
+		// Sequenced Assembly: Print Glyph Page
 		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_print_glyph_page"))
 				.require(Items.PAPER)
 				.transitionTo(Items.PAPER)
@@ -348,7 +362,7 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.addOutput(ModItems.GLYPH_8.get(), 0.125f)
 				.build(recipeOutput);
 
-		// 15. Sequenced Assembly: Molten Lapis Core
+		// Sequenced Assembly: Molten Lapis Core
 		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_sequenced_molten_lapis_core"))
 				.require(ModItems.POLISHED_INLAID_LAPIS.get())
 				.transitionTo(ModItems.POLISHED_INLAID_LAPIS.get())
@@ -358,10 +372,44 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.addOutput(ModItems.MOLTEN_LAPIS_CORE.get(), 1.0f)
 				.build(recipeOutput);
 
-		// 16. Soul Infusion: Soul Shard from Amethyst Shard (35% success chance)
+		// Crushing: Soul Shard to Experience Nugget
+		new StandardProcessingRecipe.Builder<>(CrushingRecipe::new, SoulHarvestMod.id("crush_soul_shard"))
+				.require(ModItems.SOUL_SHARD.get())
+				.output(0.05f, com.simibubi.create.AllItems.EXP_NUGGET)
+				.build(recipeOutput);
+
+		// Splashing: Wash Overloaded Glyph
+		new StandardProcessingRecipe.Builder<>(SplashingRecipe::new, SoulHarvestMod.id("create_splashing_wash_overloaded_glyph"))
+				.require(ModItems.GLYPH_OVERLOADED.get())
+				.output(0.12f, ModItems.GLYPH_1.get())
+				.output(0.12f, ModItems.GLYPH_2.get())
+				.output(0.12f, ModItems.GLYPH_3.get())
+				.output(0.12f, ModItems.GLYPH_4.get())
+				.output(0.12f, ModItems.GLYPH_5.get())
+				.output(0.12f, ModItems.GLYPH_6.get())
+				.output(0.12f, ModItems.GLYPH_7.get())
+				.output(0.12f, ModItems.GLYPH_8.get())
+				.output(0.02f, com.simibubi.create.AllItems.EXP_NUGGET)
+				.build(recipeOutput);
+
+		// Soul Infusion: Soul Shard from Amethyst Shard
 		new StandardProcessingRecipe.Builder<>(SoulInfusionRecipe::new, SoulHarvestMod.id("soul_infusion_soul_shard"))
 				.require(Items.AMETHYST_SHARD)
 				.output(0.35f, ModItems.SOUL_SHARD.get())
+				.build(recipeOutput);
+
+		// Soul Infusion: Enchant Inlaid Lapis Lazuli
+		new StandardProcessingRecipe.Builder<>(SoulInfusionRecipe::new, SoulHarvestMod.id("soul_infusion_polished_inlaid_lapis"))
+				.require(ModItems.POLISHED_INLAID_LAPIS.get())
+				.output(0.25f, ModItems.ENCHANTED_INLAID_LAPIS.get())
+				.output(0.75f, ModItems.POLISHED_INLAID_LAPIS.get())
+				.build(recipeOutput);
+
+		// Soul Infusion: Overload Glyph Page
+		new StandardProcessingRecipe.Builder<>(SoulInfusionRecipe::new, SoulHarvestMod.id("soul_infusion_overload_glyph_page"))
+				.require(ModTags.Items.GLYPH_PAGES)
+				.output(0.95f, ModItems.GLYPH_OVERLOADED.get())
+				.output(0.025f, com.simibubi.create.AllItems.EXP_NUGGET)
 				.build(recipeOutput);
 	}
 }

@@ -105,6 +105,7 @@ public class ModItems {
 	public static final DeferredHolder<Item, Item> GLYPH_6 = ITEMS.register("glyph_6", () -> createGlyphPage());
 	public static final DeferredHolder<Item, Item> GLYPH_7 = ITEMS.register("glyph_7", () -> createGlyphPage());
 	public static final DeferredHolder<Item, Item> GLYPH_8 = ITEMS.register("glyph_8", () -> createGlyphPage());
+	public static final DeferredHolder<Item, Item> GLYPH_OVERLOADED = ITEMS.register("glyph_overloaded", () -> createGlyphPage());
 
 	// Glyph Scrolls
 	public static final DeferredHolder<Item, GlyphScrollItem> GLYPH_SCROLL_1 = ITEMS.register("glyph_scroll_1", () -> new GlyphScrollItem(1, new Item.Properties().stacksTo(16)));
@@ -207,6 +208,7 @@ public class ModItems {
 	public static final RegistryObject<Item> GLYPH_6 = ITEMS.register("glyph_6", () -> createGlyphPage());
 	public static final RegistryObject<Item> GLYPH_7 = ITEMS.register("glyph_7", () -> createGlyphPage());
 	public static final RegistryObject<Item> GLYPH_8 = ITEMS.register("glyph_8", () -> createGlyphPage());
+	public static final RegistryObject<Item> GLYPH_OVERLOADED = ITEMS.register("glyph_overloaded", () -> createGlyphPage());
 
 	// Glyph Scrolls
 	public static final RegistryObject<GlyphScrollItem> GLYPH_SCROLL_1 = ITEMS.register("glyph_scroll_1", () -> new GlyphScrollItem(1, new Item.Properties().stacksTo(16)));

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_glyph_pages": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#create_soul_harvest:glyph_pages"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create_soul_harvest:recycle_glyph_page"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_glyph_pages"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create_soul_harvest:recycle_glyph_page"
+    ]
+  }
+}

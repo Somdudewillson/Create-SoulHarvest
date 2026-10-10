@@ -1,0 +1,14 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "create_soul_harvest:soul_shard"
+    }
+  ],
+  "results": [
+    {
+      "chance": 0.05,
+      "id": "create:experience_nugget"
+    }
+  ]
+}

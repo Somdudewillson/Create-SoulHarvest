@@ -1,0 +1,46 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create_soul_harvest:glyph_overloaded"
+    }
+  ],
+  "results": [
+    {
+      "chance": 0.12,
+      "id": "create_soul_harvest:glyph_1"
+    },
+    {
+      "chance": 0.12,
+      "id": "create_soul_harvest:glyph_2"
+    },
+    {
+      "chance": 0.12,
+      "id": "create_soul_harvest:glyph_3"
+    },
+    {
+      "chance": 0.12,
+      "id": "create_soul_harvest:glyph_4"
+    },
+    {
+      "chance": 0.12,
+      "id": "create_soul_harvest:glyph_5"
+    },
+    {
+      "chance": 0.12,
+      "id": "create_soul_harvest:glyph_6"
+    },
+    {
+      "chance": 0.12,
+      "id": "create_soul_harvest:glyph_7"
+    },
+    {
+      "chance": 0.12,
+      "id": "create_soul_harvest:glyph_8"
+    },
+    {
+      "chance": 0.02,
+      "id": "create:experience_nugget"
+    }
+  ]
+}

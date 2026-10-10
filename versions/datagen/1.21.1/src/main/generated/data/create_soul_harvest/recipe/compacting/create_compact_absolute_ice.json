@@ -2,7 +2,7 @@
   "type": "create:compacting",
   "ingredients": [
     {
-      "item": "create_soul_harvest:polished_inlaid_lapis"
+      "item": "create_soul_harvest:enchanted_inlaid_lapis"
     },
     {
       "item": "minecraft:blue_ice"

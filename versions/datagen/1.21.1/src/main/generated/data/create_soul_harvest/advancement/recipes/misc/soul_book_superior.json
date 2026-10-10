@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_glyph_1": {
+    "has_glyph_pages": {
       "conditions": {
         "items": [
           {
-            "items": "create_soul_harvest:glyph_1"
+            "items": "#create_soul_harvest:glyph_pages"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_glyph_1"
+      "has_glyph_pages"
     ]
   ],
   "rewards": {

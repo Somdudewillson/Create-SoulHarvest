@@ -53,6 +53,7 @@ public class NeoforgeDataGeneratorHandler {
 		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_6).build());
 		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_7).build());
 		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_8).build());
+		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_OVERLOADED).build());
 
 		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_SCROLL_1).build());
 		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_SCROLL_2).build());

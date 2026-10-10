@@ -1,0 +1,18 @@
+{
+  "type": "create_soul_harvest:soul_infusion",
+  "ingredients": [
+    {
+      "item": "create_soul_harvest:polished_inlaid_lapis"
+    }
+  ],
+  "results": [
+    {
+      "chance": 0.25,
+      "id": "create_soul_harvest:enchanted_inlaid_lapis"
+    },
+    {
+      "chance": 0.75,
+      "id": "create_soul_harvest:polished_inlaid_lapis"
+    }
+  ]
+}

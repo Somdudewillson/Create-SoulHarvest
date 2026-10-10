@@ -1,0 +1,28 @@
+{
+  "type": "create:mechanical_crafting",
+  "accept_mirrored": false,
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "create:brass_ingot"
+    },
+    "G": {
+      "item": "minecraft:gold_block"
+    },
+    "I": {
+      "item": "create_soul_harvest:enchanted_inlaid_lapis"
+    }
+  },
+  "pattern": [
+    " BBB ",
+    "BGGGB",
+    "BGIGB",
+    "BGGGB",
+    " BBB "
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_soul_harvest:midas_core"
+  },
+  "show_notification": false
+}

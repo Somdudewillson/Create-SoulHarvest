@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "G": {
-      "item": "minecraft:gold_nugget"
+      "item": "create_soul_harvest:magic_gold"
     },
     "P": {
       "item": "create_soul_harvest:glyph_7"
