@@ -1,6 +1,9 @@
 package somdudewillson.create_soul_harvest.platform.neoforge.datagen;
 
+import net.minecraft.advancements.Advancement;
+
 //? neoforge {
+import net.minecraft.advancements.AdvancementHolder;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -15,11 +18,17 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.item.GlyphScrollItem;
 import somdudewillson.create_soul_harvest.content.recipe.SoulInfusionRecipe;
+import somdudewillson.create_soul_harvest.content.recipe.UniformSequencedAssemblyRecipe;
+import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 import somdudewillson.create_soul_harvest.registry.ModItems;
 import somdudewillson.create_soul_harvest.registry.ModTags;
@@ -360,7 +369,7 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.addOutput(ModItems.GLYPH_6.get(), 0.125f)
 				.addOutput(ModItems.GLYPH_7.get(), 0.125f)
 				.addOutput(ModItems.GLYPH_8.get(), 0.125f)
-				.build(recipeOutput);
+				.build(withUniformSerializer(recipeOutput, "create_soul_harvest.jei.glyph_page_random_output"));
 
 		// Sequenced Assembly: Molten Lapis Core
 		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_sequenced_molten_lapis_core"))
@@ -411,6 +420,28 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.output(0.95f, ModItems.GLYPH_OVERLOADED.get())
 				.output(0.025f, com.simibubi.create.AllItems.EXP_NUGGET)
 				.build(recipeOutput);
+	}
+
+	private RecipeOutput withUniformSerializer(final RecipeOutput output) {
+		return withUniformSerializer(output, null);
+	}
+
+	private RecipeOutput withUniformSerializer(final RecipeOutput output, @Nullable final String tooltipKey) {
+		return new RecipeOutput() { 
+			@Override
+			public void accept(ResourceLocation id, Recipe<?> recipe, @Nullable AdvancementHolder advancement, ICondition... conditions) {
+				if (recipe instanceof SequencedAssemblyRecipe saRecipe) {
+					output.accept(id, new UniformSequencedAssemblyRecipe(saRecipe, tooltipKey), advancement, conditions);
+				} else {
+					output.accept(id, recipe, advancement, conditions);
+				}
+			}
+
+            @Override
+            public Advancement.Builder advancement() {
+                return output.advancement();
+            }
+		};
 	}
 }
 //?}

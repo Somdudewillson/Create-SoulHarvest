@@ -12,6 +12,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.recipe.SoulInfusionRecipe;
+import somdudewillson.create_soul_harvest.content.recipe.UniformSequencedAssemblyRecipeSerializer;
 
 //? >= 1.21 {
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
@@ -40,6 +41,9 @@ public enum ModRecipeTypes implements IRecipeTypeInfo {
 		//?} else {
 		/*() -> new ProcessingRecipeSerializer<>(SoulInfusionRecipe::new)
 		*///?}
+	),
+	UNIFORM_SEQUENCED_ASSEMBLY(
+		() -> new UniformSequencedAssemblyRecipeSerializer()
 	);
 
 	private final ResourceLocation id;

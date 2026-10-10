@@ -129,5 +129,9 @@
   "tag.create_soul_harvest.requires_low_kills": "Requires Low Kills",
   "tag.create_soul_harvest.requires_medium_kills": "Requires Medium Kills",
   "tag.create_soul_harvest.requires_high_kills": "Requires High Kills",
-  "tag.create_soul_harvest.soul_can_be_captured": "Capturable Soul Mobs"
+  "tag.create_soul_harvest.soul_can_be_captured": "Capturable Soul Mobs",
+
+  "create_soul_harvest.jei.glyph_page_chance_per_page": "12.5% Chance (1 in 8)",
+  "create_soul_harvest.jei.glyph_page_random_output": "Randomly produces one of the 8 Glyph Pages",
+  "create_soul_harvest.jei.uniform_chance": "%s Chance (1 in %s)"
 }

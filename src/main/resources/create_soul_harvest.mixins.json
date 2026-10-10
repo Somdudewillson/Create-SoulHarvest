@@ -1,11 +1,14 @@
 {
   "package": "somdudewillson.create_soul_harvest.mixin",
   "required": true,
+  "plugin": "somdudewillson.create_soul_harvest.mixin.SoulHarvestMixinPlugin",
   "minVersion": "0.8",
   "compatibilityLevel": "${java}",
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [],
-  "client": []
+  "client": [
+    "client.SequencedAssemblyCategoryMixin"
+  ]
 }

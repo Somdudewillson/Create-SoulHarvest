@@ -1,5 +1,5 @@
 {
-  "type": "create:sequenced_assembly",
+  "type": "create_soul_harvest:uniform_sequenced_assembly",
   "ingredient": {
     "item": "minecraft:paper"
   },
@@ -69,6 +69,7 @@
       ]
     }
   ],
+  "tooltip": "create_soul_harvest.jei.glyph_page_random_output",
   "transitional_item": {
     "id": "minecraft:paper"
   }
