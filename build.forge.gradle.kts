@@ -70,6 +70,7 @@ repositories {
 	maven("https://maven.createmod.net") { name = "Create" }
 	maven("https://maven.ithundxr.dev/mirror") { name = "Registrate" }
 	maven("https://raw.githubusercontent.com/Fuzss/modresources/main/maven/") { name = "Fuzs" }
+	maven("https://maven.blamejared.com") { name = "BlameJared" }
 }
 
 dependencies {
@@ -85,6 +86,10 @@ dependencies {
 		"include" to listOf("redsparklib-*-SNAPSHOT.jar"),
 		"exclude" to listOf("*-sources.jar", "*-javadoc.jar")
 	)))
+
+	compileOnly("mezz.jei:jei-${prop("deps.minecraft")}-common-api:${prop("deps.jei")}")
+	compileOnly("mezz.jei:jei-${prop("deps.minecraft")}-forge-api:${prop("deps.jei")}")
+	runtimeOnly("mezz.jei:jei-${prop("deps.minecraft")}-forge:${prop("deps.jei")}")
 }
 
 sourceSets {

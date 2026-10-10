@@ -77,6 +77,7 @@ repositories {
 	strictMaven("https://api.modrinth.com/maven", "maven.modrinth") { name = "Modrinth" }
 	maven("https://maven.createmod.net") { name = "Create" }
 	maven("https://maven.ithundxr.dev/snapshots") { name = "Registrate" }
+	maven("https://maven.blamejared.com") { name = "BlameJared" }
 }
 
 dependencies {
@@ -90,6 +91,10 @@ dependencies {
 		"include" to listOf("redsparklib-*-SNAPSHOT.jar"),
 		"exclude" to listOf("*-sources.jar", "*-javadoc.jar")
 	)))
+
+	compileOnly("mezz.jei:jei-${prop("deps.minecraft")}-common-api:${prop("deps.jei")}")
+	compileOnly("mezz.jei:jei-${prop("deps.minecraft")}-neoforge-api:${prop("deps.jei")}")
+	runtimeOnly("mezz.jei:jei-${prop("deps.minecraft")}-neoforge:${prop("deps.jei")}")
 }
 
 tasks.named("createMinecraftArtifacts") {
