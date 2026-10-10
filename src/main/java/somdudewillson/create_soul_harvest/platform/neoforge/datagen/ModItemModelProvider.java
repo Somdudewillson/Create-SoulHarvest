@@ -29,7 +29,6 @@ public class ModItemModelProvider extends ItemModelProvider {
 
 		// Block items whose block models are custom-generated in ModBlockStateProvider
 		withExistingParent("carved_bone_block", modLoc("block/carved_bone_block"));
-		withExistingParent("anima_moss", modLoc("block/anima_moss"));
 		withExistingParent("magic_glass", modLoc("block/magic_glass"));
 	}
 }

@@ -20,6 +20,7 @@ import org.joml.Vector3f;
 
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
+import somdudewillson.create_soul_harvest.content.block.SoulBudBlock;
 import somdudewillson.create_soul_harvest.registry.ModParticleTypes;
 import somdudewillson.create_soul_harvest.registry.ModRecipeTypes;
 import somdudewillson.create_soul_harvest.registry.ModTags;
@@ -40,7 +41,8 @@ public class SoulInfusionType implements FanProcessingType {
 	@Override
 	public boolean isValidAt(Level level, BlockPos pos) {
 		BlockState state = level.getBlockState(pos);
-		return state.is(ModTags.Blocks.FAN_PROCESSING_CATALYSTS_SOUL_INFUSION);
+		return state.is(ModTags.Blocks.FAN_PROCESSING_CATALYSTS_SOUL_INFUSION)
+				&& (!state.hasProperty(SoulBudBlock.ACTIVE) || state.getValue(SoulBudBlock.ACTIVE));
 	}
 
 	@Override

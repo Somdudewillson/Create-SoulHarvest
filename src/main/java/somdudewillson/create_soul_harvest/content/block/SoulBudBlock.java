@@ -30,6 +30,7 @@ public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 
 	public static final DirectionProperty FACING = BlockStateProperties.FACING;
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+	public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
 	protected final VoxelShape shapeUp;
 	protected final VoxelShape shapeDown;
@@ -45,7 +46,8 @@ public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 		this.nextStageBlock = nextStageBlock;
 		this.registerDefaultState(this.stateDefinition.any()
 				.setValue(FACING, Direction.UP)
-				.setValue(WATERLOGGED, Boolean.FALSE));
+				.setValue(WATERLOGGED, Boolean.FALSE)
+				.setValue(ACTIVE, Boolean.FALSE));
 
 		this.shapeUp = Block.box(offset, 0.0, offset, 16 - offset, size, 16 - offset);
 		this.shapeDown = Block.box(offset, 16 - size, offset, 16 - offset, 16.0, 16 - offset);
@@ -80,18 +82,25 @@ public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 		if (state.getValue(WATERLOGGED)) {
 			level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
 		}
-		return facing == state.getValue(FACING).getOpposite() && !state.canSurvive(level, currentPos)
-				? Blocks.AIR.defaultBlockState()
-				: super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+		if (facing == state.getValue(FACING).getOpposite()) {
+			return !state.canSurvive(level, currentPos)
+					? Blocks.AIR.defaultBlockState()
+					: state.setValue(ACTIVE, facingState.is(ModTags.Blocks.SOUL_BUD_GROWTH_BLOCKS));
+		}
+		return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		LevelAccessor level = context.getLevel();
 		BlockPos pos = context.getClickedPos();
+		Direction direction = context.getClickedFace();
+		BlockPos supportingPos = pos.relative(direction.getOpposite());
+		boolean active = level.getBlockState(supportingPos).is(ModTags.Blocks.SOUL_BUD_GROWTH_BLOCKS);
 		return this.defaultBlockState()
 				.setValue(WATERLOGGED, level.getFluidState(pos).getType() == Fluids.WATER)
-				.setValue(FACING, context.getClickedFace());
+				.setValue(FACING, direction)
+				.setValue(ACTIVE, active);
 	}
 
 	@Override
@@ -101,11 +110,12 @@ public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 
 	@Override
 	public boolean isRandomlyTicking(BlockState state) {
-		return true;
+		return state.getValue(ACTIVE);
 	}
 
 	@Override
 	public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+		if (!state.getValue(ACTIVE)) return;
 		if (nextStageBlock == null) return;
 		Direction attachedFace = state.getValue(FACING).getOpposite();
 		BlockPos attachedPos = pos.relative(attachedFace);
@@ -116,7 +126,8 @@ public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 			if (nextBlock != null) {
 				BlockState nextState = nextBlock.defaultBlockState()
 						.setValue(FACING, state.getValue(FACING))
-						.setValue(WATERLOGGED, state.getValue(WATERLOGGED));
+						.setValue(WATERLOGGED, state.getValue(WATERLOGGED))
+						.setValue(ACTIVE, true);
 				level.setBlockAndUpdate(pos, nextState);
 			}
 		}
@@ -134,6 +145,6 @@ public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(FACING, WATERLOGGED);
+		builder.add(FACING, WATERLOGGED, ACTIVE);
 	}
 }

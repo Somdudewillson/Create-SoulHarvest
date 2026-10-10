@@ -57,7 +57,8 @@ public class SoulClusterBlock extends SoulBudBlock {
 				if (supportingState.is(ModTags.Blocks.SOUL_BUD_GROWTH_BLOCKS)) {
 					BlockState replantState = ModBlocks.SOUL_BUD_SMALL.get().defaultBlockState()
 							.setValue(FACING, state.getValue(FACING))
-							.setValue(WATERLOGGED, state.getValue(WATERLOGGED));
+							.setValue(WATERLOGGED, state.getValue(WATERLOGGED))
+							.setValue(ACTIVE, true);
 					level.setBlockAndUpdate(pos, replantState);
 				}
 			}

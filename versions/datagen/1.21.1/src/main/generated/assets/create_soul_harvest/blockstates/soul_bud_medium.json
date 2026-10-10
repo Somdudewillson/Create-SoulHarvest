@@ -1,53 +1,105 @@
 {
   "variants": {
-    "facing=down,waterlogged=false": {
+    "active=false,facing=down,waterlogged=false": {
+      "model": "create_soul_harvest:block/soul_bud_medium_dark",
+      "x": 180
+    },
+    "active=false,facing=down,waterlogged=true": {
+      "model": "create_soul_harvest:block/soul_bud_medium_dark",
+      "x": 180
+    },
+    "active=false,facing=east,waterlogged=false": {
+      "model": "create_soul_harvest:block/soul_bud_medium_dark",
+      "x": 90,
+      "y": 90
+    },
+    "active=false,facing=east,waterlogged=true": {
+      "model": "create_soul_harvest:block/soul_bud_medium_dark",
+      "x": 90,
+      "y": 90
+    },
+    "active=false,facing=north,waterlogged=false": {
+      "model": "create_soul_harvest:block/soul_bud_medium_dark",
+      "x": 90
+    },
+    "active=false,facing=north,waterlogged=true": {
+      "model": "create_soul_harvest:block/soul_bud_medium_dark",
+      "x": 90
+    },
+    "active=false,facing=south,waterlogged=false": {
+      "model": "create_soul_harvest:block/soul_bud_medium_dark",
+      "x": 90,
+      "y": 180
+    },
+    "active=false,facing=south,waterlogged=true": {
+      "model": "create_soul_harvest:block/soul_bud_medium_dark",
+      "x": 90,
+      "y": 180
+    },
+    "active=false,facing=up,waterlogged=false": {
+      "model": "create_soul_harvest:block/soul_bud_medium_dark"
+    },
+    "active=false,facing=up,waterlogged=true": {
+      "model": "create_soul_harvest:block/soul_bud_medium_dark"
+    },
+    "active=false,facing=west,waterlogged=false": {
+      "model": "create_soul_harvest:block/soul_bud_medium_dark",
+      "x": 90,
+      "y": 270
+    },
+    "active=false,facing=west,waterlogged=true": {
+      "model": "create_soul_harvest:block/soul_bud_medium_dark",
+      "x": 90,
+      "y": 270
+    },
+    "active=true,facing=down,waterlogged=false": {
       "model": "create_soul_harvest:block/soul_bud_medium",
       "x": 180
     },
-    "facing=down,waterlogged=true": {
+    "active=true,facing=down,waterlogged=true": {
       "model": "create_soul_harvest:block/soul_bud_medium",
       "x": 180
     },
-    "facing=east,waterlogged=false": {
+    "active=true,facing=east,waterlogged=false": {
       "model": "create_soul_harvest:block/soul_bud_medium",
       "x": 90,
       "y": 90
     },
-    "facing=east,waterlogged=true": {
+    "active=true,facing=east,waterlogged=true": {
       "model": "create_soul_harvest:block/soul_bud_medium",
       "x": 90,
       "y": 90
     },
-    "facing=north,waterlogged=false": {
+    "active=true,facing=north,waterlogged=false": {
       "model": "create_soul_harvest:block/soul_bud_medium",
       "x": 90
     },
-    "facing=north,waterlogged=true": {
+    "active=true,facing=north,waterlogged=true": {
       "model": "create_soul_harvest:block/soul_bud_medium",
       "x": 90
     },
-    "facing=south,waterlogged=false": {
+    "active=true,facing=south,waterlogged=false": {
       "model": "create_soul_harvest:block/soul_bud_medium",
       "x": 90,
       "y": 180
     },
-    "facing=south,waterlogged=true": {
+    "active=true,facing=south,waterlogged=true": {
       "model": "create_soul_harvest:block/soul_bud_medium",
       "x": 90,
       "y": 180
     },
-    "facing=up,waterlogged=false": {
+    "active=true,facing=up,waterlogged=false": {
       "model": "create_soul_harvest:block/soul_bud_medium"
     },
-    "facing=up,waterlogged=true": {
+    "active=true,facing=up,waterlogged=true": {
       "model": "create_soul_harvest:block/soul_bud_medium"
     },
-    "facing=west,waterlogged=false": {
+    "active=true,facing=west,waterlogged=false": {
       "model": "create_soul_harvest:block/soul_bud_medium",
       "x": 90,
       "y": 270
     },
-    "facing=west,waterlogged=true": {
+    "active=true,facing=west,waterlogged=true": {
       "model": "create_soul_harvest:block/soul_bud_medium",
       "x": 90,
       "y": 270

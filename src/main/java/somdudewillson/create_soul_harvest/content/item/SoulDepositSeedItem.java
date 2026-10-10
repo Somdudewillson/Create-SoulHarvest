@@ -37,7 +37,8 @@ public class SoulDepositSeedItem extends Item {
 			if (level.getBlockState(budPos).canBeReplaced()) {
 				if (!level.isClientSide()) {
 					BlockState newBud = ModBlocks.SOUL_BUD_SMALL.get().defaultBlockState()
-							.setValue(SoulBudBlock.FACING, clickedFace);
+							.setValue(SoulBudBlock.FACING, clickedFace)
+							.setValue(SoulBudBlock.ACTIVE, true);
 					level.setBlockAndUpdate(budPos, newBud);
 				}
 

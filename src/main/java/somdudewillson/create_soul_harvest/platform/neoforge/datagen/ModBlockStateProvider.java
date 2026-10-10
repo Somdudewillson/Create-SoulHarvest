@@ -11,6 +11,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.block.AnimaGlassBlock;
 import somdudewillson.create_soul_harvest.content.block.BiocideGasBlock;
+import somdudewillson.create_soul_harvest.content.block.SoulBudBlock;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 
 public class ModBlockStateProvider extends BlockStateProvider {
@@ -28,15 +29,26 @@ public class ModBlockStateProvider extends BlockStateProvider {
 				.texture("top", mcLoc("block/bone_block_top"));
 		horizontalBlock(ModBlocks.CARVED_BONE_BLOCK.get(), carvedBoneModel);
 
-		// Soul buds and cluster (cross model + directional facing)
+		// Soul buds and cluster (cross model + directional facing, active/dark)
+		ModelFile soulBudSmall = models().cross("soul_bud_small", modLoc("block/soul_bud_small")).renderType("cutout");
+		ModelFile soulBudSmallDark = models().cross("soul_bud_small_dark", modLoc("block/soul_bud_small_dark")).renderType("cutout");
 		directionalBlock(ModBlocks.SOUL_BUD_SMALL.get(),
-				models().cross("soul_bud_small", modLoc("block/soul_bud_small")).renderType("cutout"));
+				state -> state.getValue(SoulBudBlock.ACTIVE) ? soulBudSmall : soulBudSmallDark);
+
+		ModelFile soulBudMedium = models().cross("soul_bud_medium", modLoc("block/soul_bud_medium")).renderType("cutout");
+		ModelFile soulBudMediumDark = models().cross("soul_bud_medium_dark", modLoc("block/soul_bud_medium_dark")).renderType("cutout");
 		directionalBlock(ModBlocks.SOUL_BUD_MEDIUM.get(),
-				models().cross("soul_bud_medium", modLoc("block/soul_bud_medium")).renderType("cutout"));
+				state -> state.getValue(SoulBudBlock.ACTIVE) ? soulBudMedium : soulBudMediumDark);
+
+		ModelFile soulBudLarge = models().cross("soul_bud_large", modLoc("block/soul_bud_large")).renderType("cutout");
+		ModelFile soulBudLargeDark = models().cross("soul_bud_large_dark", modLoc("block/soul_bud_large_dark")).renderType("cutout");
 		directionalBlock(ModBlocks.SOUL_BUD_LARGE.get(),
-				models().cross("soul_bud_large", modLoc("block/soul_bud_large")).renderType("cutout"));
+				state -> state.getValue(SoulBudBlock.ACTIVE) ? soulBudLarge : soulBudLargeDark);
+
+		ModelFile soulCluster = models().cross("soul_cluster", modLoc("block/soul_cluster")).renderType("cutout");
+		ModelFile soulClusterDark = models().cross("soul_cluster_dark", modLoc("block/soul_cluster_dark")).renderType("cutout");
 		directionalBlock(ModBlocks.SOUL_CLUSTER.get(),
-				models().cross("soul_cluster", modLoc("block/soul_cluster")).renderType("cutout"));
+				state -> state.getValue(SoulBudBlock.ACTIVE) ? soulCluster : soulClusterDark);
 
 		// Magic glass (cube_all models + age 0..3)
 		VariantBlockStateBuilder magicGlass = getVariantBuilder(ModBlocks.MAGIC_GLASS.get());
