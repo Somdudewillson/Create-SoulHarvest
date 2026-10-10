@@ -15,15 +15,20 @@ public class InfuseSoulFireParticle extends RisingParticle {
 	protected InfuseSoulFireParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, SpriteSet sprites) {
 		super(level, x, y, z, xSpeed, ySpeed, zSpeed);
 		this.sprites = sprites;
-		this.scale(1.2f);
+		this.scale(1.0f);
 		this.setSpriteFromAge(sprites);
 	}
 
 	@Override
 	public ParticleRenderType getRenderType() {
-		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+		return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
 	}
 
+    @Override
+    public float getQuadSize(float p_106824_) {
+        float f = ((float)this.age + p_106824_) / (float)this.lifetime;
+        return this.quadSize * (1.0F - f * f * 0.5F);
+    }
 	@Override
 	public void tick() {
 		super.tick();

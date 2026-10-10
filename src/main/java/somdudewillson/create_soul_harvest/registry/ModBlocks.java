@@ -22,19 +22,19 @@ public class ModBlocks {
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(Registries.BLOCK, SoulHarvestMod.MOD_ID);
 
 	public static final DeferredHolder<Block, SoulBudBlock> SOUL_BUD_SMALL = BLOCKS.register("soul_bud_small",
-			() -> new SoulBudBlock(4, 3, ModBlocks.SOUL_BUD_MEDIUM::get,
+			() -> new SoulBudBlock(3, 4, ModBlocks.SOUL_BUD_MEDIUM::get,
 					BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.SMALL_AMETHYST_BUD).strength(1.5f).lightLevel(s -> 1).noOcclusion()));
 
 	public static final DeferredHolder<Block, SoulBudBlock> SOUL_BUD_MEDIUM = BLOCKS.register("soul_bud_medium",
-			() -> new SoulBudBlock(8, 2, ModBlocks.SOUL_BUD_LARGE::get,
+			() -> new SoulBudBlock(4, 3, ModBlocks.SOUL_BUD_LARGE::get,
 					BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.MEDIUM_AMETHYST_BUD).strength(1.5f).lightLevel(s -> 2).noOcclusion()));
 
 	public static final DeferredHolder<Block, SoulBudBlock> SOUL_BUD_LARGE = BLOCKS.register("soul_bud_large",
-			() -> new SoulBudBlock(12, 1, ModBlocks.SOUL_CLUSTER::get,
+			() -> new SoulBudBlock(5, 3, ModBlocks.SOUL_CLUSTER::get,
 					BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.LARGE_AMETHYST_BUD).strength(1.5f).lightLevel(s -> 4).noOcclusion()));
 
 	public static final DeferredHolder<Block, SoulClusterBlock> SOUL_CLUSTER = BLOCKS.register("soul_cluster",
-			() -> new SoulClusterBlock(16, 0,
+			() -> new SoulClusterBlock(7, 3,
 					BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.AMETHYST_CLUSTER).strength(1.5f).lightLevel(s -> 5).noOcclusion()));
 
 	public static final DeferredHolder<Block, Block> SOUL_CRYSTAL_BLOCK = BLOCKS.register("soul_crystal_block",
@@ -64,19 +64,19 @@ public class ModBlocks {
 	/*public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, SoulHarvestMod.MOD_ID);
 
 	public static final RegistryObject<SoulBudBlock> SOUL_BUD_SMALL = BLOCKS.register("soul_bud_small",
-			() -> new SoulBudBlock(4, 3, ModBlocks.SOUL_BUD_MEDIUM::get,
+			() -> new SoulBudBlock(3, 4, ModBlocks.SOUL_BUD_MEDIUM::get,
 					BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.SMALL_AMETHYST_BUD).strength(1.5f).lightLevel(s -> 1).noOcclusion()));
 
 	public static final RegistryObject<SoulBudBlock> SOUL_BUD_MEDIUM = BLOCKS.register("soul_bud_medium",
-			() -> new SoulBudBlock(8, 2, ModBlocks.SOUL_BUD_LARGE::get,
+			() -> new SoulBudBlock(4, 3, ModBlocks.SOUL_BUD_LARGE::get,
 					BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.MEDIUM_AMETHYST_BUD).strength(1.5f).lightLevel(s -> 2).noOcclusion()));
 
 	public static final RegistryObject<SoulBudBlock> SOUL_BUD_LARGE = BLOCKS.register("soul_bud_large",
-			() -> new SoulBudBlock(12, 1, ModBlocks.SOUL_CLUSTER::get,
+			() -> new SoulBudBlock(5, 3, ModBlocks.SOUL_CLUSTER::get,
 					BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.LARGE_AMETHYST_BUD).strength(1.5f).lightLevel(s -> 4).noOcclusion()));
 
 	public static final RegistryObject<SoulClusterBlock> SOUL_CLUSTER = BLOCKS.register("soul_cluster",
-			() -> new SoulClusterBlock(16, 0,
+			() -> new SoulClusterBlock(7, 3,
 					BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.AMETHYST_CLUSTER).strength(1.5f).lightLevel(s -> 5).noOcclusion()));
 
 	public static final RegistryObject<Block> SOUL_CRYSTAL_BLOCK = BLOCKS.register("soul_crystal_block",
