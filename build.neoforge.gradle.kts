@@ -74,6 +74,7 @@ neoForge {
 
 repositories {
 	mavenCentral()
+	mavenLocal()
 	strictMaven("https://api.modrinth.com/maven", "maven.modrinth") { name = "Modrinth" }
 	maven("https://maven.createmod.net") { name = "Create" }
 	maven("https://maven.ithundxr.dev/snapshots") { name = "Registrate" }
@@ -86,11 +87,8 @@ dependencies {
 	compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-${prop("deps.minecraft")}:${prop("deps.flywheel")}")
 	runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${prop("deps.minecraft")}:${prop("deps.flywheel")}")
 	implementation("com.tterrag.registrate:Registrate:${prop("deps.registrate")}")
-	implementation(fileTree(mapOf(
-		"dir" to "${rootDir}/../../RedSparkLib/RedSparkLib/versions/${sc.current.project}/build/libs",
-		"include" to listOf("redsparklib-*-SNAPSHOT.jar"),
-		"exclude" to listOf("*-sources.jar", "*-javadoc.jar")
-	)))
+	
+	implementation("com.github.somdudewillson:redsparklib:${prop("deps.redsparklib")}-neoforge+${prop("deps.minecraft")}-SNAPSHOT")
 
 	compileOnly("mezz.jei:jei-${prop("deps.minecraft")}-common-api:${prop("deps.jei")}")
 	compileOnly("mezz.jei:jei-${prop("deps.minecraft")}-neoforge-api:${prop("deps.jei")}")

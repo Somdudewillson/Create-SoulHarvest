@@ -66,6 +66,7 @@ mixin {
 
 repositories {
 	mavenCentral()
+	mavenLocal()
 	strictMaven("https://api.modrinth.com/maven", "maven.modrinth") { name = "Modrinth" }
 	maven("https://maven.createmod.net") { name = "Create" }
 	maven("https://maven.ithundxr.dev/mirror") { name = "Registrate" }
@@ -75,21 +76,20 @@ repositories {
 
 dependencies {
 	annotationProcessor("org.spongepowered:mixin:${libs.versions.mixin.get()}:processor")
+	
+    modImplementation("com.simibubi.create:create-${property("deps.minecraft")}:${property("deps.create")}:slim") { isTransitive = false }
+    modImplementation("net.createmod.ponder:Ponder-Forge-${property("deps.minecraft")}:${property("deps.ponder")}")
+    modCompileOnly("dev.engine-room.flywheel:flywheel-forge-api-${property("deps.minecraft")}:${property("deps.flywheel")}")
+    modRuntimeOnly("dev.engine-room.flywheel:flywheel-forge-${property("deps.minecraft")}:${property("deps.flywheel")}")
+    modImplementation("com.tterrag.registrate:Registrate:${property("deps.registrate")}")
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1")!!)
+    implementation("io.github.llamalad7:mixinextras-forge:0.4.1")
+	
+	modImplementation("com.github.somdudewillson:redsparklib:${prop("deps.redsparklib")}-forge+${prop("deps.minecraft")}-SNAPSHOT")
 
-	implementation("com.simibubi.create:create-${prop("deps.minecraft")}:${prop("deps.create")}:slim") { isTransitive = false }
-	implementation("net.createmod.ponder:Ponder-Forge-${prop("deps.minecraft")}:${prop("deps.ponder")}")
-	compileOnly("dev.engine-room.flywheel:flywheel-forge-api-${prop("deps.minecraft")}:${prop("deps.flywheel")}")
-	runtimeOnly("dev.engine-room.flywheel:flywheel-forge-${prop("deps.minecraft")}:${prop("deps.flywheel")}")
-	implementation("com.tterrag.registrate:Registrate:${prop("deps.registrate")}")
-	implementation(fileTree(mapOf(
-		"dir" to "${rootDir}/../../RedSparkLib/RedSparkLib/versions/${sc.current.project}/build/libs",
-		"include" to listOf("redsparklib-*-SNAPSHOT.jar"),
-		"exclude" to listOf("*-sources.jar", "*-javadoc.jar")
-	)))
-
-	compileOnly("mezz.jei:jei-${prop("deps.minecraft")}-common-api:${prop("deps.jei")}")
-	compileOnly("mezz.jei:jei-${prop("deps.minecraft")}-forge-api:${prop("deps.jei")}")
-	runtimeOnly("mezz.jei:jei-${prop("deps.minecraft")}-forge:${prop("deps.jei")}")
+	modCompileOnly("mezz.jei:jei-${prop("deps.minecraft")}-common-api:${prop("deps.jei")}")
+	modCompileOnly("mezz.jei:jei-${prop("deps.minecraft")}-forge-api:${prop("deps.jei")}")
+	modRuntimeOnly("mezz.jei:jei-${prop("deps.minecraft")}-forge:${prop("deps.jei")}")
 }
 
 sourceSets {
