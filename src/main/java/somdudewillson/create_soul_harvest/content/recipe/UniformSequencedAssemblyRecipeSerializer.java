@@ -57,8 +57,8 @@ public class UniformSequencedAssemblyRecipeSerializer extends SequencedAssemblyR
 	}
 }
 //?} else {
-/*
-import com.google.gson.JsonObject;
+
+/*import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -66,27 +66,38 @@ import net.minecraft.util.GsonHelper;
 public class UniformSequencedAssemblyRecipeSerializer extends SequencedAssemblyRecipeSerializer {
 
 	@Override
-	public SequencedAssemblyRecipe fromJson(ResourceLocation id, JsonObject json) {
-		SequencedAssemblyRecipe base = AllRecipeTypes.SEQUENCED_ASSEMBLY.getSerializer().fromJson(id, json);
+	protected SequencedAssemblyRecipe readFromJson(ResourceLocation id, JsonObject json) {
+		SequencedAssemblyRecipeSerializer baseSerializer = AllRecipeTypes.SEQUENCED_ASSEMBLY.getSerializer();
+		SequencedAssemblyRecipe base = baseSerializer.fromJson(id, json);
 		String tooltip = GsonHelper.getAsString(json, "tooltip", null);
 		return new UniformSequencedAssemblyRecipe(base, tooltip);
 	}
 
 	@Override
-	public SequencedAssemblyRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buffer) {
-		SequencedAssemblyRecipe base = AllRecipeTypes.SEQUENCED_ASSEMBLY.getSerializer().fromNetwork(id, buffer);
+	protected SequencedAssemblyRecipe readFromBuffer(ResourceLocation id, FriendlyByteBuf buffer) {
+		SequencedAssemblyRecipeSerializer baseSerializer = AllRecipeTypes.SEQUENCED_ASSEMBLY.getSerializer();
+		SequencedAssemblyRecipe base = baseSerializer.fromNetwork(id, buffer);
 		String tooltip = buffer.readBoolean() ? buffer.readUtf() : null;
 		return new UniformSequencedAssemblyRecipe(base, tooltip);
 	}
 
 	@Override
-	public void toNetwork(FriendlyByteBuf buffer, SequencedAssemblyRecipe recipe) {
-		AllRecipeTypes.SEQUENCED_ASSEMBLY.getSerializer().toNetwork(buffer, recipe);
+	protected void writeToBuffer(FriendlyByteBuf buffer, SequencedAssemblyRecipe recipe) {
+		SequencedAssemblyRecipeSerializer baseSerializer = AllRecipeTypes.SEQUENCED_ASSEMBLY.getSerializer();
+		baseSerializer.toNetwork(buffer, recipe);
 		if (recipe instanceof UniformSequencedAssemblyRecipe uniformRecipe && uniformRecipe.getTooltipKey() != null) {
 			buffer.writeBoolean(true);
 			buffer.writeUtf(uniformRecipe.getTooltipKey());
 		} else {
 			buffer.writeBoolean(false);
+		}
+	}
+
+	@Override
+	protected void writeToJson(JsonObject json, SequencedAssemblyRecipe recipe) {
+		super.writeToJson(json, recipe);
+		if (recipe instanceof UniformSequencedAssemblyRecipe uniformRecipe && uniformRecipe.getTooltipKey() != null) {
+			json.addProperty("tooltip", uniformRecipe.getTooltipKey());
 		}
 	}
 }

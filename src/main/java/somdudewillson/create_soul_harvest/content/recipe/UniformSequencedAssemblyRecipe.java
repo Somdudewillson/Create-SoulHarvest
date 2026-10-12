@@ -34,8 +34,8 @@ public class UniformSequencedAssemblyRecipe extends SequencedAssemblyRecipe {
 		this.tooltipKey = tooltipKey;
 	}
 //?} else {
-/*
-public class UniformSequencedAssemblyRecipe extends SequencedAssemblyRecipe {
+
+/*public class UniformSequencedAssemblyRecipe extends SequencedAssemblyRecipe {
 	private String tooltipKey;
 
 	public UniformSequencedAssemblyRecipe(net.minecraft.resources.ResourceLocation recipeId, SequencedAssemblyRecipeSerializer serializer) {
