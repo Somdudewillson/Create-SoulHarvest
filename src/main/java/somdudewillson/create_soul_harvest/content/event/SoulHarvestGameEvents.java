@@ -14,5 +14,6 @@ public class SoulHarvestGameEvents {
 		eventBus.register(PipeCollisionEvents.class);
 		eventBus.register(AnimaGlassEvents.class);
 		eventBus.register(SpellGameEvents.class);
+		eventBus.register(SoulHarvestDataEvents.class);
 	}
 }

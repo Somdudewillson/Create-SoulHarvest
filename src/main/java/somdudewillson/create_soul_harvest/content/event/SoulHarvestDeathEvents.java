@@ -17,84 +17,57 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 *///?}
 
 import somdudewillson.create_soul_harvest.content.item.SoulBookItem;
+import somdudewillson.create_soul_harvest.content.soul.SoulData;
+import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
 import somdudewillson.create_soul_harvest.util.AdvancementHelper;
-
-import static somdudewillson.create_soul_harvest.registry.ModTags.EntityTypes.*;
 
 public class SoulHarvestDeathEvents {
 
 	@SubscribeEvent
 	public static void onLivingDeath(LivingDeathEvent event) {
-		DamageSourceAttacker:
-		{
-			Entity attacker = event.getSource().getEntity();
-			if (!(attacker instanceof ServerPlayer player)) {
-				break DamageSourceAttacker;
+		Entity attacker = event.getSource().getEntity();
+		if (!(attacker instanceof ServerPlayer player)) {
+			return;
+		}
+
+		LivingEntity target = event.getEntity();
+		ItemStack offhand = player.getItemInHand(InteractionHand.OFF_HAND);
+		if (!(offhand.getItem() instanceof SoulBookItem soulBook)) {
+			return;
+		}
+
+		SoulData soulData = SoulDataManager.get(target.getType());
+		if (soulData == null || soulData.tier() > soulBook.getTier()) {
+			return;
+		}
+
+		String heldSoul = SoulBookItem.getHeldSoul(offhand);
+		int soulPortion = SoulBookItem.getSoulPortion(offhand);
+		if (soulPortion >= 100) {
+			return;
+		}
+
+		ResourceLocation entityKey = BuiltInRegistries.ENTITY_TYPE.getKey(target.getType());
+		String entityId = entityKey.toString();
+		if (!heldSoul.isEmpty() && !heldSoul.equals(entityId)) {
+			return;
+		}
+
+		int newPortion = Math.min(100, soulPortion + soulData.progressPerKill());
+		SoulBookItem.setSoulData(offhand, entityId, newPortion);
+		player.setItemInHand(InteractionHand.OFF_HAND, offhand);
+
+		if (newPortion >= 100) {
+			AdvancementHelper.grantAdvancement(player, "captured_soul");
+			if (soulData.tier() == 1) {
+				AdvancementHelper.grantAdvancement(player, "captured_t1_soul");
+			} else if (soulData.tier() == 2) {
+				AdvancementHelper.grantAdvancement(player, "captured_t2_soul");
+			} else if (soulData.tier() == 3) {
+				AdvancementHelper.grantAdvancement(player, "captured_t3_soul");
 			}
-
-			LivingEntity target = event.getEntity();
-			ItemStack offhand = player.getItemInHand(InteractionHand.OFF_HAND);
-			if (!(offhand.getItem() instanceof SoulBookItem soulBook)) {
-				break DamageSourceAttacker;
-			}
-
-			int bookTier = soulBook.getTier();
-			int targetTier = 0;
-			int addedPortion = 10;
-
-			if (target.getType().is(T1_MOB)) {
-				targetTier = 1;
-				addedPortion = 10;
-			} else if (target.getType().is(T2_MOB)) {
-				targetTier = 2;
-				addedPortion = 4;
-			} else if (target.getType().is(T3_MOB)) {
-				targetTier = 3;
-				addedPortion = 100;
-			} else {
-				break DamageSourceAttacker;
-			}
-
-			if (target.getType().is(REQUIRES_MEDIUM)) {
-				addedPortion = 10;
-			} else if (target.getType().is(REQUIRES_HIGH)) {
-				addedPortion = 4;
-			} else if (target.getType().is(REQUIRES_LOW)) {
-				addedPortion = 100;
-			}
-
-			if (targetTier > bookTier) {
-				break DamageSourceAttacker;
-			}
-
-			String heldSoul = SoulBookItem.getHeldSoul(offhand);
-			int soulPortion = SoulBookItem.getSoulPortion(offhand);
-			if (soulPortion >= 100) {
-				break DamageSourceAttacker;
-			}
-
-			ResourceLocation entityKey = BuiltInRegistries.ENTITY_TYPE.getKey(target.getType());
-			String entityId = entityKey.toString();
-			if (!heldSoul.isEmpty() && !heldSoul.equals(entityId)) {
-				break DamageSourceAttacker;
-			}
-
-			int newPortion = Math.min(100, soulPortion + addedPortion);
-			SoulBookItem.setSoulData(offhand, entityId, newPortion);
-			player.setItemInHand(InteractionHand.OFF_HAND, offhand);
-
-			if (newPortion >= 100) {
-				AdvancementHelper.grantAdvancement(player, "captured_soul");
-				if (target.getType().is(T1_MOB)) {
-					AdvancementHelper.grantAdvancement(player, "captured_t1_soul");
-				} else if (target.getType().is(T2_MOB)) {
-					AdvancementHelper.grantAdvancement(player, "captured_t2_soul");
-				} else if (target.getType().is(T3_MOB)) {
-					AdvancementHelper.grantAdvancement(player, "captured_t3_soul");
-				}
-				if ("artifacts:mimic".equals(entityId)) {
-					AdvancementHelper.grantAdvancement(player, "captured_mimic_soul");
-				}
+			if ("artifacts:mimic".equals(entityId)) {
+				AdvancementHelper.grantAdvancement(player, "captured_mimic_soul");
 			}
 		}
 	}
