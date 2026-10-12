@@ -2,6 +2,7 @@ import dev.kikugie.fletching_table.extension.FletchingTableExtension
 import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.provider.Property
@@ -92,6 +93,7 @@ abstract class ModPlatformPlugin @Inject constructor() : Plugin<Project> {
 		configureIdea()
 		configureProcessResources(ctx)
 		configureJava(ctx)
+		configureDependencies()
 		registerBuildAndCollectTask(ctx)
 
 		configureModPublishing(ctx)
@@ -99,6 +101,15 @@ abstract class ModPlatformPlugin @Inject constructor() : Plugin<Project> {
 		if (envTrue("PUB_MAVEN_ENABLE")) {
 			configureMavenPublishing(ctx)
 		}
+	}
+
+	private fun Project.configureDependencies() {
+		val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+		val lombok = libs.findLibrary("lombok").get()
+		dependencies.add("compileOnly", lombok)
+		dependencies.add("annotationProcessor", lombok)
+		dependencies.add("testCompileOnly", lombok)
+		dependencies.add("testAnnotationProcessor", lombok)
 	}
 
 	private fun Project.configureJava(ctx: Context) {
