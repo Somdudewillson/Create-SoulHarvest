@@ -287,6 +287,10 @@ public class SoulDataManager {
 		return get(type) != null;
 	}
 
+	public static Map<ResourceLocation, SoulData> getAllResolvedData() {
+		return Collections.unmodifiableMap(resolvedData);
+	}
+
 	public static void clear() {
 		resolvedData.clear();
 		pendingSamplingQueue.clear();

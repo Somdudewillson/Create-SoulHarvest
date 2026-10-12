@@ -59,6 +59,8 @@ public class SoulDataLoader extends SimplePreparableReloadListener<SoulDataLoade
 					boolean isPartial = false;
 					if (json.has("partial") && json.get("partial").getAsBoolean()) {
 						isPartial = true;
+					} else if (json.has("replace") && !json.get("replace").getAsBoolean()) {
+						isPartial = true;
 					}
 
 					List<SoulDropPool> pools = parsePools(json);

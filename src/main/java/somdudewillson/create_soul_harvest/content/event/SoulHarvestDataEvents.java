@@ -1,6 +1,7 @@
 package somdudewillson.create_soul_harvest.content.event;
 
 import net.minecraft.server.MinecraftServer;
+import somdudewillson.create_soul_harvest.compat.jei.CreateSoulHarvestJeiPlugin;
 import somdudewillson.create_soul_harvest.content.command.SoulHarvestCommands;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataLoader;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
@@ -37,12 +38,43 @@ public class SoulHarvestDataEvents {
 		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 		if (server != null) {
 			SoulDataManager.recalculate(server);
+			onSoulDataUpdated();
 		}
 	}
 
 	@SubscribeEvent
 	public static void onServerStarted(ServerStartedEvent event) {
 		SoulDataManager.recalculate(event.getServer());
+		onSoulDataUpdated();
+	}
+
+	private static void onSoulDataUpdated() {
+		// If running client-side (integrated server), refresh creative tab contents and JEI
+		try {
+			boolean isClient = false;
+			//? neoforge {
+			isClient = net.neoforged.fml.loading.FMLEnvironment.dist == net.neoforged.api.distmarker.Dist.CLIENT;
+			//?} forge {
+			/*isClient = net.minecraftforge.fml.loading.FMLEnvironment.dist == net.minecraftforge.api.distmarker.Dist.CLIENT;
+			*///?}
+			if (isClient) {
+				net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
+				if (mc != null) {
+					mc.execute(() -> {
+						if (mc.getConnection() != null && mc.level != null) {
+							net.minecraft.world.item.CreativeModeTabs.tryRebuildTabContents(
+									mc.getConnection().enabledFeatures(),
+									mc.options.operatorItemsTab().get(),
+									mc.level.registryAccess()
+							);
+						}
+						CreateSoulHarvestJeiPlugin.refreshSoulBooksInJei();
+					});
+				}
+			}
+		} catch (Throwable ignored) {
+			// Environment without client classes or early initialization
+		}
 	}
 
 	@SubscribeEvent

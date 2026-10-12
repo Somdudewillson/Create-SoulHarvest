@@ -74,6 +74,12 @@ public class SoulBookItem extends Item {
 		*///?}
 	}
 
+	public static ItemStack createCompletedSoulBook(Item item, String entityId) {
+		ItemStack stack = new ItemStack(item);
+		setSoulData(stack, entityId, 100);
+		return stack;
+	}
+
 	@Override
 	public boolean isFoil(ItemStack stack) {
 		return getSoulPortion(stack) >= 100 || super.isFoil(stack);
