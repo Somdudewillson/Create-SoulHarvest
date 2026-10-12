@@ -29,7 +29,7 @@
     "minecraft:zombie",
     "minecraft:zombified_piglin",
     "minecraft:breeze",
-    "friendsandfoes:mauler",
+    { "id": "friendsandfoes:mauler", "required": false },
     "minecraft:drowned",
     "minecraft:piglin_brute",
     "minecraft:ravager",

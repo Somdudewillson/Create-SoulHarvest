@@ -1,14 +1,14 @@
 {
   "values": [
     "minecraft:evoker",
-    "friendsandfoes:illusioner",
-    "friendsandfoes:iceologer",
+    { "id": "friendsandfoes:illusioner", "required": false },
+    { "id": "friendsandfoes:iceologer", "required": false },
     "minecraft:elder_guardian",
     "minecraft:wither",
     "minecraft:warden",
     "minecraft:ender_dragon",
-    "artifacts:mimic",
-    "friendsandfoes:wildfire",
+    { "id": "artifacts:mimic", "required": false },
+    { "id": "friendsandfoes:wildfire", "required": false },
     "minecraft:giant"
   ]
 }

@@ -1,5 +1,6 @@
 {
   "values": [
+    { "id": "friendsandfoes:illusioner", "required": false },
     "minecraft:guardian",
     "minecraft:skeleton",
     "minecraft:cave_spider",
@@ -29,7 +30,7 @@
     "minecraft:zombie",
     "minecraft:zombified_piglin",
     "minecraft:breeze",
-    "friendsandfoes:mauler",
+    { "id": "friendsandfoes:mauler", "required": false },
     "minecraft:drowned",
     "minecraft:piglin_brute",
     "minecraft:ravager",

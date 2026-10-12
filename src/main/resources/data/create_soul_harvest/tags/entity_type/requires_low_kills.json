@@ -4,7 +4,7 @@
     "minecraft:wither",
     "minecraft:warden",
     "minecraft:ender_dragon",
-    "friendsandfoes:wildfire",
+    { "id": "friendsandfoes:wildfire", "required": false },
     "minecraft:giant"
   ]
 }
