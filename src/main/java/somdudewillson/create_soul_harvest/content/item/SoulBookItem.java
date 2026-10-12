@@ -12,7 +12,9 @@ import net.minecraft.world.item.TooltipFlag;
 //? >= 1.21 {
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
-//?}
+//?} else {
+/*import net.minecraft.world.level.Level;
+*///?}
 
 import java.util.List;
 import java.util.Optional;

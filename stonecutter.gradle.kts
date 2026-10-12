@@ -21,4 +21,16 @@ stonecutter parameters {
 	swaps["mod_group"] = "\"${properties.get<String>("mod.group")}\";"
 	swaps["minecraft"] = "\"${current.version}\";"
 	constants["release"] = properties.get<String>("mod.id") != "modtemplate"
+
+	// Forge replacements when active version is < 1.21 (1.20.1-forge)
+	replacements.string(current.parsed < "1.21") {
+		replace("import net.neoforged.neoforge.registries.DeferredRegister;", "import net.minecraftforge.registries.DeferredRegister;")
+		replace("import net.neoforged.neoforge.registries.DeferredHolder;", "import net.minecraftforge.registries.RegistryObject;")
+		replace("DeferredHolder<Block, ", "RegistryObject/*B*/<")
+		replace("DeferredHolder<Item, ", "RegistryObject/*I*/<")
+		replace("DeferredHolder<BlockEntityType<?>, ", "RegistryObject/*BE*/<")
+		replace("DeferredHolder<CreativeModeTab, ", "RegistryObject/*T*/<")
+		replace("(DeferredHolder)", "(RegistryObject)")
+	}
 }
+

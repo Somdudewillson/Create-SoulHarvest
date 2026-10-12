@@ -6,220 +6,155 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
-//? neoforge {
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
-//?} forge {
-/*import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
-*///?}
+import somdudewillson.redsparklib.common.data.builder.ItemRegistryBuilder.ItemRegistryBuilderFactory;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.item.*;
 
 public class ModItems {
 
-	//? neoforge {
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, SoulHarvestMod.MOD_ID);
+	public static final ItemRegistryBuilderFactory ITEM_BUILDER_FACTORY = new ItemRegistryBuilderFactory(SoulHarvestMod.MOD_ID, ITEMS);
 
-	// Block Items
-	public static final DeferredHolder<Item, BlockItem> SOUL_BUD_SMALL = ITEMS.register("soul_bud_small",
+	private static <T extends Item> DeferredHolder<Item, T> registerWithTab(String name, java.util.function.Supplier<T> supplier) {
+		DeferredHolder<Item, T> holder = ITEMS.register(name, supplier);
+		ModCreativeTabs.addToMainTab(holder);
+		return holder;
+	}
+
+	// Block Items (simple blocks with block items are registered via BlockRegistryBuilder in ModBlocks)
+	public static final DeferredHolder<Item, BlockItem> SOUL_BUD_SMALL = registerWithTab("soul_bud_small",
 			() -> new BlockItem(ModBlocks.SOUL_BUD_SMALL.get(), new Item.Properties()));
-	public static final DeferredHolder<Item, BlockItem> SOUL_BUD_MEDIUM = ITEMS.register("soul_bud_medium",
+	public static final DeferredHolder<Item, BlockItem> SOUL_BUD_MEDIUM = registerWithTab("soul_bud_medium",
 			() -> new BlockItem(ModBlocks.SOUL_BUD_MEDIUM.get(), new Item.Properties()));
-	public static final DeferredHolder<Item, BlockItem> SOUL_BUD_LARGE = ITEMS.register("soul_bud_large",
+	public static final DeferredHolder<Item, BlockItem> SOUL_BUD_LARGE = registerWithTab("soul_bud_large",
 			() -> new BlockItem(ModBlocks.SOUL_BUD_LARGE.get(), new Item.Properties()));
-	public static final DeferredHolder<Item, BlockItem> SOUL_CLUSTER = ITEMS.register("soul_cluster",
+	public static final DeferredHolder<Item, BlockItem> SOUL_CLUSTER = registerWithTab("soul_cluster",
 			() -> new BlockItem(ModBlocks.SOUL_CLUSTER.get(), new Item.Properties()));
-	public static final DeferredHolder<Item, BlockItem> SOUL_CRYSTAL_BLOCK = ITEMS.register("soul_crystal_block",
-			() -> new BlockItem(ModBlocks.SOUL_CRYSTAL_BLOCK.get(), new Item.Properties()));
-	public static final DeferredHolder<Item, FuelBlockItem> BIOFUEL_BLOCK = ITEMS.register("biofuel_block",
+	public static final DeferredHolder<Item, FuelBlockItem> BIOFUEL_BLOCK = registerWithTab("biofuel_block",
 			() -> new FuelBlockItem(ModBlocks.BIOFUEL_BLOCK.get(), 16000, new Item.Properties()));
-	public static final DeferredHolder<Item, BlockItem> CARVED_BONE_BLOCK = ITEMS.register("carved_bone_block",
+	public static final DeferredHolder<Item, BlockItem> CARVED_BONE_BLOCK = registerWithTab("carved_bone_block",
 			() -> new BlockItem(ModBlocks.CARVED_BONE_BLOCK.get(), new Item.Properties()));
-	public static final DeferredHolder<Item, BlockItem> ABSOLUTE_ICE = ITEMS.register("absolute_ice",
-			() -> new BlockItem(ModBlocks.ABSOLUTE_ICE.get(), new Item.Properties()));
-	public static final DeferredHolder<Item, BlockItem> GOLD_FOAM = ITEMS.register("gold_foam",
-			() -> new BlockItem(ModBlocks.GOLD_FOAM.get(), new Item.Properties()));
-	public static final DeferredHolder<Item, BlockItem> MIDAS_CORE = ITEMS.register("midas_core",
-			() -> new BlockItem(ModBlocks.MIDAS_CORE.get(), new Item.Properties()));
-	public static final DeferredHolder<Item, BlockItem> MAGIC_GLASS = ITEMS.register("magic_glass",
+	public static final DeferredHolder<Item, BlockItem> MAGIC_GLASS = registerWithTab("magic_glass",
 			() -> new BlockItem(ModBlocks.MAGIC_GLASS.get(), new Item.Properties()));
 
 	// Fuels and organics
-	public static final DeferredHolder<Item, Item> ORGANIC_MULCH = ITEMS.register("organic_mulch",
-			() -> new Item(new Item.Properties()));
-	public static final DeferredHolder<Item, FuelItem> BIOFUEL_CHUNK = ITEMS.register("biofuel_chunk",
-			() -> new FuelItem(1600, new Item.Properties()));
+	public static final DeferredHolder<Item, Item> ORGANIC_MULCH = ITEM_BUILDER_FACTORY.registerSimpleItem("organic_mulch")
+			.properties(new Item.Properties())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> BIOFUEL_CHUNK = ITEM_BUILDER_FACTORY.registerItem("biofuel_chunk", props -> new FuelItem(1600, props))
+			.properties(new Item.Properties())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
 
 	// Lapis and magic materials
-	public static final DeferredHolder<Item, Item> BLANK_TABLET = ITEMS.register("blank_tablet",
+	public static final DeferredHolder<Item, Item> BLANK_TABLET = registerWithTab("blank_tablet",
 			() -> new Item(new Item.Properties()));
-	public static final DeferredHolder<Item, Item> INLAID_LAPIS = ITEMS.register("inlaid_lapis",
-			() -> new Item(new Item.Properties()));
-	public static final DeferredHolder<Item, Item> POLISHED_INLAID_LAPIS = ITEMS.register("polished_inlaid_lapis",
-			() -> new Item(new Item.Properties()));
-	public static final DeferredHolder<Item, Item> ENCHANTED_INLAID_LAPIS = ITEMS.register("enchanted_inlaid_lapis",
+	public static final DeferredHolder<Item, Item> INLAID_LAPIS = ITEM_BUILDER_FACTORY.registerSimpleItem("inlaid_lapis")
+			.properties(new Item.Properties())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> POLISHED_INLAID_LAPIS = ITEM_BUILDER_FACTORY.registerSimpleItem("polished_inlaid_lapis")
+			.properties(new Item.Properties())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> ENCHANTED_INLAID_LAPIS = registerWithTab("enchanted_inlaid_lapis",
 			() -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON)) {
 				@Override public boolean isFoil(ItemStack stack) { return true; }
 			});
-	public static final DeferredHolder<Item, FuelItem> MOLTEN_LAPIS_CORE = ITEMS.register("molten_lapis_core",
-			() -> new FuelItem(20000, new Item.Properties().stacksTo(16)));
-	public static final DeferredHolder<Item, Item> MAGIC_GOLD = ITEMS.register("magic_gold",
+	public static final DeferredHolder<Item, Item> MOLTEN_LAPIS_CORE = ITEM_BUILDER_FACTORY.registerItem("molten_lapis_core", props -> new FuelItem(20000, props))
+			.properties(new Item.Properties().stacksTo(16))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> MAGIC_GOLD = ITEM_BUILDER_FACTORY.registerItem("magic_gold",
 			() -> new Item(new Item.Properties()) {
 				@Override public boolean isFoil(ItemStack stack) { return true; }
-			});
+			})
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
 
 	// Soul Harvest items
-	public static final DeferredHolder<Item, SoulDepositSeedItem> SOUL_DEPOSIT_SEED = ITEMS.register("soul_deposit_seed",
-			() -> new SoulDepositSeedItem(new Item.Properties().stacksTo(16)));
-	public static final DeferredHolder<Item, Item> SOUL_SHARD = ITEMS.register("soul_shard",
+	public static final DeferredHolder<Item, Item> SOUL_DEPOSIT_SEED = ITEM_BUILDER_FACTORY.registerItem("soul_deposit_seed", SoulDepositSeedItem::new)
+			.properties(new Item.Properties().stacksTo(16))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> SOUL_SHARD = ITEM_BUILDER_FACTORY.registerItem("soul_shard",
 			() -> new Item(new Item.Properties()) {
 				@Override public boolean isFoil(ItemStack stack) { return true; }
-			});
-	public static final DeferredHolder<Item, PolyclayItem> POLYCLAY = ITEMS.register("polyclay",
-			() -> new PolyclayItem(new Item.Properties()));
+			})
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> POLYCLAY = ITEM_BUILDER_FACTORY.registerItem("polyclay", PolyclayItem::new)
+			.properties(new Item.Properties())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
 
 	// Tokens and hazardous items
-	public static final DeferredHolder<Item, Item> LOOT_TOKEN_BLANK = ITEMS.register("loot_token_blank",
-			() -> new Item(new Item.Properties().stacksTo(1).fireResistant()));
-	public static final DeferredHolder<Item, LootTokenItem> LOOT_TOKEN = ITEMS.register("loot_token",
-			() -> new LootTokenItem(new Item.Properties().stacksTo(1).fireResistant().rarity(Rarity.UNCOMMON)));
-	public static final DeferredHolder<Item, BiocideGasBottleItem> BIOCIDE_GAS_BOTTLE = ITEMS.register("biocide_gas_bottle",
-			() -> new BiocideGasBottleItem(new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON).craftRemainder(Items.GLASS_BOTTLE)));
+	public static final DeferredHolder<Item, Item> LOOT_TOKEN_BLANK = ITEM_BUILDER_FACTORY.registerSimpleItem("loot_token_blank")
+			.properties(new Item.Properties().stacksTo(1).fireResistant())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> LOOT_TOKEN = ITEM_BUILDER_FACTORY.registerItem("loot_token", LootTokenItem::new)
+			.properties(new Item.Properties().stacksTo(1).fireResistant().rarity(Rarity.UNCOMMON))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> BIOCIDE_GAS_BOTTLE = ITEM_BUILDER_FACTORY.registerItem("biocide_gas_bottle", BiocideGasBottleItem::new)
+			.properties(new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON).craftRemainder(Items.GLASS_BOTTLE))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
 
 	// Soul Books
-	public static final DeferredHolder<Item, SoulBookItem> SOUL_BOOK_SIMPLE = ITEMS.register("soul_book_simple",
-			() -> new SoulBookItem(1, new Item.Properties().stacksTo(1)));
-	public static final DeferredHolder<Item, SoulBookItem> SOUL_BOOK_STANDARD = ITEMS.register("soul_book_standard",
-			() -> new SoulBookItem(2, new Item.Properties().stacksTo(1)));
-	public static final DeferredHolder<Item, SoulBookItem> SOUL_BOOK_SUPERIOR = ITEMS.register("soul_book_superior",
-			() -> new SoulBookItem(3, new Item.Properties().stacksTo(1)));
+	public static final DeferredHolder<Item, Item> SOUL_BOOK_SIMPLE = ITEM_BUILDER_FACTORY.registerItem("soul_book_simple", props -> new SoulBookItem(1, props))
+			.properties(new Item.Properties().stacksTo(1))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> SOUL_BOOK_STANDARD = ITEM_BUILDER_FACTORY.registerItem("soul_book_standard", props -> new SoulBookItem(2, props))
+			.properties(new Item.Properties().stacksTo(1))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> SOUL_BOOK_SUPERIOR = ITEM_BUILDER_FACTORY.registerItem("soul_book_superior", props -> new SoulBookItem(3, props))
+			.properties(new Item.Properties().stacksTo(1))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
 
 	// Glyphs
-	public static final DeferredHolder<Item, Item> GLYPH_1 = ITEMS.register("glyph_1", () -> createGlyphPage());
-	public static final DeferredHolder<Item, Item> GLYPH_2 = ITEMS.register("glyph_2", () -> createGlyphPage());
-	public static final DeferredHolder<Item, Item> GLYPH_3 = ITEMS.register("glyph_3", () -> createGlyphPage());
-	public static final DeferredHolder<Item, Item> GLYPH_4 = ITEMS.register("glyph_4", () -> createGlyphPage());
-	public static final DeferredHolder<Item, Item> GLYPH_5 = ITEMS.register("glyph_5", () -> createGlyphPage());
-	public static final DeferredHolder<Item, Item> GLYPH_6 = ITEMS.register("glyph_6", () -> createGlyphPage());
-	public static final DeferredHolder<Item, Item> GLYPH_7 = ITEMS.register("glyph_7", () -> createGlyphPage());
-	public static final DeferredHolder<Item, Item> GLYPH_8 = ITEMS.register("glyph_8", () -> createGlyphPage());
-	public static final DeferredHolder<Item, Item> GLYPH_OVERLOADED = ITEMS.register("glyph_overloaded", () -> createGlyphPage());
+	public static final DeferredHolder<Item, Item> GLYPH_1 = ITEM_BUILDER_FACTORY.registerItem("glyph_1", ModItems::createGlyphPage).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_2 = ITEM_BUILDER_FACTORY.registerItem("glyph_2", ModItems::createGlyphPage).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_3 = ITEM_BUILDER_FACTORY.registerItem("glyph_3", ModItems::createGlyphPage).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_4 = ITEM_BUILDER_FACTORY.registerItem("glyph_4", ModItems::createGlyphPage).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_5 = ITEM_BUILDER_FACTORY.registerItem("glyph_5", ModItems::createGlyphPage).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_6 = ITEM_BUILDER_FACTORY.registerItem("glyph_6", ModItems::createGlyphPage).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_7 = ITEM_BUILDER_FACTORY.registerItem("glyph_7", ModItems::createGlyphPage).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_8 = ITEM_BUILDER_FACTORY.registerItem("glyph_8", ModItems::createGlyphPage).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_OVERLOADED = ITEM_BUILDER_FACTORY.registerItem("glyph_overloaded", ModItems::createGlyphPage).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
 
 	// Glyph Scrolls
-	public static final DeferredHolder<Item, GlyphScrollItem> GLYPH_SCROLL_1 = ITEMS.register("glyph_scroll_1", () -> new GlyphScrollItem(1, new Item.Properties().stacksTo(16)));
-	public static final DeferredHolder<Item, GlyphScrollItem> GLYPH_SCROLL_2 = ITEMS.register("glyph_scroll_2", () -> new GlyphScrollItem(2, new Item.Properties().stacksTo(16)));
-	public static final DeferredHolder<Item, GlyphScrollItem> GLYPH_SCROLL_3 = ITEMS.register("glyph_scroll_3", () -> new GlyphScrollItem(3, new Item.Properties().stacksTo(16)));
-	public static final DeferredHolder<Item, GlyphScrollItem> GLYPH_SCROLL_4 = ITEMS.register("glyph_scroll_4", () -> new GlyphScrollItem(4, new Item.Properties().stacksTo(16)));
-	public static final DeferredHolder<Item, GlyphScrollItem> GLYPH_SCROLL_5 = ITEMS.register("glyph_scroll_5", () -> new GlyphScrollItem(5, new Item.Properties().stacksTo(16)));
-	public static final DeferredHolder<Item, GlyphScrollItem> GLYPH_SCROLL_6 = ITEMS.register("glyph_scroll_6", () -> new GlyphScrollItem(6, new Item.Properties().stacksTo(16)));
-	public static final DeferredHolder<Item, GlyphScrollItem> GLYPH_SCROLL_7 = ITEMS.register("glyph_scroll_7", () -> new GlyphScrollItem(7, new Item.Properties().stacksTo(16)));
-	public static final DeferredHolder<Item, GlyphScrollItem> GLYPH_SCROLL_8 = ITEMS.register("glyph_scroll_8", () -> new GlyphScrollItem(8, new Item.Properties().stacksTo(16)));
-	//?} forge {
-	/*public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SoulHarvestMod.MOD_ID);
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_1 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_1", props -> new GlyphScrollItem(1, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_2 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_2", props -> new GlyphScrollItem(2, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_3 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_3", props -> new GlyphScrollItem(3, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_4 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_4", props -> new GlyphScrollItem(4, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_5 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_5", props -> new GlyphScrollItem(5, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_6 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_6", props -> new GlyphScrollItem(6, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_7 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_7", props -> new GlyphScrollItem(7, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_8 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_8", props -> new GlyphScrollItem(8, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
 
-	// Block Items
-	public static final RegistryObject<BlockItem> SOUL_BUD_SMALL = ITEMS.register("soul_bud_small",
-			() -> new BlockItem(ModBlocks.SOUL_BUD_SMALL.get(), new Item.Properties()));
-	public static final RegistryObject<BlockItem> SOUL_BUD_MEDIUM = ITEMS.register("soul_bud_medium",
-			() -> new BlockItem(ModBlocks.SOUL_BUD_MEDIUM.get(), new Item.Properties()));
-	public static final RegistryObject<BlockItem> SOUL_BUD_LARGE = ITEMS.register("soul_bud_large",
-			() -> new BlockItem(ModBlocks.SOUL_BUD_LARGE.get(), new Item.Properties()));
-	public static final RegistryObject<BlockItem> SOUL_CLUSTER = ITEMS.register("soul_cluster",
-			() -> new BlockItem(ModBlocks.SOUL_CLUSTER.get(), new Item.Properties()));
-	public static final RegistryObject<BlockItem> SOUL_CRYSTAL_BLOCK = ITEMS.register("soul_crystal_block",
-			() -> new BlockItem(ModBlocks.SOUL_CRYSTAL_BLOCK.get(), new Item.Properties()));
-	public static final RegistryObject<FuelBlockItem> BIOFUEL_BLOCK = ITEMS.register("biofuel_block",
-			() -> new FuelBlockItem(ModBlocks.BIOFUEL_BLOCK.get(), 16000, new Item.Properties()));
-	public static final RegistryObject<FuelBlockItem> CHARCOAL_BLOCK = ITEMS.register("charcoal_block",
-			() -> new FuelBlockItem(ModBlocks.CHARCOAL_BLOCK.get(), 16000, new Item.Properties()));
-	public static final RegistryObject<BlockItem> CARVED_BONE_BLOCK = ITEMS.register("carved_bone_block",
-			() -> new BlockItem(ModBlocks.CARVED_BONE_BLOCK.get(), new Item.Properties()));
-	public static final RegistryObject<BlockItem> ANIMA_MOSS = ITEMS.register("anima_moss",
-			() -> new BlockItem(ModBlocks.ANIMA_MOSS.get(), new Item.Properties()));
-	public static final RegistryObject<BlockItem> ABSOLUTE_ICE = ITEMS.register("absolute_ice",
-			() -> new BlockItem(ModBlocks.ABSOLUTE_ICE.get(), new Item.Properties()));
-	public static final RegistryObject<BlockItem> GOLD_FOAM = ITEMS.register("gold_foam",
-			() -> new BlockItem(ModBlocks.GOLD_FOAM.get(), new Item.Properties()));
-	public static final RegistryObject<BlockItem> MIDAS_CORE = ITEMS.register("midas_core",
-			() -> new BlockItem(ModBlocks.MIDAS_CORE.get(), new Item.Properties()));
-	public static final RegistryObject<BlockItem> MAGIC_GLASS = ITEMS.register("magic_glass",
-			() -> new BlockItem(ModBlocks.MAGIC_GLASS.get(), new Item.Properties()));
-
-	// Fuels and organics
-	public static final RegistryObject<FuelItem> FUEL_PELLET = ITEMS.register("fuel_pellet",
-			() -> new FuelItem(200, new Item.Properties()));
-	public static final RegistryObject<Item> ORGANIC_MULCH = ITEMS.register("organic_mulch",
-			() -> new Item(new Item.Properties()));
-	public static final RegistryObject<FuelItem> BIOFUEL_CHUNK = ITEMS.register("biofuel_chunk",
-			() -> new FuelItem(1600, new Item.Properties()));
-
-	// Lapis and magic materials
-	public static final RegistryObject<Item> BLANK_TABLET = ITEMS.register("blank_tablet",
-			() -> new Item(new Item.Properties()));
-	public static final RegistryObject<Item> INLAID_LAPIS = ITEMS.register("inlaid_lapis",
-			() -> new Item(new Item.Properties()));
-	public static final RegistryObject<Item> POLISHED_INLAID_LAPIS = ITEMS.register("polished_inlaid_lapis",
-			() -> new Item(new Item.Properties()));
-	public static final RegistryObject<Item> ENCHANTED_INLAID_LAPIS = ITEMS.register("enchanted_inlaid_lapis",
-			() -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON)) {
-				@Override public boolean isFoil(ItemStack stack) { return true; }
-			});
-	public static final RegistryObject<FuelItem> MOLTEN_LAPIS_CORE = ITEMS.register("molten_lapis_core",
-			() -> new FuelItem(20000, new Item.Properties().stacksTo(16)));
-	public static final RegistryObject<Item> MAGIC_GOLD = ITEMS.register("magic_gold",
-			() -> new Item(new Item.Properties()) {
-				@Override public boolean isFoil(ItemStack stack) { return true; }
-			});
-
-	// Soul Harvest items
-	public static final RegistryObject<SoulDepositSeedItem> SOUL_DEPOSIT_SEED = ITEMS.register("soul_deposit_seed",
-			() -> new SoulDepositSeedItem(new Item.Properties().stacksTo(16)));
-	public static final RegistryObject<Item> SOUL_SHARD = ITEMS.register("soul_shard",
-			() -> new Item(new Item.Properties()) {
-				@Override public boolean isFoil(ItemStack stack) { return true; }
-			});
-	public static final RegistryObject<PolyclayItem> POLYCLAY = ITEMS.register("polyclay",
-			() -> new PolyclayItem(new Item.Properties()));
-
-	// Tokens and hazardous items
-	public static final RegistryObject<Item> LOOT_TOKEN_BLANK = ITEMS.register("loot_token_blank",
-			() -> new Item(new Item.Properties().stacksTo(1).fireResistant()));
-	public static final RegistryObject<LootTokenItem> LOOT_TOKEN = ITEMS.register("loot_token",
-			() -> new LootTokenItem(new Item.Properties().stacksTo(1).fireResistant().rarity(Rarity.UNCOMMON)));
-	public static final RegistryObject<BiocideGasBottleItem> BIOCIDE_GAS_BOTTLE = ITEMS.register("biocide_gas_bottle",
-			() -> new BiocideGasBottleItem(new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON).craftRemainder(Items.GLASS_BOTTLE)));
-
-	// Soul Books
-	public static final RegistryObject<SoulBookItem> SOUL_BOOK_SIMPLE = ITEMS.register("soul_book_simple",
-			() -> new SoulBookItem(1, new Item.Properties().stacksTo(1)));
-	public static final RegistryObject<SoulBookItem> SOUL_BOOK_STANDARD = ITEMS.register("soul_book_standard",
-			() -> new SoulBookItem(2, new Item.Properties().stacksTo(1)));
-	public static final RegistryObject<SoulBookItem> SOUL_BOOK_SUPERIOR = ITEMS.register("soul_book_superior",
-			() -> new SoulBookItem(3, new Item.Properties().stacksTo(1)));
-
-	// Glyphs
-	public static final RegistryObject<Item> GLYPH_1 = ITEMS.register("glyph_1", () -> createGlyphPage());
-	public static final RegistryObject<Item> GLYPH_2 = ITEMS.register("glyph_2", () -> createGlyphPage());
-	public static final RegistryObject<Item> GLYPH_3 = ITEMS.register("glyph_3", () -> createGlyphPage());
-	public static final RegistryObject<Item> GLYPH_4 = ITEMS.register("glyph_4", () -> createGlyphPage());
-	public static final RegistryObject<Item> GLYPH_5 = ITEMS.register("glyph_5", () -> createGlyphPage());
-	public static final RegistryObject<Item> GLYPH_6 = ITEMS.register("glyph_6", () -> createGlyphPage());
-	public static final RegistryObject<Item> GLYPH_7 = ITEMS.register("glyph_7", () -> createGlyphPage());
-	public static final RegistryObject<Item> GLYPH_8 = ITEMS.register("glyph_8", () -> createGlyphPage());
-	public static final RegistryObject<Item> GLYPH_OVERLOADED = ITEMS.register("glyph_overloaded", () -> createGlyphPage());
-
-	// Glyph Scrolls
-	public static final RegistryObject<GlyphScrollItem> GLYPH_SCROLL_1 = ITEMS.register("glyph_scroll_1", () -> new GlyphScrollItem(1, new Item.Properties().stacksTo(16)));
-	public static final RegistryObject<GlyphScrollItem> GLYPH_SCROLL_2 = ITEMS.register("glyph_scroll_2", () -> new GlyphScrollItem(2, new Item.Properties().stacksTo(16)));
-	public static final RegistryObject<GlyphScrollItem> GLYPH_SCROLL_3 = ITEMS.register("glyph_scroll_3", () -> new GlyphScrollItem(3, new Item.Properties().stacksTo(16)));
-	public static final RegistryObject<GlyphScrollItem> GLYPH_SCROLL_4 = ITEMS.register("glyph_scroll_4", () -> new GlyphScrollItem(4, new Item.Properties().stacksTo(16)));
-	public static final RegistryObject<GlyphScrollItem> GLYPH_SCROLL_5 = ITEMS.register("glyph_scroll_5", () -> new GlyphScrollItem(5, new Item.Properties().stacksTo(16)));
-	public static final RegistryObject<GlyphScrollItem> GLYPH_SCROLL_6 = ITEMS.register("glyph_scroll_6", () -> new GlyphScrollItem(6, new Item.Properties().stacksTo(16)));
-	public static final RegistryObject<GlyphScrollItem> GLYPH_SCROLL_7 = ITEMS.register("glyph_scroll_7", () -> new GlyphScrollItem(7, new Item.Properties().stacksTo(16)));
-	public static final RegistryObject<GlyphScrollItem> GLYPH_SCROLL_8 = ITEMS.register("glyph_scroll_8", () -> new GlyphScrollItem(8, new Item.Properties().stacksTo(16)));
-	*///?}
 
 	private static Item createGlyphPage() {
 		return new Item(new Item.Properties()) {

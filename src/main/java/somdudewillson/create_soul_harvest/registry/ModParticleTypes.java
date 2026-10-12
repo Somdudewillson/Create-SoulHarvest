@@ -9,9 +9,9 @@ import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 //?} forge {
-/*import net.minecraftforge.registries.DeferredRegister;
+/*import net.neoforged.neoforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 *///?}
 
 public class ModParticleTypes {

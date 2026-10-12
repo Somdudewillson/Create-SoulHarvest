@@ -9,8 +9,8 @@ import somdudewillson.create_soul_harvest.content.kinetics.fan.processing.SoulIn
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 //?} forge {
-/*import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+/*import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.DeferredHolder;
 *///?}
 
 public class ModFanProcessingTypes {

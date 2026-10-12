@@ -244,7 +244,7 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.build(recipeOutput, SoulHarvestMod.id("craft_loot_token_blank"));
 		
 		// Mechanical Crafting: Midas Core
-		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.MIDAS_CORE.get(), 1)
+		MechanicalCraftingRecipeBuilder.shapedRecipe(ModBlocks.MIDAS_CORE.get(), 1)
 				.key('I', ModItems.ENCHANTED_INLAID_LAPIS.get())
 				.key('G', Items.GOLD_BLOCK)
 				.key('B', com.simibubi.create.AllItems.BRASS_INGOT)

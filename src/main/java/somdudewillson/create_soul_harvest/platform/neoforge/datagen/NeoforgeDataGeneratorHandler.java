@@ -10,9 +10,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
-import somdudewillson.create_soul_harvest.registry.ModItems;
 import somdudewillson.redsparklib.common.data.RedSparkLibSimpleDatagenManager;
-import somdudewillson.redsparklib.common.data.task.DatagenTaskBuilder;
+import somdudewillson.redsparklib.common.data.task.BasicBlockItemModelDatagenTask;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -20,49 +19,8 @@ import java.util.concurrent.CompletableFuture;
 public class NeoforgeDataGeneratorHandler {
 
 	static {
-		// Queue simple blocks with block items using RedSparkLib
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.BlockDatagenTaskBuilder.unchained(ModBlocks.SOUL_CRYSTAL_BLOCK).blockItem().build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.BlockDatagenTaskBuilder.unchained(ModBlocks.BIOFUEL_BLOCK).blockItem().build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.BlockDatagenTaskBuilder.unchained(ModBlocks.ABSOLUTE_ICE).blockItem().build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.BlockDatagenTaskBuilder.unchained(ModBlocks.GOLD_FOAM).blockItem().build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.BlockDatagenTaskBuilder.unchained(ModBlocks.MIDAS_CORE).blockItem().build());
-
-		// Queue simple items using RedSparkLib
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.ORGANIC_MULCH).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.BIOFUEL_CHUNK).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.INLAID_LAPIS).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.POLISHED_INLAID_LAPIS).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.MOLTEN_LAPIS_CORE).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.MAGIC_GOLD).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.SOUL_DEPOSIT_SEED).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.SOUL_SHARD).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.POLYCLAY).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.LOOT_TOKEN_BLANK).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.LOOT_TOKEN).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.BIOCIDE_GAS_BOTTLE).build());
-
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.SOUL_BOOK_SIMPLE).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.SOUL_BOOK_STANDARD).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.SOUL_BOOK_SUPERIOR).build());
-
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_1).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_2).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_3).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_4).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_5).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_6).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_7).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_8).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_OVERLOADED).build());
-
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_SCROLL_1).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_SCROLL_2).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_SCROLL_3).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_SCROLL_4).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_SCROLL_5).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_SCROLL_6).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_SCROLL_7).build());
-		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, DatagenTaskBuilder.ItemDatagenTaskBuilder.unchained(ModItems.GLYPH_SCROLL_8).build());
+		// Queue block item model for biofuel block (block model is queued via BlockRegistryBuilder.simpleBlockNoItem)
+		RedSparkLibSimpleDatagenManager.queueDatagen(SoulHarvestMod.MOD_ID, new BasicBlockItemModelDatagenTask<>(ModBlocks.BIOFUEL_BLOCK));
 	}
 
 	@SubscribeEvent
