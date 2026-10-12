@@ -2,7 +2,9 @@
   "values": [
     "#minecraft:dirt",
     "#minecraft:sand",
-    "#c:gravels",
+    { "id": "#c:gravels", "required": false },
+    { "id": "#forge:gravel", "required": false },
+    "minecraft:gravel",
     "minecraft:stone",
     "minecraft:sandstone",
     "minecraft:red_sandstone",

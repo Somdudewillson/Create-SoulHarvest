@@ -17,7 +17,7 @@
     "minecraft:tropical_fish",
     { "id": "friendsandfoes:glare", "required": false },
     "minecraft:salmon",
-    "minecraft:armadillo",
+    { "id": "minecraft:armadillo", "required": false },
     "minecraft:pufferfish",
     "minecraft:pig",
     "minecraft:mooshroom",

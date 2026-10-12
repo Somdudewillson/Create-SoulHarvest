@@ -2,7 +2,7 @@
   "parent": "create_soul_harvest:got_enchanted_lapis",
   "display": {
     "icon": {
-      "id": "create_soul_harvest:loot_token"
+      "item": "create_soul_harvest:loot_token"
     },
     "title": "Token of Destiny",
     "description": "Assembled an enchanted Loot Token."
@@ -13,7 +13,9 @@
       "conditions": {
         "items": [
           {
-            "items": "create_soul_harvest:loot_token"
+            "items": [
+              "create_soul_harvest:loot_token"
+            ]
           }
         ]
       }

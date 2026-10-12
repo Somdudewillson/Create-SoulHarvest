@@ -2,7 +2,7 @@
   "parent": "create_soul_harvest:got_soul_tome",
   "display": {
     "icon": {
-      "id": "create_soul_harvest:soul_book_standard"
+      "item": "create_soul_harvest:soul_book_standard"
     },
     "title": "Written Soul",
     "description": "Captured a complete soul in a soul book.",

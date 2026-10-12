@@ -2,7 +2,7 @@
   "parent": "create_soul_harvest:got_inlaid_lapis",
   "display": {
     "icon": {
-      "id": "create_soul_harvest:polished_inlaid_lapis"
+      "item": "create_soul_harvest:polished_inlaid_lapis"
     },
     "title": "Smooth Conductance",
     "description": "Polished Inlaid Lapis Lazuli with sandpaper."
@@ -13,7 +13,9 @@
       "conditions": {
         "items": [
           {
-            "items": "create_soul_harvest:polished_inlaid_lapis"
+            "items": [
+              "create_soul_harvest:polished_inlaid_lapis"
+            ]
           }
         ]
       }

@@ -6,6 +6,7 @@
     },
     "title": "Tricked the Trickster",
     "description": "Harvested the soul of a Mimic.",
+    "hidden": true,
     "frame": "challenge"
   },
   "criteria": {

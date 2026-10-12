@@ -2,7 +2,7 @@
   "parent": "create_soul_harvest:root",
   "display": {
     "icon": {
-      "id": "create_soul_harvest:inlaid_lapis"
+      "item": "create_soul_harvest:inlaid_lapis"
     },
     "title": "Gold-Anima Compound",
     "description": "Acquired Inlaid Lapis Lazuli."
@@ -13,7 +13,9 @@
       "conditions": {
         "items": [
           {
-            "items": "create_soul_harvest:inlaid_lapis"
+            "items": [
+              "create_soul_harvest:inlaid_lapis"
+            ]
           }
         ]
       }
@@ -23,7 +25,9 @@
       "conditions": {
         "items": [
           {
-            "items": "create_soul_harvest:polished_inlaid_lapis"
+            "items": [
+              "create_soul_harvest:polished_inlaid_lapis"
+            ]
           }
         ]
       }
@@ -33,7 +37,9 @@
       "conditions": {
         "items": [
           {
-            "items": "create_soul_harvest:enchanted_inlaid_lapis"
+            "items": [
+              "create_soul_harvest:enchanted_inlaid_lapis"
+            ]
           }
         ]
       }

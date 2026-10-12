@@ -2,10 +2,11 @@
   "parent": "create_soul_harvest:captured_t3_soul",
   "display": {
     "icon": {
-      "id": "create_soul_harvest:soul_book_superior"
+      "item": "create_soul_harvest:soul_book_superior"
     },
     "title": "Tricked the Trickster",
     "description": "Harvested the soul of a Mimic.",
+    "hidden": true,
     "frame": "challenge"
   },
   "criteria": {

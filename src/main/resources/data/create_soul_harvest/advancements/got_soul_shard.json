@@ -2,7 +2,7 @@
   "parent": "create_soul_harvest:got_inlaid_lapis",
   "display": {
     "icon": {
-      "id": "create_soul_harvest:soul_shard"
+      "item": "create_soul_harvest:soul_shard"
     },
     "title": "Crystallized Souls",
     "description": "Harvested a Soul Crystal."
@@ -13,7 +13,9 @@
       "conditions": {
         "items": [
           {
-            "items": "create_soul_harvest:soul_shard"
+            "items": [
+              "create_soul_harvest:soul_shard"
+            ]
           }
         ]
       }

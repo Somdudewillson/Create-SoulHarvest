@@ -2,7 +2,7 @@
   "parent": "create_soul_harvest:got_polished_lapis",
   "display": {
     "icon": {
-      "id": "create_soul_harvest:enchanted_inlaid_lapis"
+      "item": "create_soul_harvest:enchanted_inlaid_lapis"
     },
     "title": "Resonant Frequency",
     "description": "Infused Polished Lapis with pure experience."
@@ -13,7 +13,9 @@
       "conditions": {
         "items": [
           {
-            "items": "create_soul_harvest:enchanted_inlaid_lapis"
+            "items": [
+              "create_soul_harvest:enchanted_inlaid_lapis"
+            ]
           }
         ]
       }

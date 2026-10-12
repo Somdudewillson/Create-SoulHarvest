@@ -2,7 +2,7 @@
   "parent": "create_soul_harvest:captured_soul",
   "display": {
     "icon": {
-      "id": "create_soul_harvest:soul_book_superior"
+      "item": "create_soul_harvest:soul_book_superior"
     },
     "title": "Apex Reaping",
     "description": "Captured a legendary boss soul in a superior soul book.",

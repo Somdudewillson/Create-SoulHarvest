@@ -2,7 +2,7 @@
   "parent": "create_soul_harvest:got_inlaid_lapis",
   "display": {
     "icon": {
-      "id": "create_soul_harvest:glyph_1"
+      "item": "create_soul_harvest:glyph_1"
     },
     "title": "Ancient Script",
     "description": "Printed a Runic Glyph Page."
@@ -13,7 +13,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#create_soul_harvest:glyph_pages"
+            "tag": "create_soul_harvest:glyph_pages"
           }
         ]
       }

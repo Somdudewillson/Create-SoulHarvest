@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "create_soul_harvest:soul_shard"
+      "item": "create_soul_harvest:soul_shard"
     },
     "title": "Create: Soul Harvest",
     "description": "Harness the power of souls and alchemy",

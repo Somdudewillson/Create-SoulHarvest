@@ -2,10 +2,11 @@
   "parent": "create_soul_harvest:root",
   "display": {
     "icon": {
-      "id": "create_soul_harvest:biocide_gas_bottle"
+      "item": "create_soul_harvest:biocide_gas_bottle"
     },
     "title": "Catastrophic Reaction",
     "description": "Triggered a biocide gas pipe rupture.",
+    "hidden": true,
     "frame": "challenge"
   },
   "criteria": {

@@ -6,6 +6,7 @@
     },
     "title": "Catastrophic Reaction",
     "description": "Triggered a biocide gas pipe rupture.",
+    "hidden": true,
     "frame": "challenge"
   },
   "criteria": {

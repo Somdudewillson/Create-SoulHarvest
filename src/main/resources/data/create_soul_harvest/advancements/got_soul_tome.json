@@ -2,7 +2,7 @@
   "parent": "create_soul_harvest:got_glyph_page",
   "display": {
     "icon": {
-      "id": "create_soul_harvest:soul_book_simple"
+      "item": "create_soul_harvest:soul_book_simple"
     },
     "title": "The Vessel",
     "description": "Bound glyph pages into a Soul Book."
@@ -13,7 +13,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#create_soul_harvest:soul_books"
+            "tag": "create_soul_harvest:soul_books"
           }
         ]
       }

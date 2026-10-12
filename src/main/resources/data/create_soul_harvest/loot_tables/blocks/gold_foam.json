@@ -12,7 +12,7 @@
             {
               "condition": "minecraft:match_tool",
               "predicate": {
-                "items": "#minecraft:pickaxes"
+                "tag": "minecraft:pickaxes"
               }
             }
           ]
@@ -31,7 +31,9 @@
             {
               "condition": "minecraft:match_tool",
               "predicate": {
-                "items": "minecraft:golden_pickaxe"
+                "items": [
+                  "minecraft:golden_pickaxe"
+                ]
               }
             }
           ]
