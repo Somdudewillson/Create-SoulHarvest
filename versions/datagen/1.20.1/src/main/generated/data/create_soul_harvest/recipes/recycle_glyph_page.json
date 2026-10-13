@@ -1,0 +1,10 @@
+{
+    "type": "minecraft:smelting",
+    "category": "misc",
+    "cookingtime": 200,
+    "experience": 0.0,
+    "ingredient": {
+        "tag": "create_soul_harvest:glyph_pages"
+    },
+    "result": "create_soul_harvest:inlaid_lapis"
+}

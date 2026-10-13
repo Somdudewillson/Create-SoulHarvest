@@ -99,8 +99,21 @@ tasks.named("createMinecraftArtifacts") {
 	dependsOn(tasks.named("stonecutterGenerate"))
 }
 
+val backportForgeRecipes = tasks.register<BackportForgeRecipesTask>("backportForgeRecipes") {
+	group = "stonecutter"
+	description = "Backports 1.21 datagen recipes to 1.20.1 Forge recipes format"
+	inputDirectory.set(file("${rootDir}/versions/datagen/1.21.1/src/main/generated/data/create_soul_harvest/recipe"))
+	outputDirectory.set(file("${rootDir}/versions/datagen/1.20.1/src/main/generated/data/create_soul_harvest/recipes"))
+}
+
+tasks.named("runData") {
+	finalizedBy(backportForgeRecipes)
+}
+
 tasks.register("runDatagen") {
 	group = "stonecutter"
 	description = "Runs the NeoForge data generation"
 	dependsOn(tasks.named("runData"))
+	finalizedBy(backportForgeRecipes)
 }
+

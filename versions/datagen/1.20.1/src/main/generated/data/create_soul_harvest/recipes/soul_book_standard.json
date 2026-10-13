@@ -1,0 +1,31 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "category": "misc",
+    "ingredients": [
+        {
+            "item": "minecraft:book"
+        },
+        {
+            "tag": "create_soul_harvest:glyph_pages"
+        },
+        {
+            "tag": "create_soul_harvest:glyph_pages"
+        },
+        {
+            "tag": "create_soul_harvest:glyph_pages"
+        },
+        {
+            "tag": "create_soul_harvest:glyph_pages"
+        },
+        {
+            "tag": "create_soul_harvest:glyph_pages"
+        },
+        {
+            "tag": "create_soul_harvest:glyph_pages"
+        }
+    ],
+    "result": {
+        "item": "create_soul_harvest:soul_book_standard",
+        "count": 1
+    }
+}

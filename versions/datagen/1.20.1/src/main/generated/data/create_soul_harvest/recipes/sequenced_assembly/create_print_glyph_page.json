@@ -1,0 +1,76 @@
+{
+    "type": "create_soul_harvest:uniform_sequenced_assembly",
+    "ingredient": {
+        "item": "minecraft:paper"
+    },
+    "loops": 2,
+    "results": [
+        {
+            "item": "create_soul_harvest:glyph_1",
+            "chance": 0.125
+        },
+        {
+            "item": "create_soul_harvest:glyph_2",
+            "chance": 0.125
+        },
+        {
+            "item": "create_soul_harvest:glyph_3",
+            "chance": 0.125
+        },
+        {
+            "item": "create_soul_harvest:glyph_4",
+            "chance": 0.125
+        },
+        {
+            "item": "create_soul_harvest:glyph_5",
+            "chance": 0.125
+        },
+        {
+            "item": "create_soul_harvest:glyph_6",
+            "chance": 0.125
+        },
+        {
+            "item": "create_soul_harvest:glyph_7",
+            "chance": 0.125
+        },
+        {
+            "item": "create_soul_harvest:glyph_8",
+            "chance": 0.125
+        }
+    ],
+    "sequence": [
+        {
+            "type": "create:deploying",
+            "ingredients": [
+                {
+                    "item": "minecraft:paper"
+                },
+                {
+                    "item": "create_soul_harvest:inlaid_lapis"
+                }
+            ],
+            "results": [
+                {
+                    "item": "minecraft:paper"
+                }
+            ]
+        },
+        {
+            "type": "create:pressing",
+            "ingredients": [
+                {
+                    "item": "minecraft:paper"
+                }
+            ],
+            "results": [
+                {
+                    "item": "minecraft:paper"
+                }
+            ]
+        }
+    ],
+    "tooltip": "create_soul_harvest.jei.glyph_page_random_output",
+    "transitionalItem": {
+        "item": "minecraft:paper"
+    }
+}

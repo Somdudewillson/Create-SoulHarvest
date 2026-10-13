@@ -92,13 +92,30 @@ dependencies {
 	modRuntimeOnly("mezz.jei:jei-${prop("deps.minecraft")}-forge:${prop("deps.jei")}")
 }
 
+val backportForgeRecipes = tasks.register<BackportForgeRecipesTask>("backportForgeRecipes") {
+	group = "stonecutter"
+	description = "Backports 1.21 datagen recipes to 1.20.1 Forge recipes format"
+	inputDirectory.set(file("${rootDir}/versions/datagen/1.21.1/src/main/generated/data/create_soul_harvest/recipe"))
+	outputDirectory.set(file("${rootDir}/versions/datagen/1.20.1/src/main/generated/data/create_soul_harvest/recipes"))
+}
+
 sourceSets {
 	main {
 		resources.srcDir(
 			file("${rootDir}/versions/datagen/1.21.1/src/main/generated")
 		)
+		resources.srcDir(
+			file("${rootDir}/versions/datagen/1.20.1/src/main/generated")
+		)
 	}
 }
+
+tasks.named<ProcessResources>("processResources") {
+	dependsOn(backportForgeRecipes)
+	exclude("data/create_soul_harvest/recipe/**")
+	exclude("data/create_soul_harvest/advancement/**")
+}
+
 
 tasks.named("createMinecraftArtifacts") {
 	dependsOn(tasks.named("stonecutterGenerate"))

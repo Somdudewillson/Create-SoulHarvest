@@ -1,0 +1,50 @@
+{
+    "type": "create:sequenced_assembly",
+    "ingredient": {
+        "item": "create_soul_harvest:polished_inlaid_lapis"
+    },
+    "loops": 8,
+    "results": [
+        {
+            "item": "create_soul_harvest:molten_lapis_core"
+        }
+    ],
+    "sequence": [
+        {
+            "type": "create:deploying",
+            "ingredients": [
+                {
+                    "item": "create_soul_harvest:polished_inlaid_lapis"
+                },
+                {
+                    "item": "minecraft:blaze_powder"
+                }
+            ],
+            "results": [
+                {
+                    "item": "create_soul_harvest:polished_inlaid_lapis"
+                }
+            ]
+        },
+        {
+            "type": "create:filling",
+            "ingredients": [
+                {
+                    "item": "create_soul_harvest:polished_inlaid_lapis"
+                },
+                {
+                    "amount": 250,
+                    "fluid": "minecraft:lava"
+                }
+            ],
+            "results": [
+                {
+                    "item": "create_soul_harvest:polished_inlaid_lapis"
+                }
+            ]
+        }
+    ],
+    "transitionalItem": {
+        "item": "create_soul_harvest:polished_inlaid_lapis"
+    }
+}

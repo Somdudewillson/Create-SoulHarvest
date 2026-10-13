@@ -1,0 +1,21 @@
+{
+    "type": "create:mixing",
+    "ingredients": [
+        {
+            "tag": "minecraft:flowers"
+        },
+        {
+            "amount": 125,
+            "fluid": "create_soul_harvest:wither_slurry"
+        },
+        {
+            "amount": 125,
+            "fluid": "minecraft:lava"
+        }
+    ],
+    "results": [
+        {
+            "item": "minecraft:wither_rose"
+        }
+    ]
+}

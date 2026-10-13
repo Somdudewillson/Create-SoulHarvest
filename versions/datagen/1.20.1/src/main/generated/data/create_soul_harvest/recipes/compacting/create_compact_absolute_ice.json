@@ -1,0 +1,37 @@
+{
+    "type": "create:compacting",
+    "ingredients": [
+        {
+            "item": "create_soul_harvest:enchanted_inlaid_lapis"
+        },
+        {
+            "item": "minecraft:blue_ice"
+        },
+        {
+            "item": "minecraft:blue_ice"
+        },
+        {
+            "item": "minecraft:blue_ice"
+        },
+        {
+            "item": "minecraft:blue_ice"
+        },
+        {
+            "item": "minecraft:blue_ice"
+        },
+        {
+            "item": "minecraft:blue_ice"
+        },
+        {
+            "item": "minecraft:blue_ice"
+        },
+        {
+            "item": "minecraft:blue_ice"
+        }
+    ],
+    "results": [
+        {
+            "item": "create_soul_harvest:absolute_ice"
+        }
+    ]
+}

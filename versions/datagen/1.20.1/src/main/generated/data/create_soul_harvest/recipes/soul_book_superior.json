@@ -1,0 +1,37 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "category": "misc",
+    "ingredients": [
+        {
+            "item": "minecraft:book"
+        },
+        {
+            "item": "create_soul_harvest:glyph_1"
+        },
+        {
+            "item": "create_soul_harvest:glyph_2"
+        },
+        {
+            "item": "create_soul_harvest:glyph_3"
+        },
+        {
+            "item": "create_soul_harvest:glyph_4"
+        },
+        {
+            "item": "create_soul_harvest:glyph_5"
+        },
+        {
+            "item": "create_soul_harvest:glyph_6"
+        },
+        {
+            "item": "create_soul_harvest:glyph_7"
+        },
+        {
+            "item": "create_soul_harvest:glyph_8"
+        }
+    ],
+    "result": {
+        "item": "create_soul_harvest:soul_book_superior",
+        "count": 1
+    }
+}

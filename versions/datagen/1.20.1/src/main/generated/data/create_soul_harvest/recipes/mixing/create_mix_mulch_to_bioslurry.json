@@ -1,0 +1,39 @@
+{
+    "type": "create:mixing",
+    "ingredients": [
+        {
+            "item": "create_soul_harvest:organic_mulch"
+        },
+        {
+            "item": "create_soul_harvest:organic_mulch"
+        },
+        {
+            "item": "create_soul_harvest:organic_mulch"
+        },
+        {
+            "item": "create_soul_harvest:organic_mulch"
+        },
+        {
+            "item": "create_soul_harvest:organic_mulch"
+        },
+        {
+            "item": "create_soul_harvest:organic_mulch"
+        },
+        {
+            "item": "create_soul_harvest:organic_mulch"
+        },
+        {
+            "item": "create_soul_harvest:organic_mulch"
+        },
+        {
+            "amount": 250,
+            "fluid": "minecraft:water"
+        }
+    ],
+    "results": [
+        {
+            "amount": 250,
+            "fluid": "create_soul_harvest:bioslurry"
+        }
+    ]
+}

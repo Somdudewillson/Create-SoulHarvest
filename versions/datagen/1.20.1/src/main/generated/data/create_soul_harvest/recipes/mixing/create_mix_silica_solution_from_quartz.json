@@ -1,0 +1,18 @@
+{
+    "type": "create:mixing",
+    "ingredients": [
+        {
+            "item": "minecraft:quartz"
+        },
+        {
+            "amount": 1000,
+            "fluid": "minecraft:water"
+        }
+    ],
+    "results": [
+        {
+            "amount": 1000,
+            "fluid": "create_soul_harvest:silica_solution"
+        }
+    ]
+}

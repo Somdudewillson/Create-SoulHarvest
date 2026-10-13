@@ -1,0 +1,39 @@
+{
+    "type": "create:mixing",
+    "ingredients": [
+        {
+            "tag": "minecraft:smelts_to_glass"
+        },
+        {
+            "tag": "minecraft:smelts_to_glass"
+        },
+        {
+            "tag": "minecraft:smelts_to_glass"
+        },
+        {
+            "tag": "minecraft:smelts_to_glass"
+        },
+        {
+            "tag": "minecraft:smelts_to_glass"
+        },
+        {
+            "tag": "minecraft:smelts_to_glass"
+        },
+        {
+            "tag": "minecraft:smelts_to_glass"
+        },
+        {
+            "tag": "minecraft:smelts_to_glass"
+        },
+        {
+            "amount": 1000,
+            "fluid": "minecraft:water"
+        }
+    ],
+    "results": [
+        {
+            "amount": 1000,
+            "fluid": "create_soul_harvest:silica_solution"
+        }
+    ]
+}

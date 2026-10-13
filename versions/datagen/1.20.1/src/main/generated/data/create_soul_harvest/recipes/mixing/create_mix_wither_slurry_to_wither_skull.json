@@ -1,0 +1,21 @@
+{
+    "type": "create:mixing",
+    "ingredients": [
+        {
+            "item": "create_soul_harvest:carved_bone_block"
+        },
+        {
+            "amount": 1000,
+            "fluid": "create_soul_harvest:wither_slurry"
+        },
+        {
+            "amount": 1000,
+            "fluid": "minecraft:lava"
+        }
+    ],
+    "results": [
+        {
+            "item": "minecraft:wither_skeleton_skull"
+        }
+    ]
+}

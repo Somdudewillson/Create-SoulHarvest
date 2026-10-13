@@ -1,0 +1,14 @@
+{
+    "type": "create_soul_harvest:soul_infusion",
+    "ingredients": [
+        {
+            "item": "minecraft:amethyst_shard"
+        }
+    ],
+    "results": [
+        {
+            "item": "create_soul_harvest:soul_shard",
+            "chance": 0.35
+        }
+    ]
+}

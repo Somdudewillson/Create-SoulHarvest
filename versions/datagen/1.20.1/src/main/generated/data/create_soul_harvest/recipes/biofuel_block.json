@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "building",
+    "key": {
+        "#": {
+            "item": "create_soul_harvest:biofuel_chunk"
+        }
+    },
+    "pattern": [
+        "###",
+        "###",
+        "###"
+    ],
+    "result": {
+        "item": "create_soul_harvest:biofuel_block",
+        "count": 1
+    }
+}
