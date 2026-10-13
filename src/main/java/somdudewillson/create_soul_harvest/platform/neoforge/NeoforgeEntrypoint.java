@@ -7,6 +7,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.event.SoulHarvestGameEvents;
+import somdudewillson.create_soul_harvest.content.recipe.mulching.MulchPackFinder;
 import somdudewillson.create_soul_harvest.registry.*;
 
 @Mod(SoulHarvestMod.MOD_ID)
@@ -25,6 +26,8 @@ public class NeoforgeEntrypoint {
 		ModFanProcessingTypes.FAN_PROCESSING_TYPES.register(modBus);
 		ModRecipeTypes.register(modBus);
 		ModParticleTypes.PARTICLE_TYPES.register(modBus);
+
+		MulchPackFinder.register(modBus);
 
 		SoulHarvestGameEvents.register(NeoForge.EVENT_BUS);
 	}

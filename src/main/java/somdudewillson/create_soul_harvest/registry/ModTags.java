@@ -42,6 +42,11 @@ public final class ModTags {
 		public static final TagKey<Item> SOUL_BOOKS = modTag("soul_books");
 
 		public static final TagKey<Item> BIOCIDE_GAS_PROTECTION = modTag("biocide_gas_protection");
+		public static final TagKey<Item> COMPOSTABLES = modTag("compostables");
+
+		public static TagKey<Item> compostableTag(int percent) {
+			return modTag("compostables/" + percent);
+		}
 
 		private static TagKey<Item> modTag(String path) {
 			return TagKey.create(Registries.ITEM, SoulHarvestMod.id(path));

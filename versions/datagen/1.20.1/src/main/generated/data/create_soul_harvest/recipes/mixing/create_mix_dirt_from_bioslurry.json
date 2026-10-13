@@ -1,0 +1,17 @@
+{
+    "type": "create:mixing",
+    "ingredients": [
+        {
+            "tag": "minecraft:sand"
+        },
+        {
+            "amount": 250,
+            "fluid": "create_soul_harvest:bioslurry"
+        }
+    ],
+    "results": [
+        {
+            "item": "minecraft:dirt"
+        }
+    ]
+}

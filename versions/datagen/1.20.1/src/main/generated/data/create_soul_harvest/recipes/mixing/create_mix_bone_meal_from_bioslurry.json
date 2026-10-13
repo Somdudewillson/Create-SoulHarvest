@@ -1,0 +1,19 @@
+{
+    "type": "create:mixing",
+    "heatRequirement": "heated",
+    "ingredients": [
+        {
+            "tag": "minecraft:dirt"
+        },
+        {
+            "amount": 1000,
+            "fluid": "create_soul_harvest:bioslurry"
+        }
+    ],
+    "results": [
+        {
+            "item": "minecraft:bone_meal",
+            "count": 9
+        }
+    ]
+}

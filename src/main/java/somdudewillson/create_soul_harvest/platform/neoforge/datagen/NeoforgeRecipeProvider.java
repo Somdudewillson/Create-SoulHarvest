@@ -333,6 +333,21 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.output(ModFluids.BIOSLURRY.get(), 250)
 				.build(recipeOutput);
 
+		// Mixing: Bioslurry to Dirt
+		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_dirt_from_bioslurry"))
+			.require(ItemTags.SAND)
+			.require(ModFluids.BIOSLURRY.get(), 250)
+			.output(Items.DIRT, 1)
+			.build(recipeOutput);
+
+		// Mixing: Bioslurry to Bone Meal
+		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_bone_meal_from_bioslurry"))
+			.require(ItemTags.DIRT)
+			.require(ModFluids.BIOSLURRY.get(), 1000)
+			.requiresHeat(HeatCondition.HEATED)
+			.output(Items.BONE_MEAL, 9)
+			.build(recipeOutput);
+
 		// Mixing: Wither Slurry to Wither Rose
 		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_wither_slurry_to_wither_rose"))
 				.require(ItemTags.FLOWERS)
