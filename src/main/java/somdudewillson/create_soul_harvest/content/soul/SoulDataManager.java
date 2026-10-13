@@ -65,7 +65,7 @@ public class SoulDataManager {
 
 			if (rawFullData.containsKey(entityId)) {
 				SoulData full = rawFullData.get(entityId);
-				soulData = new SoulData(full.tier(), full.progressPerKill(), full.pools().values());
+				soulData = new SoulData(full.tier(), full.progressPerKill(), full.xp(), full.pools().values());
 				wasFullData = true;
 			} else {
 				// Determine tier from partial data or tags
@@ -124,17 +124,31 @@ public class SoulDataManager {
 					}
 				}
 
-				// Resolve drop pools
+				// Determine xp and drop pools
 				List<SoulDropPool> pools;
+				int xp = 0;
+				if (partials != null) {
+					for (PartialSoulData p : partials) {
+						if (p.xp().isPresent()) {
+							xp = p.xp().getAsInt();
+							break;
+						}
+					}
+				}
+
 				if (DROP_CACHE.contains(entityId)) {
-					pools = DROP_CACHE.get(entityId);
+					SoulDropCache.CachedSoulData cached = DROP_CACHE.get(entityId);
+					pools = cached.pools();
+					if (xp <= 0) {
+						xp = cached.xp();
+					}
 				} else {
 					pools = Collections.emptyList();
 					pendingSamplingQueue.add(entityId);
 					queuedForSampling = true;
 				}
 
-				soulData = new SoulData(tier, progress, pools);
+				soulData = new SoulData(tier, progress, xp, pools);
 			}
 
 			// Apply partial data additions
@@ -147,6 +161,9 @@ public class SoulDataManager {
 						if (partial.progressPerKill().isPresent()) {
 							soulData.progressPerKill(partial.progressPerKill().getAsInt());
 						}
+						if (partial.xp().isPresent()) {
+							soulData.xp(partial.xp().getAsInt());
+						}
 					}
 					for (SoulDropPool partialPool : partial.pools()) {
 						soulData.mergePool(partialPool);
@@ -154,8 +171,8 @@ public class SoulDataManager {
 				}
 			}
 
-			// Pruning: if not queued for sampling and has empty drops, omit from final manager entries
-			if (!queuedForSampling && !soulData.hasDrops()) {
+			// Pruning: if not queued for sampling and has neither drops nor xp, omit from final manager entries
+			if (!queuedForSampling && !soulData.hasDrops() && soulData.xp() <= 0) {
 				continue;
 			}
 
@@ -188,12 +205,15 @@ public class SoulDataManager {
 			return;
 		}
 
-		List<SoulDropPool> sampledPools = sampleNonPlayerDrops(server, entityType);
-		DROP_CACHE.put(entityId, sampledPools, server);
+		SoulDropCache.CachedSoulData sampled = sampleEntityData(server, entityType);
+		DROP_CACHE.put(entityId, sampled.xp(), sampled.pools(), server);
 
 		SoulData current = resolvedData.get(entityId);
 		if (current != null) {
-			for (SoulDropPool pool : sampledPools) {
+			if (current.xp() <= 0 && sampled.xp() > 0) {
+				current.xp(sampled.xp());
+			}
+			for (SoulDropPool pool : sampled.pools()) {
 				current.mergePool(pool);
 			}
 		}
@@ -202,32 +222,53 @@ public class SoulDataManager {
 	//? forge {
 	/*@SuppressWarnings("deprecation")
 	*///?}
-	private static List<SoulDropPool> sampleNonPlayerDrops(MinecraftServer server, EntityType<?> entityType) {
+	private static SoulDropCache.CachedSoulData sampleEntityData(MinecraftServer server, EntityType<?> entityType) {
 		ServerLevel level = server.overworld();
 		if (level == null) {
-			return Collections.emptyList();
+			return new SoulDropCache.CachedSoulData(0, Collections.emptyList());
 		}
 
 		try {
 			//? >= 1.21 {
 			ResourceKey<net.minecraft.world.level.storage.loot.LootTable> lootTableKey = entityType.getDefaultLootTable();
 			if (lootTableKey == null) {
-				return Collections.emptyList();
+				return new SoulDropCache.CachedSoulData(0, Collections.emptyList());
 			}
 			net.minecraft.world.level.storage.loot.LootTable lootTable = server.reloadableRegistries().getLootTable(lootTableKey);
 			//?} else {
 			/*ResourceLocation lootTableId = entityType.getDefaultLootTable();
 			if (lootTableId == null) {
-				return Collections.emptyList();
+				return new SoulDropCache.CachedSoulData(0, Collections.emptyList());
 			}
 			net.minecraft.world.level.storage.loot.LootTable lootTable = server.getLootData().getLootTable(lootTableId);
 			*///?}
 
+			Entity entity = entityType.create(level);
+
+			int xp = 0;
+			try {
+				//? >= 1.21 {
+				if (entity instanceof net.minecraft.world.entity.LivingEntity living) {
+					xp = living.getExperienceReward(level, null);
+				}
+				//?} else {
+				/*if (entity instanceof net.minecraft.world.entity.Mob mob) {
+					xp = mob.getExperienceReward();
+				}
+				*///?}
+			} catch (Exception e) {
+				SoulHarvestMod.LOGGER.debug("Failed to calculate experience reward for {}: {}",
+						BuiltInRegistries.ENTITY_TYPE.getKey(entityType), e.getMessage());
+			}
+			xp = Math.max(0, xp);
+
 			if (lootTable == null || lootTable == net.minecraft.world.level.storage.loot.LootTable.EMPTY) {
-				return Collections.emptyList();
+				if (entity != null) {
+					entity.discard();
+				}
+				return new SoulDropCache.CachedSoulData(xp, Collections.emptyList());
 			}
 
-			Entity entity = entityType.create(level);
 			DamageSource damageSource = level.damageSources().genericKill();
 			Vec3 pos = entity != null ? entity.position() : Vec3.atCenterOf(level.getSharedSpawnPos());
 
@@ -263,15 +304,15 @@ public class SoulDataManager {
 				entries.add(new SoulDropEntry(entry.getKey(), stats.occurrences, stats.minCount, stats.maxCount));
 			}
 
-			if (entries.isEmpty()) {
-				return Collections.emptyList();
-			}
+			List<SoulDropPool> pools = entries.isEmpty()
+					? Collections.emptyList()
+					: List.of(new SoulDropPool("main", 1, entries));
 
-			return List.of(new SoulDropPool("main", 1, entries));
+			return new SoulDropCache.CachedSoulData(xp, pools);
 		} catch (Exception e) {
 			SoulHarvestMod.LOGGER.debug("Failed to simulate loot table for {}: {}",
 					BuiltInRegistries.ENTITY_TYPE.getKey(entityType), e.getMessage());
-			return Collections.emptyList();
+			return new SoulDropCache.CachedSoulData(0, Collections.emptyList());
 		}
 	}
 

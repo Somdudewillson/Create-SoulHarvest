@@ -12,12 +12,18 @@ import lombok.experimental.Accessors;
 public class PartialSoulData {
 	private final OptionalInt tier;
 	private final OptionalInt progressPerKill;
+	private final OptionalInt xp;
 	private final List<SoulDropPool> pools;
 
-	public PartialSoulData(OptionalInt tier, OptionalInt progressPerKill, List<SoulDropPool> pools) {
+	public PartialSoulData(OptionalInt tier, OptionalInt progressPerKill, OptionalInt xp, List<SoulDropPool> pools) {
 		this.tier = tier;
 		this.progressPerKill = progressPerKill;
+		this.xp = xp;
 		this.pools = pools != null ? pools : Collections.emptyList();
+	}
+
+	public PartialSoulData(OptionalInt tier, OptionalInt progressPerKill, List<SoulDropPool> pools) {
+		this(tier, progressPerKill, OptionalInt.empty(), pools);
 	}
 
 	public List<SoulDropPool> pools() {

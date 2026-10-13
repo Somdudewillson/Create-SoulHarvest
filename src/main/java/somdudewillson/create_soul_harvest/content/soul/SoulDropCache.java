@@ -4,6 +4,7 @@ import com.google.gson.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
+import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 
 import java.io.BufferedReader;
@@ -14,10 +15,37 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SoulDropCache {
+	public static final int CURRENT_VERSION = 1;
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final String CACHE_FILE_NAME = "soul_harvest_drop_cache.json";
 
-	private final Map<ResourceLocation, List<SoulDropPool>> cache = new ConcurrentHashMap<>();
+	public record CachedSoulData(int xp, List<SoulDropPool> pools) {
+		public JsonObject toJson() {
+			JsonObject obj = new JsonObject();
+			obj.addProperty("xp", xp);
+			JsonArray poolsArray = new JsonArray();
+			for (SoulDropPool pool : pools) {
+				poolsArray.add(pool.toJson());
+			}
+			obj.add("pools", poolsArray);
+			return obj;
+		}
+
+		@Nullable
+		public static CachedSoulData fromJson(JsonObject json) {
+			if (json == null) return null;
+			int xp = 0;
+			if (json.has("xp")) {
+				xp = json.get("xp").getAsInt();
+			} else if (json.has("experience")) {
+				xp = json.get("experience").getAsInt();
+			}
+			List<SoulDropPool> pools = SoulDropPool.parsePools(json);
+			return new CachedSoulData(xp, pools);
+		}
+	}
+
+	private final Map<ResourceLocation, CachedSoulData> cache = new ConcurrentHashMap<>();
 
 	private Path getCachePath(MinecraftServer server) {
 		if (server == null) return null;
@@ -38,37 +66,71 @@ public class SoulDropCache {
 		}
 
 		try (BufferedReader reader = Files.newBufferedReader(path)) {
-			JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
-			for (Map.Entry<String, JsonElement> entry : root.entrySet()) {
-				ResourceLocation entityId = ResourceLocation.tryParse(entry.getKey());
-				if (entityId == null || !entry.getValue().isJsonArray()) continue;
-
-				List<SoulDropPool> pools = new ArrayList<>();
-				for (JsonElement poolEl : entry.getValue().getAsJsonArray()) {
-					if (!poolEl.isJsonObject()) continue;
-					JsonObject poolObj = poolEl.getAsJsonObject();
-					String name = poolObj.has("name") ? poolObj.get("name").getAsString() : "main";
-					int rolls = poolObj.has("rolls") ? poolObj.get("rolls").getAsInt() : 1;
-					List<SoulDropEntry> entries = new ArrayList<>();
-					if (poolObj.has("entries") && poolObj.get("entries").isJsonArray()) {
-						for (JsonElement entEl : poolObj.get("entries").getAsJsonArray()) {
-							if (!entEl.isJsonObject()) continue;
-							JsonObject entObj = entEl.getAsJsonObject();
-							ResourceLocation itemId = ResourceLocation.tryParse(entObj.get("item").getAsString());
-							if (itemId == null) continue;
-							int weight = entObj.has("weight") ? entObj.get("weight").getAsInt() : 1;
-							int min = entObj.has("min") ? entObj.get("min").getAsInt() : 1;
-							int max = entObj.has("max") ? entObj.get("max").getAsInt() : 1;
-							entries.add(new SoulDropEntry(itemId, weight, min, max));
-						}
-					}
-					pools.add(new SoulDropPool(name, rolls, entries));
-				}
-				cache.put(entityId, pools);
+			JsonElement rootEl = JsonParser.parseReader(reader);
+			if (!rootEl.isJsonObject()) {
+				dropCacheFile(path, "Root is not a JSON object");
+				return;
 			}
-			SoulHarvestMod.LOGGER.info("Loaded {} cached entity drop tables from {}", cache.size(), path.getFileName());
+
+			JsonObject root = rootEl.getAsJsonObject();
+			if (!validateCacheRoot(root, path)) {
+				return;
+			}
+
+			Map<ResourceLocation, CachedSoulData> loaded = deserializeEntities(root);
+			cache.putAll(loaded);
+			SoulHarvestMod.LOGGER.info("Loaded {} cached entity drop & soul definitions from {}", cache.size(), path.getFileName());
 		} catch (Exception e) {
 			SoulHarvestMod.LOGGER.error("Failed to load soul drop cache: {}", e.getMessage());
+			dropCacheFile(path, "Exception reading cache file: " + e.getMessage());
+		}
+	}
+
+	private boolean validateCacheRoot(JsonObject root, Path path) {
+		if (!root.has("version") || root.get("version").getAsInt() != CURRENT_VERSION) {
+			String versionDesc = !root.has("version")
+					? "Missing version"
+					: "Out-of-date version " + root.get("version").getAsInt() + " (expected " + CURRENT_VERSION + ")";
+			dropCacheFile(path, versionDesc);
+			return false;
+		}
+
+		if (!root.has("entities") && !root.has("data")) {
+			dropCacheFile(path, "Missing 'entities' object in cache root");
+			return false;
+		}
+		return true;
+	}
+
+	private Map<ResourceLocation, CachedSoulData> deserializeEntities(JsonObject root) {
+		Map<ResourceLocation, CachedSoulData> result = new HashMap<>();
+		JsonObject entitiesObj = root.has("entities") && root.get("entities").isJsonObject()
+				? root.getAsJsonObject("entities")
+				: root.getAsJsonObject("data");
+
+		if (entitiesObj == null) {
+			return result;
+		}
+
+		for (Map.Entry<String, JsonElement> entry : entitiesObj.entrySet()) {
+			ResourceLocation entityId = ResourceLocation.tryParse(entry.getKey());
+			if (entityId == null || !entry.getValue().isJsonObject()) continue;
+
+			CachedSoulData data = CachedSoulData.fromJson(entry.getValue().getAsJsonObject());
+			if (data != null) {
+				result.put(entityId, data);
+			}
+		}
+		return result;
+	}
+
+	private void dropCacheFile(Path path, String reason) {
+		cache.clear();
+		try {
+			Files.deleteIfExists(path);
+			SoulHarvestMod.LOGGER.info("Dropped out-of-date or invalid soul drop cache file at {} (reason: {}). Will regenerate from scratch.", path.getFileName(), reason);
+		} catch (Exception e) {
+			SoulHarvestMod.LOGGER.error("Failed to delete out-of-date cache file at {}: {}", path, e.getMessage());
 		}
 	}
 
@@ -77,28 +139,7 @@ public class SoulDropCache {
 		if (path == null) return;
 
 		try {
-			JsonObject root = new JsonObject();
-			for (Map.Entry<ResourceLocation, List<SoulDropPool>> entry : cache.entrySet()) {
-				JsonArray poolsArray = new JsonArray();
-				for (SoulDropPool pool : entry.getValue()) {
-					JsonObject poolObj = new JsonObject();
-					poolObj.addProperty("name", pool.name());
-					poolObj.addProperty("rolls", pool.rolls());
-					JsonArray entriesArray = new JsonArray();
-					for (SoulDropEntry ent : pool.entries()) {
-						JsonObject entObj = new JsonObject();
-						entObj.addProperty("item", ent.item().toString());
-						entObj.addProperty("weight", ent.weight());
-						entObj.addProperty("min", ent.min());
-						entObj.addProperty("max", ent.max());
-						entriesArray.add(entObj);
-					}
-					poolObj.add("entries", entriesArray);
-					poolsArray.add(poolObj);
-				}
-				root.add(entry.getKey().toString(), poolsArray);
-			}
-
+			JsonObject root = serializeCache();
 			Files.createDirectories(path.getParent());
 			try (BufferedWriter writer = Files.newBufferedWriter(path)) {
 				GSON.toJson(root, writer);
@@ -108,20 +149,42 @@ public class SoulDropCache {
 		}
 	}
 
+	private JsonObject serializeCache() {
+		JsonObject root = new JsonObject();
+		root.addProperty("version", CURRENT_VERSION);
+
+		JsonObject entitiesObj = new JsonObject();
+		for (Map.Entry<ResourceLocation, CachedSoulData> entry : cache.entrySet()) {
+			entitiesObj.add(entry.getKey().toString(), entry.getValue().toJson());
+		}
+		root.add("entities", entitiesObj);
+		return root;
+	}
+
 	public boolean contains(ResourceLocation entityId) {
 		return cache.containsKey(entityId);
 	}
 
-	public List<SoulDropPool> get(ResourceLocation entityId) {
+	public CachedSoulData get(ResourceLocation entityId) {
 		return cache.get(entityId);
+	}
+
+	public List<SoulDropPool> getPools(ResourceLocation entityId) {
+		CachedSoulData data = cache.get(entityId);
+		return data != null ? data.pools() : Collections.emptyList();
+	}
+
+	public int getXp(ResourceLocation entityId) {
+		CachedSoulData data = cache.get(entityId);
+		return data != null ? data.xp() : 0;
 	}
 
 	public int size() {
 		return cache.size();
 	}
 
-	public synchronized void put(ResourceLocation entityId, List<SoulDropPool> pools, MinecraftServer server) {
-		cache.put(entityId, pools);
+	public synchronized void put(ResourceLocation entityId, int xp, List<SoulDropPool> pools, MinecraftServer server) {
+		cache.put(entityId, new CachedSoulData(xp, pools));
 		save(server);
 	}
 

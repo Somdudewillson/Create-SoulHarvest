@@ -14,11 +14,13 @@ import lombok.experimental.Accessors;
 public class SoulData {
 	private int tier;
 	private int progressPerKill;
+	private int xp;
 	private final Map<String, SoulDropPool> pools;
 
-	public SoulData(int tier, int progressPerKill, Collection<SoulDropPool> poolList) {
+	public SoulData(int tier, int progressPerKill, int xp, Collection<SoulDropPool> poolList) {
 		this.tier = Math.max(1, tier);
 		this.progressPerKill = Math.max(1, progressPerKill);
+		this.xp = Math.max(0, xp);
 		this.pools = new LinkedHashMap<>();
 		if (poolList != null) {
 			for (SoulDropPool pool : poolList) {
@@ -27,8 +29,16 @@ public class SoulData {
 		}
 	}
 
+	public SoulData(int tier, int progressPerKill, int xp) {
+		this(tier, progressPerKill, xp, Collections.emptyList());
+	}
+
+	public SoulData(int tier, int progressPerKill, Collection<SoulDropPool> poolList) {
+		this(tier, progressPerKill, 0, poolList);
+	}
+
 	public SoulData(int tier, int progressPerKill) {
-		this(tier, progressPerKill, Collections.emptyList());
+		this(tier, progressPerKill, 0, Collections.emptyList());
 	}
 
 	public void tier(int tier) {
@@ -37,6 +47,10 @@ public class SoulData {
 
 	public void progressPerKill(int progressPerKill) {
 		this.progressPerKill = Math.max(1, progressPerKill);
+	}
+
+	public void xp(int xp) {
+		this.xp = Math.max(0, xp);
 	}
 
 	public Map<String, SoulDropPool> pools() {

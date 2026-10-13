@@ -54,70 +54,61 @@ public class SoulDataLoader extends SimplePreparableReloadListener<SoulDataLoade
 
 			// Process resources in order (lower priority to higher priority)
 			for (Resource resource : entry.getValue()) {
-				try (Reader reader = resource.openAsReader()) {
-					JsonElement parsed = JsonParser.parseReader(reader);
-					if (!parsed.isJsonObject()) continue;
-					JsonObject json = parsed.getAsJsonObject();
-
-					boolean isPartial = false;
-					if (json.has("partial") && json.get("partial").getAsBoolean()) {
-						isPartial = true;
-					} else if (json.has("replace") && !json.get("replace").getAsBoolean()) {
-						isPartial = true;
-					}
-
-					List<SoulDropPool> pools = parsePools(json);
-
-					if (isPartial) {
-						OptionalInt tier = json.has("tier") ? OptionalInt.of(json.get("tier").getAsInt()) : OptionalInt.empty();
-						OptionalInt progress = json.has("progress_per_kill") ? OptionalInt.of(json.get("progress_per_kill").getAsInt()) : OptionalInt.empty();
-						PartialSoulData partial = new PartialSoulData(tier, progress, pools);
-						partialData.computeIfAbsent(entityId, k -> new ArrayList<>()).add(partial);
-					} else {
-						int tier = json.get("tier").getAsInt();
-						int progress = json.get("progress_per_kill").getAsInt();
-						SoulData full = new SoulData(tier, progress, pools);
-						fullData.put(entityId, full);
-					}
-				} catch (Exception e) {
-					SoulHarvestMod.LOGGER.error("Failed to parse soul data file {} from pack {}: {}",
-							fileLocation, resource.sourcePackId(), e.getMessage());
-				}
+				parseResource(fileLocation, resource, entityId, fullData, partialData);
 			}
 		}
 
 		return new PreparedData(fullData, partialData);
 	}
 
-	private List<SoulDropPool> parsePools(JsonObject json) {
-		List<SoulDropPool> pools = new ArrayList<>();
-		if (json.has("pools") && json.get("pools").isJsonArray()) {
-			for (JsonElement poolEl : json.getAsJsonArray("pools")) {
-				if (!poolEl.isJsonObject()) continue;
-				JsonObject poolObj = poolEl.getAsJsonObject();
+	private void parseResource(
+			ResourceLocation fileLocation,
+			Resource resource,
+			ResourceLocation entityId,
+			Map<ResourceLocation, SoulData> fullData,
+			Map<ResourceLocation, List<PartialSoulData>> partialData
+	) {
+		try (Reader reader = resource.openAsReader()) {
+			JsonElement parsed = JsonParser.parseReader(reader);
+			if (!parsed.isJsonObject()) return;
+			JsonObject json = parsed.getAsJsonObject();
 
-				String name = poolObj.has("name") ? poolObj.get("name").getAsString() : "main";
-				int rolls = poolObj.has("rolls") ? poolObj.get("rolls").getAsInt() : 1;
-				List<SoulDropEntry> entries = new ArrayList<>();
+			boolean isPartial = isPartialDefinition(json);
+			List<SoulDropPool> pools = SoulDropPool.parsePools(json);
+			OptionalInt xp = parseXp(json);
 
-				if (poolObj.has("entries") && poolObj.get("entries").isJsonArray()) {
-					for (JsonElement entEl : poolObj.getAsJsonArray("entries")) {
-						if (!entEl.isJsonObject()) continue;
-						JsonObject entObj = entEl.getAsJsonObject();
-						if (!entObj.has("item")) continue;
-						ResourceLocation itemLoc = ResourceLocation.tryParse(entObj.get("item").getAsString());
-						if (itemLoc == null) continue;
-
-						int weight = entObj.has("weight") ? entObj.get("weight").getAsInt() : 1;
-						int min = entObj.has("min") ? entObj.get("min").getAsInt() : 1;
-						int max = entObj.has("max") ? entObj.get("max").getAsInt() : 1;
-						entries.add(new SoulDropEntry(itemLoc, weight, min, max));
-					}
-				}
-				pools.add(new SoulDropPool(name, rolls, entries));
+			if (isPartial) {
+				OptionalInt tier = json.has("tier") ? OptionalInt.of(json.get("tier").getAsInt()) : OptionalInt.empty();
+				OptionalInt progress = json.has("progress_per_kill") ? OptionalInt.of(json.get("progress_per_kill").getAsInt()) : OptionalInt.empty();
+				PartialSoulData partial = new PartialSoulData(tier, progress, xp, pools);
+				partialData.computeIfAbsent(entityId, k -> new ArrayList<>()).add(partial);
+			} else {
+				int tier = json.has("tier") ? json.get("tier").getAsInt() : 1;
+				int progress = json.has("progress_per_kill") ? json.get("progress_per_kill").getAsInt() : 10;
+				int xpAmount = xp.orElse(0);
+				SoulData full = new SoulData(tier, progress, xpAmount, pools);
+				fullData.put(entityId, full);
 			}
+		} catch (Exception e) {
+			SoulHarvestMod.LOGGER.error("Failed to parse soul data file {} from pack {}: {}",
+					fileLocation, resource.sourcePackId(), e.getMessage());
 		}
-		return pools;
+	}
+
+	private boolean isPartialDefinition(JsonObject json) {
+		if (json.has("partial") && json.get("partial").getAsBoolean()) {
+			return true;
+		}
+		return json.has("replace") && !json.get("replace").getAsBoolean();
+	}
+
+	private OptionalInt parseXp(JsonObject json) {
+		if (json.has("xp")) {
+			return OptionalInt.of(json.get("xp").getAsInt());
+		} else if (json.has("experience")) {
+			return OptionalInt.of(json.get("experience").getAsInt());
+		}
+		return OptionalInt.empty();
 	}
 
 	@Override

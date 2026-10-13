@@ -10,6 +10,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import org.jetbrains.annotations.Nullable;
+
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -28,6 +33,57 @@ public class SoulDropPool {
 
 	public SoulDropPool(String name, int rolls) {
 		this(name, rolls, Collections.emptyList());
+	}
+
+	public JsonObject toJson() {
+		JsonObject obj = new JsonObject();
+		obj.addProperty("name", name);
+		obj.addProperty("rolls", rolls);
+		JsonArray entriesArray = new JsonArray();
+		for (SoulDropEntry entry : entries) {
+			entriesArray.add(entry.toJson());
+		}
+		obj.add("entries", entriesArray);
+		return obj;
+	}
+
+	@Nullable
+	public static SoulDropPool fromJson(JsonObject json) {
+		if (json == null) return null;
+		String name = json.has("name") ? json.get("name").getAsString() : "main";
+		int rolls = json.has("rolls") ? json.get("rolls").getAsInt() : 1;
+		List<SoulDropEntry> entries = parseEntries(json);
+		return new SoulDropPool(name, rolls, entries);
+	}
+
+	public static List<SoulDropPool> parsePools(JsonObject json) {
+		List<SoulDropPool> pools = new ArrayList<>();
+		if (json != null && json.has("pools") && json.get("pools").isJsonArray()) {
+			for (JsonElement el : json.getAsJsonArray("pools")) {
+				if (el.isJsonObject()) {
+					SoulDropPool pool = fromJson(el.getAsJsonObject());
+					if (pool != null) {
+						pools.add(pool);
+					}
+				}
+			}
+		}
+		return pools;
+	}
+
+	public static List<SoulDropEntry> parseEntries(JsonObject json) {
+		List<SoulDropEntry> entries = new ArrayList<>();
+		if (json != null && json.has("entries") && json.get("entries").isJsonArray()) {
+			for (JsonElement el : json.getAsJsonArray("entries")) {
+				if (el.isJsonObject()) {
+					SoulDropEntry entry = SoulDropEntry.fromJson(el.getAsJsonObject());
+					if (entry != null) {
+						entries.add(entry);
+					}
+				}
+			}
+		}
+		return entries;
 	}
 
 	public List<SoulDropEntry> entries() {
