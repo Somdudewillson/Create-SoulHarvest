@@ -7,7 +7,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
 //?} forge {
 /*import net.neoforged.neoforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.DeferredHolder;
 *///?}
 import somdudewillson.create_soul_harvest.SoulHarvestMod;

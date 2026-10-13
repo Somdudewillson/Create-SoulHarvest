@@ -2,9 +2,11 @@ package somdudewillson.create_soul_harvest.registry;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -77,4 +79,16 @@ public class ModBlocks {
 	public static final DeferredHolder<Block, BiocideGasBlock> BIOCIDE_GAS = BLOCKS.register("biocide_gas",
 			() -> new BiocideGasBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).strength(0.0f).noCollission().noOcclusion().noLootTable()));
 
+	public static final DeferredHolder<Block, LiquidBlock> LIQUID_SOUL_CRYSTAL = BLOCKS.register("liquid_soul_crystal",
+			() -> new LiquidBlock(ModFluids.LIQUID_SOUL_CRYSTAL.get(),
+					BlockBehaviour.Properties.of()
+							.mapColor(MapColor.COLOR_MAGENTA)
+							.replaceable()
+							.noCollission()
+							.strength(100.0f)
+							.pushReaction(PushReaction.DESTROY)
+							.noLootTable()
+							.liquid()
+							.sound(SoundType.EMPTY)
+							.lightLevel(s -> 10)));
 }

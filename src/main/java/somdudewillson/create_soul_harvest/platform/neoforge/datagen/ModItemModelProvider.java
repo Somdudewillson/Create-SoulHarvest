@@ -20,6 +20,8 @@ public class ModItemModelProvider extends ItemModelProvider {
 				.texture("layer0", modLoc("item/runic_tablet_empty"));
 		withExistingParent("enchanted_inlaid_lapis", "item/generated")
 				.texture("layer0", modLoc("item/polished_inlaid_lapis"));
+		withExistingParent("liquid_soul_crystal_bucket", "item/generated")
+				.texture("layer0", modLoc("item/liquid_soul_crystal_bucket"));
 
 		// Flat block items using block/ textures
 		withExistingParent("soul_bud_small", "item/generated").texture("layer0", modLoc("block/soul_bud_small"));

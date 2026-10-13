@@ -1,0 +1,19 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:quartz"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 1000,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "results": [
+    {
+      "amount": 1000,
+      "id": "create_soul_harvest:silica_solution"
+    }
+  ]
+}

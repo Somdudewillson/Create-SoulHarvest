@@ -1,7 +1,18 @@
 {
-  "type": "create:compacting",
-  "heat_requirement": "heated",
+  "type": "create:mixing",
   "ingredients": [
+    {
+      "tag": "minecraft:smelts_to_glass"
+    },
+    {
+      "tag": "minecraft:smelts_to_glass"
+    },
+    {
+      "tag": "minecraft:smelts_to_glass"
+    },
+    {
+      "tag": "minecraft:smelts_to_glass"
+    },
     {
       "tag": "minecraft:smelts_to_glass"
     },

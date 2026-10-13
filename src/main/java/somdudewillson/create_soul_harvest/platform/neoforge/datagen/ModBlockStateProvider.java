@@ -76,6 +76,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
 			biocideGas.partialState().with(BiocideGasBlock.AGE, age).with(BiocideGasBlock.TRIGGERED, false)
 					.modelForState().modelFile(active).addModel();
 		}
+
+		// Liquid Soul Crystal (particle texture)
+		simpleBlock(ModBlocks.LIQUID_SOUL_CRYSTAL.get(),
+				models().getBuilder("liquid_soul_crystal").texture("particle", modLoc("block/liquid_soul_crystal_still")));
 	}
 }
 //?}

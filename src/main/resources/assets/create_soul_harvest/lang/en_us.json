@@ -14,6 +14,9 @@
   "block.create_soul_harvest.midas_core": "Midas Core",
   "block.create_soul_harvest.magic_glass": "Anima Glass",
   "block.create_soul_harvest.biocide_gas": "Biocide Gas",
+  "block.create_soul_harvest.liquid_soul_crystal": "Liquid Soul Crystal",
+
+  "item.create_soul_harvest.liquid_soul_crystal_bucket": "Liquid Soul Crystal Bucket",
 
   "item.create_soul_harvest.soul_bud_small": "Small Soul Crystal Bud",
   "item.create_soul_harvest.soul_bud_medium": "Medium Soul Crystal Bud",
@@ -68,6 +71,7 @@
   "fluid_type.create_soul_harvest.bioslurry": "Bioslurry",
   "fluid_type.create_soul_harvest.wither_slurry": "Wither Slurry",
   "fluid_type.create_soul_harvest.silica_solution": "Silica Solution",
+  "fluid_type.create_soul_harvest.liquid_soul_crystal": "Liquid Soul Crystal",
 
   "effect.create_soul_harvest.contagion": "Contagion",
 

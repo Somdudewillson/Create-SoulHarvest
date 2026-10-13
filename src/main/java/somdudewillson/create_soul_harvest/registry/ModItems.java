@@ -2,6 +2,7 @@ package somdudewillson.create_soul_harvest.registry;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -38,6 +39,9 @@ public class ModItems {
 			() -> new BlockItem(ModBlocks.CARVED_BONE_BLOCK.get(), new Item.Properties()));
 	public static final DeferredHolder<Item, BlockItem> MAGIC_GLASS = registerWithTab("magic_glass",
 			() -> new BlockItem(ModBlocks.MAGIC_GLASS.get(), new Item.Properties()));
+	public static final DeferredHolder<Item, BucketItem> LIQUID_SOUL_CRYSTAL_BUCKET = registerWithTab("liquid_soul_crystal_bucket",
+			() -> new BucketItem(ModFluids.LIQUID_SOUL_CRYSTAL.get(),
+					new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
 	// Fuels and organics
 	public static final DeferredHolder<Item, Item> ORGANIC_MULCH = ITEM_BUILDER_FACTORY.registerSimpleItem("organic_mulch")

@@ -63,6 +63,12 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 
 	@Override
 	protected void buildRecipes(@NotNull RecipeOutput recipeOutput) {
+		buildVanillaRecipes(recipeOutput);
+
+		buildCreateRecipes(recipeOutput);
+	}
+
+	private void buildVanillaRecipes(RecipeOutput recipeOutput) {
 		// Biofuel block & uncraft
 		ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.BIOFUEL_BLOCK.get())
 				.pattern("###")
@@ -225,9 +231,6 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				)
 				.unlockedBy("has_glyph_pages", has(glyphPagesTag))
 				.save(recipeOutput, SoulHarvestMod.id("recycle_glyph_page"));
-
-		// Create Processing Recipes
-		buildCreateRecipes(recipeOutput);
 	}
 
 	private void buildCreateRecipes(RecipeOutput recipeOutput) {
@@ -277,18 +280,6 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.output(ModBlocks.BIOFUEL_BLOCK.get())
 				.build(recipeOutput);
 
-		// Compacting: Silica Solution (Heated)
-		TagKey<Item> smeltsToGlass = TagKey.create(Registries.ITEM, ResourceLocation.withDefaultNamespace("smelts_to_glass"));
-		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_silica_solution"))
-				.require(smeltsToGlass)
-				.require(smeltsToGlass)
-				.require(smeltsToGlass)
-				.require(smeltsToGlass)
-				.require(Fluids.WATER, 1000)
-				.requiresHeat(HeatCondition.HEATED)
-				.output(ModFluids.SILICA_SOLUTION.get(), 1000)
-				.build(recipeOutput);
-
 		// Deploying: Carve Bone Block
 		new ItemApplicationRecipe.Builder<>(DeployerApplicationRecipe::new, SoulHarvestMod.id("create_deploy_carve_bone_block"))
 				.require(Blocks.BONE_BLOCK)
@@ -309,6 +300,28 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.require(Items.WITHER_ROSE)
 				.require(ModFluids.BIOSLURRY.get(), 250)
 				.output(ModFluids.WITHER_SLURRY.get(), 250)
+				.build(recipeOutput);
+
+		// Mixing: Silica Solution from Sand
+		TagKey<Item> smeltsToGlass = TagKey.create(Registries.ITEM, ResourceLocation.withDefaultNamespace("smelts_to_glass"));
+		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_silica_solution_from_sand"))
+				.require(smeltsToGlass)
+				.require(smeltsToGlass)
+				.require(smeltsToGlass)
+				.require(smeltsToGlass)
+				.require(smeltsToGlass)
+				.require(smeltsToGlass)
+				.require(smeltsToGlass)
+				.require(smeltsToGlass)
+				.require(Fluids.WATER, 1000)
+				.output(ModFluids.SILICA_SOLUTION.get(), 1000)
+				.build(recipeOutput);
+
+		// Mixing: Silica Solution from Quartz
+		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_silica_solution_from_quartz"))
+				.require(Items.QUARTZ)
+				.require(Fluids.WATER, 1000)
+				.output(ModFluids.SILICA_SOLUTION.get(), 1000)
 				.build(recipeOutput);
 
 		// Mixing: Mulch to Bioslurry
@@ -334,6 +347,14 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.require(ModFluids.WITHER_SLURRY.get(), 1000)
 				.require(Fluids.LAVA, 1000)
 				.output(Items.WITHER_SKELETON_SKULL, 1)
+				.build(recipeOutput);
+
+		// Mixing: Soul Shards to Liquid Soul Crystal
+		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_soul_shards_to_liquid_soul_crystal"))
+				.require(ModItems.SOUL_SHARD.get())
+				.require(ModFluids.SILICA_SOLUTION.get(), 125)
+				.requiresHeat(HeatCondition.HEATED)
+				.output(ModFluids.LIQUID_SOUL_CRYSTAL.get(), 250)
 				.build(recipeOutput);
 
 		// Sandpaper Polishing: Inlaid Lapis

@@ -26,10 +26,18 @@ stonecutter parameters {
 	replacements.string(current.parsed < "1.21") {
 		replace("import net.neoforged.neoforge.registries.DeferredRegister;", "import net.minecraftforge.registries.DeferredRegister;")
 		replace("import net.neoforged.neoforge.registries.DeferredHolder;", "import net.minecraftforge.registries.RegistryObject;")
+		replace("import net.neoforged.neoforge.registries.NeoForgeRegistries;", "import net.minecraftforge.registries.ForgeRegistries;")
+		replace("import net.neoforged.neoforge.fluids.FluidType;", "import net.minecraftforge.fluids.FluidType;")
+		replace("import net.neoforged.neoforge.fluids.BaseFlowingFluid;", "import net.minecraftforge.fluids.ForgeFlowingFluid;")
+		replace("NeoForgeRegistries.Keys.FLUID_TYPES", "ForgeRegistries.Keys.FLUID_TYPES")
+		replace("net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions", "net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions")
+		replace("BaseFlowingFluid", "ForgeFlowingFluid")
 		replace("DeferredHolder<Block, ", "RegistryObject/*B*/<")
 		replace("DeferredHolder<Item, ", "RegistryObject/*I*/<")
 		replace("DeferredHolder<BlockEntityType<?>, ", "RegistryObject/*BE*/<")
 		replace("DeferredHolder<CreativeModeTab, ", "RegistryObject/*T*/<")
+		replace("DeferredHolder<FluidType, ", "RegistryObject/*FT*/<")
+		replace("DeferredHolder<Fluid, ", "RegistryObject/*F*/<")
 		replace("(DeferredHolder)", "(RegistryObject)")
 	}
 }

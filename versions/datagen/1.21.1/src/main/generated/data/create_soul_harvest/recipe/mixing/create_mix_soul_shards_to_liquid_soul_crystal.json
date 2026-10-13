@@ -1,0 +1,20 @@
+{
+  "type": "create:mixing",
+  "heat_requirement": "heated",
+  "ingredients": [
+    {
+      "item": "create_soul_harvest:soul_shard"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 125,
+      "fluid": "create_soul_harvest:silica_solution"
+    }
+  ],
+  "results": [
+    {
+      "amount": 250,
+      "id": "create_soul_harvest:liquid_soul_crystal"
+    }
+  ]
+}
