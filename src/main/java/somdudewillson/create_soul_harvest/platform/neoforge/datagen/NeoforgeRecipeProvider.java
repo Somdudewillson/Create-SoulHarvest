@@ -92,30 +92,6 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.unlockedBy("has_lapis", has(Items.LAPIS_LAZULI))
 				.save(recipeOutput, SoulHarvestMod.id("inlaid_lapis"));
 
-		// Glyph Scrolls 1..8
-		@SuppressWarnings("unchecked")
-		DeferredHolder<Item, Item>[] glyphs = new DeferredHolder[] {
-				ModItems.GLYPH_1, ModItems.GLYPH_2, ModItems.GLYPH_3, ModItems.GLYPH_4,
-				ModItems.GLYPH_5, ModItems.GLYPH_6, ModItems.GLYPH_7, ModItems.GLYPH_8
-		};
-		@SuppressWarnings("unchecked")
-		DeferredHolder<Item, GlyphScrollItem>[] scrolls = new DeferredHolder[] {
-				ModItems.GLYPH_SCROLL_1, ModItems.GLYPH_SCROLL_2, ModItems.GLYPH_SCROLL_3, ModItems.GLYPH_SCROLL_4,
-				ModItems.GLYPH_SCROLL_5, ModItems.GLYPH_SCROLL_6, ModItems.GLYPH_SCROLL_7, ModItems.GLYPH_SCROLL_8
-		};
-		for (int i = 0; i < 8; i++) {
-			int index = i + 1;
-			ShapedRecipeBuilder.shaped(RecipeCategory.MISC, scrolls[i].get())
-					.pattern("GSG")
-					.pattern(" P ")
-					.pattern("GSG")
-					.define('G', ModItems.MAGIC_GOLD.get())
-					.define('S', Items.STICK)
-					.define('P', glyphs[i].get())
-					.unlockedBy("has_glyph_" + index, has(glyphs[i].get()))
-					.save(recipeOutput, SoulHarvestMod.id("glyph_scroll_" + index));
-		}
-
 		// Magic gold transmutations
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.COPPER_INGOT)
 				.pattern("M M")
@@ -192,14 +168,13 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 
 		// Soul crystal block & uncraft
 		ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.SOUL_CRYSTAL_BLOCK.get())
-				.pattern("###")
-				.pattern("###")
-				.pattern("###")
+				.pattern("##")
+				.pattern("##")
 				.define('#', ModItems.SOUL_SHARD.get())
 				.unlockedBy("has_soul_shard", has(ModItems.SOUL_SHARD.get()))
 				.save(recipeOutput, SoulHarvestMod.id("soul_crystal_block"));
 
-		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOUL_SHARD.get(), 9)
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOUL_SHARD.get(), 4)
 				.requires(ModBlocks.SOUL_CRYSTAL_BLOCK.get())
 				.unlockedBy("has_soul_crystal_block", has(ModBlocks.SOUL_CRYSTAL_BLOCK.get()))
 				.save(recipeOutput, SoulHarvestMod.id("soul_crystal_block_uncraft"));
@@ -258,6 +233,34 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.patternLine(" BBB ")
 				.disallowMirrored()
 				.build(recipeOutput, SoulHarvestMod.id("craft_midas_core"));
+
+		// Mechanical Crafting: Glyph Scrolls 1..8
+		@SuppressWarnings("unchecked")
+		DeferredHolder<Item, Item>[] glyphs = new DeferredHolder[] {
+				ModItems.GLYPH_1, ModItems.GLYPH_2, ModItems.GLYPH_3, ModItems.GLYPH_4,
+				ModItems.GLYPH_5, ModItems.GLYPH_6, ModItems.GLYPH_7, ModItems.GLYPH_8
+		};
+		@SuppressWarnings("unchecked")
+		DeferredHolder<Item, GlyphScrollItem>[] scrolls = new DeferredHolder[] {
+				ModItems.GLYPH_SCROLL_1, ModItems.GLYPH_SCROLL_2, ModItems.GLYPH_SCROLL_3, ModItems.GLYPH_SCROLL_4,
+				ModItems.GLYPH_SCROLL_5, ModItems.GLYPH_SCROLL_6, ModItems.GLYPH_SCROLL_7, ModItems.GLYPH_SCROLL_8
+		};
+		for (int i = 0; i < 8; i++) {
+			int index = i + 1;
+			MechanicalCraftingRecipeBuilder.shapedRecipe(scrolls[i].get(), 1)
+				.key('G', ModItems.MAGIC_GOLD.get())
+				.key('-', Items.STICK)
+				.key('O', glyphs[i].get())
+				.key('+', ModItems.GLYPH_OVERLOADED.get())
+				.key('P', Items.PAPER)
+				.patternLine("G---G")
+				.patternLine(" P+P ")
+				.patternLine(" POP ")
+				.patternLine(" P+P ")
+				.patternLine("G---G")
+				.disallowMirrored()
+				.build(recipeOutput, SoulHarvestMod.id("glyph_scroll_" + index));
+		}
 
 		// Compacting: Absolute Ice
 		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_absolute_ice"))

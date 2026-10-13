@@ -7,9 +7,8 @@
         }
     },
     "pattern": [
-        "###",
-        "###",
-        "###"
+        "##",
+        "##"
     ],
     "result": {
         "item": "create_soul_harvest:soul_crystal_block",

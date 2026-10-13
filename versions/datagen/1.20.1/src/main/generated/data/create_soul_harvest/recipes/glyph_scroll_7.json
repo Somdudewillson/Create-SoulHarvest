@@ -1,24 +1,34 @@
 {
-    "type": "minecraft:crafting_shaped",
+    "type": "create:mechanical_crafting",
+    "acceptMirrored": false,
     "category": "misc",
     "key": {
+        "+": {
+            "item": "create_soul_harvest:glyph_overloaded"
+        },
+        "-": {
+            "item": "minecraft:stick"
+        },
         "G": {
             "item": "create_soul_harvest:magic_gold"
         },
-        "P": {
+        "O": {
             "item": "create_soul_harvest:glyph_7"
         },
-        "S": {
-            "item": "minecraft:stick"
+        "P": {
+            "item": "minecraft:paper"
         }
     },
     "pattern": [
-        "GSG",
-        " P ",
-        "GSG"
+        "G---G",
+        " P+P ",
+        " POP ",
+        " P+P ",
+        "G---G"
     ],
     "result": {
         "item": "create_soul_harvest:glyph_scroll_7",
         "count": 1
-    }
+    },
+    "showNotification": false
 }
