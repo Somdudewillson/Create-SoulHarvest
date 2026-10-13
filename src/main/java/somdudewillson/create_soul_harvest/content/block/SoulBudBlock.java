@@ -77,6 +77,9 @@ public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 		return level.getBlockState(supportingPos).isFaceSturdy(level, supportingPos, direction);
 	}
 
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
 	@Override
 	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
 		if (state.getValue(WATERLOGGED)) {
@@ -103,6 +106,9 @@ public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 				.setValue(ACTIVE, active);
 	}
 
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
 	@Override
 	public FluidState getFluidState(BlockState state) {
 		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
@@ -138,6 +144,7 @@ public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 		return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirror) {
 		return state.rotate(mirror.getRotation(state.getValue(FACING)));

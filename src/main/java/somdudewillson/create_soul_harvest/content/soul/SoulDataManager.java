@@ -42,6 +42,9 @@ public class SoulDataManager {
 		rawPartialData = partial != null ? partial : Collections.emptyMap();
 	}
 
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
 	public static synchronized void recalculate(MinecraftServer server) {
 		if (server == null) {
 			return;
@@ -167,6 +170,9 @@ public class SoulDataManager {
 				resolvedData.size(), pendingSamplingQueue.size());
 	}
 
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
 	public static void tick(MinecraftServer server) {
 		if (server == null || pendingSamplingQueue.isEmpty()) {
 			return;
@@ -193,6 +199,9 @@ public class SoulDataManager {
 		}
 	}
 
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
 	private static List<SoulDropPool> sampleNonPlayerDrops(MinecraftServer server, EntityType<?> entityType) {
 		ServerLevel level = server.overworld();
 		if (level == null) {
@@ -272,6 +281,9 @@ public class SoulDataManager {
 		return pendingSamplingQueue.size();
 	}
 
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
 	public static SoulData get(EntityType<?> type) {
 		if (type == null) return null;
 		ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(type);

@@ -2,10 +2,10 @@ package somdudewillson.create_soul_harvest.content.effect;
 
 //? >= 1.21 {
 import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 //?} else {
 /*import net.minecraft.core.particles.DustParticleOptions;
 *///?}
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;

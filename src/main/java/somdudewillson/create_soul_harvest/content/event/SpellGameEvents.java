@@ -33,6 +33,9 @@ import java.util.List;
 
 public class SpellGameEvents {
 
+	//? forge {
+	/*@SuppressWarnings("removal")
+	*///?}
 	@SubscribeEvent
 	public static void onProjectileImpact(ProjectileImpactEvent event) {
 		Entity entity = event.getEntity();

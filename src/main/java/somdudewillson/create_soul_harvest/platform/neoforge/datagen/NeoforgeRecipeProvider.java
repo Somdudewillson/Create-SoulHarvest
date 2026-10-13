@@ -1,9 +1,8 @@
 package somdudewillson.create_soul_harvest.platform.neoforge.datagen;
 
-import net.minecraft.advancements.Advancement;
-
 //? neoforge {
 import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.Advancement;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -45,7 +44,6 @@ import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 import com.simibubi.create.content.kinetics.crusher.CrushingRecipe;
 import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipe;
-import com.simibubi.create.content.kinetics.fan.processing.SplashingRecipe;
 import com.simibubi.create.content.kinetics.mixer.CompactingRecipe;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
@@ -491,6 +489,7 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.build(recipeOutput);
 	}
 
+	@SuppressWarnings("unused")
 	private RecipeOutput withUniformSerializer(final RecipeOutput output) {
 		return withUniformSerializer(output, null);
 	}

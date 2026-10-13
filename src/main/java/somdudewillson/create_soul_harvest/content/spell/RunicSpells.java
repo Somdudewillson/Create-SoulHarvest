@@ -41,6 +41,9 @@ public class RunicSpells {
 		}
 	}
 
+	//? forge {
+	/*@SuppressWarnings("unused")
+	*///?}
 	public static void castSpell2_Fireball(Level level, LivingEntity caster) {
 		if (level instanceof ServerLevel serverLevel) {
 			Vec3 look = caster.getLookAngle();
@@ -77,6 +80,9 @@ public class RunicSpells {
 		}
 	}
 
+	//? forge {
+	/*@SuppressWarnings("unused")
+	*///?}
 	public static void castSpell4_ContagionBlast(Level level, LivingEntity caster) {
 		if (level instanceof ServerLevel serverLevel) {
 			Vec3 look = caster.getLookAngle();

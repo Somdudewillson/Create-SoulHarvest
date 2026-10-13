@@ -1,13 +1,16 @@
 package somdudewillson.create_soul_harvest.content.block;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import somdudewillson.create_soul_harvest.registry.ModBlockEntities;
 
 import java.util.UUID;
+
+//? >= 1.21 {
+import net.minecraft.core.HolderLookup;
+//?}
 
 public class AnimaGlassBlockEntity extends BlockEntity {
 

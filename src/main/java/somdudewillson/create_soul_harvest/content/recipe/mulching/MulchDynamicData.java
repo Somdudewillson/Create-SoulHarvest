@@ -27,6 +27,7 @@ public class MulchDynamicData {
 		return count * getMulchAmount(percent);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Map<String, byte[]> generate() {
 		Map<String, byte[]> files = new HashMap<>();
 

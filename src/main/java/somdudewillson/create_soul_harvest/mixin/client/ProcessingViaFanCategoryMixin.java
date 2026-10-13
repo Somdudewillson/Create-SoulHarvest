@@ -60,7 +60,7 @@ public abstract class ProcessingViaFanCategoryMixin {
 		IRecipeSlotBuilder slot = builder.addSlot(role, x, y);
 		if (role == RecipeIngredientRole.OUTPUT && this.create_soul_harvest$currentRecipe instanceof ISelectiveOutputRecipe selective) {
 			if (selective.isSingleOutput()) {
-				slot.addTooltipCallback((recipeSlotView, tooltip) -> {
+				slot.addRichTooltipCallback((recipeSlotView, tooltip) -> {
 					tooltip.add(Component.translatable("create_soul_harvest.jei.output_mode.single").withStyle(ChatFormatting.YELLOW));
 				});
 			}
@@ -103,7 +103,7 @@ public abstract class ProcessingViaFanCategoryMixin {
 		IRecipeSlotBuilder slot = builder.addSlot(role, x, y);
 		if (role == RecipeIngredientRole.OUTPUT && this.create_soul_harvest$currentRecipe instanceof ISelectiveOutputRecipe selective) {
 			if (selective.isSingleOutput()) {
-				slot.addTooltipCallback((recipeSlotView, tooltip) -> {
+				slot.addRichTooltipCallback((recipeSlotView, tooltip) -> {
 					tooltip.add(Component.translatable("create_soul_harvest.jei.output_mode.single").withStyle(ChatFormatting.YELLOW));
 				});
 			}

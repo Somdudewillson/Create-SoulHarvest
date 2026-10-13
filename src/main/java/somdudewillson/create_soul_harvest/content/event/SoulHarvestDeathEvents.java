@@ -23,6 +23,9 @@ import somdudewillson.create_soul_harvest.util.AdvancementHelper;
 
 public class SoulHarvestDeathEvents {
 
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
 	@SubscribeEvent
 	public static void onLivingDeath(LivingDeathEvent event) {
 		Entity attacker = event.getSource().getEntity();

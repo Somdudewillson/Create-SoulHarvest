@@ -15,6 +15,9 @@ public record SoulDropEntry(ResourceLocation item, int weight, int min, int max)
 		if (max < min) max = min;
 	}
 
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
 	public ItemStack createStack(RandomSource random) {
 		Item registeredItem = BuiltInRegistries.ITEM.get(item);
 		if (registeredItem == null || registeredItem == Items.AIR) {

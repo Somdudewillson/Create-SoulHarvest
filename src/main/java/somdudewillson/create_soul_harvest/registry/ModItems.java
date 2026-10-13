@@ -13,6 +13,9 @@ import somdudewillson.redsparklib.common.data.builder.ItemRegistryBuilder.ItemRe
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.item.*;
 
+//? forge {
+/*@SuppressWarnings("deprecation")
+*///?}
 public class ModItems {
 
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, SoulHarvestMod.MOD_ID);

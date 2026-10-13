@@ -17,6 +17,7 @@ public class ForgeEntrypoint {
 	public ForgeEntrypoint() {
 		SoulHarvestMod.onInitialize();
 
+		@SuppressWarnings("removal")
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 		ModBlocks.BLOCKS.register(modBus);
 		ModItems.ITEMS.register(modBus);

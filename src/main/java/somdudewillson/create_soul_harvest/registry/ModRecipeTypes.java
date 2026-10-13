@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -18,12 +17,11 @@ import somdudewillson.create_soul_harvest.content.recipe.SoulInfusionRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.UniformSequencedAssemblyRecipeSerializer;
 
 //? >= 1.21 {
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.core.registries.Registries;
 //?} else {
-/*import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
-import net.minecraft.world.Container;
+/*import net.minecraft.world.Container;
 *///?}
 
 //? neoforge {

@@ -59,6 +59,9 @@ public class AnimaGlassBlock extends Block implements EntityBlock {
 		}
 	}
 
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
 	@Override
 	public float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
 		if (player.isCreative()) return super.getDestroyProgress(state, player, level, pos);

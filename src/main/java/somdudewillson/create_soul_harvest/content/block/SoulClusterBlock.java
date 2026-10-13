@@ -17,8 +17,7 @@ import somdudewillson.create_soul_harvest.registry.ModTags;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.tags.EnchantmentTags;
 //?} else {
-/*import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
+/*import net.minecraft.world.item.enchantment.Enchantments;
 *///?}
 
 public class SoulClusterBlock extends SoulBudBlock {
@@ -46,7 +45,7 @@ public class SoulClusterBlock extends SoulBudBlock {
 			//? >= 1.21 {
 			hasSilkTouch = EnchantmentHelper.hasTag(tool, EnchantmentTags.PREVENTS_DECORATED_POT_SHATTERING);
 			//?} else {
-			/*hasSilkTouch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, tool) > 0;
+			/*hasSilkTouch = tool != null && tool.getEnchantmentLevel(Enchantments.SILK_TOUCH) > 0;
 			*///?}
 
 			if (!hasSilkTouch) {

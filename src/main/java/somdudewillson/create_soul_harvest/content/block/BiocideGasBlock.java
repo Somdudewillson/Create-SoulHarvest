@@ -50,6 +50,9 @@ public class BiocideGasBlock extends Block {
 		return Shapes.block();
 	}
 
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
 	@Override
 	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onPlace(state, level, pos, oldState, isMoving);

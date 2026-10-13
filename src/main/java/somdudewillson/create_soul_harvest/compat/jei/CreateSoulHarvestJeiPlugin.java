@@ -3,7 +3,6 @@ package somdudewillson.create_soul_harvest.compat.jei;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
@@ -18,6 +17,15 @@ import somdudewillson.create_soul_harvest.registry.ModItems;
 
 import java.util.List;
 
+import lombok.val;
+
+//? >= 1.21 {
+import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
+import org.jetbrains.annotations.Nullable;
+//?} else {
+/*import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
+*///?}
+
 @JeiPlugin
 public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 
@@ -31,15 +39,8 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 
 	@Override
 	public void registerItemSubtypes(ISubtypeRegistration registration) {
-		IIngredientSubtypeInterpreter<ItemStack> interpreter = (stack, context) -> {
-			String heldSoul = SoulBookItem.getHeldSoul(stack);
-			int portion = SoulBookItem.getSoulPortion(stack);
-			if (heldSoul.isEmpty() && portion <= 0) {
-				return IIngredientSubtypeInterpreter.NONE;
-			}
-			return heldSoul + ":" + portion;
-		};
-
+		val interpreter = new SoulBookSubtypeInterpreter(); 
+		
 		registration.registerSubtypeInterpreter(ModItems.SOUL_BOOK_SIMPLE.get(), interpreter);
 		registration.registerSubtypeInterpreter(ModItems.SOUL_BOOK_STANDARD.get(), interpreter);
 		registration.registerSubtypeInterpreter(ModItems.SOUL_BOOK_SUPERIOR.get(), interpreter);
@@ -69,5 +70,35 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 				}
 			}
 		});
+	}
+
+	//? >= 1.21 {
+	public static class SoulBookSubtypeInterpreter implements ISubtypeInterpreter<ItemStack> {
+
+		@Override
+		public @Nullable Object getSubtypeData(ItemStack ingredient, UidContext context) {
+			return getSubtypeString(ingredient, context);
+		}
+
+		@Override
+		public String getLegacyStringSubtypeInfo(ItemStack ingredient, UidContext context) {
+			return getSubtypeString(ingredient, context);
+		}
+	//?} else {
+	/*public static class SoulBookSubtypeInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
+		@Override
+		public String apply(ItemStack ingredient, UidContext context) {
+			return getSubtypeString(ingredient, context);
+		}
+	*///?}
+
+		protected String getSubtypeString(ItemStack ingredient, UidContext context) {
+			String heldSoul = SoulBookItem.getHeldSoul(ingredient);
+			int portion = SoulBookItem.getSoulPortion(ingredient);
+			if (heldSoul.isEmpty() && portion <= 0) {
+				return "";
+			}
+			return heldSoul + ":" + portion;
+		}
 	}
 }

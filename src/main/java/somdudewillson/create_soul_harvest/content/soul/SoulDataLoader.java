@@ -23,6 +23,9 @@ public class SoulDataLoader extends SimplePreparableReloadListener<SoulDataLoade
 
 	private SoulDataLoader() {}
 
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
 	@Override
 	protected PreparedData prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
 		Map<ResourceLocation, SoulData> fullData = new HashMap<>();

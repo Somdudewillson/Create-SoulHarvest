@@ -1,7 +1,6 @@
 package somdudewillson.create_soul_harvest.content.recipe;
 
 import java.util.List;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import net.minecraft.util.RandomSource;
@@ -13,6 +12,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 //? >= 1.21 {
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import net.minecraft.world.item.crafting.SingleRecipeInput;

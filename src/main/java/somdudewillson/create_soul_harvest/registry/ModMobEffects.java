@@ -1,15 +1,16 @@
 package somdudewillson.create_soul_harvest.registry;
 
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 //? neoforge {
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraft.core.registries.Registries;
 //?} forge {
 /*import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.DeferredHolder;
 *///?}
+
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.effect.ContagionMobEffect;
 

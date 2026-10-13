@@ -59,6 +59,7 @@ public abstract class SequencedAssemblyCategoryMixin {
 		InvocationHandler handler = new InvocationHandler() {
 			private boolean itemsAdded = false;
 
+			@SuppressWarnings("removal")
 			@Override
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				String name = method.getName();
