@@ -1,0 +1,64 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "create_soul_harvest:soul_book_cover_superior"
+  },
+  "loops": 4,
+  "results": [
+    {
+      "id": "create_soul_harvest:soul_book_superior"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_soul_harvest:soul_book_incomplete_superior"
+        },
+        {
+          "item": "create_soul_harvest:glyph_page_sheaf"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_soul_harvest:soul_book_incomplete_superior"
+        }
+      ]
+    },
+    {
+      "type": "create:filling",
+      "ingredients": [
+        {
+          "item": "create_soul_harvest:soul_book_incomplete_superior"
+        },
+        {
+          "type": "neoforge:single",
+          "amount": 125,
+          "fluid": "create_soul_harvest:liquid_soul_crystal"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_soul_harvest:soul_book_incomplete_superior"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "create_soul_harvest:soul_book_incomplete_superior"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_soul_harvest:soul_book_incomplete_superior"
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "create_soul_harvest:soul_book_incomplete_superior"
+  }
+}

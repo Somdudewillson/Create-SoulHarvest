@@ -1,0 +1,38 @@
+{
+  "type": "create:mechanical_crafting",
+  "accept_mirrored": true,
+  "category": "misc",
+  "key": {
+    "1": {
+      "item": "create_soul_harvest:glyph_1"
+    },
+    "2": {
+      "item": "create_soul_harvest:glyph_2"
+    },
+    "3": {
+      "item": "create_soul_harvest:glyph_3"
+    },
+    "4": {
+      "item": "create_soul_harvest:glyph_4"
+    },
+    "5": {
+      "item": "create_soul_harvest:glyph_5"
+    },
+    "6": {
+      "item": "create_soul_harvest:glyph_6"
+    },
+    "7": {
+      "item": "create_soul_harvest:glyph_7"
+    },
+    "8": {
+      "item": "create_soul_harvest:glyph_8"
+    }
+  },
+  "pattern": [
+    "12345678"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_soul_harvest:glyph_page_sheaf"
+  }
+}

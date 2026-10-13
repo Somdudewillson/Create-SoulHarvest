@@ -1,0 +1,62 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "create_soul_harvest:soul_book_cover_standard"
+  },
+  "loops": 8,
+  "results": [
+    {
+      "id": "create_soul_harvest:soul_book_standard"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_soul_harvest:soul_book_incomplete_standard"
+        },
+        {
+          "tag": "create_soul_harvest:glyph_pages"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_soul_harvest:soul_book_incomplete_standard"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_soul_harvest:soul_book_incomplete_standard"
+        },
+        {
+          "tag": "create_soul_harvest:glyph_pages"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_soul_harvest:soul_book_incomplete_standard"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "create_soul_harvest:soul_book_incomplete_standard"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_soul_harvest:soul_book_incomplete_standard"
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "create_soul_harvest:soul_book_incomplete_standard"
+  }
+}

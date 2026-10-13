@@ -1,0 +1,33 @@
+{
+    "type": "create:sequenced_assembly",
+    "ingredient": {
+        "item": "create_soul_harvest:soul_book_cover_simple"
+    },
+    "loops": 8,
+    "results": [
+        {
+            "item": "create_soul_harvest:soul_book_simple"
+        }
+    ],
+    "sequence": [
+        {
+            "type": "create:deploying",
+            "ingredients": [
+                {
+                    "item": "create_soul_harvest:soul_book_incomplete_simple"
+                },
+                {
+                    "tag": "create_soul_harvest:glyph_pages"
+                }
+            ],
+            "results": [
+                {
+                    "item": "create_soul_harvest:soul_book_incomplete_simple"
+                }
+            ]
+        }
+    ],
+    "transitionalItem": {
+        "item": "create_soul_harvest:soul_book_incomplete_simple"
+    }
+}

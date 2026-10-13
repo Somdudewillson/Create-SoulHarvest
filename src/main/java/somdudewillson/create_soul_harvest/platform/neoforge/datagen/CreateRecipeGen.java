@@ -57,6 +57,8 @@ public final class CreateRecipeGen {
 		registerCrushingRecipes(recipeOutput);
 		registerSplashingRecipes(recipeOutput);
 		registerSoulInfusionRecipes(recipeOutput);
+		
+		registerSoulBookRecipes(recipeOutput);
 	}
 
 	public static void registerMechanicalCraftingRecipes(RecipeOutput recipeOutput) {
@@ -134,6 +136,14 @@ public final class CreateRecipeGen {
 				.require(ModFluids.BIOSLURRY.get(), 1000)
 				.requiresHeat(HeatCondition.HEATED)
 				.output(ModBlocks.BIOFUEL_BLOCK.get())
+				.build(recipeOutput);
+
+		// Inlaid Lapis Plate
+		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_inlaid_lapis_to_plate"))
+				.require(Items.PAPER)
+				.require(ModItems.INLAID_LAPIS.get())
+				.require(Items.PAPER)
+				.output(ModItems.INLAID_LAPIS_PLATE.get())
 				.build(recipeOutput);
 	}
 
@@ -258,7 +268,7 @@ public final class CreateRecipeGen {
 				.require(Items.PAPER)
 				.transitionTo(Items.PAPER)
 				.loops(2)
-				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ModItems.INLAID_LAPIS.get()))
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ModItems.INLAID_LAPIS_PLATE.get()))
 				.addStep(PressingRecipe::new, rb -> rb)
 				.addOutput(ModItems.GLYPH_1.get(), 0.125f)
 				.addOutput(ModItems.GLYPH_2.get(), 0.125f)
@@ -278,6 +288,73 @@ public final class CreateRecipeGen {
 				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(Items.BLAZE_POWDER))
 				.addStep(FillingRecipe::new, rb -> rb.require(Fluids.LAVA, 250))
 				.addOutput(ModItems.MOLTEN_LAPIS_CORE.get(), 1.0f)
+				.build(recipeOutput);
+	}
+	
+	public static void registerSoulBookRecipes(RecipeOutput recipeOutput) {
+		TagKey<Item> glyphPagesTag = ModTags.Items.GLYPH_PAGES;
+		
+		// Glyph Page Sheaf
+		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.GLYPH_SHEAF.get(), 1)
+				.key('1', ModItems.GLYPH_1.get())
+				.key('2', ModItems.GLYPH_2.get())
+				.key('3', ModItems.GLYPH_3.get())
+				.key('4', ModItems.GLYPH_4.get())
+				.key('5', ModItems.GLYPH_5.get())
+				.key('6', ModItems.GLYPH_6.get())
+				.key('7', ModItems.GLYPH_7.get())
+				.key('8', ModItems.GLYPH_8.get())
+				.patternLine("12345678")
+				.build(recipeOutput, SoulHarvestMod.id("craft_glyph_sheaf_horizontal"));
+		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.GLYPH_SHEAF.get(), 1)
+				.key('1', ModItems.GLYPH_1.get())
+				.key('2', ModItems.GLYPH_2.get())
+				.key('3', ModItems.GLYPH_3.get())
+				.key('4', ModItems.GLYPH_4.get())
+				.key('5', ModItems.GLYPH_5.get())
+				.key('6', ModItems.GLYPH_6.get())
+				.key('7', ModItems.GLYPH_7.get())
+				.key('8', ModItems.GLYPH_8.get())
+				.patternLine("8")
+				.patternLine("7")
+				.patternLine("6")
+				.patternLine("5")
+				.patternLine("4")
+				.patternLine("3")
+				.patternLine("2")
+				.patternLine("1")
+				.disallowMirrored()
+				.build(recipeOutput, SoulHarvestMod.id("craft_glyph_sheaf_vertical"));
+		
+		// Simple
+		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_assemble_soul_book_simple"))
+				.require(ModItems.SOUL_BOOK_COVER_SIMPLE.get())
+				.transitionTo(ModItems.SOUL_BOOK_INCOMPLETE_SIMPLE.get())
+				.loops(8)
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(glyphPagesTag))
+				.addOutput(ModItems.SOUL_BOOK_SIMPLE.get(), 1.0f)
+				.build(recipeOutput);
+		
+		// Standard
+		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_assemble_soul_book_standard"))
+				.require(ModItems.SOUL_BOOK_COVER_STANDARD.get())
+				.transitionTo(ModItems.SOUL_BOOK_INCOMPLETE_STANDARD.get())
+				.loops(8)
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(glyphPagesTag))
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(glyphPagesTag))
+				.addStep(PressingRecipe::new, rb -> rb)
+				.addOutput(ModItems.SOUL_BOOK_STANDARD.get(), 1.0f)
+				.build(recipeOutput);
+		
+		// Superior
+		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_assemble_soul_book_superior"))
+				.require(ModItems.SOUL_BOOK_COVER_SUPERIOR.get())
+				.transitionTo(ModItems.SOUL_BOOK_INCOMPLETE_SUPERIOR.get())
+				.loops(4)
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ModItems.GLYPH_SHEAF.get()))
+				.addStep(FillingRecipe::new, rb -> rb.require(ModFluids.LIQUID_SOUL_CRYSTAL.get(), 125))
+				.addStep(PressingRecipe::new, rb -> rb)
+				.addOutput(ModItems.SOUL_BOOK_SUPERIOR.get(), 1.0f)
 				.build(recipeOutput);
 	}
 

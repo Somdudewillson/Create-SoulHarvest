@@ -1,5 +1,7 @@
 package somdudewillson.create_soul_harvest.registry;
 
+import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
+
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
@@ -62,6 +64,11 @@ public class ModItems {
 	public static final DeferredHolder<Item, Item> BLANK_TABLET = registerWithTab("blank_tablet",
 			() -> new Item(new Item.Properties()));
 	public static final DeferredHolder<Item, Item> INLAID_LAPIS = ITEM_BUILDER_FACTORY.registerSimpleItem("inlaid_lapis")
+			.properties(new Item.Properties())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> INLAID_LAPIS_PLATE = ITEM_BUILDER_FACTORY.registerSimpleItem("inlaid_lapis_plate")
 			.properties(new Item.Properties())
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
@@ -147,6 +154,21 @@ public class ModItems {
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
 			.build();
+	public static final DeferredHolder<Item, Item> SOUL_BOOK_INCOMPLETE_SIMPLE = ITEM_BUILDER_FACTORY.registerItem("soul_book_incomplete_simple", SequencedAssemblyItem::new)
+			.properties(new Item.Properties())
+			.simpleItem()
+//			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> SOUL_BOOK_INCOMPLETE_STANDARD = ITEM_BUILDER_FACTORY.registerItem("soul_book_incomplete_standard", SequencedAssemblyItem::new)
+			.properties(new Item.Properties().stacksTo(1))
+			.simpleItem()
+//			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> SOUL_BOOK_INCOMPLETE_SUPERIOR = ITEM_BUILDER_FACTORY.registerItem("soul_book_incomplete_superior", SequencedAssemblyItem::new)
+			.properties(new Item.Properties().stacksTo(1))
+			.simpleItem()
+//			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
 	public static final DeferredHolder<Item, Item> SOUL_BOOK_SIMPLE = ITEM_BUILDER_FACTORY.registerItem("soul_book_simple", props -> new SoulBookItem(1, props))
 			.properties(new Item.Properties().stacksTo(1))
 			.simpleItem()
@@ -173,6 +195,8 @@ public class ModItems {
 	public static final DeferredHolder<Item, Item> GLYPH_7 = ITEM_BUILDER_FACTORY.registerItem("glyph_7", ModItems::createGlyphPage).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
 	public static final DeferredHolder<Item, Item> GLYPH_8 = ITEM_BUILDER_FACTORY.registerItem("glyph_8", ModItems::createGlyphPage).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
 	public static final DeferredHolder<Item, Item> GLYPH_OVERLOADED = ITEM_BUILDER_FACTORY.registerItem("glyph_overloaded", ModItems::createGlyphPage).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	
+	public static final DeferredHolder<Item, Item> GLYPH_SHEAF = ITEM_BUILDER_FACTORY.registerItem("glyph_page_sheaf", ModItems::createGlyphPage).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
 
 	// Glyph Scrolls
 	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_1 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_1", props -> new GlyphScrollItem(1, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();

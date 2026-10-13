@@ -144,32 +144,13 @@ public final class VanillaRecipeGen {
 				.requires(glyphPagesTag)
 				.requires(glyphPagesTag)
 				.requires(glyphPagesTag)
+				.requires(glyphPagesTag)
+				.requires(glyphPagesTag)
+				.requires(glyphPagesTag)
+				.requires(glyphPagesTag)
+				.requires(glyphPagesTag)
 				.unlockedBy("has_glyph_pages", has(glyphPagesTag))
 				.save(recipeOutput, SoulHarvestMod.id("soul_book_simple"));
-
-		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOUL_BOOK_STANDARD.get())
-				.requires(ModItems.SOUL_BOOK_COVER_STANDARD.get())
-				.requires(glyphPagesTag)
-				.requires(glyphPagesTag)
-				.requires(glyphPagesTag)
-				.requires(glyphPagesTag)
-				.requires(glyphPagesTag)
-				.requires(glyphPagesTag)
-				.unlockedBy("has_glyph_pages", has(glyphPagesTag))
-				.save(recipeOutput, SoulHarvestMod.id("soul_book_standard"));
-
-		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOUL_BOOK_SUPERIOR.get())
-				.requires(ModItems.SOUL_BOOK_COVER_SUPERIOR.get())
-				.requires(ModItems.GLYPH_1.get())
-				.requires(ModItems.GLYPH_2.get())
-				.requires(ModItems.GLYPH_3.get())
-				.requires(ModItems.GLYPH_4.get())
-				.requires(ModItems.GLYPH_5.get())
-				.requires(ModItems.GLYPH_6.get())
-				.requires(ModItems.GLYPH_7.get())
-				.requires(ModItems.GLYPH_8.get())
-				.unlockedBy("has_glyph_pages", has(glyphPagesTag))
-				.save(recipeOutput, SoulHarvestMod.id("soul_book_superior"));
 	}
 
 	public static void registerSoulCrystalRecipes(RecipeOutput recipeOutput) {
