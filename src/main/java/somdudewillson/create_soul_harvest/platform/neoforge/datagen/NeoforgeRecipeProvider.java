@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.item.GlyphScrollItem;
 import somdudewillson.create_soul_harvest.content.recipe.ISelectiveOutputRecipe;
+import somdudewillson.create_soul_harvest.content.recipe.SelectiveSplashingRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.SoulInfusionRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.UniformSequencedAssemblyRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
@@ -453,7 +454,8 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.build(recipeOutput);
 
 		// Splashing: Wash Overloaded Glyph
-		new StandardProcessingRecipe.Builder<>(SplashingRecipe::new, SoulHarvestMod.id("create_splashing_wash_overloaded_glyph"))
+		new ISelectiveOutputRecipe.Builder<>(SelectiveSplashingRecipe::new, SoulHarvestMod.id("create_splashing_wash_overloaded_glyph"))
+				.singleOutput()
 				.require(ModItems.GLYPH_OVERLOADED.get())
 				.output(0.12f, ModItems.GLYPH_1.get())
 				.output(0.12f, ModItems.GLYPH_2.get())

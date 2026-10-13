@@ -1,10 +1,11 @@
 {
-    "type": "create:splashing",
+    "type": "create_soul_harvest:splashing",
     "ingredients": [
         {
             "item": "create_soul_harvest:glyph_overloaded"
         }
     ],
+    "output_mode": "single",
     "results": [
         {
             "item": "create_soul_harvest:glyph_1",

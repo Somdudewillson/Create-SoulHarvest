@@ -126,7 +126,7 @@ public abstract class ProcessingViaFanCategoryMixin {
 			return;
 
 		Font font = Minecraft.getInstance().font;
-		int badgeX = 158;
+		int badgeX = 4;
 		int badgeY = 4;
 		int badgeWidth = 16;
 		int badgeHeight = 11;

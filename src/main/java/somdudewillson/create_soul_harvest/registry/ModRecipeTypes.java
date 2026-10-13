@@ -3,6 +3,7 @@ package somdudewillson.create_soul_harvest.registry;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.recipe.ISelectiveOutputRecipe;
+import somdudewillson.create_soul_harvest.content.recipe.SelectiveSplashingRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.SoulInfusionRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.UniformSequencedAssemblyRecipeSerializer;
 
@@ -43,6 +45,15 @@ public enum ModRecipeTypes implements IRecipeTypeInfo {
 		/*() -> new ISelectiveOutputRecipe.Serializer<>(SoulInfusionRecipe::new)
 		*///?}
 	),
+	SPLASHING(
+		//? >= 1.21 {
+		() -> new ISelectiveOutputRecipe.Serializer<>(SelectiveSplashingRecipe::new),
+		() -> AllRecipeTypes.SPLASHING.getType()
+		//?} else {
+		/*() -> new ISelectiveOutputRecipe.Serializer<>(SelectiveSplashingRecipe::new),
+		() -> AllRecipeTypes.SPLASHING.getType()
+		*///?}
+	),
 	UNIFORM_SEQUENCED_ASSEMBLY(
 		() -> new UniformSequencedAssemblyRecipeSerializer()
 	);
@@ -50,17 +61,28 @@ public enum ModRecipeTypes implements IRecipeTypeInfo {
 	private final ResourceLocation id;
 	//? neoforge {
 	private final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> serializerHolder;
-	private final DeferredHolder<RecipeType<?>, RecipeType<?>> typeHolder;
 	//?} forge {
 	/*private final RegistryObject<RecipeSerializer<?>> serializerHolder;
-	private final RegistryObject<RecipeType<?>> typeHolder;
 	*///?}
+	private final Supplier<RecipeType<?>> typeSupplier;
 
 	ModRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier) {
+		this(serializerSupplier, null);
+	}
+
+	ModRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier, Supplier<RecipeType<?>> existingType) {
 		String name = name().toLowerCase();
 		this.id = SoulHarvestMod.id(name);
 		this.serializerHolder = Registers.SERIALIZERS.register(name, serializerSupplier);
-		this.typeHolder = Registers.TYPES.register(name, () -> RecipeType.simple(id));
+		if (existingType != null) {
+			this.typeSupplier = existingType;
+		} else {
+			//? neoforge {
+			this.typeSupplier = Registers.TYPES.register(name, () -> RecipeType.simple(id));
+			//?} forge {
+			/*this.typeSupplier = Registers.TYPES.register(name, () -> RecipeType.simple(id));
+			*///?}
+		}
 	}
 
 	public static void register(IEventBus modEventBus) {
@@ -83,7 +105,7 @@ public enum ModRecipeTypes implements IRecipeTypeInfo {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <I extends RecipeInput, R extends Recipe<I>> RecipeType<R> getType() {
-		return (RecipeType<R>) typeHolder.get();
+		return (RecipeType<R>) typeSupplier.get();
 	}
 
 	public <I extends RecipeInput, R extends Recipe<I>> Optional<RecipeHolder<R>> find(I inv, Level level) {
@@ -93,7 +115,7 @@ public enum ModRecipeTypes implements IRecipeTypeInfo {
 	/*@SuppressWarnings("unchecked")
 	@Override
 	public <T extends RecipeType<?>> T getType() {
-		return (T) typeHolder.get();
+		return (T) typeSupplier.get();
 	}
 
 	public <C extends Container, T extends Recipe<C>> Optional<T> find(C inv, Level level) {
