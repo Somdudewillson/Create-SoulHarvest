@@ -9,6 +9,7 @@
   },
   "mixins": [],
   "client": [
-    "client.SequencedAssemblyCategoryMixin"
+    "client.SequencedAssemblyCategoryMixin",
+    "client.ProcessingViaFanCategoryMixin"
   ]
 }

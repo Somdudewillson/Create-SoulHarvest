@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.item.GlyphScrollItem;
+import somdudewillson.create_soul_harvest.content.recipe.ISelectiveOutputRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.SoulInfusionRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.UniformSequencedAssemblyRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
@@ -466,20 +467,22 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.build(recipeOutput);
 
 		// Soul Infusion: Soul Shard from Amethyst Shard
-		new StandardProcessingRecipe.Builder<>(SoulInfusionRecipe::new, SoulHarvestMod.id("soul_infusion_soul_shard"))
+		new ISelectiveOutputRecipe.Builder<>(SoulInfusionRecipe::new, SoulHarvestMod.id("soul_infusion_soul_shard"))
 				.require(Items.AMETHYST_SHARD)
 				.output(0.35f, ModItems.SOUL_SHARD.get())
 				.build(recipeOutput);
 
 		// Soul Infusion: Enchant Inlaid Lapis Lazuli
-		new StandardProcessingRecipe.Builder<>(SoulInfusionRecipe::new, SoulHarvestMod.id("soul_infusion_polished_inlaid_lapis"))
+		new ISelectiveOutputRecipe.Builder<>(SoulInfusionRecipe::new, SoulHarvestMod.id("soul_infusion_polished_inlaid_lapis"))
+				.singleOutput()
 				.require(ModItems.POLISHED_INLAID_LAPIS.get())
 				.output(0.25f, ModItems.ENCHANTED_INLAID_LAPIS.get())
 				.output(0.75f, ModItems.POLISHED_INLAID_LAPIS.get())
 				.build(recipeOutput);
 
 		// Soul Infusion: Overload Glyph Page
-		new StandardProcessingRecipe.Builder<>(SoulInfusionRecipe::new, SoulHarvestMod.id("soul_infusion_overload_glyph_page"))
+		new ISelectiveOutputRecipe.Builder<>(SoulInfusionRecipe::new, SoulHarvestMod.id("soul_infusion_overload_glyph_page"))
+				.singleOutput()
 				.require(ModTags.Items.GLYPH_PAGES)
 				.output(0.95f, ModItems.GLYPH_OVERLOADED.get())
 				.output(0.025f, com.simibubi.create.AllItems.EXP_NUGGET)

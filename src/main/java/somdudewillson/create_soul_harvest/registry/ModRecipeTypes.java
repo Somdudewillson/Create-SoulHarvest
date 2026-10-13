@@ -11,6 +11,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.recipe.ISelectiveOutputRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.SoulInfusionRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.UniformSequencedAssemblyRecipeSerializer;
 
@@ -37,9 +38,9 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 public enum ModRecipeTypes implements IRecipeTypeInfo {
 	SOUL_INFUSION(
 		//? >= 1.21 {
-		() -> new StandardProcessingRecipe.Serializer<>(SoulInfusionRecipe::new)
+		() -> new ISelectiveOutputRecipe.Serializer<>(SoulInfusionRecipe::new)
 		//?} else {
-		/*() -> new ProcessingRecipeSerializer<>(SoulInfusionRecipe::new)
+		/*() -> new ISelectiveOutputRecipe.Serializer<>(SoulInfusionRecipe::new)
 		*///?}
 	),
 	UNIFORM_SEQUENCED_ASSEMBLY(

@@ -5,6 +5,7 @@
             "tag": "create_soul_harvest:glyph_pages"
         }
     ],
+    "output_mode": "single",
     "results": [
         {
             "item": "create_soul_harvest:glyph_overloaded",

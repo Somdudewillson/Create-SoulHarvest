@@ -141,5 +141,10 @@
 
   "create_soul_harvest.jei.glyph_page_chance_per_page": "12.5% Chance (1 in 8)",
   "create_soul_harvest.jei.glyph_page_random_output": "Randomly produces one of the 8 Glyph Pages",
-  "create_soul_harvest.jei.uniform_chance": "%s Chance (1 in %s)"
+  "create_soul_harvest.jei.uniform_chance": "%s Chance (1 in %s)",
+  "create_soul_harvest.jei.output_mode.title": "Output Selection Mode",
+  "create_soul_harvest.jei.output_mode.single": "✦ Produces only one of the possible outputs",
+  "create_soul_harvest.jei.output_mode.single.desc": "When processed, this recipe produces at most one of the possible output items.",
+  "create_soul_harvest.jei.output_mode.independent": "✦ Rolls each output independently",
+  "create_soul_harvest.jei.output_mode.independent.desc": "When processed, each item in the output list has an independent roll based on its chance."
 }

@@ -5,6 +5,7 @@
             "item": "create_soul_harvest:polished_inlaid_lapis"
         }
     ],
+    "output_mode": "single",
     "results": [
         {
             "item": "create_soul_harvest:enchanted_inlaid_lapis",
