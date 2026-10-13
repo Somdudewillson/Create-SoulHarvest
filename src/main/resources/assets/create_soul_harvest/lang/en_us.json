@@ -39,12 +39,17 @@
   "item.create_soul_harvest.enchanted_inlaid_lapis": "Enchanted Inlaid Lapis Lazuli",
   "item.create_soul_harvest.molten_lapis_core": "Molten Lapis Core",
   "item.create_soul_harvest.magic_gold": "Anima Gold",
+  "item.create_soul_harvest.magic_gold_string": "Anima Gold String",
   "item.create_soul_harvest.soul_deposit_seed": "Soul Crystal Seed",
   "item.create_soul_harvest.soul_shard": "Soul Crystal",
   "item.create_soul_harvest.polyclay": "Polyclay",
   "item.create_soul_harvest.loot_token_blank": "Loot Token Blank",
   "item.create_soul_harvest.loot_token": "Loot Token",
   "item.create_soul_harvest.biocide_gas_bottle": "Biocide Gas Bottle",
+  
+  "item.create_soul_harvest.soul_book_cover_simple": "Simple Soul Book Cover",
+  "item.create_soul_harvest.soul_book_cover_standard": "Soul Book Cover",
+  "item.create_soul_harvest.soul_book_cover_superior": "Superior Soul Book Cover",
   "item.create_soul_harvest.soul_book_simple": "Simple Soul Book",
   "item.create_soul_harvest.soul_book_standard": "Soul Book",
   "item.create_soul_harvest.soul_book_superior": "Superior Soul Book",
@@ -84,6 +89,8 @@
 
   "tag.item.create_soul_harvest.glyph_pages": "Glyph Pages",
   "tag.item.create_soul_harvest.glyph_scrolls": "Glyph Scrolls",
+  "tag.item.create_soul_harvest.book_cover_ingredients": "Book Cover Ingredients",
+  "tag.item.create_soul_harvest.soul_book_covers": "Soul Book Covers",
   "tag.item.create_soul_harvest.soul_books": "Soul Books",
   "tag.item.create_soul_harvest.biocide_gas_protection": "Biocide Gas Protection Equipment",
 

@@ -7,12 +7,12 @@
     }
   },
   "pattern": [
-    "MMM",
+    " M ",
     "M M",
     " M "
   ],
   "result": {
     "count": 1,
-    "id": "minecraft:gold_ingot"
+    "id": "create_soul_harvest:magic_gold_string"
   }
 }

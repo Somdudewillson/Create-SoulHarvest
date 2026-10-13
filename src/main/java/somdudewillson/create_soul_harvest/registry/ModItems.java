@@ -84,6 +84,13 @@ public class ModItems {
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
 			.build();
+	public static final DeferredHolder<Item, Item> MAGIC_GOLD_STRING = ITEM_BUILDER_FACTORY.registerItem("magic_gold_string",
+			() -> new Item(new Item.Properties()) {
+				@Override public boolean isFoil(ItemStack stack) { return true; }
+			})
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
 
 	// Soul Harvest items
 	public static final DeferredHolder<Item, Item> SOUL_DEPOSIT_SEED = ITEM_BUILDER_FACTORY.registerItem("soul_deposit_seed", SoulDepositSeedItem::new)
@@ -122,6 +129,21 @@ public class ModItems {
 			.build();
 
 	// Soul Books
+	public static final DeferredHolder<Item, Item> SOUL_BOOK_COVER_SIMPLE = ITEM_BUILDER_FACTORY.registerSimpleItem("soul_book_cover_simple")
+			.properties(new Item.Properties().stacksTo(16))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> SOUL_BOOK_COVER_STANDARD = ITEM_BUILDER_FACTORY.registerSimpleItem("soul_book_cover_standard")
+			.properties(new Item.Properties().stacksTo(16))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> SOUL_BOOK_COVER_SUPERIOR = ITEM_BUILDER_FACTORY.registerSimpleItem("soul_book_cover_superior")
+			.properties(new Item.Properties().stacksTo(16))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
 	public static final DeferredHolder<Item, Item> SOUL_BOOK_SIMPLE = ITEM_BUILDER_FACTORY.registerItem("soul_book_simple", props -> new SoulBookItem(1, props))
 			.properties(new Item.Properties().stacksTo(1))
 			.simpleItem()

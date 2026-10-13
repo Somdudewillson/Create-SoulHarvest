@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "key": {
+        "B": {
+            "tag": "create_soul_harvest:book_cover_ingredients"
+        },
+        "D": {
+            "tag": "c:dyes/blue"
+        },
+        "S": {
+            "tag": "c:strings"
+        }
+    },
+    "pattern": [
+        "SB",
+        "BD"
+    ],
+    "result": {
+        "item": "create_soul_harvest:soul_book_cover_simple",
+        "count": 1
+    }
+}

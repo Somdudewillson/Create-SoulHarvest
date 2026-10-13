@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_magic_gold": {
+    "has_glyph_pages": {
       "conditions": {
         "items": [
           {
-            "items": "create_soul_harvest:magic_gold"
+            "items": "#create_soul_harvest:glyph_pages"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "create_soul_harvest:magic_gold_to_zinc"
+        "recipe": "create_soul_harvest:soul_book_cover_standard"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_magic_gold"
+      "has_glyph_pages"
     ]
   ],
   "rewards": {
     "recipes": [
-      "create_soul_harvest:magic_gold_to_zinc"
+      "create_soul_harvest:soul_book_cover_standard"
     ]
   }
 }

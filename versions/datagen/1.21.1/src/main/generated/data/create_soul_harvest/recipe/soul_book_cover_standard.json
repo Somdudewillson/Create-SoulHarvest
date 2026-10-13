@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "create_soul_harvest:book_cover_ingredients"
+    },
+    "D": {
+      "tag": "c:dyes/blue"
+    },
+    "G": {
+      "item": "create_soul_harvest:magic_gold"
+    },
+    "S": {
+      "tag": "c:strings"
+    }
+  },
+  "pattern": [
+    "SBG",
+    "BD "
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_soul_harvest:soul_book_cover_standard"
+  }
+}

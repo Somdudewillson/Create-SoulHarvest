@@ -19,6 +19,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
@@ -95,33 +96,27 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 		// Magic gold transmutations
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.COPPER_INGOT)
 				.pattern("M M")
+				.pattern(" M ")
 				.define('M', ModItems.MAGIC_GOLD.get())
 				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
 				.save(recipeOutput, SoulHarvestMod.id("magic_gold_to_copper"));
 
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.IRON_INGOT)
-				.pattern(" M ")
-				.pattern("M M")
-				.pattern(" M ")
-				.define('M', ModItems.MAGIC_GOLD.get())
-				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
-				.save(recipeOutput, SoulHarvestMod.id("magic_gold_to_iron"));
-
-		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.GOLD_INGOT)
-				.pattern("MMM")
-				.pattern("M M")
-				.pattern(" M ")
-				.define('M', ModItems.MAGIC_GOLD.get())
-				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
-				.save(recipeOutput, SoulHarvestMod.id("magic_gold_to_gold"));
-
-		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, AllItems.ZINC_INGOT.get())
 				.pattern("M M")
 				.pattern("   ")
 				.pattern("M M")
 				.define('M', ModItems.MAGIC_GOLD.get())
 				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
-				.save(recipeOutput, SoulHarvestMod.id("magic_gold_to_zinc"));
+				.save(recipeOutput, SoulHarvestMod.id("magic_gold_to_iron"));
+
+		// Magic gold string
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.MAGIC_GOLD_STRING.get())
+				.pattern(" M ")
+				.pattern("M M")
+				.pattern(" M ")
+				.define('M', ModItems.MAGIC_GOLD.get())
+				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
+				.save(recipeOutput, SoulHarvestMod.id("magic_gold_stringify"));
 
 		// Polyclay
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.POLYCLAY.get(), 8)
@@ -131,11 +126,41 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.define('C', Items.CLAY_BALL)
 				.unlockedBy("has_clay_ball", has(Items.CLAY_BALL))
 				.save(recipeOutput, SoulHarvestMod.id("polyclay"));
+		
+		// Soul Book Covers
+		TagKey<Item> glyphPagesTag = ModTags.Items.GLYPH_PAGES;
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SOUL_BOOK_COVER_SIMPLE.get())
+				.pattern("SB")
+				.pattern("BD")
+				.define('S', Tags.Items.STRINGS)
+				.define('B', ModTags.Items.BOOK_COVER_INGREDIENTS)
+				.define('D', Tags.Items.DYES_BLUE)
+				.unlockedBy("has_glyph_pages", has(glyphPagesTag))
+				.save(recipeOutput, SoulHarvestMod.id("soul_book_cover_simple"));
+		
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SOUL_BOOK_COVER_STANDARD.get())
+				.pattern("SBG")
+				.pattern("BD ")
+				.define('S', Tags.Items.STRINGS)
+				.define('B', ModTags.Items.BOOK_COVER_INGREDIENTS)
+				.define('G', ModItems.MAGIC_GOLD.get())
+				.define('D', Tags.Items.DYES_BLUE)
+				.unlockedBy("has_glyph_pages", has(glyphPagesTag))
+				.save(recipeOutput, SoulHarvestMod.id("soul_book_cover_standard"));
+		
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SOUL_BOOK_COVER_SUPERIOR.get())
+				.pattern("SBG")
+				.pattern("BD ")
+				.define('S', ModItems.MAGIC_GOLD_STRING.get())
+				.define('B', ModTags.Items.BOOK_COVER_INGREDIENTS)
+				.define('G', ModItems.MAGIC_GOLD.get())
+				.define('D', Tags.Items.DYES_BLUE)
+				.unlockedBy("has_glyph_pages", has(glyphPagesTag))
+				.save(recipeOutput, SoulHarvestMod.id("soul_book_cover_superior"));
 
 		// Soul Books
-		TagKey<Item> glyphPagesTag = ModTags.Items.GLYPH_PAGES;
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOUL_BOOK_SIMPLE.get())
-				.requires(Items.BOOK)
+				.requires(ModItems.SOUL_BOOK_COVER_SIMPLE.get())
 				.requires(glyphPagesTag)
 				.requires(glyphPagesTag)
 				.requires(glyphPagesTag)
@@ -143,7 +168,7 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.save(recipeOutput, SoulHarvestMod.id("soul_book_simple"));
 
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOUL_BOOK_STANDARD.get())
-				.requires(Items.BOOK)
+				.requires(ModItems.SOUL_BOOK_COVER_STANDARD.get())
 				.requires(glyphPagesTag)
 				.requires(glyphPagesTag)
 				.requires(glyphPagesTag)
@@ -154,7 +179,7 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 				.save(recipeOutput, SoulHarvestMod.id("soul_book_standard"));
 
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOUL_BOOK_SUPERIOR.get())
-				.requires(Items.BOOK)
+				.requires(ModItems.SOUL_BOOK_COVER_SUPERIOR.get())
 				.requires(ModItems.GLYPH_1.get())
 				.requires(ModItems.GLYPH_2.get())
 				.requires(ModItems.GLYPH_3.get())

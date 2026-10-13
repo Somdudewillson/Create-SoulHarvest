@@ -3,7 +3,7 @@
     "category": "misc",
     "ingredients": [
         {
-            "item": "minecraft:book"
+            "item": "create_soul_harvest:soul_book_cover_superior"
         },
         {
             "item": "create_soul_harvest:glyph_1"
