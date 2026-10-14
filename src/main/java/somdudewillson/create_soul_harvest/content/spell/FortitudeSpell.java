@@ -5,11 +5,12 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
-public final class FortitudeSpell {
+public class FortitudeSpell implements GlyphSpell {
 
-	private FortitudeSpell() {}
+	public FortitudeSpell() {}
 
-	public static void cast(Level level, LivingEntity caster) {
+	@Override
+	public void cast(Level level, LivingEntity caster) {
 		if (!level.isClientSide()) {
 			caster.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20 * 30, 4));
 			caster.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 20 * 30, 2));

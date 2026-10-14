@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 
-public interface SpellEffect {
+public interface PersistentGlyphSpell extends GlyphSpell {
 
 	/**
 	 * Unique identifier for this spell effect, used for serialization and registry lookup.

@@ -6,14 +6,15 @@ import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public final class FireballSpell {
+public class FireballSpell implements GlyphSpell {
 
-	private FireballSpell() {}
+	public FireballSpell() {}
 
 	//? forge {
 	/*@SuppressWarnings("unused")
 	*///?}
-	public static void cast(Level level, LivingEntity caster) {
+	@Override
+	public void cast(Level level, LivingEntity caster) {
 		if (level instanceof ServerLevel serverLevel) {
 			Vec3 look = caster.getLookAngle();
 			Vec3 spawnPos = caster.getEyePosition().add(look);

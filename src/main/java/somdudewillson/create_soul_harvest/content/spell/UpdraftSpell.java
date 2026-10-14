@@ -10,11 +10,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public final class UpdraftSpell {
+public class UpdraftSpell implements GlyphSpell {
 
-	private UpdraftSpell() {}
+	public UpdraftSpell() {}
 
-	public static void cast(Level level, LivingEntity caster) {
+	@Override
+	public void cast(Level level, LivingEntity caster) {
 		AABB area = AABB.ofSize(caster.position(), 5, 3, 5);
 		for (LivingEntity nearby : level.getEntitiesOfClass(LivingEntity.class, area)) {
 			if (level instanceof ServerLevel serverLevel) {

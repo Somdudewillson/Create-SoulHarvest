@@ -18,7 +18,7 @@ public class SpellThinker extends Entity {
 
 	@FunctionalInterface
 	public interface EffectFactory {
-		SpellEffect create();
+		PersistentGlyphSpell create();
 	}
 
 	private static final Map<ResourceLocation, EffectFactory> REGISTRY = new ConcurrentHashMap<>();
@@ -28,17 +28,17 @@ public class SpellThinker extends Entity {
 	}
 
 	@Nullable
-	public static SpellEffect createEffect(ResourceLocation id) {
+	public static PersistentGlyphSpell createEffect(ResourceLocation id) {
 		EffectFactory factory = REGISTRY.get(id);
 		return factory != null ? factory.create() : null;
 	}
 
 	static {
-		registerEffect(LightningSpellEffect.ID, LightningSpellEffect::new);
-		registerEffect(TerrainFlattenSpellEffect.ID, TerrainFlattenSpellEffect::new);
+		registerEffect(LightningSpell.ID, LightningSpell::new);
+		registerEffect(TerrainFlattenSpell.ID, TerrainFlattenSpell::new);
 	}
 
-	private SpellEffect currentEffect;
+	private PersistentGlyphSpell currentEffect;
 
 	public SpellThinker(EntityType<?> entityType, Level level) {
 		super(entityType, level);
@@ -47,7 +47,7 @@ public class SpellThinker extends Entity {
 		this.setInvulnerable(true);
 	}
 
-	public void setEffect(SpellEffect effect) {
+	public void setEffect(PersistentGlyphSpell effect) {
 		this.currentEffect = effect;
 		if (effect != null && this.level() instanceof ServerLevel serverLevel) {
 			effect.onStart(this, serverLevel);
@@ -55,11 +55,11 @@ public class SpellThinker extends Entity {
 	}
 
 	@Nullable
-	public SpellEffect getEffect() {
+	public PersistentGlyphSpell getEffect() {
 		return this.currentEffect;
 	}
 
-	public static SpellThinker spawn(ServerLevel level, Vec3 pos, SpellEffect effect) {
+	public static SpellThinker spawn(ServerLevel level, Vec3 pos, PersistentGlyphSpell effect) {
 		SpellThinker thinker = new SpellThinker(ModEntityTypes.SPELL_THINKER.get(), level);
 		thinker.setPos(pos.x, pos.y, pos.z);
 		thinker.setEffect(effect);
@@ -67,7 +67,7 @@ public class SpellThinker extends Entity {
 		return thinker;
 	}
 
-	public static SpellThinker spawn(ServerLevel level, BlockPos pos, SpellEffect effect) {
+	public static SpellThinker spawn(ServerLevel level, BlockPos pos, PersistentGlyphSpell effect) {
 		return spawn(level, Vec3.atCenterOf(pos), effect);
 	}
 
@@ -107,7 +107,7 @@ public class SpellThinker extends Entity {
 		if (compound.contains("EffectId")) {
 			ResourceLocation effectId = ResourceLocation.tryParse(compound.getString("EffectId"));
 			if (effectId != null) {
-				SpellEffect effect = createEffect(effectId);
+				PersistentGlyphSpell effect = createEffect(effectId);
 				if (effect != null) {
 					if (compound.contains("EffectData")) {
 						effect.readSaveData(compound.getCompound("EffectData"));

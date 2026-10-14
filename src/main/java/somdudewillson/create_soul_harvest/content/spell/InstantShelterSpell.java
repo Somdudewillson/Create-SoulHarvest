@@ -9,11 +9,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import somdudewillson.create_soul_harvest.content.block.AnimaGlassBlockEntity;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 
-public final class InstantShelterSpell {
+public class InstantShelterSpell implements GlyphSpell {
 
-	private InstantShelterSpell() {}
+	public InstantShelterSpell() {}
 
-	public static void cast(Level level, LivingEntity caster) {
+	@Override
+	public void cast(Level level, LivingEntity caster) {
 		if (level instanceof ServerLevel serverLevel) {
 			final double bubbleRadius = 6.0;
 			final double bubbleThickness = 0.9;

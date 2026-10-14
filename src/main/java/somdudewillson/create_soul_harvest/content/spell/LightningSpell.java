@@ -6,23 +6,32 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 
-public class LightningSpellEffect implements SpellEffect {
+public class LightningSpell implements PersistentGlyphSpell {
 
 	public static final ResourceLocation ID = SoulHarvestMod.id("lightning");
 	public static final int DEFAULT_DURATION = 20 * 15; // 15 seconds
 
 	private int remainingTicks;
 
-	public LightningSpellEffect() {
+	public LightningSpell() {
 		this(DEFAULT_DURATION);
 	}
 
-	public LightningSpellEffect(int durationTicks) {
+	public LightningSpell(int durationTicks) {
 		this.remainingTicks = durationTicks;
+	}
+
+	@Override
+	public void cast(Level level, LivingEntity caster) {
+		if (level instanceof ServerLevel serverLevel) {
+			SpellThinker.spawn(serverLevel, caster.blockPosition(), this);
+		}
 	}
 
 	@Override

@@ -5,15 +5,19 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.registry.ModTags;
 
+import static somdudewillson.create_soul_harvest.registry.ModTags.Blocks.CONSIDER_REPLACEABLE;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class TerrainFlattenSpellEffect implements SpellEffect {
+public class TerrainFlattenSpell implements PersistentGlyphSpell {
 
 	public static final ResourceLocation ID = SoulHarvestMod.id("terrain_flatten");
 	public static final int EFFECT_SIZE = 15;
@@ -23,12 +27,27 @@ public class TerrainFlattenSpellEffect implements SpellEffect {
 	private int flattenStep = 0;
 	private List<BlockPos> flattenPositions;
 
-	public TerrainFlattenSpellEffect() {
+	public TerrainFlattenSpell() {
 		this(0);
 	}
 
-	public TerrainFlattenSpellEffect(int initialStep) {
+	public TerrainFlattenSpell(int initialStep) {
 		this.flattenStep = initialStep;
+	}
+
+	@Override
+	public void cast(Level level, LivingEntity caster) {
+		if (level instanceof ServerLevel serverLevel) {
+			BlockPos spawnPos = caster.blockPosition();
+			while (serverLevel.getBlockState(spawnPos.below()).canBeReplaced() || serverLevel.getBlockState(spawnPos.below()).is(CONSIDER_REPLACEABLE)) {
+				spawnPos = spawnPos.below();
+				if (serverLevel.isOutsideBuildHeight(spawnPos) || serverLevel.isOutsideBuildHeight(spawnPos.above())) {
+					return;
+				}
+			}
+
+			SpellThinker.spawn(serverLevel, spawnPos, this);
+		}
 	}
 
 	@Override

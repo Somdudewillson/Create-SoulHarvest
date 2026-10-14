@@ -9,11 +9,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-public final class BonemealSpell {
+public class BonemealSpell implements GlyphSpell {
 
-	private BonemealSpell() {}
+	public BonemealSpell() {}
 
-	public static void cast(Level level, LivingEntity caster) {
+	@Override
+	public void cast(Level level, LivingEntity caster) {
 		BlockPos center = caster.blockPosition();
 		for (BlockPos pos : BlockPos.withinManhattan(center, 15, 3, 15)) {
 			BlockState state = level.getBlockState(pos);

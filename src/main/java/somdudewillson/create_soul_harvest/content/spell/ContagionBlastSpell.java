@@ -7,14 +7,15 @@ import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public final class ContagionBlastSpell {
+public class ContagionBlastSpell implements GlyphSpell {
 
-	private ContagionBlastSpell() {}
+	public ContagionBlastSpell() {}
 
 	//? forge {
 	/*@SuppressWarnings("unused")
 	*///?}
-	public static void cast(Level level, LivingEntity caster) {
+	@Override
+	public void cast(Level level, LivingEntity caster) {
 		if (level instanceof ServerLevel serverLevel) {
 			Vec3 look = caster.getLookAngle();
 			Vec3 spawnPos = caster.getEyePosition().add(look);

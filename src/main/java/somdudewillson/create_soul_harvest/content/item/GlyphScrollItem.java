@@ -8,15 +8,21 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
-import somdudewillson.create_soul_harvest.content.spell.RunicSpells;
+import somdudewillson.create_soul_harvest.content.spell.GlyphSpell;
+
+import java.util.function.Supplier;
 
 public class GlyphScrollItem extends Item {
 
-	private final int spellId;
+	private final Supplier<? extends GlyphSpell> spellSupplier;
 
-	public GlyphScrollItem(int spellId, Properties properties) {
+	public GlyphScrollItem(Supplier<? extends GlyphSpell> spellSupplier, Properties properties) {
 		super(properties);
-		this.spellId = spellId;
+		this.spellSupplier = spellSupplier;
+	}
+
+	public GlyphSpell getSpell() {
+		return this.spellSupplier.get();
 	}
 
 	@Override
@@ -50,15 +56,9 @@ public class GlyphScrollItem extends Item {
 
 	@Override
 	public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
-		switch (spellId) {
-			case 1 -> RunicSpells.castSpell1_Lightning(level, entity);
-			case 2 -> RunicSpells.castSpell2_Fireball(level, entity);
-			case 3 -> RunicSpells.castSpell3_Bonemeal(level, entity);
-			case 4 -> RunicSpells.castSpell4_ContagionBlast(level, entity);
-			case 5 -> RunicSpells.castSpell5_Fortitude(level, entity);
-			case 6 -> RunicSpells.castSpell6_Updraft(level, entity);
-			case 7 -> RunicSpells.castSpell7_InstantShelter(level, entity);
-			case 8 -> RunicSpells.castSpell8_TerrainFlatten(level, entity);
+		GlyphSpell spell = spellSupplier.get();
+		if (spell != null) {
+			spell.cast(level, entity);
 		}
 
 		if (entity instanceof Player player && !player.isCreative()) {
