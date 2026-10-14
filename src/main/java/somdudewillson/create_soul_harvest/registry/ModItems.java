@@ -208,6 +208,15 @@ public class ModItems {
 	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_7 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_7", props -> new GlyphScrollItem(7, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
 	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_8 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_8", props -> new GlyphScrollItem(8, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
 
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_ENHANCED_1 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_enhanced_1", props -> new GlyphScrollItem(1, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_ENHANCED_2 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_enhanced_2", props -> new GlyphScrollItem(2, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_ENHANCED_3 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_enhanced_3", props -> new GlyphScrollItem(3, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_ENHANCED_4 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_enhanced_4", props -> new GlyphScrollItem(4, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_ENHANCED_5 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_enhanced_5", props -> new GlyphScrollItem(5, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_ENHANCED_6 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_enhanced_6", props -> new GlyphScrollItem(6, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_ENHANCED_7 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_enhanced_7", props -> new GlyphScrollItem(7, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_ENHANCED_8 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_enhanced_8", props -> new GlyphScrollItem(8, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
+
 
 	private static Item createGlyphPage() {
 		return new Item(new Item.Properties()) {
