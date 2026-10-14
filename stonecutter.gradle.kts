@@ -38,6 +38,7 @@ stonecutter parameters {
 		replace("DeferredHolder<CreativeModeTab, ", "RegistryObject/*T*/<")
 		replace("DeferredHolder<FluidType, ", "RegistryObject/*FT*/<")
 		replace("DeferredHolder<Fluid, ", "RegistryObject/*F*/<")
+		replace("DeferredHolder<EntityType<?>, ", "RegistryObject/*ET*/<")
 		replace("(DeferredHolder)", "(RegistryObject)")
 	}
 }

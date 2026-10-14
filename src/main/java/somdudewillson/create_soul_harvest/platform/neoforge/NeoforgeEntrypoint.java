@@ -26,6 +26,7 @@ public class NeoforgeEntrypoint {
 		ModFanProcessingTypes.FAN_PROCESSING_TYPES.register(modBus);
 		ModRecipeTypes.register(modBus);
 		ModParticleTypes.PARTICLE_TYPES.register(modBus);
+		ModEntityTypes.ENTITY_TYPES.register(modBus);
 
 		MulchPackFinder.register(modBus);
 
