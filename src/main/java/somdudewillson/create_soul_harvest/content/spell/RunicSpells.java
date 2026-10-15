@@ -9,7 +9,7 @@ import somdudewillson.create_soul_harvest.SoulHarvestMod;
 public class RunicSpells {
 	public static final Supplier<GlyphSpell> LIGHTNING = register("lightning", (id)->new LightningSpell(id, 20 * 15)); // 15 seconds
 	public static final Supplier<GlyphSpell> FIREBALL = FireballSpell::new;
-	public static final Supplier<GlyphSpell> BONEMEAL = BonemealSpell::new;
+	public static final Supplier<GlyphSpell> BONEMEAL = ()->new BonemealSpell(8);
 	public static final Supplier<GlyphSpell> CONTAGION_BLAST = ContagionBlastSpell::new;
 	public static final Supplier<GlyphSpell> FORTITUDE = FortitudeSpell::new;
 	public static final Supplier<GlyphSpell> UPDRAFT = UpdraftSpell::new;

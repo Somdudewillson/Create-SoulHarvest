@@ -7,7 +7,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -92,7 +91,7 @@ public class LightningSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public void clientTick(SpellThinker thinker, ClientLevel level) {
+	public void clientTick(SpellThinker thinker, Level level) {
 		Vec3 thinkerPos = thinker.position();
 		double centerX = thinkerPos.x() + 0.5;
 		double centerY = thinkerPos.y() + 35;

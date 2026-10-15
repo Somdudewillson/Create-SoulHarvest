@@ -1,9 +1,9 @@
 package somdudewillson.create_soul_harvest.content.spell;
 
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 
 public interface PersistentGlyphSpell extends GlyphSpell {
 
@@ -20,7 +20,7 @@ public interface PersistentGlyphSpell extends GlyphSpell {
 	/**
 	 * Executed on each client tick of the owning {@link SpellThinker}.
 	 */
-	default void clientTick(SpellThinker thinker, ClientLevel level) {}
+	default void clientTick(SpellThinker thinker, Level level) {}
 
 	/**
 	 * Returns true if this spell effect has finished executing and the owning thinker should be discarded.

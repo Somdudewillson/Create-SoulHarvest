@@ -1,6 +1,10 @@
 package somdudewillson.create_soul_harvest.content.spell;
 
-import net.minecraft.client.multiplayer.ClientLevel;
+import static somdudewillson.create_soul_harvest.registry.ModTags.Blocks.CONSIDER_REPLACEABLE;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -13,11 +17,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import somdudewillson.create_soul_harvest.registry.ModTags;
-
-import static somdudewillson.create_soul_harvest.registry.ModTags.Blocks.CONSIDER_REPLACEABLE;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TerrainFlattenSpell extends SimplePersistentGlyphSpell {	
 	public static final int MAX_VERTICAL_SEARCH = 15;
@@ -155,7 +154,7 @@ public class TerrainFlattenSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public void clientTick(SpellThinker thinker, ClientLevel level) {
+	public void clientTick(SpellThinker thinker, Level level) {
 		BlockPos entityPos = thinker.blockPosition();
 		double cx = entityPos.getX() + 0.5;
 		double cy = entityPos.getY() + 0.5;

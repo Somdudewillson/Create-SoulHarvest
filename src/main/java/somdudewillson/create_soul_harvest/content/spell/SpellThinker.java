@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -106,12 +105,12 @@ public class SpellThinker extends Entity implements OwnableEntity {
 				this.currentEffect.onEnd(this, serverLevel);
 				this.discard();
 			}
-		} else if (this.level().isClientSide() && this.level() instanceof ClientLevel clientLevel) {
+		} else if (this.level().isClientSide()) {
 			if (this.currentEffect == null) {
 				updateClientEffect();
 			}
 			if (this.currentEffect != null) {
-				this.currentEffect.clientTick(this, clientLevel);
+				this.currentEffect.clientTick(this, this.level());
 			}
 		}
 	}
