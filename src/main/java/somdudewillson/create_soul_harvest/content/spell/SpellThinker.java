@@ -29,6 +29,9 @@ public class SpellThinker extends Entity implements OwnableEntity {
     protected static final EntityDataAccessor<String> DATA_EFFECT_ID = SynchedEntityData.defineId(
     		SpellThinker.class, EntityDataSerializers.STRING
         );
+    protected static final EntityDataAccessor<Long> DATA_EFFECT_FLAGS_ID = SynchedEntityData.defineId(
+    		SpellThinker.class, EntityDataSerializers.LONG
+        );
 
 	@FunctionalInterface
 	public static interface EffectFactory {
@@ -71,6 +74,14 @@ public class SpellThinker extends Entity implements OwnableEntity {
 	@Nullable
 	public PersistentGlyphSpell getEffect() {
 		return this.currentEffect;
+	}
+	
+	public long getEffectFlags() {
+		return this.entityData.get(DATA_EFFECT_FLAGS_ID);
+	}
+	
+	public void setEffectFlags(long flags) {
+		this.entityData.set(DATA_EFFECT_FLAGS_ID, flags);
 	}
 
 	public static SpellThinker spawn(ServerLevel level, Vec3 pos, PersistentGlyphSpell effect, @Nullable UUID owner) {
@@ -140,18 +151,21 @@ public class SpellThinker extends Entity implements OwnableEntity {
 	protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
 		builder.define(DATA_OWNERUUID_ID, Optional.empty());
 		builder.define(DATA_EFFECT_ID, "");
+		builder.define(DATA_EFFECT_FLAGS_ID, 0l);
 	}
 	//?} else {
 	/*@Override
 	protected void defineSynchedData() {
 		this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
 		this.entityData.define(DATA_EFFECT_ID, "");
+		this.entityData.define(DATA_EFFECT_FLAGS_ID, 0l);
 	}
 	*///?}
 
 	@Override
 	protected void addAdditionalSaveData(CompoundTag compound) {
 		OptNbtUtils.putUUID(compound, "Owner", getOwnerUUID());
+		compound.putLong("EffectFlags", getEffectFlags());
 		
 		if (this.currentEffect != null) {
 			compound.putString("EffectId", this.currentEffect.getId().toString());
@@ -164,6 +178,7 @@ public class SpellThinker extends Entity implements OwnableEntity {
 	@Override
 	protected void readAdditionalSaveData(CompoundTag compound) {
 		setOwnerUUID(OptNbtUtils.getUUID(compound, "Owner").orElse(null));
+		setEffectFlags(OptNbtUtils.getLong(compound, "EffectFlags").orElse(0l));
 		
 		if (compound.contains("EffectId")) {
 			ResourceLocation effectId = ResourceLocation.tryParse(compound.getString("EffectId"));
