@@ -1,44 +1,65 @@
 package somdudewillson.create_soul_harvest.content.spell;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import somdudewillson.create_soul_harvest.content.block.AnimaGlassBlockEntity;
-import somdudewillson.create_soul_harvest.registry.ModBlocks;
+import net.minecraft.world.phys.Vec3;
+import somdudewillson.create_soul_harvest.SoulHarvestMod;
 
-public class InstantShelterSpell implements GlyphSpell {
+import java.util.ArrayList;
+import java.util.List;
 
-	public static final int LIFESPAN = 20 * 16; // 16 seconds
+public class InstantShelterSpell extends AnimaGlassStructureSpell {
 
-	public InstantShelterSpell() {}
+	public static final ResourceLocation ID = SoulHarvestMod.id("instant_shelter");
+	public static final int LIFESPAN = 20 * 30; // 30 seconds
+	public static final double BUBBLE_RADIUS = 6.0;
+	public static final double BUBBLE_THICKNESS = 0.9;
+
+	public InstantShelterSpell() {
+	}
 
 	@Override
-	public void cast(Level level, LivingEntity caster) {
-		if (level instanceof ServerLevel serverLevel) {
-			final double bubbleRadius = 6.0;
-			final double bubbleThickness = 0.9;
-			BlockPos center = caster.blockPosition();
-			int extent = (int) Math.ceil(bubbleRadius + bubbleThickness);
+	public ResourceLocation getId() {
+		return ID;
+	}
 
-			for (BlockPos testPos : BlockPos.betweenClosed(center.offset(-extent, -extent, -extent), center.offset(extent, extent, extent))) {
-				BlockState cur = serverLevel.getBlockState(testPos);
-				if (!cur.canBeReplaced()) continue;
+	@Override
+	protected int getLifespan() {
+		return LIFESPAN;
+	}
 
-				double distFromCenter = Math.sqrt(testPos.distToCenterSqr(center.getCenter()));
-				double distFromEdge = Math.abs(distFromCenter - bubbleRadius);
-				if (distFromEdge <= bubbleThickness) {
-					serverLevel.setBlockAndUpdate(testPos, ModBlocks.MAGIC_GLASS.get().defaultBlockState());
-					BlockEntity be = serverLevel.getBlockEntity(testPos);
-					if (be instanceof AnimaGlassBlockEntity animaBe) {
-						animaBe.setOwnerId(caster.getUUID());
-						animaBe.setMaxLifespan(LIFESPAN);
-						animaBe.setCurrentLifespan(0);
-					}
-				}
+	@Override
+	protected int getPlaceInterval() {
+		return 1;
+	}
+
+	@Override
+	protected int getBlocksPerInterval() {
+		return 24;
+	}
+
+	@Override
+	protected Vec3 getOrigin(ServerLevel level, LivingEntity caster) {
+		// Sort from the bottom of the dome upwards to give an upward rising dome effect
+		return caster.position().subtract(0, BUBBLE_RADIUS, 0);
+	}
+
+	@Override
+	protected List<BlockPlacement> supplyBlockPlacements(ServerLevel level, LivingEntity caster, Vec3 origin) {
+		BlockPos center = caster.blockPosition();
+		int extent = (int) Math.ceil(BUBBLE_RADIUS + BUBBLE_THICKNESS);
+		List<BlockPlacement> placements = new ArrayList<>();
+
+		for (BlockPos testPos : BlockPos.betweenClosed(center.offset(-extent, -extent, -extent), center.offset(extent, extent, extent))) {
+			double distFromCenter = Math.sqrt(testPos.distToCenterSqr(center.getCenter()));
+			double distFromEdge = Math.abs(distFromCenter - BUBBLE_RADIUS);
+			if (distFromEdge <= BUBBLE_THICKNESS) {
+				placements.add(new BlockPlacement(testPos.immutable()));
 			}
 		}
+
+		return placements;
 	}
 }

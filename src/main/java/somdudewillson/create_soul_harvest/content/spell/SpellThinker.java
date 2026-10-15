@@ -36,6 +36,8 @@ public class SpellThinker extends Entity {
 	static {
 		registerEffect(LightningSpell.ID, LightningSpell::new);
 		registerEffect(TerrainFlattenSpell.ID, TerrainFlattenSpell::new);
+		registerEffect(InstantWallSpell.ID, InstantWallSpell::new);
+		registerEffect(InstantShelterSpell.ID, InstantShelterSpell::new);
 	}
 
 	private PersistentGlyphSpell currentEffect;
