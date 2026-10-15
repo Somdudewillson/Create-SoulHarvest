@@ -74,7 +74,15 @@ public class ModBlocks {
 			.build();
 
 	public static final DeferredHolder<Block, AnimaGlassBlock> MAGIC_GLASS = BLOCKS.register("magic_glass",
-			() -> new AnimaGlassBlock(BlockBehaviour.Properties.of().mapColor(MapColor.NONE).sound(SoundType.GLASS).strength(1.5f, 100.0f).lightLevel(s -> 2).noOcclusion().noLootTable()));
+			() -> new AnimaGlassBlock(BlockBehaviour.Properties.of()
+					.mapColor(MapColor.NONE)
+					.sound(SoundType.GLASS)
+					.strength(1.5f, 100.0f)
+					.lightLevel(s -> 2)
+					.noOcclusion()
+					.isSuffocating((state, level, pos) -> false)
+					.isViewBlocking((state, level, pos) -> false)
+					.noLootTable()));
 
 	public static final DeferredHolder<Block, BiocideGasBlock> BIOCIDE_GAS = BLOCKS.register("biocide_gas",
 			() -> new BiocideGasBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).strength(0.0f).noCollission().noOcclusion().noLootTable()));

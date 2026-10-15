@@ -40,6 +40,7 @@ stonecutter parameters {
 		replace("DeferredHolder<Fluid, ", "RegistryObject/*F*/<")
 		replace("DeferredHolder<EntityType<?>, ", "RegistryObject/*ET*/<")
 		replace("(DeferredHolder)", "(RegistryObject)")
+		replace("TransparentBlock", "AbstractGlassBlock")
 	}
 }
 

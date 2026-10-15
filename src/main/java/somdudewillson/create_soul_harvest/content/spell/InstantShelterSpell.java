@@ -11,6 +11,8 @@ import somdudewillson.create_soul_harvest.registry.ModBlocks;
 
 public class InstantShelterSpell implements GlyphSpell {
 
+	public static final int LIFESPAN = 20 * 16; // 16 seconds
+
 	public InstantShelterSpell() {}
 
 	@Override
@@ -32,6 +34,8 @@ public class InstantShelterSpell implements GlyphSpell {
 					BlockEntity be = serverLevel.getBlockEntity(testPos);
 					if (be instanceof AnimaGlassBlockEntity animaBe) {
 						animaBe.setOwnerId(caster.getUUID());
+						animaBe.setMaxLifespan(LIFESPAN);
+						animaBe.setCurrentLifespan(0);
 					}
 				}
 			}

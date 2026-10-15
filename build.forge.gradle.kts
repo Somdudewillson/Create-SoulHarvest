@@ -116,6 +116,10 @@ tasks.named<ProcessResources>("processResources") {
 	exclude("data/create_soul_harvest/advancement/**")
 }
 
+tasks.named("sourcesJar") {
+	dependsOn(backportForgeRecipes)
+}
+
 
 tasks.named("createMinecraftArtifacts") {
 	dependsOn(tasks.named("stonecutterGenerate"))

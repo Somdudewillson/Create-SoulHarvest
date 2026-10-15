@@ -54,7 +54,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		VariantBlockStateBuilder magicGlass = getVariantBuilder(ModBlocks.MAGIC_GLASS.get());
 		for (int age = 0; age <= 3; age++) {
 			String name = age == 0 ? "magic_glass" : "magic_glass_" + age;
-			ModelFile model = models().cubeAll(name, modLoc("block/" + name));
+			ModelFile model = models().cubeAll(name, modLoc("block/" + name)).renderType("cutout");
 			magicGlass.partialState().with(AnimaGlassBlock.AGE, age)
 					.modelForState().modelFile(model).addModel();
 		}
