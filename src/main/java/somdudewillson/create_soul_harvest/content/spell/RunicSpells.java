@@ -23,7 +23,8 @@ public class RunicSpells {
 	public static final Supplier<GlyphSpell> FIREBALL = FireballSpell::new;
 	public static final Supplier<GlyphSpell> BONEMEAL = ()->new BonemealSpell(8);
 	public static final Supplier<GlyphSpell> CONTAGION_BLAST = ContagionBlastSpell::new;
-	public static final Supplier<GlyphSpell> FORTITUDE = FortitudeSpell::new;
+	public static final Supplier<GlyphSpell> FORTITUDE = ()->new FortitudeSpell(false);
+	public static final Supplier<GlyphSpell> FORTITUDE_ENHANCED = ()->new FortitudeSpell(true);
 	//? >= 1.21 {
 	public static final Supplier<GlyphSpell> UPDRAFT = () -> new UpdraftSpell(7.0, ()->new MobEffectInstance(MobEffects.SLOW_FALLING, 20*25, 0));
 	public static final Supplier<GlyphSpell> UPDRAFT_ENHANCED = () -> new UpdraftSpell(7.0, ()->new MobEffectInstance(ModMobEffects.AGILE_FALLING, 20*35, 0));

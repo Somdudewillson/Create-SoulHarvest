@@ -13,12 +13,15 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 //?} forge {
 /*import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 *///?}
 
+import somdudewillson.create_soul_harvest.content.effect.StoneskinMobEffect;
 import somdudewillson.create_soul_harvest.registry.ModMobEffects;
 
 public class SpellGameEvents {
@@ -83,4 +86,24 @@ public class SpellGameEvents {
 		}
 		*///?}
 	}
+
+	//? neoforge {
+	@SubscribeEvent
+	public static void onLivingDamage(LivingDamageEvent.Pre event) {
+		float currentDamage = event.getNewDamage();
+		float newDamage = StoneskinMobEffect.modifyDamage(event.getEntity(), event.getSource(), currentDamage);
+		if (newDamage != currentDamage) {
+			event.setNewDamage(newDamage);
+		}
+	}
+	//?} forge {
+	/*@SubscribeEvent
+	public static void onLivingDamage(LivingDamageEvent event) {
+		float currentDamage = event.getAmount();
+		float newDamage = StoneskinMobEffect.modifyDamage(event.getEntity(), event.getSource(), currentDamage);
+		if (newDamage != currentDamage) {
+			event.setAmount(newDamage);
+		}
+	}
+	*///?}
 }

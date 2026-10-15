@@ -94,6 +94,7 @@
 
   "effect.create_soul_harvest.contagion": "Contagion",
   "effect.create_soul_harvest.agile_falling": "Agile Falling",
+  "effect.create_soul_harvest.stoneskin": "Stoneskin",
 
   "create_soul_harvest.recipe.soul_infusion": "Soul Infusion",
   "create.recipe.soul_infusion.fan": "Fan behind Active Soul Crystal",
