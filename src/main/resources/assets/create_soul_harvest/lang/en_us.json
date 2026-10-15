@@ -93,6 +93,7 @@
   "fluid_type.create_soul_harvest.liquid_soul_crystal": "Liquid Soul Crystal",
 
   "effect.create_soul_harvest.contagion": "Contagion",
+  "effect.create_soul_harvest.agile_falling": "Agile Falling",
 
   "create_soul_harvest.recipe.soul_infusion": "Soul Infusion",
   "create.recipe.soul_infusion.fan": "Fan behind Active Soul Crystal",

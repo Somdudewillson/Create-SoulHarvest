@@ -12,6 +12,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 *///?}
 
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.effect.AgileFallingMobEffect;
 import somdudewillson.create_soul_harvest.content.effect.ContagionMobEffect;
 
 public class ModMobEffects {
@@ -20,9 +21,11 @@ public class ModMobEffects {
 	public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, SoulHarvestMod.MOD_ID);
 
 	public static final DeferredHolder<MobEffect, ContagionMobEffect> CONTAGION = MOB_EFFECTS.register("contagion", ContagionMobEffect::new);
+	public static final DeferredHolder<MobEffect, AgileFallingMobEffect> AGILE_FALLING = MOB_EFFECTS.register("agile_falling", AgileFallingMobEffect::new);
 	//?} forge {
 	/*public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, SoulHarvestMod.MOD_ID);
 
 	public static final RegistryObject<ContagionMobEffect> CONTAGION = MOB_EFFECTS.register("contagion", ContagionMobEffect::new);
+	public static final RegistryObject<AgileFallingMobEffect> AGILE_FALLING = MOB_EFFECTS.register("agile_falling", AgileFallingMobEffect::new);
 	*///?}
 }

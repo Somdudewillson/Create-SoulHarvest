@@ -1,9 +1,11 @@
 package somdudewillson.create_soul_harvest.content.spell.spells;
 
+import java.util.function.Supplier;
+
+import lombok.RequiredArgsConstructor;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.level.Level;
@@ -11,9 +13,11 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import somdudewillson.create_soul_harvest.content.spell.GlyphSpell;
 
+@RequiredArgsConstructor
 public class UpdraftSpell implements GlyphSpell {
 
-	public UpdraftSpell() {}
+	private final double launchHeight;
+	private final Supplier<MobEffectInstance> effect;
 
 	@Override
 	public void cast(Level level, LivingEntity caster) {
@@ -27,16 +31,16 @@ public class UpdraftSpell implements GlyphSpell {
 				/*serverLevel.sendParticles(ParticleTypes.CLOUD, nearby.getX(), nearby.getY(), nearby.getZ(), 5, 0.2, 0.2, 0.2, 0.05);
 				*///?}
 			}
-			nearby.setDeltaMovement(new Vec3(0, 7, 0));
+			nearby.setDeltaMovement(new Vec3(0, launchHeight, 0));
 			nearby.hurtMarked = true;
 
 			if (nearby instanceof OwnableEntity ownable && caster.getUUID().equals(ownable.getOwnerUUID())) {
-				nearby.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 20 * 25, 0));
+				nearby.addEffect(effect.get());
 			}
 		}
 		
 		if (!level.isClientSide()) {
-			caster.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 20 * 25, 0));
+			caster.addEffect(effect.get());
 		}
 	}
 }

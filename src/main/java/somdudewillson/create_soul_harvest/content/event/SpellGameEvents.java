@@ -12,9 +12,11 @@ import net.minecraft.world.phys.AABB;
 //? neoforge {
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 //?} forge {
 /*import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 *///?}
 
 import somdudewillson.create_soul_harvest.registry.ModMobEffects;
@@ -65,5 +67,20 @@ public class SpellGameEvents {
 				entity.discard();
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public static void onLivingFall(LivingFallEvent event) {
+		//? >= 1.21 {
+		if (event.getEntity().hasEffect(ModMobEffects.AGILE_FALLING)) {
+			event.setCanceled(true);
+			event.setDistance(0);
+		}
+		//?} else {
+		/*if (event.getEntity().hasEffect(ModMobEffects.AGILE_FALLING.get())) {
+			event.setCanceled(true);
+			event.setDistance(0);
+		}
+		*///?}
 	}
 }

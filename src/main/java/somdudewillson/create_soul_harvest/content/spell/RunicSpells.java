@@ -4,6 +4,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.spell.spells.BonemealSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.ContagionBlastSpell;
@@ -14,6 +16,7 @@ import somdudewillson.create_soul_harvest.content.spell.spells.InstantWallSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.LightningSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.TerrainFlattenSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.UpdraftSpell;
+import somdudewillson.create_soul_harvest.registry.ModMobEffects;
 
 public class RunicSpells {
 	public static final Supplier<GlyphSpell> LIGHTNING = register("lightning", (id)->new LightningSpell(id, 20 * 15)); // 15 seconds
@@ -21,7 +24,13 @@ public class RunicSpells {
 	public static final Supplier<GlyphSpell> BONEMEAL = ()->new BonemealSpell(8);
 	public static final Supplier<GlyphSpell> CONTAGION_BLAST = ContagionBlastSpell::new;
 	public static final Supplier<GlyphSpell> FORTITUDE = FortitudeSpell::new;
-	public static final Supplier<GlyphSpell> UPDRAFT = UpdraftSpell::new;
+	//? >= 1.21 {
+	public static final Supplier<GlyphSpell> UPDRAFT = () -> new UpdraftSpell(7.0, ()->new MobEffectInstance(MobEffects.SLOW_FALLING, 20*25, 0));
+	public static final Supplier<GlyphSpell> UPDRAFT_ENHANCED = () -> new UpdraftSpell(7.0, ()->new MobEffectInstance(ModMobEffects.AGILE_FALLING, 20*35, 0));
+	//?} else {
+	/*public static final Supplier<GlyphSpell> UPDRAFT = () -> new UpdraftSpell(7.0, ()->new MobEffectInstance(MobEffects.SLOW_FALLING, 20*25, 0));
+	public static final Supplier<GlyphSpell> UPDRAFT_ENHANCED = () -> new UpdraftSpell(7.0, ()->new MobEffectInstance(ModMobEffects.AGILE_FALLING.get(), 20*35, 0));
+	*///?}
 	public static final Supplier<GlyphSpell> INSTANT_WALL = register("instant_wall", InstantWallSpell::new);
 	public static final Supplier<GlyphSpell> INSTANT_SHELTER = register("instant_shelter", InstantShelterSpell::new);
 	public static final Supplier<GlyphSpell> TERRAIN_FLATTEN_SMALL = register("terrain_flatten_small", (id)->new TerrainFlattenSpell(id, 8));
