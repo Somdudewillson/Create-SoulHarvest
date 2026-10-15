@@ -1,4 +1,4 @@
-package somdudewillson.create_soul_harvest.content.spell;
+package somdudewillson.create_soul_harvest.content.spell.spells;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +24,8 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Team;
+import somdudewillson.create_soul_harvest.content.spell.SimplePersistentGlyphSpell;
+import somdudewillson.create_soul_harvest.content.spell.SpellThinker;
 import somdudewillson.create_soul_harvest.registry.ModParticleTypes;
 
 public class LightningSpell extends SimplePersistentGlyphSpell {

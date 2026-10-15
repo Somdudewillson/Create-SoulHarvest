@@ -1,4 +1,4 @@
-package somdudewillson.create_soul_harvest.content.spell;
+package somdudewillson.create_soul_harvest.content.spell.spells;
 
 import static somdudewillson.create_soul_harvest.registry.ModTags.Blocks.CONSIDER_REPLACEABLE;
 
@@ -16,6 +16,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import somdudewillson.create_soul_harvest.content.spell.SimplePersistentGlyphSpell;
+import somdudewillson.create_soul_harvest.content.spell.SpellThinker;
 import somdudewillson.create_soul_harvest.registry.ModTags;
 
 public class TerrainFlattenSpell extends SimplePersistentGlyphSpell {	

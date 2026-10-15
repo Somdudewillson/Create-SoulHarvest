@@ -5,6 +5,15 @@ import java.util.function.Supplier;
 
 import net.minecraft.resources.ResourceLocation;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.spell.spells.BonemealSpell;
+import somdudewillson.create_soul_harvest.content.spell.spells.ContagionBlastSpell;
+import somdudewillson.create_soul_harvest.content.spell.spells.FireballSpell;
+import somdudewillson.create_soul_harvest.content.spell.spells.FortitudeSpell;
+import somdudewillson.create_soul_harvest.content.spell.spells.InstantShelterSpell;
+import somdudewillson.create_soul_harvest.content.spell.spells.InstantWallSpell;
+import somdudewillson.create_soul_harvest.content.spell.spells.LightningSpell;
+import somdudewillson.create_soul_harvest.content.spell.spells.TerrainFlattenSpell;
+import somdudewillson.create_soul_harvest.content.spell.spells.UpdraftSpell;
 
 public class RunicSpells {
 	public static final Supplier<GlyphSpell> LIGHTNING = register("lightning", (id)->new LightningSpell(id, 20 * 15)); // 15 seconds

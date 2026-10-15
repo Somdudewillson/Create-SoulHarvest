@@ -1,4 +1,4 @@
-package somdudewillson.create_soul_harvest.content.spell;
+package somdudewillson.create_soul_harvest.content.spell.spells;
 
 import lombok.RequiredArgsConstructor;
 import net.minecraft.core.BlockPos;
@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import somdudewillson.create_soul_harvest.content.spell.GlyphSpell;
 
 @RequiredArgsConstructor
 public class BonemealSpell implements GlyphSpell {

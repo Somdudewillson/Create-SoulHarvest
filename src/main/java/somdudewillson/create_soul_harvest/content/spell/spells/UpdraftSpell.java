@@ -1,4 +1,4 @@
-package somdudewillson.create_soul_harvest.content.spell;
+package somdudewillson.create_soul_harvest.content.spell.spells;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -9,6 +9,7 @@ import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import somdudewillson.create_soul_harvest.content.spell.GlyphSpell;
 
 public class UpdraftSpell implements GlyphSpell {
 

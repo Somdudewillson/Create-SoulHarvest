@@ -1,10 +1,11 @@
-package somdudewillson.create_soul_harvest.content.spell;
+package somdudewillson.create_soul_harvest.content.spell.spells;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import somdudewillson.create_soul_harvest.content.spell.GlyphSpell;
 
 public class FireballSpell implements GlyphSpell {
 

@@ -1,9 +1,10 @@
-package somdudewillson.create_soul_harvest.content.spell;
+package somdudewillson.create_soul_harvest.content.spell.spells;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import somdudewillson.create_soul_harvest.content.spell.GlyphSpell;
 
 public class FortitudeSpell implements GlyphSpell {
 

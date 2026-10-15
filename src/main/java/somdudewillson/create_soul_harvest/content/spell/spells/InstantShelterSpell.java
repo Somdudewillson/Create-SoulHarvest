@@ -1,10 +1,11 @@
-package somdudewillson.create_soul_harvest.content.spell;
+package somdudewillson.create_soul_harvest.content.spell.spells;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import somdudewillson.create_soul_harvest.content.spell.AnimaGlassStructureSpell;
 
 import java.util.ArrayList;
 import java.util.List;
