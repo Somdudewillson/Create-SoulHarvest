@@ -11,6 +11,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.block.AnimaGlassBlock;
 import somdudewillson.create_soul_harvest.content.block.BiocideGasBlock;
+import somdudewillson.create_soul_harvest.content.block.DenseHypotheticalBlock;
 import somdudewillson.create_soul_harvest.content.block.SoulBudBlock;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 
@@ -75,6 +76,21 @@ public class ModBlockStateProvider extends BlockStateProvider {
 					.modelForState().modelFile(normal).addModel();
 			biocideGas.partialState().with(BiocideGasBlock.AGE, age).with(BiocideGasBlock.TRIGGERED, false)
 					.modelForState().modelFile(active).addModel();
+		}
+
+		// Dense hypothetical block (age 0..3 & variant 0..5)
+		VariantBlockStateBuilder denseHypothetical = getVariantBuilder(ModBlocks.DENSE_HYPOTHETICAL.get());
+		for (int variant = 0; variant <= 5; variant++) {
+			String baseName = ModBlocks.DENSE_HYPOTHETICAL.getId().getPath();
+			String modelName = variant == 0 ? baseName : baseName + "_" + variant;
+			String textureName = baseName + "_" + variant;
+			for (int age = 0; age <= 3; age++) {
+				ModelFile model = models().cubeAll(modelName, modLoc("block/" + textureName));
+				denseHypothetical.partialState()
+						.with(DenseHypotheticalBlock.AGE, age)
+						.with(DenseHypotheticalBlock.VARIANT, variant)
+						.modelForState().modelFile(model).addModel();
+			}
 		}
 
 		// Liquid Soul Crystal (particle texture)

@@ -1,0 +1,76 @@
+{
+  "variants": {
+    "age=0,variant=0": {
+      "model": "create_soul_harvest:block/dense_hypothetical"
+    },
+    "age=0,variant=1": {
+      "model": "create_soul_harvest:block/dense_hypothetical_1"
+    },
+    "age=0,variant=2": {
+      "model": "create_soul_harvest:block/dense_hypothetical_2"
+    },
+    "age=0,variant=3": {
+      "model": "create_soul_harvest:block/dense_hypothetical_3"
+    },
+    "age=0,variant=4": {
+      "model": "create_soul_harvest:block/dense_hypothetical_4"
+    },
+    "age=0,variant=5": {
+      "model": "create_soul_harvest:block/dense_hypothetical_5"
+    },
+    "age=1,variant=0": {
+      "model": "create_soul_harvest:block/dense_hypothetical"
+    },
+    "age=1,variant=1": {
+      "model": "create_soul_harvest:block/dense_hypothetical_1"
+    },
+    "age=1,variant=2": {
+      "model": "create_soul_harvest:block/dense_hypothetical_2"
+    },
+    "age=1,variant=3": {
+      "model": "create_soul_harvest:block/dense_hypothetical_3"
+    },
+    "age=1,variant=4": {
+      "model": "create_soul_harvest:block/dense_hypothetical_4"
+    },
+    "age=1,variant=5": {
+      "model": "create_soul_harvest:block/dense_hypothetical_5"
+    },
+    "age=2,variant=0": {
+      "model": "create_soul_harvest:block/dense_hypothetical"
+    },
+    "age=2,variant=1": {
+      "model": "create_soul_harvest:block/dense_hypothetical_1"
+    },
+    "age=2,variant=2": {
+      "model": "create_soul_harvest:block/dense_hypothetical_2"
+    },
+    "age=2,variant=3": {
+      "model": "create_soul_harvest:block/dense_hypothetical_3"
+    },
+    "age=2,variant=4": {
+      "model": "create_soul_harvest:block/dense_hypothetical_4"
+    },
+    "age=2,variant=5": {
+      "model": "create_soul_harvest:block/dense_hypothetical_5"
+    },
+    "age=3,variant=0": {
+      "model": "create_soul_harvest:block/dense_hypothetical"
+    },
+    "age=3,variant=1": {
+      "model": "create_soul_harvest:block/dense_hypothetical_1"
+    },
+    "age=3,variant=2": {
+      "model": "create_soul_harvest:block/dense_hypothetical_2"
+    },
+    "age=3,variant=3": {
+      "model": "create_soul_harvest:block/dense_hypothetical_3"
+    },
+    "age=3,variant=4": {
+      "model": "create_soul_harvest:block/dense_hypothetical_4"
+    },
+    "age=3,variant=5": {
+      "model": "create_soul_harvest:block/dense_hypothetical_5"
+    }
+  }
+}

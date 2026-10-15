@@ -14,6 +14,7 @@
   "block.create_soul_harvest.midas_core": "Midas Core",
   "block.create_soul_harvest.magic_glass": "Anima Glass",
   "block.create_soul_harvest.biocide_gas": "Biocide Gas",
+  "block.create_soul_harvest.dense_hypothetical": "Dense Hypothetical Block",
   "block.create_soul_harvest.liquid_soul_crystal": "Liquid Soul Crystal",
 
   "item.create_soul_harvest.liquid_soul_crystal_bucket": "Liquid Soul Crystal Bucket",

@@ -87,6 +87,13 @@ public class ModBlocks {
 	public static final DeferredHolder<Block, BiocideGasBlock> BIOCIDE_GAS = BLOCKS.register("biocide_gas",
 			() -> new BiocideGasBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).strength(0.0f).noCollission().noOcclusion().noLootTable()));
 
+	public static final DeferredHolder<Block, DenseHypotheticalBlock> DENSE_HYPOTHETICAL = BLOCKS.register("dense_hypothetical",
+			() -> new DenseHypotheticalBlock(BlockBehaviour.Properties.of()
+					.mapColor(MapColor.COLOR_BLACK)
+	                .strength(50.0F, 1200.0F)
+					.lightLevel(s -> 2)
+					.noLootTable()));
+
 	//? forge {
 	/*@SuppressWarnings("deprecation")
 	*///?}
