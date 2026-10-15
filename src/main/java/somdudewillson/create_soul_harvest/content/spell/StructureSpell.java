@@ -58,7 +58,7 @@ public abstract class StructureSpell implements PersistentGlyphSpell {
 			this.remainingPlacements = new ArrayList<>(unordered);
 			this.remainingPlacements.sort(Comparator.comparingDouble(p -> p.pos().distToCenterSqr(this.origin.x, this.origin.y, this.origin.z)));
 
-			SpellThinker.spawn(serverLevel, this.origin, this);
+			SpellThinker.spawn(serverLevel, this.origin, this, caster.getUUID());
 		}
 	}
 

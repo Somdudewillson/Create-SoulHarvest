@@ -1,20 +1,31 @@
 package somdudewillson.create_soul_harvest.content.spell;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.registry.ModEntityTypes;
+import somdudewillson.redsparklib.common.utils.OptNbtUtils;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-public class SpellThinker extends Entity {
+public class SpellThinker extends Entity implements OwnableEntity {
+    protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(
+    		SpellThinker.class, EntityDataSerializers.OPTIONAL_UUID
+        );
 
 	@FunctionalInterface
 	public interface EffectFactory {
@@ -61,21 +72,23 @@ public class SpellThinker extends Entity {
 		return this.currentEffect;
 	}
 
-	public static SpellThinker spawn(ServerLevel level, Vec3 pos, PersistentGlyphSpell effect) {
+	public static SpellThinker spawn(ServerLevel level, Vec3 pos, PersistentGlyphSpell effect, @Nullable UUID owner) {
 		SpellThinker thinker = new SpellThinker(ModEntityTypes.SPELL_THINKER.get(), level);
 		thinker.setPos(pos.x, pos.y, pos.z);
 		thinker.setEffect(effect);
+		thinker.setOwnerUUID(owner);
 		level.addFreshEntity(thinker);
 		return thinker;
 	}
 
-	public static SpellThinker spawn(ServerLevel level, BlockPos pos, PersistentGlyphSpell effect) {
-		return spawn(level, Vec3.atCenterOf(pos), effect);
+	public static SpellThinker spawn(ServerLevel level, BlockPos pos, PersistentGlyphSpell effect, @Nullable UUID owner) {
+		return spawn(level, Vec3.atCenterOf(pos), effect, owner);
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
+		
 		if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
 			if (this.currentEffect == null || this.currentEffect.isFinished(this)) {
 				if (this.currentEffect != null) {
@@ -97,15 +110,31 @@ public class SpellThinker extends Entity {
 	//? >= 1.21 {
 	@Override
 	protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+		builder.define(DATA_OWNERUUID_ID, Optional.empty());
 	}
 	//?} else {
 	/*@Override
 	protected void defineSynchedData() {
+		this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
 	}
 	*///?}
 
 	@Override
+	protected void addAdditionalSaveData(CompoundTag compound) {
+		OptNbtUtils.putUUID(compound, "Owner", getOwnerUUID());
+		
+		if (this.currentEffect != null) {
+			compound.putString("EffectId", this.currentEffect.getId().toString());
+			CompoundTag effectData = new CompoundTag();
+			this.currentEffect.writeSaveData(effectData);
+			compound.put("EffectData", effectData);
+		}
+	}
+
+	@Override
 	protected void readAdditionalSaveData(CompoundTag compound) {
+		setOwnerUUID(OptNbtUtils.getUUID(compound, "Owner").orElse(null));
+		
 		if (compound.contains("EffectId")) {
 			ResourceLocation effectId = ResourceLocation.tryParse(compound.getString("EffectId"));
 			if (effectId != null) {
@@ -117,16 +146,6 @@ public class SpellThinker extends Entity {
 					this.currentEffect = effect;
 				}
 			}
-		}
-	}
-
-	@Override
-	protected void addAdditionalSaveData(CompoundTag compound) {
-		if (this.currentEffect != null) {
-			compound.putString("EffectId", this.currentEffect.getId().toString());
-			CompoundTag effectData = new CompoundTag();
-			this.currentEffect.writeSaveData(effectData);
-			compound.put("EffectData", effectData);
 		}
 	}
 
@@ -154,4 +173,14 @@ public class SpellThinker extends Entity {
 	public boolean displayFireAnimation() {
 		return false;
 	}
+
+    @Nullable
+    @Override
+    public UUID getOwnerUUID() {
+        return this.entityData.get(DATA_OWNERUUID_ID).orElse(null);
+    }
+
+    public void setOwnerUUID(@Nullable UUID p_21817_) {
+        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(p_21817_));
+    }
 }

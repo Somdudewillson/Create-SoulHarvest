@@ -46,7 +46,7 @@ public class TerrainFlattenSpell implements PersistentGlyphSpell {
 				}
 			}
 
-			SpellThinker.spawn(serverLevel, spawnPos, this);
+			SpellThinker.spawn(serverLevel, spawnPos, this, caster.getUUID());
 		}
 	}
 
