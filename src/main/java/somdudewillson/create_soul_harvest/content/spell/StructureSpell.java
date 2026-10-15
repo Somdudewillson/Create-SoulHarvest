@@ -2,6 +2,7 @@ package somdudewillson.create_soul_harvest.content.spell;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class StructureSpell implements PersistentGlyphSpell {
+public abstract class StructureSpell extends SimplePersistentGlyphSpell {
 	
 	// This is a record because we might want to put extra data in here in the future
 	public static record BlockPlacement(BlockPos pos) {}
@@ -27,7 +28,8 @@ public abstract class StructureSpell implements PersistentGlyphSpell {
 	protected int timer;
 	protected List<BlockPlacement> remainingPlacements = new ArrayList<>();
 
-	public StructureSpell() {
+	public StructureSpell(ResourceLocation id) {
+		super(id);
 	}
 
 	protected abstract List<BlockPlacement> supplyBlockPlacements(ServerLevel level, LivingEntity caster, Vec3 origin);
@@ -63,7 +65,7 @@ public abstract class StructureSpell implements PersistentGlyphSpell {
 	}
 
 	@Override
-	public void tick(SpellThinker thinker, ServerLevel level) {
+	public void serverTick(SpellThinker thinker, ServerLevel level) {
 		if (remainingPlacements == null || remainingPlacements.isEmpty()) {
 			return;
 		}

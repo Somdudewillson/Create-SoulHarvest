@@ -15,7 +15,7 @@ public class ModEntityTypes {
 	public static final DeferredHolder<EntityType<?>, EntityType<SpellThinker>> SPELL_THINKER = ENTITY_TYPES.register("spell_thinker",
 			() -> EntityType.Builder.<SpellThinker>of(SpellThinker::new, MobCategory.MISC)
 					.sized(0.0F, 0.0F)
-					.clientTrackingRange(4)
+					.clientTrackingRange(16)
 					.updateInterval(20)
 					.build("spell_thinker"));
 }

@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -24,39 +25,27 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Team;
-import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.registry.ModParticleTypes;
 
-public class LightningSpell implements PersistentGlyphSpell {
+public class LightningSpell extends SimplePersistentGlyphSpell {
+	protected int remainingTicks;
 
-	public static final ResourceLocation ID = SoulHarvestMod.id("lightning");
-	public static final int DEFAULT_DURATION = 20 * 15; // 15 seconds
-
-	private int remainingTicks;
-
-	public LightningSpell() {
-		this(DEFAULT_DURATION);
-	}
-
-	public LightningSpell(int durationTicks) {
+	public LightningSpell(ResourceLocation id, int durationTicks) {
+		super(id);
+		
 		this.remainingTicks = durationTicks;
 	}
 
 	@Override
 	public void cast(Level level, LivingEntity caster) {
 		if (level instanceof ServerLevel serverLevel) {
-			SpellThinker.spawn(serverLevel, caster.blockPosition(), this, caster.getUUID());
+			BlockPos surfacePos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, caster.blockPosition());
+			SpellThinker.spawn(serverLevel, surfacePos, this, caster.getUUID());
 		}
 	}
 
 	@Override
-	public ResourceLocation getId() {
-		return ID;
-	}
-
-	@Override
-	public void tick(SpellThinker thinker, ServerLevel level) {
-		BlockPos surfacePos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, thinker.blockPosition());
+	public void serverTick(SpellThinker thinker, ServerLevel level) {
 		
 		// Random strikes
 		if (level.random.nextFloat() < 0.15f) {
@@ -83,7 +72,7 @@ public class LightningSpell implements PersistentGlyphSpell {
 			List<Entity> potentialTargets = level.getEntities(
 					thinker, 
 					AABB.ofSize(
-							surfacePos.getCenter(), 
+							thinker.position(), 
 							15*2, 35*2, 15*2
 							), 
 					getIsValidStrikeTargetPredicate(thinker)
@@ -99,14 +88,22 @@ public class LightningSpell implements PersistentGlyphSpell {
 			}
 		}
 
-		level.sendParticles(
-				ModParticleTypes.STORM_CLOUD.get(), 
-				surfacePos.getX(), surfacePos.getY() + 35, surfacePos.getZ(), 
-				10, 
-				15, 1.5, 15, 
-				0);
-
 		remainingTicks--;
+	}
+
+	@Override
+	public void clientTick(SpellThinker thinker, ClientLevel level) {
+		Vec3 thinkerPos = thinker.position();
+		double centerX = thinkerPos.x() + 0.5;
+		double centerY = thinkerPos.y() + 35;
+		double centerZ = thinkerPos.z() + 0.5;
+
+		for (int i = 0; i < 5; i++) {
+			double px = centerX + level.random.nextGaussian() * 15;
+			double py = centerY + level.random.nextGaussian() * 1.5;
+			double pz = centerZ + level.random.nextGaussian() * 15;
+			level.addAlwaysVisibleParticle(ModParticleTypes.STORM_CLOUD.get(), true, px, py, pz, 0, 0, 0);
+		}
 	}
 	
 	public Predicate<Entity> getIsValidStrikeTargetPredicate(SpellThinker thinker) {

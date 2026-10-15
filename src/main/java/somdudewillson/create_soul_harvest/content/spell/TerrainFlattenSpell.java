@@ -1,15 +1,17 @@
 package somdudewillson.create_soul_harvest.content.spell;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.registry.ModTags;
 
 import static somdudewillson.create_soul_harvest.registry.ModTags.Blocks.CONSIDER_REPLACEABLE;
@@ -17,22 +19,23 @@ import static somdudewillson.create_soul_harvest.registry.ModTags.Blocks.CONSIDE
 import java.util.ArrayList;
 import java.util.List;
 
-public class TerrainFlattenSpell implements PersistentGlyphSpell {
-
-	public static final ResourceLocation ID = SoulHarvestMod.id("terrain_flatten");
-	public static final int EFFECT_SIZE = 15;
+public class TerrainFlattenSpell extends SimplePersistentGlyphSpell {	
 	public static final int MAX_VERTICAL_SEARCH = 15;
 	public static final int DOWNSHIFT_MAX_SIZE = 10;
 
+	private final int effectSize;
 	private int flattenStep = 0;
 	private List<BlockPos> flattenPositions;
 
-	public TerrainFlattenSpell() {
-		this(0);
+	public TerrainFlattenSpell(ResourceLocation id, int effectSize) {
+		this(id, 0, effectSize);
 	}
 
-	public TerrainFlattenSpell(int initialStep) {
+	public TerrainFlattenSpell(ResourceLocation id, int initialStep, int effectSize) {
+		super(id);
+		
 		this.flattenStep = initialStep;
+		this.effectSize = effectSize;
 	}
 
 	@Override
@@ -50,23 +53,16 @@ public class TerrainFlattenSpell implements PersistentGlyphSpell {
 		}
 	}
 
-	@Override
-	public ResourceLocation getId() {
-		return ID;
-	}
-
 	private void ensurePositions(BlockPos center) {
 		if (flattenPositions == null) {
-			flattenPositions = generateSpiral(center.below(), EFFECT_SIZE);
+			flattenPositions = generateSpiral(center.below(), effectSize);
 		}
 	}
 
 	@Override
-	public void tick(SpellThinker thinker, ServerLevel level) {
+	public void serverTick(SpellThinker thinker, ServerLevel level) {
 		BlockPos entityPos = thinker.blockPosition();
 		ensurePositions(entityPos);
-
-		level.sendParticles(ParticleTypes.WITCH, entityPos.getX() + 0.5, entityPos.getY() + 0.5, entityPos.getZ() + 0.5, 20, EFFECT_SIZE / 2.0, 1, EFFECT_SIZE / 2.0, 0);
 
 		if (flattenStep >= flattenPositions.size()) {
 			return;
@@ -98,7 +94,7 @@ public class TerrainFlattenSpell implements PersistentGlyphSpell {
 
 			BlockState raiseReplacedState = level.getBlockState(raisePos);
 			if (!findingGround && raiseState != null && (raiseReplacedState.is(ModTags.Blocks.FLATTEN_CAN_DISPLACE) || isFlattenReplaceable(raiseReplacedState))) {
-				level.setBlockAndUpdate(raisePos, raiseState);
+				createBlock(level, raisePos, raiseState);
 			} else {
 				flattenStep++;
 			}
@@ -138,7 +134,7 @@ public class TerrainFlattenSpell implements PersistentGlyphSpell {
 								level.setBlockAndUpdate(crushedPos, pullStates.get(s));
 								crushedPos = crushedPos.above();
 							}
-							level.setBlockAndUpdate(pullPos, Blocks.AIR.defaultBlockState());
+							removeBlock(level, pullPos);
 							break;
 						} else {
 							crushedPos = crushedPos.below();
@@ -147,7 +143,7 @@ public class TerrainFlattenSpell implements PersistentGlyphSpell {
 
 						if (i >= DOWNSHIFT_MAX_SIZE - 1) {
 							if (isFlattenReplaceable(pullState) || pullState.is(ModTags.Blocks.FLATTEN_CAN_CRUSH)) {
-								level.setBlockAndUpdate(pullPos, Blocks.AIR.defaultBlockState());
+								removeBlock(level, pullPos);
 							} else {
 								flattenStep++;
 							}
@@ -155,6 +151,21 @@ public class TerrainFlattenSpell implements PersistentGlyphSpell {
 					}
 				}
 			}
+		}
+	}
+
+	@Override
+	public void clientTick(SpellThinker thinker, ClientLevel level) {
+		BlockPos entityPos = thinker.blockPosition();
+		double cx = entityPos.getX() + 0.5;
+		double cy = entityPos.getY() + 0.5;
+		double cz = entityPos.getZ() + 0.5;
+
+		for (int i = 0; i < 20; i++) {
+			double px = cx + level.random.nextGaussian() * (effectSize / 2.0);
+			double py = cy + level.random.nextGaussian() * 1.0;
+			double pz = cz + level.random.nextGaussian() * (effectSize / 2.0);
+			level.addParticle(ParticleTypes.WITCH, px, py, pz, 0, 0, 0);
 		}
 	}
 
@@ -173,6 +184,31 @@ public class TerrainFlattenSpell implements PersistentGlyphSpell {
 	public void readSaveData(CompoundTag tag) {
 		if (tag.contains("flatten_step")) {
 			this.flattenStep = tag.getInt("flatten_step");
+		}
+	}
+
+	protected void createBlock(ServerLevel level, BlockPos pos, BlockState state) {
+		level.setBlockAndUpdate(pos, state);
+		if (state != null && !state.isAir()) {
+			SoundType soundType = state.getSoundType(level, pos, null);
+			level.playSound(null, pos, soundType.getPlaceSound(), SoundSource.BLOCKS, (soundType.getVolume() + 0.5F) / 3.0F, soundType.getPitch() * 0.8F);
+		}
+	}
+
+	protected void placeBlock(ServerLevel level, BlockPos pos, BlockState state) {
+		createBlock(level, pos, state);
+	}
+
+	protected void removeBlock(ServerLevel level, BlockPos pos) {
+		BlockState state = level.getBlockState(pos);
+		removeBlock(level, pos, state);
+	}
+
+	protected void removeBlock(ServerLevel level, BlockPos pos, BlockState state) {
+		level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+		if (state != null && !state.isAir()) {
+			SoundType soundType = state.getSoundType(level, pos, null);
+			level.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS, (soundType.getVolume() + 0.5F) / 3.0F, soundType.getPitch() * 0.8F);
 		}
 	}
 

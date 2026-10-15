@@ -5,24 +5,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import somdudewillson.create_soul_harvest.SoulHarvestMod;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InstantShelterSpell extends AnimaGlassStructureSpell {
 
-	public static final ResourceLocation ID = SoulHarvestMod.id("instant_shelter");
 	public static final int LIFESPAN = 20 * 30; // 30 seconds
 	public static final double BUBBLE_RADIUS = 6.0;
 	public static final double BUBBLE_THICKNESS = 0.9;
 
-	public InstantShelterSpell() {
-	}
-
-	@Override
-	public ResourceLocation getId() {
-		return ID;
+	public InstantShelterSpell(ResourceLocation id) {
+		super(id);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -15,9 +16,14 @@ import somdudewillson.create_soul_harvest.registry.ModBlocks;
 import somdudewillson.redsparklib.common.utils.OptNbtUtils;
 
 public abstract class AnimaGlassStructureSpell extends StructureSpell {
+
 	protected UUID ownerUUID;
 
 	protected abstract int getLifespan();
+	
+	public AnimaGlassStructureSpell(ResourceLocation id) {
+		super(id);
+	}
 
 	@Override
 	public void cast(Level level, LivingEntity caster) {

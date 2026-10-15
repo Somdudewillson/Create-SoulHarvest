@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -26,9 +27,12 @@ public class SpellThinker extends Entity implements OwnableEntity {
     protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(
     		SpellThinker.class, EntityDataSerializers.OPTIONAL_UUID
         );
+    protected static final EntityDataAccessor<String> DATA_EFFECT_ID = SynchedEntityData.defineId(
+    		SpellThinker.class, EntityDataSerializers.STRING
+        );
 
 	@FunctionalInterface
-	public interface EffectFactory {
+	public static interface EffectFactory {
 		PersistentGlyphSpell create();
 	}
 
@@ -44,13 +48,6 @@ public class SpellThinker extends Entity implements OwnableEntity {
 		return factory != null ? factory.create() : null;
 	}
 
-	static {
-		registerEffect(LightningSpell.ID, LightningSpell::new);
-		registerEffect(TerrainFlattenSpell.ID, TerrainFlattenSpell::new);
-		registerEffect(InstantWallSpell.ID, InstantWallSpell::new);
-		registerEffect(InstantShelterSpell.ID, InstantShelterSpell::new);
-	}
-
 	private PersistentGlyphSpell currentEffect;
 
 	public SpellThinker(EntityType<?> entityType, Level level) {
@@ -62,8 +59,13 @@ public class SpellThinker extends Entity implements OwnableEntity {
 
 	public void setEffect(PersistentGlyphSpell effect) {
 		this.currentEffect = effect;
-		if (effect != null && this.level() instanceof ServerLevel serverLevel) {
-			effect.onStart(this, serverLevel);
+		if (effect != null) {
+			this.entityData.set(DATA_EFFECT_ID, effect.getId().toString());
+			if (this.level() instanceof ServerLevel serverLevel) {
+				effect.onStart(this, serverLevel);
+			}
+		} else {
+			this.entityData.set(DATA_EFFECT_ID, "");
 		}
 	}
 
@@ -98,12 +100,39 @@ public class SpellThinker extends Entity implements OwnableEntity {
 				return;
 			}
 
-			this.currentEffect.tick(this, serverLevel);
+			this.currentEffect.serverTick(this, serverLevel);
 
 			if (this.currentEffect.isFinished(this)) {
 				this.currentEffect.onEnd(this, serverLevel);
 				this.discard();
 			}
+		} else if (this.level().isClientSide() && this.level() instanceof ClientLevel clientLevel) {
+			if (this.currentEffect == null) {
+				updateClientEffect();
+			}
+			if (this.currentEffect != null) {
+				this.currentEffect.clientTick(this, clientLevel);
+			}
+		}
+	}
+
+	@Override
+	public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+		super.onSyncedDataUpdated(key);
+		if (this.level().isClientSide() && DATA_EFFECT_ID.equals(key)) {
+			updateClientEffect();
+		}
+	}
+
+	private void updateClientEffect() {
+		String idStr = this.entityData.get(DATA_EFFECT_ID);
+		if (idStr != null && !idStr.isEmpty()) {
+			ResourceLocation effectId = ResourceLocation.tryParse(idStr);
+			if (effectId != null && (this.currentEffect == null || !this.currentEffect.getId().equals(effectId))) {
+				this.currentEffect = createEffect(effectId);
+			}
+		} else {
+			this.currentEffect = null;
 		}
 	}
 
@@ -111,11 +140,13 @@ public class SpellThinker extends Entity implements OwnableEntity {
 	@Override
 	protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
 		builder.define(DATA_OWNERUUID_ID, Optional.empty());
+		builder.define(DATA_EFFECT_ID, "");
 	}
 	//?} else {
 	/*@Override
 	protected void defineSynchedData() {
 		this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
+		this.entityData.define(DATA_EFFECT_ID, "");
 	}
 	*///?}
 

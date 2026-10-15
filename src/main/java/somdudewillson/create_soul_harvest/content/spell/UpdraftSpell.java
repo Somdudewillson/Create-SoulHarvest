@@ -17,6 +17,7 @@ public class UpdraftSpell implements GlyphSpell {
 	@Override
 	public void cast(Level level, LivingEntity caster) {
 		AABB area = AABB.ofSize(caster.position(), 5, 3, 5);
+		
 		for (LivingEntity nearby : level.getEntitiesOfClass(LivingEntity.class, area)) {
 			if (level instanceof ServerLevel serverLevel) {
 				//? >= 1.21 {
@@ -32,6 +33,7 @@ public class UpdraftSpell implements GlyphSpell {
 				nearby.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 20 * 25, 0));
 			}
 		}
+		
 		if (!level.isClientSide()) {
 			caster.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 20 * 25, 0));
 		}

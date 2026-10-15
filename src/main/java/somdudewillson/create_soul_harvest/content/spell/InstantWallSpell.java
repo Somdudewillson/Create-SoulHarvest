@@ -10,22 +10,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import somdudewillson.create_soul_harvest.SoulHarvestMod;
 
 public class InstantWallSpell extends AnimaGlassStructureSpell {
 
-	public static final ResourceLocation ID = SoulHarvestMod.id("instant_wall");
 	public static final int LIFESPAN = 20 * 8; // 8 seconds
 	public static final double ANGLE_INCREMENT = 45.0; // degrees to snap the wall's orientation to
 	public static final double WALL_RADIUS = 3.5;
 	public static final double WALL_THICKNESS = 0.9;
 
-	public InstantWallSpell() {
-	}
-
-	@Override
-	public ResourceLocation getId() {
-		return ID;
+	public InstantWallSpell(ResourceLocation id) {
+		super(id);
 	}
 
 	@Override
