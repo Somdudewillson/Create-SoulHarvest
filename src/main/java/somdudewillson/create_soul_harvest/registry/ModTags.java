@@ -29,6 +29,16 @@ public final class ModTags {
 		public static final TagKey<Block> SOUL_BUD_GROWTH_BLOCKS = modTag("soul_bud_growth_blocks");
 		public static final TagKey<Block> FAN_PROCESSING_CATALYSTS_SOUL_INFUSION = modTag("fan_processing_catalysts/soul_infusion");
 
+		public static final TagKey<Block> PLANETOID_DEEPSLATE_ORES_COMMON = modTag("planetoid_deepslate_ores_common");
+		public static final TagKey<Block> PLANETOID_DEEPSLATE_ORES_UNCOMMON = modTag("planetoid_deepslate_ores_uncommon");
+		public static final TagKey<Block> PLANETOID_DEEPSLATE_ORES_RARE = modTag("planetoid_deepslate_ores_rare");
+
+		public static final TagKey<Block> PLANETOID_STONE_ORES_COMMON = modTag("planetoid_stone_ores_common");
+		public static final TagKey<Block> PLANETOID_STONE_ORES_UNCOMMON = modTag("planetoid_stone_ores_uncommon");
+		public static final TagKey<Block> PLANETOID_STONE_ORES_RARE = modTag("planetoid_stone_ores_rare");
+
+		public static final TagKey<Block> PLANETOID_STONE_VARIANTS = modTag("planetoid_stone_variants");
+
 		private static TagKey<Block> modTag(String path) {
 			return TagKey.create(Registries.BLOCK, SoulHarvestMod.id(path));
 		}

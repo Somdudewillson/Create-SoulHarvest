@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import somdudewillson.create_soul_harvest.content.spell.planetoid.PlanetoidSpell;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 
 public class DenseHypotheticalBlock extends Block {
@@ -45,7 +46,14 @@ public class DenseHypotheticalBlock extends Block {
     		BlockPos.ZERO.south(),
     		BlockPos.ZERO.west()
     }; 
-    protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+    	if (PlanetoidSpell.isProtected(level, pos)) {
+    		if (state.getValue(AGE) != 0) {
+    			level.setBlock(pos, state.setValue(AGE, 0), UPDATE_ALL);
+    		}
+    		return;
+    	}
+
     	if (state.getValue(AGE) < BlockStateProperties.MAX_AGE_3) {
     		level.setBlock(pos, state.setValue(AGE, state.getValue(AGE) + 1), UPDATE_ALL);
     		return;
@@ -55,6 +63,11 @@ public class DenseHypotheticalBlock extends Block {
     		level.destroyBlock(pos.below(), true);
     		level.setBlock(pos.below(), state, UPDATE_ALL);
     		level.setBlock(pos, Blocks.AIR.defaultBlockState(), UPDATE_ALL);
+    		return;
+    	}
+    	
+    	if (random.nextFloat() < 0.002f) {
+    		level.setBlock(pos, Blocks.OBSIDIAN.defaultBlockState(), UPDATE_ALL);
     		return;
     	}
     	
@@ -101,7 +114,7 @@ public class DenseHypotheticalBlock extends Block {
     		BlockPos adjPos = pos.offset(offsetPos);
     		if (adjPos.equals(exclude)) continue;
     		
-    		if (level.getBlockState(adjPos).is(ModBlocks.DENSE_HYPOTHETICAL)) return true;
+    		if (level.getBlockState(adjPos).is(ModBlocks.DENSE_HYPOTHETICAL.get())) return true;
     	}
     	return false;
     }

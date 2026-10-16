@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.spell.planetoid.PlanetoidSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.BonemealSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.ContagionBlastSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.FireballSpell;
@@ -36,6 +37,7 @@ public class RunicSpells {
 	public static final Supplier<GlyphSpell> INSTANT_SHELTER = register("instant_shelter", InstantShelterSpell::new);
 	public static final Supplier<GlyphSpell> TERRAIN_FLATTEN_SMALL = register("terrain_flatten_small", (id)->new TerrainFlattenSpell(id, 8));
 	public static final Supplier<GlyphSpell> TERRAIN_FLATTEN_LARGE = register("terrain_flatten_large", (id)->new TerrainFlattenSpell(id, 16));
+	public static final Supplier<GlyphSpell> PLANETOID = register("planetoid", PlanetoidSpell::new);
 	
 	private static <T extends PersistentGlyphSpell> Supplier<GlyphSpell> register(String registryName, Function<ResourceLocation, T> factory) {
 		return register(SoulHarvestMod.id(registryName), factory);
