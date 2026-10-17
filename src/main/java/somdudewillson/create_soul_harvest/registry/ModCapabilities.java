@@ -35,7 +35,7 @@ public class ModCapabilities {
 
 	private static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerItem(SOUL_HOLDER, (stack, ctx) -> new ItemStackSoulHolder(stack),
-				ModItems.ATTUNED_POLYCLAY.get(),
+				ModItems.POLYCLAY_ATTUNED.get(),
 				ModItems.SOUL_BOOK_SIMPLE.get(),
 				ModItems.SOUL_BOOK_STANDARD.get(),
 				ModItems.SOUL_BOOK_SUPERIOR.get()

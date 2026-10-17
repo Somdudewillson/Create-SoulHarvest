@@ -19,9 +19,9 @@ import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 import java.util.List;
 import java.util.Optional;
 
-public class AttunedPolyclayItem extends Item {
+public class PolyclayAttunedItem extends Item {
 
-	public AttunedPolyclayItem(Properties properties) {
+	public PolyclayAttunedItem(Properties properties) {
 		super(properties);
 	}
 

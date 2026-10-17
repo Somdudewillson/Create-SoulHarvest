@@ -45,7 +45,7 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 		registration.registerSubtypeInterpreter(ModItems.SOUL_BOOK_STANDARD.get(), interpreter);
 		registration.registerSubtypeInterpreter(ModItems.SOUL_BOOK_SUPERIOR.get(), interpreter);
 
-		registration.registerSubtypeInterpreter(ModItems.ATTUNED_POLYCLAY.get(), new AttunedPolyclaySubtypeInterpreter());
+		registration.registerSubtypeInterpreter(ModItems.POLYCLAY_ATTUNED.get(), new AttunedPolyclaySubtypeInterpreter());
 	}
 
 	@Override

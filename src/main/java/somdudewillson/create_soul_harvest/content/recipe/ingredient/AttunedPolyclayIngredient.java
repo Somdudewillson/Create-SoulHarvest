@@ -22,7 +22,7 @@ import net.minecraftforge.common.crafting.IIngredientSerializer;
 
 import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
-import somdudewillson.create_soul_harvest.content.item.AttunedPolyclayItem;
+import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
 import somdudewillson.create_soul_harvest.registry.ModIngredients;
 import somdudewillson.create_soul_harvest.registry.ModItems;
 
@@ -81,7 +81,7 @@ public class AttunedPolyclayIngredient implements ICustomIngredient {
 		if (stack == null || stack.isEmpty()) {
 			return false;
 		}
-		if (!stack.is(ModItems.ATTUNED_POLYCLAY.get())) {
+		if (!stack.is(ModItems.POLYCLAY_ATTUNED.get())) {
 			return false;
 		}
 		return ISoulHolder.get(stack)
@@ -125,7 +125,7 @@ public class AttunedPolyclayIngredient implements ICustomIngredient {
 	*///?}
 
 	public static List<ItemStack> makeDisplayStacks(ResourceLocation soul) {
-		ItemStack stack = AttunedPolyclayItem.createAttunedPolyclay(ModItems.ATTUNED_POLYCLAY.get(), soul);
+		ItemStack stack = PolyclayAttunedItem.createAttunedPolyclay(ModItems.POLYCLAY_ATTUNED.get(), soul);
 		return Collections.singletonList(stack);
 	}
 }

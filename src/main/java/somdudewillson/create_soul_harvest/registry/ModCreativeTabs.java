@@ -16,7 +16,7 @@ import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
-import somdudewillson.create_soul_harvest.content.item.AttunedPolyclayItem;
+import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
 import somdudewillson.create_soul_harvest.content.item.SoulBookItem;
 import somdudewillson.create_soul_harvest.content.soul.SoulData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
@@ -102,7 +102,7 @@ public class ModCreativeTabs {
 
 		for (Map.Entry<ResourceLocation, SoulData> entry : sortedEntries) {
 			ResourceLocation entityId = entry.getKey();
-			list.add(AttunedPolyclayItem.createAttunedPolyclay(ModItems.ATTUNED_POLYCLAY.get(), entityId));
+			list.add(PolyclayAttunedItem.createAttunedPolyclay(ModItems.POLYCLAY_ATTUNED.get(), entityId));
 		}
 		return list;
 	}

@@ -123,11 +123,11 @@ public class ModItems {
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
 			.build();
-	public static final DeferredHolder<Item, Item> INCOMPLETE_POLYCLAY = ITEM_BUILDER_FACTORY.registerItem("incomplete_polyclay", SequencedAssemblyItem::new)
+	public static final DeferredHolder<Item, Item> POLYCLAY_INCOMPLETE = ITEM_BUILDER_FACTORY.registerItem("polyclay_attuned_incomplete", SequencedAssemblyItem::new)
 			.properties(new Item.Properties())
 			.simpleItem()
 			.build();
-	public static final DeferredHolder<Item, Item> ATTUNED_POLYCLAY = ITEM_BUILDER_FACTORY.registerItem("attuned_polyclay", AttunedPolyclayItem::new)
+	public static final DeferredHolder<Item, Item> POLYCLAY_ATTUNED = ITEM_BUILDER_FACTORY.registerItem("polyclay_attuned", PolyclayAttunedItem::new)
 			.properties(new Item.Properties())
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
