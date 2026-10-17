@@ -123,6 +123,15 @@ public class ModItems {
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
 			.build();
+	public static final DeferredHolder<Item, Item> INCOMPLETE_POLYCLAY = ITEM_BUILDER_FACTORY.registerItem("incomplete_polyclay", SequencedAssemblyItem::new)
+			.properties(new Item.Properties())
+			.simpleItem()
+			.build();
+	public static final DeferredHolder<Item, Item> ATTUNED_POLYCLAY = ITEM_BUILDER_FACTORY.registerItem("attuned_polyclay", AttunedPolyclayItem::new)
+			.properties(new Item.Properties())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
 
 	// Tokens and hazardous items
 	public static final DeferredHolder<Item, Item> LOOT_TOKEN_BLANK = ITEM_BUILDER_FACTORY.registerSimpleItem("loot_token_blank")
@@ -187,6 +196,15 @@ public class ModItems {
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
 			.build();
+
+	public static SoulBookItem getSoulBook(int tier) {
+		return switch (tier) {
+			case 1 -> (SoulBookItem) SOUL_BOOK_SIMPLE.get();
+			case 2 -> (SoulBookItem) SOUL_BOOK_STANDARD.get();
+			case 3 -> (SoulBookItem) SOUL_BOOK_SUPERIOR.get();
+			default -> null;
+		};
+	}
 
 	// Glyphs
 	public static final DeferredHolder<Item, Item> GLYPH_1 = ITEM_BUILDER_FACTORY.registerItem("glyph_1", ModItems::createGlyphPage).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();

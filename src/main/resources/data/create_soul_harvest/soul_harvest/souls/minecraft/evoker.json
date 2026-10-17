@@ -1,0 +1,18 @@
+{
+  "fallback": true,
+  "xp": 10,
+  "pools": [
+    {
+      "name": "main",
+      "rolls": 1,
+      "entries": [
+        {
+          "item": "minecraft:totem_of_undying",
+          "weight": 100,
+          "min": 1,
+          "max": 1
+        }
+      ]
+    }
+  ]
+}

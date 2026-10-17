@@ -1,0 +1,18 @@
+{
+  "fallback": true,
+  "xp": 20,
+  "pools": [
+    {
+      "name": "main",
+      "rolls": 1,
+      "entries": [
+        {
+          "item": "minecraft:saddle",
+          "weight": 100,
+          "min": 1,
+          "max": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "fallback": true,
+  "xp": 3,
+  "pools": [
+    {
+      "name": "main",
+      "rolls": 1,
+      "entries": [
+        {
+          "item": "minecraft:rabbit",
+          "weight": 100,
+          "min": 1,
+          "max": 1
+        },
+        {
+          "item": "minecraft:rabbit_hide",
+          "weight": 47,
+          "min": 1,
+          "max": 1
+        }
+      ]
+    }
+  ]
+}

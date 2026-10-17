@@ -15,7 +15,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 /*import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 *///?}
-
+import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 import somdudewillson.create_soul_harvest.content.item.SoulBookItem;
 import somdudewillson.create_soul_harvest.content.soul.SoulData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
@@ -44,20 +44,19 @@ public class SoulHarvestDeathEvents {
 			return;
 		}
 
-		String heldSoul = SoulBookItem.getHeldSoul(offhand);
-		int soulPortion = SoulBookItem.getSoulPortion(offhand);
+		ResourceLocation heldSoul = ISoulHolder.getHeldSoul(offhand);
+		int soulPortion = ISoulHolder.getSoulPortion(offhand);
 		if (soulPortion >= 100) {
 			return;
 		}
 
 		ResourceLocation entityKey = BuiltInRegistries.ENTITY_TYPE.getKey(target.getType());
-		String entityId = entityKey.toString();
-		if (!heldSoul.isEmpty() && !heldSoul.equals(entityId)) {
+		if (heldSoul != null && !heldSoul.equals(entityKey)) {
 			return;
 		}
 
 		int newPortion = Math.min(100, soulPortion + soulData.progressPerKill());
-		SoulBookItem.setSoulData(offhand, entityId, newPortion);
+		SoulBookItem.setSoulData(offhand, entityKey, newPortion);
 		player.setItemInHand(InteractionHand.OFF_HAND, offhand);
 
 		if (newPortion >= 100) {
@@ -69,7 +68,7 @@ public class SoulHarvestDeathEvents {
 			} else if (soulData.tier() == 3) {
 				AdvancementHelper.grantAdvancement(player, "captured_t3_soul");
 			}
-			if ("artifacts:mimic".equals(entityId)) {
+			if ("artifacts:mimic".equals(entityKey.toString())) {
 				AdvancementHelper.grantAdvancement(player, "captured_mimic_soul");
 			}
 		}

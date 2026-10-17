@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.item.AttunedPolyclayItem;
 import somdudewillson.create_soul_harvest.content.item.SoulBookItem;
 import somdudewillson.create_soul_harvest.content.soul.SoulData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
@@ -43,7 +45,11 @@ public class ModCreativeTabs {
 		List<ItemStack> list = new ArrayList<>();
 		Map<ResourceLocation, SoulData> dataMap = SoulDataManager.getAllResolvedData();
 
-		List<Map.Entry<ResourceLocation, SoulData>> sortedEntries = new ArrayList<>(dataMap.entrySet());
+		List<Map.Entry<ResourceLocation, SoulData>> sortedEntries = dataMap.entrySet()
+				.stream()
+				.filter(e->e.getValue()!=null)
+				.filter(e->e.getValue().xp()>0 || e.getValue().hasDrops())
+				.collect(Collectors.toCollection(ArrayList::new));
 
 		sortedEntries.sort((e1, e2) -> {
 			int tier1 = e1.getValue() != null ? e1.getValue().tier() : 0;
@@ -68,7 +74,35 @@ public class ModCreativeTabs {
 				default -> ModItems.SOUL_BOOK_SUPERIOR.get();
 			};
 
-			list.add(SoulBookItem.createCompletedSoulBook(bookItem, entityId.toString()));
+			list.add(SoulBookItem.createCompletedSoulBook(bookItem, entityId));
+		}
+		return list;
+	}
+
+	public static List<ItemStack> generateAllAttunedPolyclay() {
+		List<ItemStack> list = new ArrayList<>();
+		Map<ResourceLocation, SoulData> dataMap = SoulDataManager.getKnownSoulData();
+
+		List<Map.Entry<ResourceLocation, SoulData>> sortedEntries = dataMap.entrySet()
+				.stream()
+				.filter(e->e.getValue()!=null && e.getValue().hasDrops())
+				.collect(Collectors.toCollection(ArrayList::new));
+
+		sortedEntries.sort((e1, e2) -> {
+			int tier1 = e1.getValue() != null ? e1.getValue().tier() : 0;
+			int tier2 = e2.getValue() != null ? e2.getValue().tier() : 0;
+			if (tier1 != tier2) {
+				return Integer.compare(tier1, tier2);
+			}
+
+			String name1 = getEntityDisplayName(e1.getKey());
+			String name2 = getEntityDisplayName(e2.getKey());
+			return name1.compareToIgnoreCase(name2);
+		});
+
+		for (Map.Entry<ResourceLocation, SoulData> entry : sortedEntries) {
+			ResourceLocation entityId = entry.getKey();
+			list.add(AttunedPolyclayItem.createAttunedPolyclay(ModItems.ATTUNED_POLYCLAY.get(), entityId));
 		}
 		return list;
 	}
@@ -89,6 +123,9 @@ public class ModCreativeTabs {
 						.displayItems((parameters, output) -> {
 							for (ItemStack bookStack : generateAllCompletedSoulBooks()) {
 								output.accept(bookStack);
+							}
+							for (ItemStack polyclayStack : generateAllAttunedPolyclay()) {
+								output.accept(polyclayStack);
 							}
 						})
 						.build()

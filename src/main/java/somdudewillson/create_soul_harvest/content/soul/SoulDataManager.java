@@ -13,6 +13,8 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.event.SoulHarvestDataEvents;
+import somdudewillson.create_soul_harvest.content.recipe.grinding.MobGrindingDynamicData;
 
 //? >= 1.21 {
 import net.minecraft.resources.ResourceKey;
@@ -29,6 +31,7 @@ public class SoulDataManager {
 
 	private static Map<ResourceLocation, SoulData> rawFullData = Collections.emptyMap();
 	private static Map<ResourceLocation, List<PartialSoulData>> rawPartialData = Collections.emptyMap();
+	private static Map<ResourceLocation, SoulDropCache.CachedSoulData> rawFallbackData = Collections.emptyMap();
 
 	private static final Map<ResourceLocation, SoulData> resolvedData = new ConcurrentHashMap<>();
 	private static final Queue<ResourceLocation> pendingSamplingQueue = new ConcurrentLinkedQueue<>();
@@ -36,21 +39,28 @@ public class SoulDataManager {
 
 	public static synchronized void setRawData(
 			Map<ResourceLocation, SoulData> full,
-			Map<ResourceLocation, List<PartialSoulData>> partial
+			Map<ResourceLocation, List<PartialSoulData>> partial,
+			Map<ResourceLocation, SoulDropCache.CachedSoulData> fallback
 	) {
 		rawFullData = full != null ? full : Collections.emptyMap();
 		rawPartialData = partial != null ? partial : Collections.emptyMap();
+		rawFallbackData = fallback != null ? fallback : Collections.emptyMap();
+	}
+
+	public static synchronized void setRawData(
+			Map<ResourceLocation, SoulData> full,
+			Map<ResourceLocation, List<PartialSoulData>> partial
+	) {
+		setRawData(full, partial, Collections.emptyMap());
 	}
 
 	//? forge {
 	/*@SuppressWarnings("deprecation")
 	*///?}
-	public static synchronized void recalculate(MinecraftServer server) {
-		if (server == null) {
-			return;
+	public static synchronized void recalculate(@org.jetbrains.annotations.Nullable MinecraftServer server) {
+		if (server != null) {
+			DROP_CACHE.load(server);
 		}
-
-		DROP_CACHE.load(server);
 		pendingSamplingQueue.clear();
 
 		Map<ResourceLocation, SoulData> newResolved = new ConcurrentHashMap<>();
@@ -68,7 +78,7 @@ public class SoulDataManager {
 				soulData = new SoulData(full.tier(), full.progressPerKill(), full.xp(), full.pools().values());
 				wasFullData = true;
 			} else {
-				// Determine tier from partial data or tags
+				// Determine tier from complete data, partial data, or tags
 				int tier = 0;
 				List<PartialSoulData> partials = rawPartialData.get(entityId);
 				if (partials != null) {
@@ -90,7 +100,7 @@ public class SoulDataManager {
 					}
 				}
 
-				// If entity has no tier, it is not capturable
+				// If entity has no tier, it is not capturable (even if fallback data exists)
 				if (tier <= 0) {
 					continue;
 				}
@@ -142,6 +152,15 @@ public class SoulDataManager {
 					if (xp <= 0) {
 						xp = cached.xp();
 					}
+				} else if (rawFallbackData.containsKey(entityId)) {
+					SoulDropCache.CachedSoulData fallback = rawFallbackData.get(entityId);
+					pools = new ArrayList<>(fallback.pools());
+					if (xp <= 0) {
+						xp = fallback.xp();
+					}
+					// Still queue for background sampling so world simulation refines the drops
+					pendingSamplingQueue.add(entityId);
+					queuedForSampling = true;
 				} else {
 					pools = Collections.emptyList();
 					pendingSamplingQueue.add(entityId);
@@ -216,6 +235,11 @@ public class SoulDataManager {
 			for (SoulDropPool pool : sampled.pools()) {
 				current.mergePool(pool);
 			}
+		}
+
+		if (pendingSamplingQueue.isEmpty()) {
+			MobGrindingDynamicData.updateRecipeManager(server);
+			SoulHarvestDataEvents.onSoulDataUpdated();
 		}
 	}
 
@@ -341,6 +365,10 @@ public class SoulDataManager {
 	}
 
 	public static Map<ResourceLocation, SoulData> getAllResolvedData() {
+		return Collections.unmodifiableMap(resolvedData);
+	}
+
+	public static Map<ResourceLocation, SoulData> getKnownSoulData() {
 		return Collections.unmodifiableMap(resolvedData);
 	}
 

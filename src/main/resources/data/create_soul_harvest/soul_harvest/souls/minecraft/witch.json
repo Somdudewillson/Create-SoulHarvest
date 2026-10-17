@@ -1,0 +1,54 @@
+{
+  "fallback": true,
+  "xp": 5,
+  "pools": [
+    {
+      "name": "main",
+      "rolls": 1,
+      "entries": [
+        {
+          "item": "minecraft:glass_bottle",
+          "weight": 23,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "minecraft:glowstone_dust",
+          "weight": 20,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "minecraft:sugar",
+          "weight": 18,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "minecraft:redstone",
+          "weight": 100,
+          "min": 4,
+          "max": 8
+        },
+        {
+          "item": "minecraft:spider_eye",
+          "weight": 18,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "minecraft:gunpowder",
+          "weight": 32,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "minecraft:stick",
+          "weight": 33,
+          "min": 1,
+          "max": 2
+        }
+      ]
+    }
+  ]
+}

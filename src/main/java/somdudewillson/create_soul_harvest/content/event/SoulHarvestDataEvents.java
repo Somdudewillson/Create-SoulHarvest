@@ -3,6 +3,7 @@ package somdudewillson.create_soul_harvest.content.event;
 import net.minecraft.server.MinecraftServer;
 import somdudewillson.create_soul_harvest.compat.jei.CreateSoulHarvestJeiPlugin;
 import somdudewillson.create_soul_harvest.content.command.SoulHarvestCommands;
+import somdudewillson.create_soul_harvest.content.recipe.grinding.MobGrindingDynamicData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataLoader;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
 
@@ -38,6 +39,7 @@ public class SoulHarvestDataEvents {
 		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 		if (server != null) {
 			SoulDataManager.recalculate(server);
+			MobGrindingDynamicData.updateRecipeManager(server);
 			onSoulDataUpdated();
 		}
 	}
@@ -45,10 +47,11 @@ public class SoulHarvestDataEvents {
 	@SubscribeEvent
 	public static void onServerStarted(ServerStartedEvent event) {
 		SoulDataManager.recalculate(event.getServer());
+		MobGrindingDynamicData.updateRecipeManager(event.getServer());
 		onSoulDataUpdated();
 	}
 
-	private static void onSoulDataUpdated() {
+	public static void onSoulDataUpdated() {
 		// If running client-side (integrated server), refresh creative tab contents and JEI
 		try {
 			boolean isClient = false;

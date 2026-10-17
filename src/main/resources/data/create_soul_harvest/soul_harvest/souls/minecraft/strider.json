@@ -1,0 +1,18 @@
+{
+  "fallback": true,
+  "xp": 3,
+  "pools": [
+    {
+      "name": "main",
+      "rolls": 1,
+      "entries": [
+        {
+          "item": "minecraft:string",
+          "weight": 100,
+          "min": 2,
+          "max": 5
+        }
+      ]
+    }
+  ]
+}

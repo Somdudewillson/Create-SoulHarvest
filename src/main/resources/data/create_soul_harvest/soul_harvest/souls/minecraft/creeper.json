@@ -1,0 +1,18 @@
+{
+  "fallback": true,
+  "xp": 5,
+  "pools": [
+    {
+      "name": "main",
+      "rolls": 1,
+      "entries": [
+        {
+          "item": "minecraft:gunpowder",
+          "weight": 68,
+          "min": 1,
+          "max": 2
+        }
+      ]
+    }
+  ]
+}

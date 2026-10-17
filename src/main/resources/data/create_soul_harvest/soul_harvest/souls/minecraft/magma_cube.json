@@ -1,0 +1,18 @@
+{
+  "fallback": true,
+  "xp": 0,
+  "pools": [
+    {
+      "name": "main",
+      "rolls": 1,
+      "entries": [
+        {
+          "item": "minecraft:magma_cream",
+          "weight": 25,
+          "min": 1,
+          "max": 1
+        }
+      ]
+    }
+  ]
+}

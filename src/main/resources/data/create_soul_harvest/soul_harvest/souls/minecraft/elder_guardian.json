@@ -1,0 +1,36 @@
+{
+  "fallback": true,
+  "xp": 10,
+  "pools": [
+    {
+      "name": "main",
+      "rolls": 1,
+      "entries": [
+        {
+          "item": "minecraft:prismarine_shard",
+          "weight": 61,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "minecraft:prismarine_crystals",
+          "weight": 41,
+          "min": 1,
+          "max": 1
+        },
+        {
+          "item": "minecraft:cod",
+          "weight": 47,
+          "min": 1,
+          "max": 1
+        },
+        {
+          "item": "minecraft:tide_armor_trim_smithing_template",
+          "weight": 19,
+          "min": 1,
+          "max": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,23 +1,24 @@
 package somdudewillson.create_soul_harvest.content.item;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 //? >= 1.21 {
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
+
 //?} else {
 /*import net.minecraft.world.level.Level;
+import net.minecraft.nbt.CompoundTag;
 *///?}
 
 import java.util.List;
 import java.util.Optional;
+import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 
 public class SoulBookItem extends Item {
 
@@ -32,49 +33,14 @@ public class SoulBookItem extends Item {
 		return tier;
 	}
 
-	public static String getHeldSoul(ItemStack stack) {
-		//? >= 1.21 {
-		CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
-		if (customData != null) {
-			return customData.copyTag().getString("soul_harvest:held_soul");
-		}
-		return "";
-		//?} else {
-		/*CompoundTag tag = stack.getTag();
-		return tag != null ? tag.getString("soul_harvest:held_soul") : "";
-		*///?}
+	public static void setSoulData(ItemStack stack, ResourceLocation heldSoul, int portion) {
+		ISoulHolder.get(stack).ifPresent(holder -> {
+			holder.setHeldSoul(heldSoul);
+			holder.setSoulPortion(portion);
+		});
 	}
 
-	public static int getSoulPortion(ItemStack stack) {
-		//? >= 1.21 {
-		CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
-		if (customData != null) {
-			return customData.copyTag().getInt("soul_harvest:soul_portion");
-		}
-		return 0;
-		//?} else {
-		/*CompoundTag tag = stack.getTag();
-		return tag != null ? tag.getInt("soul_harvest:soul_portion") : 0;
-		*///?}
-	}
-
-	public static void setSoulData(ItemStack stack, String heldSoul, int portion) {
-		//? >= 1.21 {
-		CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
-		tag.putString("soul_harvest:held_soul", heldSoul);
-		tag.putInt("soul_harvest:soul_portion", portion);
-		CustomData.set(DataComponents.CUSTOM_DATA, stack, tag);
-		if (portion >= 100) {
-			stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
-		}
-		//?} else {
-		/*CompoundTag tag = stack.getOrCreateTag();
-		tag.putString("soul_harvest:held_soul", heldSoul);
-		tag.putInt("soul_harvest:soul_portion", portion);
-		*///?}
-	}
-
-	public static ItemStack createCompletedSoulBook(Item item, String entityId) {
+	public static ItemStack createCompletedSoulBook(Item item, ResourceLocation entityId) {
 		ItemStack stack = new ItemStack(item);
 		setSoulData(stack, entityId, 100);
 		return stack;
@@ -82,7 +48,7 @@ public class SoulBookItem extends Item {
 
 	@Override
 	public boolean isFoil(ItemStack stack) {
-		return getSoulPortion(stack) >= 100 || super.isFoil(stack);
+		return ISoulHolder.getSoulPortion(stack) >= 100 || super.isFoil(stack);
 	}
 
 	//? >= 1.21 {
@@ -100,18 +66,18 @@ public class SoulBookItem extends Item {
 	*///?}
 
 	private void addSoulBookTooltip(ItemStack stack, List<Component> tooltipComponents) {
-		String heldSoul = getHeldSoul(stack);
-		int soulPortion = getSoulPortion(stack);
+		ResourceLocation heldSoul = ISoulHolder.getHeldSoul(stack);
+		int soulPortion = ISoulHolder.getSoulPortion(stack);
 
-		if (heldSoul.isEmpty() || soulPortion <= 0) {
+		if (heldSoul == null || soulPortion <= 0) {
 			tooltipComponents.add(Component.literal("Hold in offhand to capture the souls of your enemies!").withStyle(ChatFormatting.GRAY));
 		} else {
-			Optional<EntityType<?>> optionalType = EntityType.byString(heldSoul);
+			Optional<EntityType<?>> optionalType = ISoulHolder.tryGetHeldSoulEntityType(stack);
 			MutableComponent nameComp;
 			if (optionalType.isPresent()) {
 				nameComp = Component.translatable(optionalType.get().getDescriptionId()).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
 			} else {
-				nameComp = Component.literal(heldSoul).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
+				nameComp = Component.literal(heldSoul.toString()).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
 			}
 			nameComp.append(Component.literal(" Soul").withStyle(ChatFormatting.GRAY));
 

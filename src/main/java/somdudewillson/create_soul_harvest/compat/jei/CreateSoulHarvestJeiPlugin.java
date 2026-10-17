@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
-import somdudewillson.create_soul_harvest.content.item.SoulBookItem;
+import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 import somdudewillson.create_soul_harvest.registry.ModCreativeTabs;
 import somdudewillson.create_soul_harvest.registry.ModItems;
 
@@ -44,6 +44,8 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 		registration.registerSubtypeInterpreter(ModItems.SOUL_BOOK_SIMPLE.get(), interpreter);
 		registration.registerSubtypeInterpreter(ModItems.SOUL_BOOK_STANDARD.get(), interpreter);
 		registration.registerSubtypeInterpreter(ModItems.SOUL_BOOK_SUPERIOR.get(), interpreter);
+
+		registration.registerSubtypeInterpreter(ModItems.ATTUNED_POLYCLAY.get(), new AttunedPolyclaySubtypeInterpreter());
 	}
 
 	@Override
@@ -67,6 +69,10 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 				List<ItemStack> soulBooks = ModCreativeTabs.generateAllCompletedSoulBooks();
 				if (!soulBooks.isEmpty()) {
 					ingredientManager.addIngredientsAtRuntime(VanillaTypes.ITEM_STACK, soulBooks);
+				}
+				List<ItemStack> polyclays = ModCreativeTabs.generateAllAttunedPolyclay();
+				if (!polyclays.isEmpty()) {
+					ingredientManager.addIngredientsAtRuntime(VanillaTypes.ITEM_STACK, polyclays);
 				}
 			}
 		});
@@ -93,12 +99,40 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 	*///?}
 
 		protected String getSubtypeString(ItemStack ingredient, UidContext context) {
-			String heldSoul = SoulBookItem.getHeldSoul(ingredient);
-			int portion = SoulBookItem.getSoulPortion(ingredient);
-			if (heldSoul.isEmpty() && portion <= 0) {
+			ResourceLocation heldSoul = ISoulHolder.getHeldSoul(ingredient);
+			int portion = ISoulHolder.getSoulPortion(ingredient);
+			if (heldSoul == null && portion <= 0) {
 				return "";
 			}
-			return heldSoul + ":" + portion;
+			return (heldSoul != null ? heldSoul.toString() : "") + ":" + portion;
+		}
+	}
+
+	//? >= 1.21 {
+	public static class AttunedPolyclaySubtypeInterpreter implements ISubtypeInterpreter<ItemStack> {
+
+		@Override
+		public @Nullable Object getSubtypeData(ItemStack ingredient, UidContext context) {
+			return getSubtypeString(ingredient, context);
+		}
+
+		@Override
+		public String getLegacyStringSubtypeInfo(ItemStack ingredient, UidContext context) {
+			return getSubtypeString(ingredient, context);
+		}
+	//?} else {
+	/*public static class AttunedPolyclaySubtypeInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
+		@Override
+		public String apply(ItemStack ingredient, UidContext context) {
+			return getSubtypeString(ingredient, context);
+		}
+	*///?}
+
+		protected String getSubtypeString(ItemStack ingredient, UidContext context) {
+			return ISoulHolder.get(ingredient)
+					.map(ISoulHolder::getHeldSoul)
+					.map(ResourceLocation::toString)
+					.orElse("");
 		}
 	}
 }

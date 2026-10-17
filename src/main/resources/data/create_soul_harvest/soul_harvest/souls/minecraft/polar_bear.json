@@ -1,0 +1,24 @@
+{
+  "fallback": true,
+  "xp": 1,
+  "pools": [
+    {
+      "name": "main",
+      "rolls": 1,
+      "entries": [
+        {
+          "item": "minecraft:salmon",
+          "weight": 16,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "minecraft:cod",
+          "weight": 55,
+          "min": 1,
+          "max": 2
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "fallback": true,
+  "xp": 0,
+  "pools": [
+    {
+      "name": "main",
+      "rolls": 1,
+      "entries": [
+        {
+          "item": "minecraft:poppy",
+          "weight": 58,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "minecraft:iron_ingot",
+          "weight": 100,
+          "min": 3,
+          "max": 5
+        }
+      ]
+    }
+  ]
+}

@@ -45,6 +45,8 @@
   "item.create_soul_harvest.soul_deposit_seed": "Soul Crystal Seed",
   "item.create_soul_harvest.soul_shard": "Soul Crystal",
   "item.create_soul_harvest.polyclay": "Polyclay",
+  "item.create_soul_harvest.incomplete_polyclay": "Incomplete Polyclay",
+  "item.create_soul_harvest.attuned_polyclay": "Attuned Polyclay",
   "item.create_soul_harvest.loot_token_blank": "Loot Token Blank",
   "item.create_soul_harvest.loot_token": "Loot Token",
   "item.create_soul_harvest.biocide_gas_bottle": "Biocide Gas Bottle",

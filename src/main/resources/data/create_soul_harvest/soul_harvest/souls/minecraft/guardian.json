@@ -1,0 +1,30 @@
+{
+  "fallback": true,
+  "xp": 10,
+  "pools": [
+    {
+      "name": "main",
+      "rolls": 1,
+      "entries": [
+        {
+          "item": "minecraft:prismarine_shard",
+          "weight": 62,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "minecraft:prismarine_crystals",
+          "weight": 40,
+          "min": 1,
+          "max": 1
+        },
+        {
+          "item": "minecraft:cod",
+          "weight": 39,
+          "min": 1,
+          "max": 1
+        }
+      ]
+    }
+  ]
+}
