@@ -101,8 +101,19 @@ public final class VanillaRecipeGen {
 				.pattern("CN")
 				.define('N', com.simibubi.create.AllItems.EXP_NUGGET.get())
 				.define('C', Items.CLAY_BALL)
-				.unlockedBy("has_clay_ball", has(Items.CLAY_BALL))
+				.unlockedBy("has_xp_nugget", has(com.simibubi.create.AllItems.EXP_NUGGET.get()))
 				.save(recipeOutput, SoulHarvestMod.id("polyclay"));
+		
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.POLYCLAY_ANDESITE.get(), 1)
+				.pattern("+C+")
+				.pattern("N|N")
+				.pattern("+C+")
+				.define('N', ModItems.POLYCLAY.get())
+				.define('C', Items.CLAY_BALL)
+				.define('+', com.simibubi.create.AllItems.ANDESITE_ALLOY.get())
+				.define('|', ModItems.SOUL_SHARD.get())
+				.unlockedBy("has_soul_shard", has(ModItems.SOUL_SHARD.get()))
+				.save(recipeOutput, SoulHarvestMod.id("polyclay_andesite"));
 	}
 
 	public static void registerSoulBookRecipes(RecipeOutput recipeOutput) {

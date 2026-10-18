@@ -87,6 +87,20 @@ public final class CreateRecipeGen {
 				.disallowMirrored()
 				.build(recipeOutput, SoulHarvestMod.id("craft_midas_core"));
 
+		// Brass Polyclay
+		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.POLYCLAY_BRASS.get(), 1)
+				.key('N', ModItems.POLYCLAY.get())
+				.key('C', Items.CLAY_BALL)
+				.key('|', ModItems.SOUL_SHARD.get())
+				.key('B', AllItems.BRASS_INGOT)
+				.patternLine("BC CB")
+				.patternLine("BC|CB")
+				.patternLine("NN|NN")
+				.patternLine("BC|CB")
+				.patternLine("BBCBB")
+				.disallowMirrored()
+				.build(recipeOutput, SoulHarvestMod.id("craft_polyclay_brass"));
+
 		// Glyph Scrolls 1..8
 		@SuppressWarnings("unchecked")
 		DeferredHolder<Item, Item>[] glyphs = new DeferredHolder[] {

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "+": {
+      "item": "create:andesite_alloy"
+    },
+    "C": {
+      "item": "minecraft:clay_ball"
+    },
+    "N": {
+      "item": "create_soul_harvest:polyclay"
+    },
+    "|": {
+      "item": "create_soul_harvest:soul_shard"
+    }
+  },
+  "pattern": [
+    "+C+",
+    "N|N",
+    "+C+"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_soul_harvest:polyclay_andesite"
+  }
+}

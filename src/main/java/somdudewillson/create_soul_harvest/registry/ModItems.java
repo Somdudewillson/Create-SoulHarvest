@@ -118,6 +118,8 @@ public class ModItems {
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
 			.build();
+	
+	// Polyclays
 	public static final DeferredHolder<Item, Item> POLYCLAY = ITEM_BUILDER_FACTORY.registerItem("polyclay",
 			props -> new PolyclayItem(0, ModItems.POLYCLAY_INCOMPLETE, ModItems.POLYCLAY_ATTUNED, props))
 			.properties(new Item.Properties())
@@ -130,6 +132,40 @@ public class ModItems {
 			.build();
 	public static final DeferredHolder<Item, Item> POLYCLAY_ATTUNED = ITEM_BUILDER_FACTORY.registerItem("polyclay_attuned",
 			props -> new PolyclayAttunedItem(0, props))
+			.properties(new Item.Properties())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	
+	public static final DeferredHolder<Item, Item> POLYCLAY_ANDESITE = ITEM_BUILDER_FACTORY.registerItem("polyclay_andesite",
+			props -> new PolyclayItem(1, ModItems.POLYCLAY_ANDESITE_INCOMPLETE, ModItems.POLYCLAY_ANDESITE_ATTUNED, props))
+			.properties(new Item.Properties())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> POLYCLAY_ANDESITE_INCOMPLETE = ITEM_BUILDER_FACTORY.registerItem("polyclay_andesite_attuned_incomplete", SequencedAssemblyItem::new)
+			.properties(new Item.Properties())
+			.simpleItem()
+			.build();
+	public static final DeferredHolder<Item, Item> POLYCLAY_ANDESITE_ATTUNED = ITEM_BUILDER_FACTORY.registerItem("polyclay_andesite_attuned",
+			props -> new PolyclayAttunedItem(1, props))
+			.properties(new Item.Properties())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	
+	public static final DeferredHolder<Item, Item> POLYCLAY_BRASS = ITEM_BUILDER_FACTORY.registerItem("polyclay_brass",
+			props -> new PolyclayItem(2, ModItems.POLYCLAY_BRASS_INCOMPLETE, ModItems.POLYCLAY_BRASS_ATTUNED, props))
+			.properties(new Item.Properties())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> POLYCLAY_BRASS_INCOMPLETE = ITEM_BUILDER_FACTORY.registerItem("polyclay_brass_attuned_incomplete", SequencedAssemblyItem::new)
+			.properties(new Item.Properties())
+			.simpleItem()
+			.build();
+	public static final DeferredHolder<Item, Item> POLYCLAY_BRASS_ATTUNED = ITEM_BUILDER_FACTORY.registerItem("polyclay_brass_attuned",
+			props -> new PolyclayAttunedItem(2, props))
 			.properties(new Item.Properties())
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)

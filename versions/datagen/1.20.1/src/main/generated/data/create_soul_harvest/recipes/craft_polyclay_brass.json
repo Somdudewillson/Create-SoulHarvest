@@ -1,0 +1,31 @@
+{
+    "type": "create:mechanical_crafting",
+    "acceptMirrored": false,
+    "category": "misc",
+    "key": {
+        "B": {
+            "item": "create:brass_ingot"
+        },
+        "C": {
+            "item": "minecraft:clay_ball"
+        },
+        "N": {
+            "item": "create_soul_harvest:polyclay"
+        },
+        "|": {
+            "item": "create_soul_harvest:soul_shard"
+        }
+    },
+    "pattern": [
+        "BC CB",
+        "BC|CB",
+        "NN|NN",
+        "BC|CB",
+        "BBCBB"
+    ],
+    "result": {
+        "item": "create_soul_harvest:polyclay_brass",
+        "count": 1
+    },
+    "showNotification": false
+}
