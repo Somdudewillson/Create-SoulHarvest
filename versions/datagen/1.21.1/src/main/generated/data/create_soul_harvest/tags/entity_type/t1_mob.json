@@ -1,0 +1,76 @@
+{
+  "values": [
+    "minecraft:cow",
+    "minecraft:villager",
+    "minecraft:glow_squid",
+    "minecraft:snow_golem",
+    "minecraft:cat",
+    "minecraft:panda",
+    "minecraft:sheep",
+    "minecraft:allay",
+    "minecraft:goat",
+    "minecraft:axolotl",
+    "minecraft:fox",
+    "minecraft:tadpole",
+    "minecraft:horse",
+    "minecraft:tropical_fish",
+    "minecraft:salmon",
+    "minecraft:pufferfish",
+    "minecraft:pig",
+    "minecraft:mooshroom",
+    "minecraft:camel",
+    "minecraft:rabbit",
+    "minecraft:frog",
+    "minecraft:strider",
+    "minecraft:dolphin",
+    "minecraft:trader_llama",
+    "minecraft:wolf",
+    "minecraft:chicken",
+    "minecraft:cod",
+    "minecraft:bat",
+    "minecraft:squid",
+    "minecraft:mule",
+    "minecraft:turtle",
+    "minecraft:llama",
+    "minecraft:parrot",
+    "minecraft:bee",
+    "minecraft:ocelot",
+    "minecraft:sniffer",
+    "minecraft:wandering_trader",
+    "minecraft:donkey",
+    "minecraft:zombie_horse",
+    "minecraft:skeleton_horse",
+    {
+      "id": "friendsandfoes:moobloom",
+      "required": false
+    },
+    {
+      "id": "friendsandfoes:glare",
+      "required": false
+    },
+    {
+      "id": "minecraft:armadillo",
+      "required": false
+    },
+    {
+      "id": "friendsandfoes:copper_golem",
+      "required": false
+    },
+    {
+      "id": "friendsandfoes:rascal",
+      "required": false
+    },
+    {
+      "id": "friendsandfoes:crab",
+      "required": false
+    },
+    {
+      "id": "supplementaries:red_merchant",
+      "required": false
+    },
+    {
+      "id": "friendsandfoes:tuff_golem",
+      "required": false
+    }
+  ]
+}

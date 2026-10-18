@@ -1,8 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "minecraft:coal_ore",
-    "minecraft:iron_ore",
-    "minecraft:copper_ore"
-  ]
-}

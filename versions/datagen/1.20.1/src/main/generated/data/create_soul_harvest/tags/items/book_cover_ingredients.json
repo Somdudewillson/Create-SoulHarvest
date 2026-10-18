@@ -1,0 +1,9 @@
+{
+  "values": [
+    "minecraft:leather",
+    {
+      "id": "create:cardboard",
+      "required": false
+    }
+  ]
+}

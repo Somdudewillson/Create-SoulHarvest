@@ -106,14 +106,21 @@ val backportForgeRecipes = tasks.register<BackportForgeRecipesTask>("backportFor
 	outputDirectory.set(file("${rootDir}/versions/datagen/1.20.1/src/main/generated/data/create_soul_harvest/recipes"))
 }
 
+val backportForgeTags = tasks.register<BackportForgeTagsTask>("backportForgeTags") {
+	group = "stonecutter"
+	description = "Backports 1.21 datagen tags to 1.20.1 Forge tags format"
+	inputDirectory.set(file("${rootDir}/versions/datagen/1.21.1/src/main/generated/data"))
+	outputDirectory.set(file("${rootDir}/versions/datagen/1.20.1/src/main/generated/data"))
+}
+
 tasks.named("runData") {
-	finalizedBy(backportForgeRecipes)
+	finalizedBy(backportForgeRecipes, backportForgeTags)
 }
 
 tasks.register("runDatagen") {
 	group = "stonecutter"
 	description = "Runs the NeoForge data generation"
 	dependsOn(tasks.named("runData"))
-	finalizedBy(backportForgeRecipes)
+	finalizedBy(backportForgeRecipes, backportForgeTags)
 }
 

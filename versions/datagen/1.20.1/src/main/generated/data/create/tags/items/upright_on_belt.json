@@ -1,0 +1,13 @@
+{
+  "values": [
+    "create_soul_harvest:polyclay",
+    "create_soul_harvest:polyclay_attuned_incomplete",
+    "create_soul_harvest:polyclay_attuned",
+    "create_soul_harvest:polyclay_andesite",
+    "create_soul_harvest:polyclay_andesite_attuned_incomplete",
+    "create_soul_harvest:polyclay_andesite_attuned",
+    "create_soul_harvest:polyclay_brass",
+    "create_soul_harvest:polyclay_brass_attuned_incomplete",
+    "create_soul_harvest:polyclay_brass_attuned"
+  ]
+}

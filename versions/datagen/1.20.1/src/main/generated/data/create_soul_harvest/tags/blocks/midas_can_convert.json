@@ -1,0 +1,35 @@
+{
+  "values": [
+    "minecraft:stone",
+    "minecraft:gravel",
+    "minecraft:sandstone",
+    "minecraft:red_sandstone",
+    "#minecraft:dirt",
+    "#minecraft:sand",
+    "#minecraft:stone_bricks",
+    {
+      "id": "#c:stones",
+      "required": false
+    },
+    {
+      "id": "#forge:stone",
+      "required": false
+    },
+    {
+      "id": "#c:gravels",
+      "required": false
+    },
+    {
+      "id": "#forge:gravel",
+      "required": false
+    },
+    {
+      "id": "#c:sandstone/blocks",
+      "required": false
+    },
+    {
+      "id": "#forge:sandstone",
+      "required": false
+    }
+  ]
+}

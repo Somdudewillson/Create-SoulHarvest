@@ -99,6 +99,13 @@ val backportForgeRecipes = tasks.register<BackportForgeRecipesTask>("backportFor
 	outputDirectory.set(file("${rootDir}/versions/datagen/1.20.1/src/main/generated/data/create_soul_harvest/recipes"))
 }
 
+val backportForgeTags = tasks.register<BackportForgeTagsTask>("backportForgeTags") {
+	group = "stonecutter"
+	description = "Backports 1.21 datagen tags to 1.20.1 Forge tags format"
+	inputDirectory.set(file("${rootDir}/versions/datagen/1.21.1/src/main/generated/data"))
+	outputDirectory.set(file("${rootDir}/versions/datagen/1.20.1/src/main/generated/data"))
+}
+
 sourceSets {
 	main {
 		resources.srcDir(
@@ -111,13 +118,17 @@ sourceSets {
 }
 
 tasks.named<ProcessResources>("processResources") {
-	dependsOn(backportForgeRecipes)
+	dependsOn(backportForgeRecipes, backportForgeTags)
 	exclude("data/create_soul_harvest/recipe/**")
 	exclude("data/create_soul_harvest/advancement/**")
+	exclude("data/**/tags/item/**")
+	exclude("data/**/tags/block/**")
+	exclude("data/**/tags/entity_type/**")
+	exclude("data/**/tags/fluid/**")
 }
 
 tasks.named("sourcesJar") {
-	dependsOn(backportForgeRecipes)
+	dependsOn(backportForgeRecipes, backportForgeTags)
 }
 
 

@@ -1,0 +1,13 @@
+{
+  "values": [
+    "minecraft:elder_guardian",
+    "minecraft:wither",
+    "minecraft:warden",
+    "minecraft:ender_dragon",
+    "minecraft:giant",
+    {
+      "id": "friendsandfoes:wildfire",
+      "required": false
+    }
+  ]
+}

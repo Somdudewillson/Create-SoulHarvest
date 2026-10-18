@@ -1,9 +1,0 @@
-{
-  "values": [
-    "#minecraft:flowers",
-    { "id": "minecraft:short_grass", "required": false },
-    { "id": "minecraft:grass", "required": false },
-    "minecraft:tall_grass",
-    "minecraft:fern"
-  ]
-}

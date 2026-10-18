@@ -1,0 +1,20 @@
+{
+  "values": [
+    "minecraft:sweet_berry_bush",
+    "minecraft:tall_grass",
+    "minecraft:fern",
+    "minecraft:snow",
+    "minecraft:sugar_cane",
+    "#minecraft:pressure_plates",
+    "#minecraft:buttons",
+    "#minecraft:flowers",
+    {
+      "id": "minecraft:short_grass",
+      "required": false
+    },
+    {
+      "id": "minecraft:grass",
+      "required": false
+    }
+  ]
+}
