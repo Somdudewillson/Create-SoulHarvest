@@ -1,11 +1,13 @@
 package somdudewillson.create_soul_harvest.registry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -17,6 +19,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
+import somdudewillson.create_soul_harvest.content.item.PolyclayItem;
 import somdudewillson.create_soul_harvest.content.item.SoulBookItem;
 import somdudewillson.create_soul_harvest.content.soul.SoulData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
@@ -100,9 +103,30 @@ public class ModCreativeTabs {
 			return name1.compareToIgnoreCase(name2);
 		});
 
+		Map<Integer, PolyclayItem> polyclays = new HashMap<>();
+		for (Item item : BuiltInRegistries.ITEM) {
+			if (!(item instanceof PolyclayItem polyclay)) continue;
+			if (polyclay.getAttunedItem() == null) continue;
+			
+			for (int t=polyclay.getTier(); t <= polyclay.getTier()+1; t++) {
+				PolyclayItem existing = polyclays.get(t);
+				int tierDiff = Math.abs(t-polyclay.getTier());
+				int existingTierDiff = existing!=null ? Math.abs(t-existing.getTier()) : Integer.MAX_VALUE;
+				
+				if (existing == null
+						|| (tierDiff < existingTierDiff)
+						|| (existingTierDiff == tierDiff && item.getDescriptionId().compareTo(existing.getDescriptionId())<0)) {
+					polyclays.put(t, polyclay);
+				}
+			}
+		}
+
 		for (Map.Entry<ResourceLocation, SoulData> entry : sortedEntries) {
 			ResourceLocation entityId = entry.getKey();
-			list.add(PolyclayAttunedItem.createAttunedPolyclay(ModItems.POLYCLAY_ATTUNED.get(), entityId));
+			int mobTier = entry.getValue() != null ? entry.getValue().tier() : 0;
+			
+			if (!polyclays.containsKey(mobTier)) continue;
+			list.add(PolyclayAttunedItem.createAttunedPolyclay(polyclays.get(mobTier).getAttunedItem(), entityId));
 		}
 		return list;
 	}

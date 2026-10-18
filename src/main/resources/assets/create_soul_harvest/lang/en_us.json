@@ -165,5 +165,8 @@
   "create_soul_harvest.jei.output_mode.single": "✦ Produces only one of the possible outputs",
   "create_soul_harvest.jei.output_mode.single.desc": "When processed, this recipe produces at most one of the possible output items.",
   "create_soul_harvest.jei.output_mode.independent": "✦ Rolls each output independently",
-  "create_soul_harvest.jei.output_mode.independent.desc": "When processed, each item in the output list has an independent roll based on its chance."
+  "create_soul_harvest.jei.output_mode.independent.desc": "When processed, each item in the output list has an independent roll based on its chance.",
+
+  "tooltip.create_soul_harvest.polyclay_tuned": " Tuned (T%s)",
+  "tooltip.create_soul_harvest.polyclay_tier": "Tier %s"
 }

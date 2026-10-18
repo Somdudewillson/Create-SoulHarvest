@@ -53,7 +53,7 @@ public class ModCapabilities {
 		@SubscribeEvent
 		public static void onAttachCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
 			ItemStack stack = event.getObject();
-			if (stack.getItem() == ModItems.ATTUNED_POLYCLAY.get()
+			if (stack.getItem() == ModItems.POLYCLAY_ATTUNED.get()
 					|| stack.getItem() == ModItems.SOUL_BOOK_SIMPLE.get()
 					|| stack.getItem() == ModItems.SOUL_BOOK_STANDARD.get()
 					|| stack.getItem() == ModItems.SOUL_BOOK_SUPERIOR.get()) {

@@ -8,10 +8,13 @@ import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
+import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
 import somdudewillson.create_soul_harvest.registry.ModCreativeTabs;
 import somdudewillson.create_soul_harvest.registry.ModItems;
 
@@ -45,7 +48,12 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 		registration.registerSubtypeInterpreter(ModItems.SOUL_BOOK_STANDARD.get(), interpreter);
 		registration.registerSubtypeInterpreter(ModItems.SOUL_BOOK_SUPERIOR.get(), interpreter);
 
-		registration.registerSubtypeInterpreter(ModItems.POLYCLAY_ATTUNED.get(), new AttunedPolyclaySubtypeInterpreter());
+		val polyclayInterpreter = new AttunedPolyclaySubtypeInterpreter();
+		for (Item item : BuiltInRegistries.ITEM) {
+			if (item instanceof PolyclayAttunedItem) {
+				registration.registerSubtypeInterpreter(item, polyclayInterpreter);
+			}
+		}
 	}
 
 	@Override

@@ -118,7 +118,8 @@ public class ModItems {
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
 			.build();
-	public static final DeferredHolder<Item, Item> POLYCLAY = ITEM_BUILDER_FACTORY.registerItem("polyclay", PolyclayItem::new)
+	public static final DeferredHolder<Item, Item> POLYCLAY = ITEM_BUILDER_FACTORY.registerItem("polyclay",
+			props -> new PolyclayItem(0, ModItems.POLYCLAY_INCOMPLETE, ModItems.POLYCLAY_ATTUNED, props))
 			.properties(new Item.Properties())
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
@@ -127,7 +128,8 @@ public class ModItems {
 			.properties(new Item.Properties())
 			.simpleItem()
 			.build();
-	public static final DeferredHolder<Item, Item> POLYCLAY_ATTUNED = ITEM_BUILDER_FACTORY.registerItem("polyclay_attuned", PolyclayAttunedItem::new)
+	public static final DeferredHolder<Item, Item> POLYCLAY_ATTUNED = ITEM_BUILDER_FACTORY.registerItem("polyclay_attuned",
+			props -> new PolyclayAttunedItem(0, props))
 			.properties(new Item.Properties())
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)

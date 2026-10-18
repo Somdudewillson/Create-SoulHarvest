@@ -4,13 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundUpdateRecipesPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.item.PolyclayItem;
 import somdudewillson.create_soul_harvest.content.soul.SoulData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
 import somdudewillson.create_soul_harvest.content.soul.SoulDropEntry;
@@ -62,24 +65,52 @@ public class MobGrindingDynamicData {
 		Map<ResourceLocation, JsonObject> recipes = new HashMap<>();
 		Map<ResourceLocation, SoulData> knownSouls = SoulDataManager.getKnownSoulData();
 
-		for (Map.Entry<ResourceLocation, SoulData> entry : knownSouls.entrySet()) {
-			ResourceLocation entityId = entry.getKey();
-			SoulData soulData = entry.getValue();
-
-			int tier = soulData.tier();
-			if (tier <= 0) {
-				continue;
+		List<PolyclayItem> polyclays = new ArrayList<>();
+		for (Item item : BuiltInRegistries.ITEM) {
+			if (item instanceof PolyclayItem polyclay) {
+				polyclays.add(polyclay);
 			}
+		}
 
-			String recipeName = entityId.getNamespace() + "_" + entityId.getPath();
+		for (PolyclayItem polyclay : polyclays) {
+			ResourceLocation polyclayId = BuiltInRegistries.ITEM.getKey(polyclay);
+			if (polyclayId == null) continue;
+			int polyclayTier = polyclay.getTier();
+			Item transItem = polyclay.getTransitionalItem();
+			Item attunedItem = polyclay.getAttunedItem();
+			if (attunedItem == null) continue;
 
-			if (soulData.hasDrops()) {
-				recipes.put(SoulHarvestMod.id("sequenced_assembly/attune_polyclay_" + recipeName),
-						makeSequencedAssemblyRecipe(entityId, tier));
+			ResourceLocation attunedId = BuiltInRegistries.ITEM.getKey(attunedItem);
+			if (attunedId == null) continue;
 
-				JsonObject splashing = makeSplashingRecipe(entityId, soulData);
+			for (Map.Entry<ResourceLocation, SoulData> entry : knownSouls.entrySet()) {
+				ResourceLocation entityId = entry.getKey();
+				SoulData soulData = entry.getValue();
+
+				int mobTier = soulData.tier();
+				if (mobTier <= 0 || mobTier > polyclayTier + 1) {
+					continue;
+				}
+
+				if (!soulData.hasDrops()) {
+					continue;
+				}
+
+				String recipeSuffix = polyclayId.getPath() + "_" + entityId.getNamespace() + "_" + entityId.getPath();
+				String washSuffix = attunedId.getPath() + "_" + entityId.getNamespace() + "_" + entityId.getPath();
+
+				recipes.put(SoulHarvestMod.id("sequenced_assembly/attune_" + recipeSuffix),
+						makeSequencedAssemblyRecipe(polyclay, transItem, attunedItem, entityId, mobTier));
+
+				float multiplier = PolyclayItem.getDropMultiplier(polyclayTier, mobTier);
+				JsonObject splashing = makeSplashingRecipe(attunedItem, entityId, soulData, multiplier);
 				if (splashing != null) {
-					recipes.put(SoulHarvestMod.id("splashing/wash_attuned_polyclay_" + recipeName), splashing);
+					recipes.put(SoulHarvestMod.id("splashing/wash_" + washSuffix), splashing);
+				}
+				
+				JsonObject grinding = makeGrindingRecipe(entityId, soulData);
+				if (grinding != null) {
+					recipes.put(SoulHarvestMod.id("splashing/grind_" + washSuffix), grinding);
 				}
 			}
 		}
@@ -161,20 +192,25 @@ public class MobGrindingDynamicData {
 		*///?}
 	}
 
-	private static JsonObject makeSequencedAssemblyRecipe(ResourceLocation entityId, int tier) {
+	private static JsonObject makeSequencedAssemblyRecipe(Item polyclay, Item transItem, Item attunedItem, ResourceLocation entityId, int mobTier) {
 		JsonObject recipe = new JsonObject();
 		recipe.addProperty("type", "create:sequenced_assembly");
 
+		ResourceLocation polyclayId = BuiltInRegistries.ITEM.getKey(polyclay);
+		ResourceLocation transId = BuiltInRegistries.ITEM.getKey(transItem);
+		ResourceLocation attunedId = BuiltInRegistries.ITEM.getKey(attunedItem);
+
 		// Base input
 		JsonObject baseIng = new JsonObject();
-		baseIng.addProperty("item", "create_soul_harvest:polyclay");
+		baseIng.addProperty("item", polyclayId != null ? polyclayId.toString() : "create_soul_harvest:polyclay");
 		recipe.add("ingredient", baseIng);
 
 		// Transitional item
-		JsonObject transItem = new JsonObject();
-		transItem.addProperty("id", "create_soul_harvest:incomplete_polyclay");
-		transItem.addProperty("item", "create_soul_harvest:incomplete_polyclay");
-		recipe.add("transitional_item", transItem);
+		JsonObject transItemJson = new JsonObject();
+		String transStr = transId != null ? transId.toString() : "create_soul_harvest:polyclay_attuned_incomplete";
+		transItemJson.addProperty("id", transStr);
+		transItemJson.addProperty("item", transStr);
+		recipe.add("transitional_item", transItemJson);
 
 		recipe.addProperty("loops", 1);
 
@@ -187,21 +223,21 @@ public class MobGrindingDynamicData {
 
 		JsonArray deployIngredients = new JsonArray();
 		JsonObject ingTrans = new JsonObject();
-		ingTrans.addProperty("id", "create_soul_harvest:incomplete_polyclay");
-		ingTrans.addProperty("item", "create_soul_harvest:incomplete_polyclay");
+		ingTrans.addProperty("id", transStr);
+		ingTrans.addProperty("item", transStr);
 		deployIngredients.add(ingTrans);
 
 		JsonObject soulBookIng = new JsonObject();
 		soulBookIng.addProperty("type", "create_soul_harvest:soul_book");
 		soulBookIng.addProperty("soul", entityId.toString());
-		soulBookIng.addProperty("min_tier", tier);
+		soulBookIng.addProperty("min_tier", mobTier);
 		deployIngredients.add(soulBookIng);
 		deployStep.add("ingredients", deployIngredients);
 
 		JsonArray deployResults = new JsonArray();
 		JsonObject deployResult = new JsonObject();
-		deployResult.addProperty("id", "create_soul_harvest:incomplete_polyclay");
-		deployResult.addProperty("item", "create_soul_harvest:incomplete_polyclay");
+		deployResult.addProperty("id", transStr);
+		deployResult.addProperty("item", transStr);
 		deployResults.add(deployResult);
 		deployStep.add("results", deployResults);
 
@@ -215,10 +251,10 @@ public class MobGrindingDynamicData {
 
 		JsonArray spoutIngredients = new JsonArray();
 		JsonObject spoutItemIng = new JsonObject();
-		spoutItemIng.addProperty("item", "create_soul_harvest:incomplete_polyclay");
+		spoutItemIng.addProperty("item", transStr);
 		spoutIngredients.add(spoutItemIng);
 
-		int fluidAmount = switch (tier) {
+		int fluidAmount = switch (mobTier) {
 			case 1 -> 250;
 			case 2 -> 500;
 			case 3 -> 1000;
@@ -240,8 +276,8 @@ public class MobGrindingDynamicData {
 
 		JsonArray spoutResults = new JsonArray();
 		JsonObject spoutResult = new JsonObject();
-		spoutResult.addProperty("id", "create_soul_harvest:incomplete_polyclay");
-		spoutResult.addProperty("item", "create_soul_harvest:incomplete_polyclay");
+		spoutResult.addProperty("id", transStr);
+		spoutResult.addProperty("item", transStr);
 		spoutResults.add(spoutResult);
 		spoutStep.add("results", spoutResults);
 
@@ -249,10 +285,11 @@ public class MobGrindingDynamicData {
 		recipe.add("sequence", sequence);
 
 		// --- Output Attuned Polyclay with soul component & nbt
+		String attunedStr = attunedId != null ? attunedId.toString() : "create_soul_harvest:polyclay_attuned";
 		JsonArray finalResults = new JsonArray();
 		JsonObject finalResult = new JsonObject();
-		finalResult.addProperty("id", "create_soul_harvest:attuned_polyclay");
-		finalResult.addProperty("item", "create_soul_harvest:attuned_polyclay");
+		finalResult.addProperty("id", attunedStr);
+		finalResult.addProperty("item", attunedStr);
 
 		JsonObject soulDataTag = new JsonObject();
 		soulDataTag.addProperty("soul_harvest:held_soul", entityId.toString());
@@ -272,19 +309,23 @@ public class MobGrindingDynamicData {
 		return recipe;
 	}
 
-	private static JsonObject makeSplashingRecipe(ResourceLocation entityId, SoulData soulData) {
+	private static JsonObject makeSplashingRecipe(Item attunedItem, ResourceLocation entityId, SoulData soulData, float multiplier) {
 		JsonObject recipe = new JsonObject();
 		recipe.addProperty("type", "create:splashing");
+
+		ResourceLocation attunedId = BuiltInRegistries.ITEM.getKey(attunedItem);
+		String attunedStr = attunedId != null ? attunedId.toString() : "create_soul_harvest:polyclay_attuned";
 
 		// Ingredient
 		JsonArray ingredients = new JsonArray();
 		JsonObject ing = new JsonObject();
 		ing.addProperty("type", "create_soul_harvest:attuned_polyclay");
+		ing.addProperty("item", attunedStr);
 		ing.addProperty("soul", entityId.toString());
 		ingredients.add(ing);
 		recipe.add("ingredients", ingredients);
 
-		// Results from soul drop pools (representing 1 mob kill)
+		// Results from soul drop pools (representing 1 mob kill) scaled by drop multiplier
 		JsonArray results = new JsonArray();
 		int maxOutputs = 12; // Create's maximum output limit
 
@@ -294,18 +335,27 @@ public class MobGrindingDynamicData {
 					break;
 				}
 
+				float baseCount = (entry.min() + entry.max()) / 2.0f;
+				float baseChance = Math.min(1.0f, Math.max(0.01f, entry.weight() / 100.0f));
+				float expected = baseCount * baseChance * multiplier;
+
+				if (expected <= 0.001f) {
+					continue;
+				}
+
 				JsonObject out = new JsonObject();
 				out.addProperty("id", entry.item().toString());
 				out.addProperty("item", entry.item().toString());
 
-				int count = Math.round((entry.min() + entry.max()) / 2.0f);
+				int count = Math.max(1, (int) Math.ceil(expected));
+				float chance = Math.min(1.0f, Math.max(0.01f, expected / count));
+				chance = Math.round(chance * 1000.0f) / 1000.0f;
+
 				if (count > 1) {
 					out.addProperty("count", count);
 				}
-
-				float chance = Math.min(1.0f, Math.max(0.01f, entry.weight() / 100.0f));
 				if (chance < 1.0f) {
-					out.addProperty("chance", Math.round(chance * 100.0f) / 100.0f);
+					out.addProperty("chance", chance);
 				}
 
 				results.add(out);
@@ -321,5 +371,10 @@ public class MobGrindingDynamicData {
 
 		recipe.add("results", results);
 		return recipe;
+	}
+
+	private static JsonObject makeGrindingRecipe(ResourceLocation entityId, SoulData soulData) {
+		// TODO Is this even possible? Consider later.
+		return null;
 	}
 }
