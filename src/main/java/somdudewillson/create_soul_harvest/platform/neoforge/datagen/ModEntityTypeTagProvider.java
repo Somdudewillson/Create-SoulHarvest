@@ -6,6 +6,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
@@ -239,6 +240,21 @@ public class ModEntityTypeTagProvider extends EntityTypeTagsProvider {
 		.addOptional(ResourceLocation.fromNamespaceAndPath("friendsandfoes", "illusioner"))
 		.addOptional(ResourceLocation.fromNamespaceAndPath("friendsandfoes", "iceologer"))
 		.addOptional(ResourceLocation.fromNamespaceAndPath("artifacts", "mimic"));
+
+		// Contagion immune entities
+		tag(ModTags.EntityTypes.CONTAGION_IMMUNE).add(
+				EntityType.IRON_GOLEM,
+				EntityType.SNOW_GOLEM,
+				EntityType.BLAZE,
+				EntityType.GUARDIAN,
+				EntityType.ELDER_GUARDIAN,
+				EntityType.WITHER,
+				EntityType.ENDER_DRAGON
+		)
+		.addTag(EntityTypeTags.SKELETONS)
+		.addOptional(ResourceLocation.fromNamespaceAndPath("friendsandfoes", "wildfire"))
+		.addOptional(ResourceLocation.fromNamespaceAndPath("friendsandfoes", "copper_golem"))
+		.addOptional(ResourceLocation.fromNamespaceAndPath("friendsandfoes", "tuff_golem"));
 	}
 
 	@Override

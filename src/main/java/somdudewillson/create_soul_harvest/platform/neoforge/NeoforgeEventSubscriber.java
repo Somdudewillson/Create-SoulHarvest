@@ -2,20 +2,22 @@ package somdudewillson.create_soul_harvest.platform.neoforge;
 
 //? neoforge {
 
-import somdudewillson.create_soul_harvest.event.ExampleEventHandler; // sample_content
-import net.minecraft.server.level.ServerPlayer; // sample_content
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import somdudewillson.create_soul_harvest.registry.ModMobEffects;
+import somdudewillson.create_soul_harvest.registry.ModTags;
 
 @EventBusSubscriber
 public class NeoforgeEventSubscriber {
 
-	@SubscribeEvent // sample_content
-	public static void onPlayerDamage(LivingDamageEvent.Post event) { // sample_content
-		if (event.getEntity() instanceof ServerPlayer player && event.getNewDamage() > 0) { // sample_content
-			ExampleEventHandler.onPlayerHurt(player); // sample_content
-		} // sample_content
-	} // sample_content
+	@SubscribeEvent
+	public static void onEffectApplicable(MobEffectEvent.Applicable event) {
+		if (event.getEffectInstance() != null
+				&& event.getEffectInstance().getEffect().value() == ModMobEffects.CONTAGION.value()
+				&& event.getEntity().getType().is(ModTags.EntityTypes.CONTAGION_IMMUNE)) {
+			event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+		}
+	}
 }
 //?}

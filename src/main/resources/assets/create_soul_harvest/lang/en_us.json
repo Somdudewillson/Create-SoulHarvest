@@ -106,6 +106,8 @@
   "fluid_type.create_soul_harvest.liquid_soul_crystal": "Liquid Soul Crystal",
 
   "effect.create_soul_harvest.contagion": "Contagion",
+  "death.attack.create_soul_harvest.contagion": "%1$s succumbed to contagion",
+  "death.attack.create_soul_harvest.contagion.player": "%1$s succumbed to contagion while fighting %2$s",
   "effect.create_soul_harvest.agile_falling": "Agile Falling",
   "effect.create_soul_harvest.stoneskin": "Stoneskin",
 
@@ -143,6 +145,7 @@
   "tag.entity_type.create_soul_harvest.requires_medium_kills": "Requires Medium Kills",
   "tag.entity_type.create_soul_harvest.requires_high_kills": "Requires High Kills",
   "tag.entity_type.create_soul_harvest.soul_can_be_captured": "Capturable Soul Mobs",
+  "tag.entity_type.create_soul_harvest.contagion_immune": "Contagion Immune Entities",
 
   "tag.create_soul_harvest.glyph_pages": "Glyph Pages",
   "tag.create_soul_harvest.glyph_scrolls": "Glyph Scrolls",
@@ -167,6 +170,7 @@
   "tag.create_soul_harvest.requires_medium_kills": "Requires Medium Kills",
   "tag.create_soul_harvest.requires_high_kills": "Requires High Kills",
   "tag.create_soul_harvest.soul_can_be_captured": "Capturable Soul Mobs",
+  "tag.create_soul_harvest.contagion_immune": "Contagion Immune Entities",
 
   "create_soul_harvest.jei.glyph_page_chance_per_page": "12.5% Chance (1 in 8)",
   "create_soul_harvest.jei.glyph_page_random_output": "Randomly produces one of the 8 Glyph Pages",

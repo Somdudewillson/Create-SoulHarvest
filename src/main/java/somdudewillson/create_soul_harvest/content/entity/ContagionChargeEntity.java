@@ -4,7 +4,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
@@ -14,14 +13,12 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ClipContext.Block;
 import net.minecraft.world.level.ClipContext.Fluid;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
+import somdudewillson.create_soul_harvest.content.effect.ContagionMobEffect;
 import somdudewillson.create_soul_harvest.registry.ModEntityTypes;
 import somdudewillson.create_soul_harvest.registry.ModItems;
-import somdudewillson.create_soul_harvest.registry.ModMobEffects;
 
 //? >= 1.21 {
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -92,7 +89,7 @@ public class ContagionChargeEntity extends AbstractHurtingProjectile implements 
 		/*return new net.minecraft.core.particles.DustParticleOptions(new org.joml.Vector3f(2f / 255f, 56f / 255f, 14f / 255f), 1.0f);
 		*///?}
 	}
-
+	
 	@Override
 	protected void onHit(HitResult result) {
 		super.onHit(result);
@@ -105,7 +102,7 @@ public class ContagionChargeEntity extends AbstractHurtingProjectile implements 
 					ClipContext context = new ClipContext(
 								effectCenter, 
 								effectCenter.add(getDeltaMovement().normalize().scale(1.5)), 
-								Block.COLLIDER, Fluid.NONE, CollisionContext.empty()
+								Block.COLLIDER, Fluid.NONE, this
 							);
 					BlockHitResult r = level().clip(context);
 					if (r.getType() != HitResult.Type.MISS) {
@@ -113,31 +110,9 @@ public class ContagionChargeEntity extends AbstractHurtingProjectile implements 
 					}
 				}
 				
-				// Particles
-				//? >= 1.21 {
-				serverLevel.sendParticles(
-						net.minecraft.core.particles.ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 2f / 255f, 56f / 255f, 14f / 255f),
-						effectCenter.x(), effectCenter.y(), effectCenter.z(), 500, cloudSize / 2, cloudSize / 4, cloudSize / 2, 0.1);
-				//?} else {
-				/*serverLevel.sendParticles(
-						new net.minecraft.core.particles.DustParticleOptions(new org.joml.Vector3f(2f / 255f, 56f / 255f, 14f / 255f), 1.0f),
-						effectCenter.x(), effectCenter.y(), effectCenter.z(), 500, cloudSize / 2, cloudSize / 4, cloudSize / 2, 0.1);
-				*///?}
-
-				AABB aabb = AABB.ofSize(effectCenter, cloudSize * 2 + 1, cloudSize + 1, cloudSize * 2 + 1);
-				for (LivingEntity nearby : this.level().getEntitiesOfClass(LivingEntity.class, aabb)) {
-					//? >= 1.21 {
-					MobEffectInstance inst = nearby.getEffect(ModMobEffects.CONTAGION);
-					if (inst == null || (inst.getAmplifier() <= 0 && inst.getDuration() < 20 * 30)) {
-						nearby.addEffect(new MobEffectInstance(ModMobEffects.CONTAGION, 20 * 30, 0), null);
-					}
-					//?} else {
-					/*MobEffectInstance inst = nearby.getEffect(ModMobEffects.CONTAGION.get());
-					if (inst == null || (inst.getAmplifier() <= 0 && inst.getDuration() < 20 * 30)) {
-						nearby.addEffect(new MobEffectInstance(ModMobEffects.CONTAGION.get(), 20 * 30, 0), null);
-					}
-					*///?}
-				}
+				LivingEntity shooter = this.getOwner() instanceof LivingEntity living ? living : null;
+				Vec3 cloudBoxSize = new Vec3(cloudSize * 2 + 1, cloudSize + 1, cloudSize * 2 + 1);
+				ContagionMobEffect.createInfectionCloud(serverLevel, effectCenter, cloudBoxSize, 20 * 30, 0, shooter);
 			}
 			this.discard();
 		}

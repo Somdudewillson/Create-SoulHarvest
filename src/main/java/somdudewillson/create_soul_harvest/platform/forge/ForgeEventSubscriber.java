@@ -2,20 +2,23 @@ package somdudewillson.create_soul_harvest.platform.forge;
 
 //? forge {
 
-/*import somdudewillson.create_soul_harvest.event.ExampleEventHandler; // sample_content
-import net.minecraft.server.level.ServerPlayer; // sample_content
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+/*import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.entity.living.MobEffectEvent;
+import somdudewillson.create_soul_harvest.registry.ModMobEffects;
+import somdudewillson.create_soul_harvest.registry.ModTags;
 
 @Mod.EventBusSubscriber
 public class ForgeEventSubscriber {
 
-	@SubscribeEvent // sample_content
-	public static void onPlayerDamage(LivingDamageEvent event) { // sample_content
-		if (event.getEntity() instanceof ServerPlayer player && event.getAmount() > 0) { // sample_content
-			ExampleEventHandler.onPlayerHurt(player); // sample_content
-		} // sample_content
-	} // sample_content
+	@SubscribeEvent
+	public static void onEffectApplicable(MobEffectEvent.Applicable event) {
+		if (event.getEffectInstance() != null
+				&& event.getEffectInstance().getEffect() == ModMobEffects.CONTAGION.get()
+				&& event.getEntity().getType().is(ModTags.EntityTypes.CONTAGION_IMMUNE)) {
+			event.setResult(Event.Result.DENY);
+		}
+	}
 }
 *///?}
