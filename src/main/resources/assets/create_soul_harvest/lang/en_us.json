@@ -110,6 +110,7 @@
   "death.attack.create_soul_harvest.contagion.player": "%1$s succumbed to contagion while fighting %2$s",
   "effect.create_soul_harvest.agile_falling": "Agile Falling",
   "effect.create_soul_harvest.stoneskin": "Stoneskin",
+  "effect.create_soul_harvest.vaccination": "Vaccination",
 
   "create_soul_harvest.recipe.soul_infusion": "Soul Infusion",
   "create.recipe.soul_infusion.fan": "Fan behind Active Soul Crystal",

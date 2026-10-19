@@ -11,6 +11,7 @@ import somdudewillson.create_soul_harvest.content.entity.SpellThinkerEntity;
 import somdudewillson.create_soul_harvest.content.spell.planetoid.PlanetoidSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.BonemealSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.ContagionBlastSpell;
+import somdudewillson.create_soul_harvest.content.spell.spells.ContagionCarrierSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.FireballSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.FortitudeSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.InstantShelterSpell;
@@ -25,6 +26,7 @@ public class RunicSpells {
 	public static final Supplier<GlyphSpell> FIREBALL = FireballSpell::new;
 	public static final Supplier<GlyphSpell> BONEMEAL = ()->new BonemealSpell(8);
 	public static final Supplier<GlyphSpell> CONTAGION_BLAST = ContagionBlastSpell::new;
+	public static final Supplier<GlyphSpell> CONTAGION_ENHANCED = ContagionCarrierSpell::new;
 	public static final Supplier<GlyphSpell> FORTITUDE = ()->new FortitudeSpell(false);
 	public static final Supplier<GlyphSpell> FORTITUDE_ENHANCED = ()->new FortitudeSpell(true);
 	//? >= 1.21 {

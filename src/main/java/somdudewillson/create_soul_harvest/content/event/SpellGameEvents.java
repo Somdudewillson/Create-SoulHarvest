@@ -11,6 +11,8 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 *///?}
 
 import somdudewillson.create_soul_harvest.content.effect.StoneskinMobEffect;
+import somdudewillson.create_soul_harvest.content.effect.VaccinationMobEffect;
+import somdudewillson.create_soul_harvest.registry.ModDamageSources;
 import somdudewillson.create_soul_harvest.registry.ModMobEffects;
 
 public class SpellGameEvents {
@@ -34,6 +36,10 @@ public class SpellGameEvents {
 	//? neoforge {
 	@SubscribeEvent
 	public static void onLivingDamage(LivingDamageEvent.Pre event) {
+		if (event.getSource().is(ModDamageSources.CONTAGION) && VaccinationMobEffect.hasVaccination(event.getEntity())) {
+			event.setNewDamage(0);
+			return;
+		}
 		float currentDamage = event.getNewDamage();
 		float newDamage = StoneskinMobEffect.modifyDamage(event.getEntity(), event.getSource(), currentDamage);
 		if (newDamage != currentDamage) {
@@ -43,6 +49,11 @@ public class SpellGameEvents {
 	//?} forge {
 	/*@SubscribeEvent
 	public static void onLivingDamage(LivingDamageEvent event) {
+		if (event.getSource().is(ModDamageSources.CONTAGION) && VaccinationMobEffect.hasVaccination(event.getEntity())) {
+			event.setAmount(0);
+			event.setCanceled(true);
+			return;
+		}
 		float currentDamage = event.getAmount();
 		float newDamage = StoneskinMobEffect.modifyDamage(event.getEntity(), event.getSource(), currentDamage);
 		if (newDamage != currentDamage) {

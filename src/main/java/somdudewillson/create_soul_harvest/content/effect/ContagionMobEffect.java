@@ -72,7 +72,7 @@ public class ContagionMobEffect extends MobEffect {
 			return 0;
 		}
 
-		if (target.getType().is(ModTags.EntityTypes.CONTAGION_IMMUNE)) {
+		if (target.getType().is(ModTags.EntityTypes.CONTAGION_IMMUNE) || VaccinationMobEffect.hasVaccination(target)) {
 			return 0;
 		}
 
@@ -183,7 +183,7 @@ public class ContagionMobEffect extends MobEffect {
 				entity);
 
 		// Deal contagion damage
-		if (amplifier < AMPLIFIER_THRESHOLD || duration < 20 * 20) {
+		if (!VaccinationMobEffect.hasVaccination(entity) && (amplifier < AMPLIFIER_THRESHOLD || duration < 20 * 20)) {
 			entity.hurt(ModDamageSources.contagion(entity.level()), 2.5f + (entity.getMaxHealth() * 0.015f * amplifier));
 		}
 	}
