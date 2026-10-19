@@ -13,7 +13,11 @@
         },
         {
             "item": "create_soul_harvest:polished_inlaid_lapis",
-            "chance": 0.75
+            "chance": 0.5
+        },
+        {
+            "item": "create_soul_harvest:inlaid_lapis",
+            "chance": 0.25
         }
     ]
 }

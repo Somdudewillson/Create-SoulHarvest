@@ -1,5 +1,6 @@
 package somdudewillson.create_soul_harvest.platform.neoforge.datagen;
 
+import com.mojang.logging.LogUtils;
 //? neoforge {
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeBuilder;
@@ -30,7 +31,17 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.registries.DeferredHolder;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.item.GlyphScrollItem;
 import somdudewillson.create_soul_harvest.content.recipe.ISelectiveOutputRecipe;
@@ -43,6 +54,8 @@ import somdudewillson.create_soul_harvest.registry.ModItems;
 import somdudewillson.create_soul_harvest.registry.ModTags;
 
 public final class CreateRecipeGen {
+	public static final Logger LOGGER = LogUtils.getLogger();
+	private static final int GLYPH_COUNT = 8;
 
 	private CreateRecipeGen() {
 	}
@@ -59,6 +72,7 @@ public final class CreateRecipeGen {
 		registerSoulInfusionRecipes(recipeOutput);
 		
 		registerSoulBookRecipes(recipeOutput);
+		registerGlyphFoldingRecipes(recipeOutput);
 	}
 
 	public static void registerMechanicalCraftingRecipes(RecipeOutput recipeOutput) {
@@ -112,7 +126,7 @@ public final class CreateRecipeGen {
 				ModItems.GLYPH_SCROLL_1, ModItems.GLYPH_SCROLL_2, ModItems.GLYPH_SCROLL_3, ModItems.GLYPH_SCROLL_4,
 				ModItems.GLYPH_SCROLL_5, ModItems.GLYPH_SCROLL_6, ModItems.GLYPH_SCROLL_7, ModItems.GLYPH_SCROLL_8
 		};
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < GLYPH_COUNT; i++) {
 			int index = i + 1;
 			MechanicalCraftingRecipeBuilder.shapedRecipe(scrolls[i].get(), 1)
 					.key('G', ModItems.MAGIC_GOLD.get())
@@ -424,16 +438,141 @@ public final class CreateRecipeGen {
 				.singleOutput()
 				.require(ModItems.POLISHED_INLAID_LAPIS.get())
 				.output(0.25f, ModItems.ENCHANTED_INLAID_LAPIS.get())
-				.output(0.75f, ModItems.POLISHED_INLAID_LAPIS.get())
+				.output(0.5f, ModItems.POLISHED_INLAID_LAPIS.get())
+				.output(0.25f, ModItems.INLAID_LAPIS.get())
 				.build(recipeOutput);
 
 		// Overload Glyph Page
 		new ISelectiveOutputRecipe.Builder<>(SoulInfusionRecipe::new, SoulHarvestMod.id("soul_infusion_overload_glyph_page"))
 				.singleOutput()
 				.require(ModTags.Items.GLYPH_PAGES)
-				.output(0.95f, ModItems.GLYPH_OVERLOADED.get())
-				.output(0.025f, AllItems.EXP_NUGGET)
+				.output(0.5f, ModItems.GLYPH_OVERLOADED.get())
+				.output(0.0625f, AllItems.EXP_NUGGET)
+				.output(0.0625f, Items.PAPER)
+				.output(0.125f, ModItems.INLAID_LAPIS_PLATE.get())
 				.build(recipeOutput);
+	}
+	
+	private static final record FoldingPair(int hi, int lo) {
+		private FoldingPair(int hi, int lo) {
+			this.hi = hi;
+			this.lo = lo;
+		}
+		
+		public static FoldingPair of(int a, int b) {
+			a %= GLYPH_COUNT;
+			if (a<0) a += GLYPH_COUNT;
+			b %= GLYPH_COUNT;
+			if (b<0) b += GLYPH_COUNT;
+			
+			return new FoldingPair(Math.max(a, b), Math.min(a, b));
+		}
+		
+		public FoldingPair applyFolds() {
+			return applyFold(hi).applyFold(lo);
+		}
+		
+		public FoldingPair applyFold(int foldingGlyphIndex) {
+			boolean targetHi = (foldingGlyphIndex & 4) > 0;
+			int offset = (foldingGlyphIndex & 2) == 0 ? 3 : 7;
+			offset += (foldingGlyphIndex & 1) > 0 ? 1 : 0;
+			
+			if (targetHi) {
+				return FoldingPair.of(hi + offset, lo);
+			} else {
+				return FoldingPair.of(hi, lo + offset);
+			}
+		}
+		
+		private static Item idxToGlyphItem(int idx) {
+			switch(idx % GLYPH_COUNT) {
+			case 0:
+				return ModItems.GLYPH_1.get();
+			case 1:
+				return ModItems.GLYPH_2.get();
+			case 2:
+				return ModItems.GLYPH_3.get();
+			case 3:
+				return ModItems.GLYPH_4.get();
+			case 4:
+				return ModItems.GLYPH_5.get();
+			case 5:
+				return ModItems.GLYPH_6.get();
+			case 6:
+				return ModItems.GLYPH_7.get();
+			case 7:
+				return ModItems.GLYPH_8.get();
+			}
+			throw new IllegalArgumentException("Index "+idx+" is out of bounds for glyph id!");
+		}
+		
+		public Item hiItem() {
+			return idxToGlyphItem(hi);
+		}
+		public Item loItem() {
+			return idxToGlyphItem(lo);
+		}
+		
+		public static String prettyFoldString(FoldingPair in, FoldingPair out) {
+			return String.format(
+					"%d+%d->%d+%d", 
+					in.hi()+1,
+					in.lo()+1,
+					out.hi()+1,
+					out.lo()+1
+					);
+		}
+	}
+	public static void registerGlyphFoldingRecipes(RecipeOutput recipeOutput) {
+		Map<FoldingPair, FoldingPair> handled = new HashMap<>();
+		for (int a=0; a<GLYPH_COUNT; a++) {
+			for (int b=0; b<GLYPH_COUNT; b++) {
+				FoldingPair in = FoldingPair.of(a, b);
+				FoldingPair out = in.applyFolds();
+				
+				if (handled.put(in, out) != null) continue;
+				if (in.equals(out)) continue;
+				
+				new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id(String.format(
+							"create_compact_glyph_fold_%d_%d_to_%d_%d",
+							in.hi()+1,
+							in.lo()+1,
+							out.hi()+1,
+							out.lo()+1
+						)))
+						.require(in.hiItem())
+						.require(in.loItem())
+						.requiresHeat(HeatCondition.HEATED)
+						.output(out.hiItem())
+						.output(out.loItem())
+						.build(recipeOutput);
+			}
+		}
+		
+		for (int o=0; o<GLYPH_COUNT; o++) {
+			List<Entry<FoldingPair, FoldingPair>> found = new ArrayList<>();
+			for (Entry<FoldingPair, FoldingPair> pair : handled.entrySet()) {
+				int score = pair.getValue().hi() == o ? 1 : 0;
+				score += pair.getValue().lo() == o ? 1 : 0;
+				
+				score -= pair.getKey().hi() == o ? 1 : 0;
+				score -= pair.getKey().lo() == o ? 1 : 0;
+				
+				if (score < 1) continue;
+				
+				found.add(pair);
+				break;
+			}
+			
+			if (found.isEmpty()) {
+				LOGGER.warn("No folding can generate glyph " + (o+1));
+			} else {
+				LOGGER.info( "Positive folds for glyph "+(o+1)+": "+found.stream()
+						.map(p->FoldingPair.prettyFoldString(p.getKey(), p.getValue()))
+						.collect(Collectors.joining(", "))
+					);
+			}
+		}
 	}
 
 	@SuppressWarnings("unused")

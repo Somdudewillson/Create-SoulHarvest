@@ -8,12 +8,20 @@
   "output_mode": "single",
   "results": [
     {
-      "chance": 0.95,
+      "chance": 0.5,
       "id": "create_soul_harvest:glyph_overloaded"
     },
     {
-      "chance": 0.025,
+      "chance": 0.0625,
       "id": "create:experience_nugget"
+    },
+    {
+      "chance": 0.0625,
+      "id": "minecraft:paper"
+    },
+    {
+      "chance": 0.125,
+      "id": "create_soul_harvest:inlaid_lapis_plate"
     }
   ]
 }

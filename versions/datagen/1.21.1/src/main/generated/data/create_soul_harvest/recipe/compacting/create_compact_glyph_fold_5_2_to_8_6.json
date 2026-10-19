@@ -1,0 +1,20 @@
+{
+  "type": "create:compacting",
+  "heat_requirement": "heated",
+  "ingredients": [
+    {
+      "item": "create_soul_harvest:glyph_5"
+    },
+    {
+      "item": "create_soul_harvest:glyph_2"
+    }
+  ],
+  "results": [
+    {
+      "id": "create_soul_harvest:glyph_8"
+    },
+    {
+      "id": "create_soul_harvest:glyph_6"
+    }
+  ]
+}
