@@ -1,5 +1,7 @@
 package somdudewillson.create_soul_harvest.platform.neoforge.datagen;
 
+import com.simibubi.create.AllItems;
+
 //? neoforge {
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -71,14 +73,14 @@ public final class VanillaRecipeGen {
 	}
 
 	public static void registerMagicGoldRecipes(RecipeOutput recipeOutput) {
-		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.COPPER_INGOT)
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, AllItems.COPPER_NUGGET, 2)
 				.pattern("M M")
 				.pattern(" M ")
 				.define('M', ModItems.MAGIC_GOLD.get())
 				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
 				.save(recipeOutput, SoulHarvestMod.id("magic_gold_to_copper"));
 
-		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.IRON_INGOT)
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.IRON_NUGGET, 2)
 				.pattern("M M")
 				.pattern("   ")
 				.pattern("M M")
@@ -93,6 +95,38 @@ public final class VanillaRecipeGen {
 				.define('M', ModItems.MAGIC_GOLD.get())
 				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
 				.save(recipeOutput, SoulHarvestMod.id("magic_gold_stringify"));
+		
+		
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.COPPER_INGOT, 2)
+				.pattern("M M")
+				.pattern(" M ")
+				.define('M', ModItems.MAGIC_GOLD_CHUNK.get())
+				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
+				.save(recipeOutput, SoulHarvestMod.id("magic_gold_chunk_to_copper"));
+
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.IRON_INGOT, 2)
+				.pattern("M M")
+				.pattern("   ")
+				.pattern("M M")
+				.define('M', ModItems.MAGIC_GOLD_CHUNK.get())
+				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
+				.save(recipeOutput, SoulHarvestMod.id("magic_gold_chunk_to_iron"));
+
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.GOLD_INGOT, 2)
+				.pattern("M M")
+				.pattern(" M ")
+				.pattern("M M")
+				.define('M', ModItems.MAGIC_GOLD_CHUNK.get())
+				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
+				.save(recipeOutput, SoulHarvestMod.id("magic_gold_chunk_to_gold"));
+
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, AllItems.ZINC_INGOT, 2)
+				.pattern("M M")
+				.pattern("   ")
+				.pattern("MMM")
+				.define('M', ModItems.MAGIC_GOLD_CHUNK.get())
+				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
+				.save(recipeOutput, SoulHarvestMod.id("magic_gold_chunk_to_zinc"));
 	}
 
 	public static void registerPolyclayRecipes(RecipeOutput recipeOutput) {

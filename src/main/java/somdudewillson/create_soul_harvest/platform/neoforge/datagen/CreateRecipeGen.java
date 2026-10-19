@@ -145,7 +145,7 @@ public final class CreateRecipeGen {
 				.output(ModBlocks.ABSOLUTE_ICE.get())
 				.build(recipeOutput);
 
-		// Biofuel Block (Heated)
+		// Biofuel Block
 		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_bioslurry_to_biofuel"))
 				.require(ModFluids.BIOSLURRY.get(), 1000)
 				.requiresHeat(HeatCondition.HEATED)
@@ -158,6 +158,20 @@ public final class CreateRecipeGen {
 				.require(ModItems.INLAID_LAPIS.get())
 				.require(Items.PAPER)
 				.output(ModItems.INLAID_LAPIS_PLATE.get())
+				.build(recipeOutput);
+
+		// Magic Gold Chunk
+		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_magic_gold"))
+				.require(ModItems.MAGIC_GOLD.get())
+				.require(ModItems.MAGIC_GOLD.get())
+				.require(ModItems.MAGIC_GOLD.get())
+				.require(ModItems.MAGIC_GOLD.get())
+				.require(ModItems.MAGIC_GOLD.get())
+				.require(ModItems.MAGIC_GOLD.get())
+				.require(ModItems.MAGIC_GOLD.get())
+				.require(ModItems.MAGIC_GOLD.get())
+				.requiresHeat(HeatCondition.SUPERHEATED)
+				.output(ModItems.MAGIC_GOLD_CHUNK.get())
 				.build(recipeOutput);
 	}
 

@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "key": {
+        "M": {
+            "item": "create_soul_harvest:magic_gold_chunk"
+        }
+    },
+    "pattern": [
+        "M M",
+        "   ",
+        "MMM"
+    ],
+    "result": {
+        "item": "create:zinc_ingot",
+        "count": 2
+    }
+}

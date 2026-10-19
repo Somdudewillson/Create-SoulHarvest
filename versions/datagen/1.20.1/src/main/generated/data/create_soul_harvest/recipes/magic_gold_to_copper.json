@@ -11,7 +11,7 @@
         " M "
     ],
     "result": {
-        "item": "minecraft:copper_ingot",
-        "count": 1
+        "item": "create:copper_nugget",
+        "count": 2
     }
 }

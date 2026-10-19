@@ -97,6 +97,13 @@ public class ModItems {
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
 			.build();
+	public static final DeferredHolder<Item, Item> MAGIC_GOLD_CHUNK = ITEM_BUILDER_FACTORY.registerItem("magic_gold_chunk",
+			() -> new Item(new Item.Properties()) {
+				@Override public boolean isFoil(ItemStack stack) { return true; }
+			})
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
 	public static final DeferredHolder<Item, Item> MAGIC_GOLD_STRING = ITEM_BUILDER_FACTORY.registerItem("magic_gold_string",
 			() -> new Item(new Item.Properties()) {
 				@Override public boolean isFoil(ItemStack stack) { return true; }

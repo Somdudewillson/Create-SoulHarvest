@@ -1,0 +1,35 @@
+{
+    "type": "create:compacting",
+    "heatRequirement": "superheated",
+    "ingredients": [
+        {
+            "item": "create_soul_harvest:magic_gold"
+        },
+        {
+            "item": "create_soul_harvest:magic_gold"
+        },
+        {
+            "item": "create_soul_harvest:magic_gold"
+        },
+        {
+            "item": "create_soul_harvest:magic_gold"
+        },
+        {
+            "item": "create_soul_harvest:magic_gold"
+        },
+        {
+            "item": "create_soul_harvest:magic_gold"
+        },
+        {
+            "item": "create_soul_harvest:magic_gold"
+        },
+        {
+            "item": "create_soul_harvest:magic_gold"
+        }
+    ],
+    "results": [
+        {
+            "item": "create_soul_harvest:magic_gold_chunk"
+        }
+    ]
+}
