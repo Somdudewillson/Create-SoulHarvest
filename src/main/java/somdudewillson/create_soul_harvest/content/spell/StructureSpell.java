@@ -8,6 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import somdudewillson.create_soul_harvest.content.entity.SpellThinkerEntity;
 import somdudewillson.redsparklib.common.utils.OptNbtUtils;
 
 import java.util.ArrayList;
@@ -60,12 +61,12 @@ public abstract class StructureSpell extends SimplePersistentGlyphSpell {
 			this.remainingPlacements = new ArrayList<>(unordered);
 			this.remainingPlacements.sort(Comparator.comparingDouble(p -> p.pos().distToCenterSqr(this.origin.x, this.origin.y, this.origin.z)));
 
-			SpellThinker.spawn(serverLevel, this.origin, this, caster.getUUID());
+			SpellThinkerEntity.spawn(serverLevel, this.origin, this, caster.getUUID());
 		}
 	}
 
 	@Override
-	public void serverTick(SpellThinker thinker, ServerLevel level) {
+	public void serverTick(SpellThinkerEntity thinker, ServerLevel level) {
 		if (remainingPlacements == null || remainingPlacements.isEmpty()) {
 			return;
 		}
@@ -118,7 +119,7 @@ public abstract class StructureSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public boolean isFinished(SpellThinker thinker) {
+	public boolean isFinished(SpellThinkerEntity thinker) {
 		return remainingPlacements == null || remainingPlacements.isEmpty();
 	}
 

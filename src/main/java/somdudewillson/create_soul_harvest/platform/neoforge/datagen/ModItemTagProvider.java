@@ -102,6 +102,10 @@ public class ModItemTagProvider extends ItemTagsProvider {
 				.replace(false)
 				.add(Items.STRING)
 				.addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "strings"));
+
+		tag(Tags.Items.HIDDEN_FROM_RECIPE_VIEWERS)
+				.replace(false)
+				.add(ModItems.CONTAGION_CHARGE.get());
 	}
 
 	@Override

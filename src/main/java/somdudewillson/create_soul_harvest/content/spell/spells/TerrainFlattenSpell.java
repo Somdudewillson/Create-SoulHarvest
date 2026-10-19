@@ -16,8 +16,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import somdudewillson.create_soul_harvest.content.entity.SpellThinkerEntity;
 import somdudewillson.create_soul_harvest.content.spell.SimplePersistentGlyphSpell;
-import somdudewillson.create_soul_harvest.content.spell.SpellThinker;
 import somdudewillson.create_soul_harvest.registry.ModTags;
 
 public class TerrainFlattenSpell extends SimplePersistentGlyphSpell {	
@@ -50,7 +50,7 @@ public class TerrainFlattenSpell extends SimplePersistentGlyphSpell {
 				}
 			}
 
-			SpellThinker.spawn(serverLevel, spawnPos, this, caster.getUUID());
+			SpellThinkerEntity.spawn(serverLevel, spawnPos, this, caster.getUUID());
 		}
 	}
 
@@ -61,7 +61,7 @@ public class TerrainFlattenSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public void serverTick(SpellThinker thinker, ServerLevel level) {
+	public void serverTick(SpellThinkerEntity thinker, ServerLevel level) {
 		BlockPos entityPos = thinker.blockPosition();
 		ensurePositions(entityPos);
 
@@ -156,7 +156,7 @@ public class TerrainFlattenSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public void clientTick(SpellThinker thinker, Level level) {
+	public void clientTick(SpellThinkerEntity thinker, Level level) {
 		BlockPos entityPos = thinker.blockPosition();
 		double cx = entityPos.getX() + 0.5;
 		double cy = entityPos.getY() + 0.5;
@@ -171,7 +171,7 @@ public class TerrainFlattenSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public boolean isFinished(SpellThinker thinker) {
+	public boolean isFinished(SpellThinkerEntity thinker) {
 		ensurePositions(thinker.blockPosition());
 		return flattenStep >= flattenPositions.size();
 	}

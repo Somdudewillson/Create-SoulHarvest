@@ -24,8 +24,8 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Team;
+import somdudewillson.create_soul_harvest.content.entity.SpellThinkerEntity;
 import somdudewillson.create_soul_harvest.content.spell.SimplePersistentGlyphSpell;
-import somdudewillson.create_soul_harvest.content.spell.SpellThinker;
 import somdudewillson.create_soul_harvest.registry.ModParticleTypes;
 
 public class LightningSpell extends SimplePersistentGlyphSpell {
@@ -41,12 +41,12 @@ public class LightningSpell extends SimplePersistentGlyphSpell {
 	public void cast(Level level, LivingEntity caster) {
 		if (level instanceof ServerLevel serverLevel) {
 			BlockPos surfacePos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, caster.blockPosition());
-			SpellThinker.spawn(serverLevel, surfacePos, this, caster.getUUID());
+			SpellThinkerEntity.spawn(serverLevel, surfacePos, this, caster.getUUID());
 		}
 	}
 
 	@Override
-	public void serverTick(SpellThinker thinker, ServerLevel level) {
+	public void serverTick(SpellThinkerEntity thinker, ServerLevel level) {
 		
 		// Random strikes
 		if (level.random.nextFloat() < 0.15f) {
@@ -93,7 +93,7 @@ public class LightningSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public void clientTick(SpellThinker thinker, Level level) {
+	public void clientTick(SpellThinkerEntity thinker, Level level) {
 		Vec3 thinkerPos = thinker.position();
 		double centerX = thinkerPos.x() + 0.5;
 		double centerY = thinkerPos.y() + 35;
@@ -107,7 +107,7 @@ public class LightningSpell extends SimplePersistentGlyphSpell {
 		}
 	}
 	
-	public Predicate<Entity> getIsValidStrikeTargetPredicate(SpellThinker thinker) {
+	public Predicate<Entity> getIsValidStrikeTargetPredicate(SpellThinkerEntity thinker) {
 		return e -> isValidStrikeTarget(thinker.getOwnerUUID(), thinker.getOwner().getTeam(), e);
 	}
 	
@@ -143,7 +143,7 @@ public class LightningSpell extends SimplePersistentGlyphSpell {
     }
 
 	@Override
-	public boolean isFinished(SpellThinker thinker) {
+	public boolean isFinished(SpellThinkerEntity thinker) {
 		return remainingTicks <= 0;
 	}
 

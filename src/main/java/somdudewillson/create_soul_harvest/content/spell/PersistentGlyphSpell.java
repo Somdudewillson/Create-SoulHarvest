@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import somdudewillson.create_soul_harvest.content.entity.SpellThinkerEntity;
 
 public interface PersistentGlyphSpell extends GlyphSpell {
 
@@ -13,19 +14,19 @@ public interface PersistentGlyphSpell extends GlyphSpell {
 	ResourceLocation getId();
 
 	/**
-	 * Executed on each server tick of the owning {@link SpellThinker}.
+	 * Executed on each server tick of the owning {@link SpellThinkerEntity}.
 	 */
-	void serverTick(SpellThinker thinker, ServerLevel level);
+	void serverTick(SpellThinkerEntity thinker, ServerLevel level);
 
 	/**
-	 * Executed on each client tick of the owning {@link SpellThinker}.
+	 * Executed on each client tick of the owning {@link SpellThinkerEntity}.
 	 */
-	default void clientTick(SpellThinker thinker, Level level) {}
+	default void clientTick(SpellThinkerEntity thinker, Level level) {}
 
 	/**
 	 * Returns true if this spell effect has finished executing and the owning thinker should be discarded.
 	 */
-	boolean isFinished(SpellThinker thinker);
+	boolean isFinished(SpellThinkerEntity thinker);
 
 	/**
 	 * Serializes effect-specific state to NBT.
@@ -40,10 +41,10 @@ public interface PersistentGlyphSpell extends GlyphSpell {
 	/**
 	 * Called once when the effect is first assigned to a thinker.
 	 */
-	default void onStart(SpellThinker thinker, ServerLevel level) {}
+	default void onStart(SpellThinkerEntity thinker, ServerLevel level) {}
 
 	/**
 	 * Called when the effect is completed or discarded.
 	 */
-	default void onEnd(SpellThinker thinker, ServerLevel level) {}
+	default void onEnd(SpellThinkerEntity thinker, ServerLevel level) {}
 }

@@ -48,6 +48,8 @@
   "item.create_soul_harvest.loot_token_blank": "Loot Token Blank",
   "item.create_soul_harvest.loot_token": "Loot Token",
   "item.create_soul_harvest.biocide_gas_bottle": "Biocide Gas Bottle",
+  "item.create_soul_harvest.contagion_charge": "Contagion Charge",
+  "entity.create_soul_harvest.contagion_charge": "Contagion Charge",
   
   "item.create_soul_harvest.polyclay": "Polyclay",
   "item.create_soul_harvest.polyclay_incomplete": "Untuned Polyclay",

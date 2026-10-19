@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.entity.SpellThinkerEntity;
 import somdudewillson.create_soul_harvest.content.spell.planetoid.PlanetoidSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.BonemealSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.ContagionBlastSpell;
@@ -44,7 +45,7 @@ public class RunicSpells {
 	}
 	
 	private static <T extends PersistentGlyphSpell> Supplier<GlyphSpell> register(ResourceLocation registryName, Function<ResourceLocation, T> factory) {
-		SpellThinker.registerEffect(registryName, () -> factory.apply(registryName));
+		SpellThinkerEntity.registerEffect(registryName, () -> factory.apply(registryName));
 		return () -> factory.apply(registryName);
 	}
 }

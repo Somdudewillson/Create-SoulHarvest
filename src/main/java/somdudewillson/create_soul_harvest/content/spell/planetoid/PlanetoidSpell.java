@@ -27,8 +27,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.block.DenseHypotheticalBlock;
+import somdudewillson.create_soul_harvest.content.entity.SpellThinkerEntity;
 import somdudewillson.create_soul_harvest.content.spell.SimplePersistentGlyphSpell;
-import somdudewillson.create_soul_harvest.content.spell.SpellThinker;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 import somdudewillson.create_soul_harvest.registry.ModParticleTypes;
 import somdudewillson.create_soul_harvest.registry.ModTags;
@@ -113,7 +113,7 @@ public class PlanetoidSpell extends SimplePersistentGlyphSpell {
 			this.placementIndex = 0;
 			this.fizzled = false;
 
-			SpellThinker.spawn(serverLevel, this.origin, this, caster.getUUID());
+			SpellThinkerEntity.spawn(serverLevel, this.origin, this, caster.getUUID());
 		}
 	}
 
@@ -131,13 +131,13 @@ public class PlanetoidSpell extends SimplePersistentGlyphSpell {
 		return r > 0 ? r : 6;
 	}
 
-	private void updateEffectFlags(SpellThinker thinker) {
+	private void updateEffectFlags(SpellThinkerEntity thinker) {
 		int radius = template != null ? (int) Math.ceil(template.maxRadius()) : 6;
 		thinker.setEffectFlags(packEffectFlags(this.phase, radius));
 	}
 
 	@Override
-	public void onStart(SpellThinker thinker, ServerLevel level) {
+	public void onStart(SpellThinkerEntity thinker, ServerLevel level) {
 		if (this.origin == null) {
 			this.origin = thinker.position();
 		}
@@ -149,11 +149,11 @@ public class PlanetoidSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public void onEnd(SpellThinker thinker, ServerLevel level) {
+	public void onEnd(SpellThinkerEntity thinker, ServerLevel level) {
 		unregisterActiveZone(thinker, level);
 	}
 
-	private void registerActiveZone(SpellThinker thinker, Level level) {
+	private void registerActiveZone(SpellThinkerEntity thinker, Level level) {
 		if (this.origin != null && this.template != null) {
 			double r = this.template.maxRadius() + 4.0;
 			AABB box = new AABB(
@@ -164,7 +164,7 @@ public class PlanetoidSpell extends SimplePersistentGlyphSpell {
 		}
 	}
 
-	private void unregisterActiveZone(SpellThinker thinker, Level level) {
+	private void unregisterActiveZone(SpellThinkerEntity thinker, Level level) {
 		Map<UUID, AABB> zones = ACTIVE_ZONES.get(level.dimension());
 		if (zones != null) {
 			zones.remove(thinker.getUUID());
@@ -175,7 +175,7 @@ public class PlanetoidSpell extends SimplePersistentGlyphSpell {
 		return fizzled;
 	}
 
-	public void fizzle(SpellThinker thinker, ServerLevel level) {
+	public void fizzle(SpellThinkerEntity thinker, ServerLevel level) {
 		if (this.fizzled) return;
 		this.fizzled = true;
 
@@ -207,17 +207,17 @@ public class PlanetoidSpell extends SimplePersistentGlyphSpell {
 		thinker.discard();
 	}
 
-	private boolean checkConflicts(SpellThinker thinker, ServerLevel level) {
+	private boolean checkConflicts(SpellThinkerEntity thinker, ServerLevel level) {
 		double conflictDist = template.getConflictRadius();
 		AABB searchBox = thinker.getBoundingBox().inflate(conflictDist);
-		List<SpellThinker> others = level.getEntitiesOfClass(
-				SpellThinker.class,
+		List<SpellThinkerEntity> others = level.getEntitiesOfClass(
+				SpellThinkerEntity.class,
 				searchBox,
 				e -> e != thinker && e.isAlive() && e.getEffect() instanceof PlanetoidSpell otherSpell && !otherSpell.isFizzled()
 		);
 
 		if (!others.isEmpty()) {
-			for (SpellThinker other : others) {
+			for (SpellThinkerEntity other : others) {
 				if (other.getEffect() instanceof PlanetoidSpell otherSpell) {
 					otherSpell.fizzle(other, level);
 				}
@@ -229,7 +229,7 @@ public class PlanetoidSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public void serverTick(SpellThinker thinker, ServerLevel level) {
+	public void serverTick(SpellThinkerEntity thinker, ServerLevel level) {
 		if (this.fizzled) {
 			return;
 		}
@@ -332,7 +332,7 @@ public class PlanetoidSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public void clientTick(SpellThinker thinker, Level level) {
+	public void clientTick(SpellThinkerEntity thinker, Level level) {
 		long flags = thinker.getEffectFlags();
 		PlanetoidPhase clientPhase = unpackPhase(flags);
 		int radius = unpackRadius(flags);
@@ -438,7 +438,7 @@ public class PlanetoidSpell extends SimplePersistentGlyphSpell {
 		sortedGenerationPositions.addAll(shellPositions);
 	}
 	
-	protected void considerPlayingSoundLoop(SpellThinker thinker, ServerLevel level) {
+	protected void considerPlayingSoundLoop(SpellThinkerEntity thinker, ServerLevel level) {
 		soundTimer--;
 		if (soundTimer <= 0) {
 			level.playSound(null, thinker.blockPosition(), SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 2.5f, 0.6f);
@@ -454,7 +454,7 @@ public class PlanetoidSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public boolean isFinished(SpellThinker thinker) {
+	public boolean isFinished(SpellThinkerEntity thinker) {
 		return fizzled || (phase == PlanetoidPhase.GENERATION && placementIndex >= sortedGenerationPositions.size());
 	}
 

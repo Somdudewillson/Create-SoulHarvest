@@ -13,6 +13,7 @@ import somdudewillson.create_soul_harvest.client.particle.StormCloudParticle;
 import somdudewillson.create_soul_harvest.registry.ModParticleTypes;
 
 import net.minecraft.client.renderer.entity.NoopRenderer;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import somdudewillson.create_soul_harvest.registry.ModEntityTypes;
 
@@ -27,6 +28,7 @@ public class ForgeClientEventSubscriber {
 	@SubscribeEvent
 	public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerEntityRenderer(ModEntityTypes.SPELL_THINKER.get(), NoopRenderer::new);
+		event.registerEntityRenderer(ModEntityTypes.CONTAGION_CHARGE.get(), p -> new ThrownItemRenderer<>(p, 0.75F, true));
 	}
 
 	@SubscribeEvent

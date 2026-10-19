@@ -125,6 +125,11 @@ public class ModItems {
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
 			.build();
+	public static final DeferredHolder<Item, Item> CONTAGION_CHARGE = ITEM_BUILDER_FACTORY.registerSimpleItem("contagion_charge")
+			.properties(new Item.Properties())
+			.simpleItem()
+			.build();
+
 	
 	// Polyclays
 	public static final DeferredHolder<Item, Item> POLYCLAY = ITEM_BUILDER_FACTORY.registerItem("polyclay",

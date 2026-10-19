@@ -1,4 +1,4 @@
-package somdudewillson.create_soul_harvest.content.spell;
+package somdudewillson.create_soul_harvest.content.entity;
 
 import java.util.Map;
 import java.util.Optional;
@@ -19,18 +19,19 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import somdudewillson.create_soul_harvest.content.spell.PersistentGlyphSpell;
 import somdudewillson.create_soul_harvest.registry.ModEntityTypes;
 import somdudewillson.redsparklib.common.utils.OptNbtUtils;
 
-public class SpellThinker extends Entity implements OwnableEntity {
+public class SpellThinkerEntity extends Entity implements OwnableEntity {
     protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(
-    		SpellThinker.class, EntityDataSerializers.OPTIONAL_UUID
+    		SpellThinkerEntity.class, EntityDataSerializers.OPTIONAL_UUID
         );
     protected static final EntityDataAccessor<String> DATA_EFFECT_ID = SynchedEntityData.defineId(
-    		SpellThinker.class, EntityDataSerializers.STRING
+    		SpellThinkerEntity.class, EntityDataSerializers.STRING
         );
     protected static final EntityDataAccessor<Long> DATA_EFFECT_FLAGS_ID = SynchedEntityData.defineId(
-    		SpellThinker.class, EntityDataSerializers.LONG
+    		SpellThinkerEntity.class, EntityDataSerializers.LONG
         );
 
 	@FunctionalInterface
@@ -52,7 +53,7 @@ public class SpellThinker extends Entity implements OwnableEntity {
 
 	private PersistentGlyphSpell currentEffect;
 
-	public SpellThinker(EntityType<?> entityType, Level level) {
+	public SpellThinkerEntity(EntityType<?> entityType, Level level) {
 		super(entityType, level);
 		this.noPhysics = true;
 		this.setNoGravity(true);
@@ -84,8 +85,8 @@ public class SpellThinker extends Entity implements OwnableEntity {
 		this.entityData.set(DATA_EFFECT_FLAGS_ID, flags);
 	}
 
-	public static SpellThinker spawn(ServerLevel level, Vec3 pos, PersistentGlyphSpell effect, @Nullable UUID owner) {
-		SpellThinker thinker = new SpellThinker(ModEntityTypes.SPELL_THINKER.get(), level);
+	public static SpellThinkerEntity spawn(ServerLevel level, Vec3 pos, PersistentGlyphSpell effect, @Nullable UUID owner) {
+		SpellThinkerEntity thinker = new SpellThinkerEntity(ModEntityTypes.SPELL_THINKER.get(), level);
 		thinker.setPos(pos.x, pos.y, pos.z);
 		thinker.setEffect(effect);
 		thinker.setOwnerUUID(owner);
@@ -93,7 +94,7 @@ public class SpellThinker extends Entity implements OwnableEntity {
 		return thinker;
 	}
 
-	public static SpellThinker spawn(ServerLevel level, BlockPos pos, PersistentGlyphSpell effect, @Nullable UUID owner) {
+	public static SpellThinkerEntity spawn(ServerLevel level, BlockPos pos, PersistentGlyphSpell effect, @Nullable UUID owner) {
 		return spawn(level, Vec3.atCenterOf(pos), effect, owner);
 	}
 
