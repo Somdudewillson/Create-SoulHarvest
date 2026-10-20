@@ -25,6 +25,9 @@ public class ModParticleTypes {
 
 	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> STORM_CLOUD =
 			PARTICLE_TYPES.register("storm_cloud", () -> new SimpleParticleType(true));
+
+	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> VERDANT_FLASH =
+			PARTICLE_TYPES.register("verdant_flash", () -> new SimpleParticleType(false));
 	//?} forge {
 	/*public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES =
 			DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, SoulHarvestMod.MOD_ID);
@@ -34,5 +37,8 @@ public class ModParticleTypes {
 
 	public static final RegistryObject<SimpleParticleType> STORM_CLOUD =
 			PARTICLE_TYPES.register("storm_cloud", () -> new SimpleParticleType(true));
+
+	public static final RegistryObject<SimpleParticleType> VERDANT_FLASH =
+			PARTICLE_TYPES.register("verdant_flash", () -> new SimpleParticleType(false));
 	*///?}
 }

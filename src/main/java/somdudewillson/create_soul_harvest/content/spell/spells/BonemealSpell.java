@@ -25,11 +25,11 @@ public class BonemealSpell implements GlyphSpell {
 			if (radius - manhattanDist < 3 && level.random.nextFloat() > 0.25f + (0.25f*(radius - manhattanDist))) {
 				continue;
 			}
-			tryBonemealBlock(level, pos, state);
+			tryBonemealBlock(level, pos, state, 0.25);
 		}
 	}
 	
-	protected void tryBonemealBlock(Level level, BlockPos pos, BlockState state) {
+	public static void tryBonemealBlock(Level level, BlockPos pos, BlockState state, double grassChance) {
 		if (!(state.getBlock() instanceof BonemealableBlock bonemealable)) return;
 		
 		//? >= 1.21 {
@@ -37,7 +37,7 @@ public class BonemealSpell implements GlyphSpell {
 		//?} else {
 		/*if (!bonemealable.isValidBonemealTarget(level, pos, state, level.isClientSide())) return;
 		*///?}
-		if (state.is(Blocks.GRASS_BLOCK) && level.random.nextFloat() < 0.25f) return;
+		if (state.is(Blocks.GRASS_BLOCK) && level.random.nextFloat() > grassChance) return;
 
 		if (level instanceof ServerLevel serverLevel) {
 			bonemealable.performBonemeal(serverLevel, level.random, pos, state);
