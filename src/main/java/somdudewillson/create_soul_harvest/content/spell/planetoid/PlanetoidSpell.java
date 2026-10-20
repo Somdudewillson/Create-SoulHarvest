@@ -92,17 +92,34 @@ public class PlanetoidSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public void cast(Level level, LivingEntity caster) {
+	public boolean cast(Level level, LivingEntity caster) {
 		if (level instanceof ServerLevel serverLevel) {
 			if (this.templateSelector != null) {
 				this.template = this.templateSelector.select(serverLevel, caster.position(), serverLevel.random);
 			}
+			if (this.template == null) {
+				return false;
+			}
+
+			// Precondition
+			BlockPos basePos = caster.blockPosition();
+			for (int dy = 2; dy <= 7; dy++) {
+				BlockPos checkPos = basePos.above(dy);
+				if (!serverLevel.getBlockState(checkPos).canBeReplaced()) {
+					return false;
+				}
+			}
+
 			double elevation = template.getSpawnElevation();
 			Vec3 castPos = caster.position().add(0, elevation, 0);
 
 			double maxY = serverLevel.getMaxBuildHeight() - template.maxRadius() - 2.0;
 			if (castPos.y > maxY) {
 				castPos = new Vec3(castPos.x, maxY, castPos.z);
+			}
+
+			if (castPos.y - template.maxRadius() < serverLevel.getMinBuildHeight()) {
+				return false;
 			}
 
 			this.origin = castPos;
@@ -114,7 +131,9 @@ public class PlanetoidSpell extends SimplePersistentGlyphSpell {
 			this.fizzled = false;
 
 			SpellThinkerEntity.spawn(serverLevel, this.origin, this, caster.getUUID());
+			return true;
 		}
+		return true;
 	}
 
 	public static long packEffectFlags(PlanetoidPhase phase, int radius) {

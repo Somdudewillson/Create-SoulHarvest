@@ -40,18 +40,20 @@ public class TerrainFlattenSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public void cast(Level level, LivingEntity caster) {
+	public boolean cast(Level level, LivingEntity caster) {
 		if (level instanceof ServerLevel serverLevel) {
 			BlockPos spawnPos = caster.blockPosition();
 			while (serverLevel.getBlockState(spawnPos.below()).canBeReplaced() || serverLevel.getBlockState(spawnPos.below()).is(CONSIDER_REPLACEABLE)) {
 				spawnPos = spawnPos.below();
 				if (serverLevel.isOutsideBuildHeight(spawnPos) || serverLevel.isOutsideBuildHeight(spawnPos.above())) {
-					return;
+					return false;
 				}
 			}
 
 			SpellThinkerEntity.spawn(serverLevel, spawnPos, this, caster.getUUID());
+			return true;
 		}
+		return true;
 	}
 
 	private void ensurePositions(BlockPos center) {

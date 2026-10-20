@@ -11,7 +11,7 @@ public class FireboltSpell implements GlyphSpell {
 	public FireboltSpell() {}
 
 	@Override
-	public void cast(Level level, LivingEntity caster) {
+	public boolean cast(Level level, LivingEntity caster) {
 		if (!level.isClientSide()) {
 			Vec3 look = caster.getLookAngle();
 			Vec3 spawnPos = caster.getEyePosition().add(look.scale(0.5));
@@ -20,5 +20,6 @@ public class FireboltSpell implements GlyphSpell {
 			firebolt.setDeltaMovement(look.scale(1.5));
 			level.addFreshEntity(firebolt);
 		}
+		return true;
 	}
 }

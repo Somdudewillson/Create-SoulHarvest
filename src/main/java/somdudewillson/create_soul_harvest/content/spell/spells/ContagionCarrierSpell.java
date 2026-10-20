@@ -17,7 +17,7 @@ public class ContagionCarrierSpell implements GlyphSpell {
 	public ContagionCarrierSpell() {}
 
 	@Override
-	public void cast(Level level, LivingEntity caster) {
+	public boolean cast(Level level, LivingEntity caster) {
 		if (!level.isClientSide()) {
 			// Inoculate and infect the caster
 			//? >= 1.21 {
@@ -38,5 +38,6 @@ public class ContagionCarrierSpell implements GlyphSpell {
 					caster
 			);
 		}
+		return true;
 	}
 }

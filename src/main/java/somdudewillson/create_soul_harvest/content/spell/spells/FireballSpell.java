@@ -15,7 +15,7 @@ public class FireballSpell implements GlyphSpell {
 	/*@SuppressWarnings("unused")
 	*///?}
 	@Override
-	public void cast(Level level, LivingEntity caster) {
+	public boolean cast(Level level, LivingEntity caster) {
 		if (level instanceof ServerLevel serverLevel) {
 			Vec3 look = caster.getLookAngle();
 			Vec3 spawnPos = caster.getEyePosition().add(look);
@@ -27,5 +27,6 @@ public class FireballSpell implements GlyphSpell {
 			fireball.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
 			level.addFreshEntity(fireball);
 		}
+		return true;
 	}
 }

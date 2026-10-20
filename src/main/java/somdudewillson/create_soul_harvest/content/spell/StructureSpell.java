@@ -48,21 +48,34 @@ public abstract class StructureSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public void cast(Level level, LivingEntity caster) {
+	public boolean cast(Level level, LivingEntity caster) {
 		if (level instanceof ServerLevel serverLevel) {
 			this.timer = getPlaceInterval();
 			this.origin = getOrigin(serverLevel, caster);
 
 			List<BlockPlacement> unordered = supplyBlockPlacements(serverLevel, caster, this.origin);
 			if (unordered == null || unordered.isEmpty()) {
-				return;
+				return false;
+			}
+
+			boolean hasValid = false;
+			for (BlockPlacement placement : unordered) {
+				if (isValidPlacement(serverLevel, placement.pos())) {
+					hasValid = true;
+					break;
+				}
+			}
+			if (!hasValid) {
+				return false;
 			}
 
 			this.remainingPlacements = new ArrayList<>(unordered);
 			this.remainingPlacements.sort(Comparator.comparingDouble(p -> p.pos().distToCenterSqr(this.origin.x, this.origin.y, this.origin.z)));
 
 			SpellThinkerEntity.spawn(serverLevel, this.origin, this, caster.getUUID());
+			return true;
 		}
+		return true;
 	}
 
 	@Override

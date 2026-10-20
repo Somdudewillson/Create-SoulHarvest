@@ -68,8 +68,9 @@ public class EnhancedBonemealThinkerSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public void cast(Level level, LivingEntity caster) {
+	public boolean cast(Level level, LivingEntity caster) {
 		// This thinker is not cast directly
+		return false;
 	}
 
 	@Override

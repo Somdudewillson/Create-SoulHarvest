@@ -13,7 +13,7 @@ public class FortitudeSpell implements GlyphSpell {
 	protected final boolean enhanced;
 
 	@Override
-	public void cast(Level level, LivingEntity caster) {
+	public boolean cast(Level level, LivingEntity caster) {
 		if (!level.isClientSide()) {
 			if (enhanced) {
 				//? >= 1.21 {
@@ -28,5 +28,6 @@ public class FortitudeSpell implements GlyphSpell {
 				caster.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 30, 5));
 			}
 		}
+		return true;
 	}
 }

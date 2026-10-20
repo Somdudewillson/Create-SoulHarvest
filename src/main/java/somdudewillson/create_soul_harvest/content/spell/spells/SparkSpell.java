@@ -92,8 +92,8 @@ public class SparkSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public void cast(Level level, LivingEntity caster) {
-		if (!(level instanceof ServerLevel serverLevel)) return;
+	public boolean cast(Level level, LivingEntity caster) {
+		if (!(level instanceof ServerLevel serverLevel)) return true;
 
 		Vec3 eyePos = caster.getEyePosition();
 		Vec3 lookVec = caster.getLookAngle().normalize();
@@ -146,7 +146,7 @@ public class SparkSpell extends SimplePersistentGlyphSpell {
 		}
 
 		if (scoredTargets.isEmpty()) {
-			return;
+			return false;
 		}
 
 		// Allocate strikes among targets using priority scores
@@ -190,6 +190,7 @@ public class SparkSpell extends SimplePersistentGlyphSpell {
 
 		Vec3 spawnPos = hitBlock ? hitResult.getLocation() : eyePos.add(lookVec.scale(Math.min(coneReach, 5.0)));
 		SpellThinkerEntity.spawn(serverLevel, spawnPos, thinkerSpell, caster.getUUID());
+		return true;
 	}
 
 	@Override

@@ -11,6 +11,7 @@ public interface GlyphSpell {
 	 *
 	 * @param level the level where the spell is cast
 	 * @param caster the entity casting the spell
+	 * @return true if the spell successfully took effect, false if it fizzled (failed to do anything)
 	 */
-	void cast(Level level, LivingEntity caster);
+	boolean cast(Level level, LivingEntity caster);
 }

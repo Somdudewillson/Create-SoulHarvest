@@ -1,5 +1,7 @@
 package somdudewillson.create_soul_harvest.content.item;
 
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -57,12 +59,28 @@ public class GlyphScrollItem extends Item {
 	@Override
 	public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
 		GlyphSpell spell = spellSupplier.get();
+		boolean success = false;
 		if (spell != null) {
-			spell.cast(level, entity);
+			success = spell.cast(level, entity);
 		}
 
-		if (entity instanceof Player player && !player.isCreative()) {
-			stack.shrink(1);
+		if (success) {
+			if (entity instanceof Player player && !player.isCreative()) {
+				stack.shrink(1);
+			}
+		} else {
+			if (!level.isClientSide()) {
+				level.playSound(
+					null,
+					entity.getX(),
+					entity.getY(),
+					entity.getZ(),
+					SoundEvents.FIRE_EXTINGUISH,
+					SoundSource.PLAYERS,
+					1.0F,
+					1.0F
+				);
+			}
 		}
 
 		return stack;

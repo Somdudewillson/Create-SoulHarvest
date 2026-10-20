@@ -20,7 +20,7 @@ public class UpdraftSpell implements GlyphSpell {
 	private final Supplier<MobEffectInstance> effect;
 
 	@Override
-	public void cast(Level level, LivingEntity caster) {
+	public boolean cast(Level level, LivingEntity caster) {
 		AABB area = AABB.ofSize(caster.position(), 5, 3, 5);
 		
 		for (LivingEntity nearby : level.getEntitiesOfClass(LivingEntity.class, area)) {
@@ -42,5 +42,6 @@ public class UpdraftSpell implements GlyphSpell {
 		if (!level.isClientSide()) {
 			caster.addEffect(effect.get());
 		}
+		return true;
 	}
 }

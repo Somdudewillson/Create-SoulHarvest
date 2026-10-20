@@ -11,7 +11,7 @@ public class ContagionBlastSpell implements GlyphSpell {
 	public ContagionBlastSpell() {}
 
 	@Override
-	public void cast(Level level, LivingEntity caster) {
+	public boolean cast(Level level, LivingEntity caster) {
 		if (!level.isClientSide()) {
 			Vec3 look = caster.getLookAngle();
 			Vec3 spawnPos = caster.getEyePosition().add(look);
@@ -20,6 +20,7 @@ public class ContagionBlastSpell implements GlyphSpell {
 			charge.addDeltaMovement(look);
 			level.addFreshEntity(charge);
 		}
+		return true;
 	}
 }
 

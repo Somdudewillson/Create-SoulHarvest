@@ -26,11 +26,12 @@ public abstract class AnimaGlassStructureSpell extends StructureSpell {
 	}
 
 	@Override
-	public void cast(Level level, LivingEntity caster) {
+	public boolean cast(Level level, LivingEntity caster) {
 		if (level instanceof ServerLevel serverLevel) {
 			this.ownerUUID = caster.getUUID();
-			super.cast(serverLevel, caster);
+			return super.cast(serverLevel, caster);
 		}
+		return true;
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public class EnhancedBonemealSpell implements GlyphSpell {
 	}
 
 	@Override
-	public void cast(Level level, LivingEntity caster) {
+	public boolean cast(Level level, LivingEntity caster) {
 		if (level instanceof ServerLevel serverLevel) {
 			BlockPos center = caster.blockPosition();
 
@@ -60,6 +60,7 @@ public class EnhancedBonemealSpell implements GlyphSpell {
 					center.getX() + 0.5, center.getY() + 1.0, center.getZ() + 0.5,
 					20, 0.5, 0.5, 0.5, 0.05);
 		}
+		return true;
 	}
 
 	public int getThinkerCount() {

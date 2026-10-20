@@ -38,11 +38,17 @@ public class LightningSpell extends SimplePersistentGlyphSpell {
 	}
 
 	@Override
-	public void cast(Level level, LivingEntity caster) {
+	public boolean cast(Level level, LivingEntity caster) {
 		if (level instanceof ServerLevel serverLevel) {
+			BlockPos skyCheckPos = caster.blockPosition().above(5);
+			if (!serverLevel.canSeeSky(skyCheckPos)) {
+				return false;
+			}
 			BlockPos surfacePos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, caster.blockPosition());
 			SpellThinkerEntity.spawn(serverLevel, surfacePos, this, caster.getUUID());
+			return true;
 		}
+		return true;
 	}
 
 	@Override
