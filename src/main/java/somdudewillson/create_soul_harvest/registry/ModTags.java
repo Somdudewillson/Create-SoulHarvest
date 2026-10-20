@@ -1,6 +1,7 @@
 package somdudewillson.create_soul_harvest.registry;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -55,6 +56,13 @@ public final class ModTags {
 
 		public static final TagKey<Item> BIOCIDE_GAS_PROTECTION = modTag("biocide_gas_protection");
 		public static final TagKey<Item> COMPOSTABLES = modTag("compostables");
+		
+		public static final TagKey<Item> C_NECRONIUM_INGOTS = commonTag("ingots/necronium");
+		public static final TagKey<Item> FORGE_NECRONIUM_INGOTS = forgeTag("ingots/necronium");
+		public static final TagKey<Item> C_NECRONIUM_RODS = commonTag("rods/necronium");
+		public static final TagKey<Item> FORGE_NECRONIUM_RODS = forgeTag("rods/necronium");
+		public static final TagKey<Item> C_NECRONIUM_PLATES = commonTag("plates/necronium");
+		public static final TagKey<Item> FORGE_NECRONIUM_PLATES = forgeTag("plates/necronium");
 
 		public static TagKey<Item> compostableTag(int percent) {
 			return modTag("compostables/" + percent);
@@ -62,6 +70,14 @@ public final class ModTags {
 
 		private static TagKey<Item> modTag(String path) {
 			return TagKey.create(Registries.ITEM, SoulHarvestMod.id(path));
+		}
+
+		private static TagKey<Item> commonTag(String path) {
+			return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", path));
+		}
+
+		private static TagKey<Item> forgeTag(String path) {
+			return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("forge", path));
 		}
 	}
 

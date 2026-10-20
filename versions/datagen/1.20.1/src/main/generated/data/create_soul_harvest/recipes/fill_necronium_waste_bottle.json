@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "key": {
+        "#": {
+            "item": "create_soul_harvest:necronium_waste"
+        },
+        "B": {
+            "item": "minecraft:glass_bottle"
+        }
+    },
+    "pattern": [
+        "###",
+        "#B#",
+        "###"
+    ],
+    "result": {
+        "item": "create_soul_harvest:necronium_waste_bottle",
+        "count": 1
+    }
+}

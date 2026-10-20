@@ -1,0 +1,46 @@
+{
+    "type": "create:mechanical_crafting",
+    "acceptMirrored": false,
+    "category": "misc",
+    "key": {
+        "+": {
+            "item": "create_soul_harvest:soul_shard"
+        },
+        "-": {
+            "tag": "c:rods/necronium"
+        },
+        "1": {
+            "item": "minecraft:feather"
+        },
+        "2": {
+            "item": "minecraft:phantom_membrane"
+        },
+        "G": {
+            "item": "create_soul_harvest:magic_gold_chunk"
+        },
+        "O": {
+            "item": "create_soul_harvest:glyph_6"
+        },
+        "P": {
+            "item": "create_soul_harvest:necronium_plate"
+        },
+        "|": {
+            "item": "create_soul_harvest:inlaid_lapis_plate"
+        }
+    },
+    "pattern": [
+        "G----G",
+        " P11P ",
+        " P++P ",
+        " |OO| ",
+        " |OO| ",
+        " P++P ",
+        " P22P ",
+        "G----G"
+    ],
+    "result": {
+        "item": "create_soul_harvest:glyph_scroll_enhanced_6",
+        "count": 1
+    },
+    "showNotification": false
+}

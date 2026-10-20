@@ -1,0 +1,33 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "minecraft:glass_bottle"
+  },
+  "loops": 8,
+  "results": [
+    {
+      "id": "create_soul_harvest:necronium_waste_bottle"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "minecraft:glass_bottle"
+        },
+        {
+          "item": "create_soul_harvest:necronium_waste"
+        }
+      ],
+      "results": [
+        {
+          "id": "minecraft:glass_bottle"
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "minecraft:glass_bottle"
+  }
+}

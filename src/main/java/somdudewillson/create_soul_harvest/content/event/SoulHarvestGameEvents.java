@@ -15,5 +15,6 @@ public class SoulHarvestGameEvents {
 		eventBus.register(AnimaGlassEvents.class);
 		eventBus.register(SpellGameEvents.class);
 		eventBus.register(SoulHarvestDataEvents.class);
+		eventBus.register(NecroniumDecayEvents.class);
 	}
 }

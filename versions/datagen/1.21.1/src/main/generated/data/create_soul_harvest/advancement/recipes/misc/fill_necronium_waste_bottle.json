@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_bottle_or_waste": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:glass_bottle"
+          },
+          {
+            "items": "create_soul_harvest:necronium_waste"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create_soul_harvest:fill_necronium_waste_bottle"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_bottle_or_waste"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create_soul_harvest:fill_necronium_waste_bottle"
+    ]
+  }
+}

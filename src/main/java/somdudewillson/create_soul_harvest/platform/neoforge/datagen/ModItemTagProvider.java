@@ -106,6 +106,27 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		tag(Tags.Items.HIDDEN_FROM_RECIPE_VIEWERS)
 				.replace(false)
 				.add(ModItems.CONTAGION_CHARGE.get());
+
+		tag(ModTags.Items.FORGE_NECRONIUM_INGOTS)
+				.replace(false)
+				.add(ModItems.NECRONIUM_INGOT.get());
+		tag(ModTags.Items.C_NECRONIUM_INGOTS)
+				.replace(false)
+				.addTag(ModTags.Items.FORGE_NECRONIUM_INGOTS);
+
+		tag(ModTags.Items.FORGE_NECRONIUM_RODS)
+				.replace(false)
+				.add(ModItems.NECRONIUM_ROD.get());
+		tag(ModTags.Items.C_NECRONIUM_RODS)
+				.replace(false)
+				.addTag(ModTags.Items.FORGE_NECRONIUM_RODS);
+
+		tag(ModTags.Items.FORGE_NECRONIUM_PLATES)
+				.replace(false)
+				.add(ModItems.NECRONIUM_PLATE.get());
+		tag(ModTags.Items.C_NECRONIUM_PLATES)
+				.replace(false)
+				.addTag(ModTags.Items.FORGE_NECRONIUM_PLATES);
 	}
 
 	@Override

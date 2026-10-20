@@ -12,6 +12,7 @@ import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipe;
 import com.simibubi.create.content.kinetics.mixer.CompactingRecipe;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
+import com.simibubi.create.content.kinetics.saw.CuttingRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
@@ -27,6 +28,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.conditions.ICondition;
@@ -69,24 +71,39 @@ public final class CreateRecipeGen {
 		registerSequencedAssemblyRecipes(recipeOutput);
 		registerCrushingRecipes(recipeOutput);
 		registerSplashingRecipes(recipeOutput);
+		registerCuttingRecipes(recipeOutput);
+		registerPressingRecipes(recipeOutput);
 		registerSoulInfusionRecipes(recipeOutput);
 		
 		registerSoulBookRecipes(recipeOutput);
 		registerGlyphFoldingRecipes(recipeOutput);
+		registerEnhancedSpellRecipes(recipeOutput);
 	}
 
 	public static void registerMechanicalCraftingRecipes(RecipeOutput recipeOutput) {
 		// Loot Token Blank
 		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.LOOT_TOKEN_BLANK.get(), 1)
 				.key('N', Items.NETHERITE_INGOT)
-				.key('G', Items.GOLD_NUGGET)
+				.key('G', ModItems.MAGIC_GOLD_CHUNK.get())
 				.patternLine(" GGG ")
 				.patternLine("GGNGG")
 				.patternLine("GNNNG")
 				.patternLine("GGNGG")
 				.patternLine(" GGG ")
 				.disallowMirrored()
-				.build(recipeOutput, SoulHarvestMod.id("craft_loot_token_blank"));
+				.build(recipeOutput, SoulHarvestMod.id("craft_loot_token_blank_netherite"));
+		
+		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.LOOT_TOKEN_BLANK.get(), 1)
+				.key('N', ModItems.NECRONIUM_INGOT.get())
+				.key('G', ModItems.MAGIC_GOLD_CHUNK.get())
+				.key('M', ModItems.MAGIC_GOLD.get())
+				.patternLine(" MMM ")
+				.patternLine("MGNGM")
+				.patternLine("MNNNM")
+				.patternLine("MGNGM")
+				.patternLine(" MMM ")
+				.disallowMirrored()
+				.build(recipeOutput, SoulHarvestMod.id("craft_loot_token_blank_necronium"));
 
 		// Midas Core
 		MechanicalCraftingRecipeBuilder.shapedRecipe(ModBlocks.MIDAS_CORE.get(), 1)
@@ -186,6 +203,36 @@ public final class CreateRecipeGen {
 				.require(ModItems.MAGIC_GOLD.get())
 				.requiresHeat(HeatCondition.SUPERHEATED)
 				.output(ModItems.MAGIC_GOLD_CHUNK.get())
+				.build(recipeOutput);
+
+		// Necronium Ingot
+		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_alloy_necronium"))
+				.require(ModFluids.WITHER_SLURRY.get(), 1000)
+				.require(Fluids.LAVA, 1000)
+				.require(AllItems.BRASS_INGOT)
+				.require(AllItems.POWDERED_OBSIDIAN)
+				.require(AllItems.POWDERED_OBSIDIAN)
+				.require(AllItems.POWDERED_OBSIDIAN)
+				.require(AllItems.POWDERED_OBSIDIAN)
+				.requiresHeat(HeatCondition.SUPERHEATED)
+				.output(ModItems.NECRONIUM_INGOT.get())
+				.output(0.15f, ModItems.NECRONIUM_WASTE.get())
+				.build(recipeOutput);
+		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_alloy_necronium_reuse_waste"))
+				.require(ModFluids.WITHER_SLURRY.get(), 1000)
+				.require(Fluids.LAVA, 1000)
+				.require(AllItems.BRASS_INGOT)
+				.require(ModItems.NECRONIUM_WASTE.get())
+				.require(ModItems.NECRONIUM_WASTE.get())
+				.require(ModItems.NECRONIUM_WASTE.get())
+				.require(ModItems.NECRONIUM_WASTE.get())
+				.require(ModItems.NECRONIUM_WASTE.get())
+				.require(ModItems.NECRONIUM_WASTE.get())
+				.require(ModItems.NECRONIUM_WASTE.get())
+				.require(ModItems.NECRONIUM_WASTE.get())
+				.requiresHeat(HeatCondition.SUPERHEATED)
+				.output(ModItems.NECRONIUM_INGOT.get())
+				.output(0.15f, ModItems.NECRONIUM_WASTE.get())
 				.build(recipeOutput);
 	}
 
@@ -334,6 +381,15 @@ public final class CreateRecipeGen {
 				.addStep(FillingRecipe::new, rb -> rb.require(Fluids.LAVA, 250))
 				.addOutput(ModItems.MOLTEN_LAPIS_CORE.get(), 1.0f)
 				.build(recipeOutput);
+
+		// Necronium Waste Bottle
+		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_sequenced_fill_necronium_waste_bottle"))
+				.require(Items.GLASS_BOTTLE)
+				.transitionTo(Items.GLASS_BOTTLE)
+				.loops(8)
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ModItems.NECRONIUM_WASTE.get()))
+				.addOutput(ModItems.NECRONIUM_WASTE_BOTTLE.get(), 1.0f)
+				.build(recipeOutput);
 	}
 	
 	public static void registerSoulBookRecipes(RecipeOutput recipeOutput) {
@@ -423,6 +479,23 @@ public final class CreateRecipeGen {
 				.output(0.12f, ModItems.GLYPH_7.get())
 				.output(0.12f, ModItems.GLYPH_8.get())
 				.output(0.02f, AllItems.EXP_NUGGET)
+				.build(recipeOutput);
+	}
+
+	public static void registerCuttingRecipes(RecipeOutput recipeOutput) {
+		new StandardProcessingRecipe.Builder<>(CuttingRecipe::new, SoulHarvestMod.id("cut_necronium_ingot_to_sticks"))
+				.require(ModItems.NECRONIUM_INGOT.get())
+				.output(ModItems.NECRONIUM_ROD.get(), 2)
+				.output(0.75f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.35f, ModItems.NECRONIUM_WASTE.get())
+				.build(recipeOutput);
+	}
+
+	public static void registerPressingRecipes(RecipeOutput recipeOutput) {
+		new StandardProcessingRecipe.Builder<>(PressingRecipe::new, SoulHarvestMod.id("press_necronium_ingot_to_plate"))
+				.require(ModItems.NECRONIUM_INGOT.get())
+				.output(ModItems.NECRONIUM_PLATE.get(), 1)
+				.output(0.55f, ModItems.NECRONIUM_WASTE.get())
 				.build(recipeOutput);
 	}
 
@@ -573,6 +646,50 @@ public final class CreateRecipeGen {
 					);
 			}
 		}
+	}
+	
+	public static void registerEnhancedSpellRecipe(RecipeOutput recipeOutput, int glyphId, ItemLike extraIngredientOne, ItemLike extraIngredientTwo) {
+		@SuppressWarnings("unchecked")
+		DeferredHolder<Item, Item>[] glyphs = new DeferredHolder[] {
+				ModItems.GLYPH_1, ModItems.GLYPH_2, ModItems.GLYPH_3, ModItems.GLYPH_4,
+				ModItems.GLYPH_5, ModItems.GLYPH_6, ModItems.GLYPH_7, ModItems.GLYPH_8
+		};
+		@SuppressWarnings("unchecked")
+		DeferredHolder<Item, GlyphScrollItem>[] scrolls = new DeferredHolder[] {
+				ModItems.GLYPH_SCROLL_ENHANCED_1, ModItems.GLYPH_SCROLL_ENHANCED_2, ModItems.GLYPH_SCROLL_ENHANCED_3, ModItems.GLYPH_SCROLL_ENHANCED_4,
+				ModItems.GLYPH_SCROLL_ENHANCED_5, ModItems.GLYPH_SCROLL_ENHANCED_6, ModItems.GLYPH_SCROLL_ENHANCED_7, ModItems.GLYPH_SCROLL_ENHANCED_8
+		};
+		
+		int i = glyphId - 1;
+		MechanicalCraftingRecipeBuilder.shapedRecipe(scrolls[i].get(), 1)
+				.key('G', ModItems.MAGIC_GOLD_CHUNK.get())
+				.key('-', ModTags.Items.C_NECRONIUM_RODS)
+				.key('O', glyphs[i].get())
+				.key('+', ModItems.SOUL_SHARD.get())
+				.key('|', ModItems.INLAID_LAPIS_PLATE.get())
+				.key('P', ModItems.NECRONIUM_PLATE.get())
+				.key('1', extraIngredientOne)
+				.key('2', extraIngredientTwo)
+				.patternLine("G----G")
+				.patternLine(" P11P ")
+				.patternLine(" P++P ")
+				.patternLine(" |OO| ")
+				.patternLine(" |OO| ")
+				.patternLine(" P++P ")
+				.patternLine(" P22P ")
+				.patternLine("G----G")
+				.disallowMirrored()
+				.build(recipeOutput, SoulHarvestMod.id("glyph_scroll_enhanced_" + glyphId));
+	}
+	
+	public static void registerEnhancedSpellRecipes(RecipeOutput recipeOutput) {
+		registerEnhancedSpellRecipe(recipeOutput, 1, Items.LIGHTNING_ROD, Items.COPPER_BLOCK);
+		registerEnhancedSpellRecipe(recipeOutput, 2, Items.FIRE_CHARGE, Items.TNT);
+		registerEnhancedSpellRecipe(recipeOutput, 3, Items.BONE_BLOCK, Items.BONE_BLOCK);
+		registerEnhancedSpellRecipe(recipeOutput, 4, Items.FERMENTED_SPIDER_EYE, ModItems.NECRONIUM_WASTE.get());
+		registerEnhancedSpellRecipe(recipeOutput, 5, Items.TURTLE_SCUTE, Items.IRON_BLOCK);
+		registerEnhancedSpellRecipe(recipeOutput, 6, Items.FEATHER, Items.PHANTOM_MEMBRANE);
+		registerEnhancedSpellRecipe(recipeOutput, 7, Items.GLASS, Items.OBSIDIAN);
 	}
 
 	@SuppressWarnings("unused")

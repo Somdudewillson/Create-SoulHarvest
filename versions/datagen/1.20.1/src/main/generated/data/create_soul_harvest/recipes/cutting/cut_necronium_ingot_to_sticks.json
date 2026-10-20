@@ -1,0 +1,22 @@
+{
+    "type": "create:cutting",
+    "ingredients": [
+        {
+            "item": "create_soul_harvest:necronium_ingot"
+        }
+    ],
+    "results": [
+        {
+            "item": "create_soul_harvest:necronium_rod",
+            "count": 2
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste",
+            "chance": 0.75
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste",
+            "chance": 0.35
+        }
+    ]
+}

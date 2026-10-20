@@ -1,0 +1,17 @@
+{
+    "type": "create:pressing",
+    "ingredients": [
+        {
+            "item": "create_soul_harvest:necronium_ingot"
+        }
+    ],
+    "results": [
+        {
+            "item": "create_soul_harvest:necronium_plate"
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste",
+            "chance": 0.55
+        }
+    ]
+}

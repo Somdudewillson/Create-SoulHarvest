@@ -45,6 +45,7 @@ public final class VanillaRecipeGen {
 		registerSoulCrystalRecipes(recipeOutput);
 		registerSoulDepositSeedRecipes(recipeOutput);
 		registerCookingRecipes(recipeOutput);
+		registerNecroniumRecipes(recipeOutput);
 	}
 
 	public static void registerBiofuelRecipes(RecipeOutput recipeOutput) {
@@ -240,6 +241,17 @@ public final class VanillaRecipeGen {
 				)
 				.unlockedBy("has_glyph_pages", has(ModTags.Items.GLYPH_PAGES))
 				.save(recipeOutput, SoulHarvestMod.id("recycle_glyph_page"));
+	}
+
+	public static void registerNecroniumRecipes(RecipeOutput recipeOutput) {
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.NECRONIUM_WASTE_BOTTLE.get())
+				.pattern("###")
+				.pattern("#B#")
+				.pattern("###")
+				.define('#', ModItems.NECRONIUM_WASTE.get())
+				.define('B', Items.GLASS_BOTTLE)
+				.unlockedBy("has_bottle_or_waste", InventoryChangeTrigger.TriggerInstance.hasItems(Items.GLASS_BOTTLE, ModItems.NECRONIUM_WASTE.get()))
+				.save(recipeOutput, SoulHarvestMod.id("fill_necronium_waste_bottle"));
 	}
 }
 //?}

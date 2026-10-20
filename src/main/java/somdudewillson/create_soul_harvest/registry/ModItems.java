@@ -111,6 +111,33 @@ public class ModItems {
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
 			.build();
+	
+	// Necronium Related
+	public static final DeferredHolder<Item, Item> NECRONIUM_INGOT = ITEM_BUILDER_FACTORY.registerSimpleItem("necronium_ingot")
+			.properties(new Item.Properties().stacksTo(64).fireResistant().rarity(Rarity.UNCOMMON))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> NECRONIUM_ROD = ITEM_BUILDER_FACTORY.registerSimpleItem("necronium_rod")
+			.properties(new Item.Properties().stacksTo(16).fireResistant().rarity(Rarity.UNCOMMON))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> NECRONIUM_PLATE = ITEM_BUILDER_FACTORY.registerSimpleItem("necronium_plate")
+			.properties(new Item.Properties().stacksTo(64).fireResistant().rarity(Rarity.UNCOMMON))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> NECRONIUM_WASTE = ITEM_BUILDER_FACTORY.registerItem("necronium_waste", NecroniumWasteItem::new)
+			.properties(new Item.Properties().stacksTo(16).fireResistant())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> NECRONIUM_WASTE_BOTTLE = ITEM_BUILDER_FACTORY.registerItem("necronium_waste_bottle", NecroniumWasteBottleItem::new)
+			.properties(new Item.Properties().stacksTo(16).fireResistant())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
 
 	// Soul Harvest items
 	public static final DeferredHolder<Item, Item> SOUL_DEPOSIT_SEED = ITEM_BUILDER_FACTORY.registerItem("soul_deposit_seed", SoulDepositSeedItem::new)

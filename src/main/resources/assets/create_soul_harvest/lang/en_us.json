@@ -40,6 +40,11 @@
   "item.create_soul_harvest.polished_inlaid_lapis": "Polished Inlaid Lapis Lazuli",
   "item.create_soul_harvest.enchanted_inlaid_lapis": "Enchanted Inlaid Lapis Lazuli",
   "item.create_soul_harvest.molten_lapis_core": "Molten Lapis Core",
+  "item.create_soul_harvest.necronium_ingot": "Necronium Ingot",
+  "item.create_soul_harvest.necronium_rod": "Necronium Rod",
+  "item.create_soul_harvest.necronium_plate": "Necronium Plate",
+  "item.create_soul_harvest.necronium_waste": "Necronium Waste",
+  "item.create_soul_harvest.necronium_waste_bottle": "Necronium Waste Bottle",
   "item.create_soul_harvest.magic_gold": "Anima Gold",
   "item.create_soul_harvest.magic_gold_string": "Anima Gold String",
   "item.create_soul_harvest.magic_gold_chunk": "Anima Gold Chunk",
@@ -184,5 +189,8 @@
   "create_soul_harvest.jei.output_mode.independent.desc": "When processed, each item in the output list has an independent roll based on its chance.",
 
   "tooltip.create_soul_harvest.polyclay_tuned": " Tuned (T%s)",
-  "tooltip.create_soul_harvest.polyclay_tier": "Tier %s"
+  "tooltip.create_soul_harvest.polyclay_tier": "Tier %s",
+  "tooltip.create_soul_harvest.necronium_decay_warning": "Highly unsafe to handle directly!",
+  "tooltip.create_soul_harvest.necronium_despawn_warning": "Will despawn unsafely!",
+  "tooltip.create_soul_harvest.biocide_reaction_warning": "Do not permit contact with lava!"
 }

@@ -4,18 +4,21 @@
     "category": "misc",
     "key": {
         "G": {
-            "item": "minecraft:gold_nugget"
+            "item": "create_soul_harvest:magic_gold_chunk"
+        },
+        "M": {
+            "item": "create_soul_harvest:magic_gold"
         },
         "N": {
-            "item": "minecraft:netherite_ingot"
+            "item": "create_soul_harvest:necronium_ingot"
         }
     },
     "pattern": [
-        " GGG ",
-        "GGNGG",
-        "GNNNG",
-        "GGNGG",
-        " GGG "
+        " MMM ",
+        "MGNGM",
+        "MNNNM",
+        "MGNGM",
+        " MMM "
     ],
     "result": {
         "item": "create_soul_harvest:loot_token_blank",

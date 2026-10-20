@@ -1,0 +1,25 @@
+{
+    "type": "create:mechanical_crafting",
+    "acceptMirrored": false,
+    "category": "misc",
+    "key": {
+        "G": {
+            "item": "create_soul_harvest:magic_gold_chunk"
+        },
+        "N": {
+            "item": "minecraft:netherite_ingot"
+        }
+    },
+    "pattern": [
+        " GGG ",
+        "GGNGG",
+        "GNNNG",
+        "GGNGG",
+        " GGG "
+    ],
+    "result": {
+        "item": "create_soul_harvest:loot_token_blank",
+        "count": 1
+    },
+    "showNotification": false
+}

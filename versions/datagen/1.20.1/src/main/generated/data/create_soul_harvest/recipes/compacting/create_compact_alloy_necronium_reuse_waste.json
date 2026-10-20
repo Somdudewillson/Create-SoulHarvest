@@ -1,0 +1,50 @@
+{
+    "type": "create:compacting",
+    "heatRequirement": "superheated",
+    "ingredients": [
+        {
+            "item": "create:brass_ingot"
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste"
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste"
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste"
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste"
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste"
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste"
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste"
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste"
+        },
+        {
+            "amount": 1000,
+            "fluid": "create_soul_harvest:wither_slurry"
+        },
+        {
+            "amount": 1000,
+            "fluid": "minecraft:lava"
+        }
+    ],
+    "results": [
+        {
+            "item": "create_soul_harvest:necronium_ingot"
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste",
+            "chance": 0.15
+        }
+    ]
+}
