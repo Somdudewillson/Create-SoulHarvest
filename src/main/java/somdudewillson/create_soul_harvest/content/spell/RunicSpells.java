@@ -15,6 +15,7 @@ import somdudewillson.create_soul_harvest.content.spell.spells.EnhancedBonemealT
 import somdudewillson.create_soul_harvest.content.spell.spells.ContagionBlastSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.ContagionCarrierSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.FireballSpell;
+import somdudewillson.create_soul_harvest.content.spell.spells.FireboltSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.FortitudeSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.InstantShelterSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.InstantWallSpell;
@@ -25,6 +26,7 @@ import somdudewillson.create_soul_harvest.registry.ModMobEffects;
 
 public class RunicSpells {
 	public static final Supplier<GlyphSpell> LIGHTNING = register("lightning", (id)->new LightningSpell(id, 20 * 15)); // 15 seconds
+	public static final Supplier<GlyphSpell> FIREBOLT = FireboltSpell::new;
 	public static final Supplier<GlyphSpell> FIREBALL = FireballSpell::new;
 	public static final Supplier<GlyphSpell> BONEMEAL = ()->new BonemealSpell(8);
 	public static final Supplier<GlyphSpell> BONEMEAL_ENHANCED = register(EnhancedBonemealThinkerSpell.ID, (id) -> new EnhancedBonemealThinkerSpell(id), EnhancedBonemealSpell::new);

@@ -29,6 +29,7 @@ public class NeoforgeClientEventSubscriber {
 	public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerEntityRenderer(ModEntityTypes.SPELL_THINKER.get(), NoopRenderer::new);
 		event.registerEntityRenderer(ModEntityTypes.CONTAGION_CHARGE.get(), p -> new ThrownItemRenderer<>(p, 0.75F, true));
+		event.registerEntityRenderer(ModEntityTypes.FIREBOLT.get(), NoopRenderer::new);
 	}
 
 	@SubscribeEvent

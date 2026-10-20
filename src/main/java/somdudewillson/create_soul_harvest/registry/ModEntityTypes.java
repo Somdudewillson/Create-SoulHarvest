@@ -7,6 +7,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.entity.ContagionChargeEntity;
+import somdudewillson.create_soul_harvest.content.entity.FireboltEntity;
 import somdudewillson.create_soul_harvest.content.entity.SpellThinkerEntity;
 
 public class ModEntityTypes {
@@ -26,4 +27,11 @@ public class ModEntityTypes {
 					.clientTrackingRange(4)
 					.updateInterval(10)
 					.build("contagion_charge"));
+
+	public static final DeferredHolder<EntityType<?>, EntityType<FireboltEntity>> FIREBOLT = ENTITY_TYPES.register("firebolt",
+			() -> EntityType.Builder.<FireboltEntity>of(FireboltEntity::new, MobCategory.MISC)
+					.sized(0.3125F, 0.3125F)
+					.clientTrackingRange(4)
+					.updateInterval(10)
+					.build("firebolt"));
 }
