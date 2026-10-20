@@ -20,11 +20,13 @@ import somdudewillson.create_soul_harvest.content.spell.spells.FortitudeSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.InstantShelterSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.InstantWallSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.LightningSpell;
+import somdudewillson.create_soul_harvest.content.spell.spells.SparkSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.TerrainFlattenSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.UpdraftSpell;
 import somdudewillson.create_soul_harvest.registry.ModMobEffects;
 
 public class RunicSpells {
+	public static final Supplier<GlyphSpell> SPARK = register("spark", SparkSpell::new);
 	public static final Supplier<GlyphSpell> LIGHTNING = register("lightning", (id)->new LightningSpell(id, 20 * 15)); // 15 seconds
 	public static final Supplier<GlyphSpell> FIREBOLT = FireboltSpell::new;
 	public static final Supplier<GlyphSpell> FIREBALL = FireballSpell::new;

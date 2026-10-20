@@ -37,7 +37,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Team;
 import somdudewillson.create_soul_harvest.registry.ModEntityTypes;
 
 //? >= 1.21 {
@@ -244,7 +244,7 @@ public class FireboltEntity extends AbstractHurtingProjectile {
 			if (target == owner) {
 				continue;
 			}
-			PlayerTeam ownerTeam = owner.getTeam();
+			Team ownerTeam = owner.getTeam();
 			if (ownerTeam != null && ownerTeam.isAlliedTo(target.getTeam())) continue;
 			if (target instanceof OwnableEntity oE && oE.getOwnerUUID().equals(owner.getUUID())) continue;
 			
