@@ -12,6 +12,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 import somdudewillson.create_soul_harvest.content.effect.StoneskinMobEffect;
 import somdudewillson.create_soul_harvest.content.effect.VaccinationMobEffect;
+import somdudewillson.create_soul_harvest.content.item.NecroniumCharmItem;
 import somdudewillson.create_soul_harvest.registry.ModDamageSources;
 import somdudewillson.create_soul_harvest.registry.ModMobEffects;
 
@@ -40,6 +41,10 @@ public class SpellGameEvents {
 			event.setNewDamage(0);
 			return;
 		}
+		if (NecroniumCharmItem.tryBlockDamage(event.getEntity(), event.getSource(), event.getNewDamage())) {
+			event.setNewDamage(0);
+			return;
+		}
 		float currentDamage = event.getNewDamage();
 		float newDamage = StoneskinMobEffect.modifyDamage(event.getEntity(), event.getSource(), currentDamage);
 		if (newDamage != currentDamage) {
@@ -50,6 +55,11 @@ public class SpellGameEvents {
 	/*@SubscribeEvent
 	public static void onLivingDamage(LivingDamageEvent event) {
 		if (event.getSource().is(ModDamageSources.CONTAGION) && VaccinationMobEffect.hasVaccination(event.getEntity())) {
+			event.setAmount(0);
+			event.setCanceled(true);
+			return;
+		}
+		if (NecroniumCharmItem.tryBlockDamage(event.getEntity(), event.getSource(), event.getAmount())) {
 			event.setAmount(0);
 			event.setCanceled(true);
 			return;

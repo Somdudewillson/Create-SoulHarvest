@@ -9,6 +9,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -127,6 +128,15 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		tag(ModTags.Items.C_NECRONIUM_PLATES)
 				.replace(false)
 				.addTag(ModTags.Items.FORGE_NECRONIUM_PLATES);
+		
+		// Curio tags
+		tag(ModTags.Items.CURIO_CHARM)
+			.replace(false)
+			.add(ModItems.NECRONIUM_CHARM.get());
+		
+		// Enchantment tags
+		tag(ItemTags.DURABILITY_ENCHANTABLE)
+			.add(ModItems.NECRONIUM_CHARM.get());
 	}
 
 	@Override

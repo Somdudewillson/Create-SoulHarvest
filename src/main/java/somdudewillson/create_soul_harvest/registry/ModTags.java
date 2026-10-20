@@ -63,9 +63,15 @@ public final class ModTags {
 		public static final TagKey<Item> FORGE_NECRONIUM_RODS = forgeTag("rods/necronium");
 		public static final TagKey<Item> C_NECRONIUM_PLATES = commonTag("plates/necronium");
 		public static final TagKey<Item> FORGE_NECRONIUM_PLATES = forgeTag("plates/necronium");
+		
+		public static final TagKey<Item> CURIO_CHARM = curioTag("charm");
 
 		public static TagKey<Item> compostableTag(int percent) {
 			return modTag("compostables/" + percent);
+		}
+		
+		private static TagKey<Item> tag(String namespace, String path) {
+			return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(namespace, path));
 		}
 
 		private static TagKey<Item> modTag(String path) {
@@ -73,11 +79,15 @@ public final class ModTags {
 		}
 
 		private static TagKey<Item> commonTag(String path) {
-			return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", path));
+			return tag("c", path);
 		}
 
 		private static TagKey<Item> forgeTag(String path) {
-			return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("forge", path));
+			return tag("forge", path);
+		}
+
+		private static TagKey<Item> curioTag(String path) {
+			return tag("curio", path);
 		}
 	}
 

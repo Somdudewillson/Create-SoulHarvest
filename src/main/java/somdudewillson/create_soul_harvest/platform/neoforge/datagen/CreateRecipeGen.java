@@ -1,6 +1,7 @@
 package somdudewillson.create_soul_harvest.platform.neoforge.datagen;
 
 import com.mojang.logging.LogUtils;
+import com.simibubi.create.AllBlocks;
 //? neoforge {
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeBuilder;
@@ -159,6 +160,20 @@ public final class CreateRecipeGen {
 					.disallowMirrored()
 					.build(recipeOutput, SoulHarvestMod.id("glyph_scroll_" + index));
 		}
+
+		// Necronium Charm
+		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.NECRONIUM_CHARM.get(), 1)
+				.key('=', ModItems.NECRONIUM_PLATE.get())
+				.key('C', ModItems.MAGIC_GOLD.get())
+				.key('S', ModItems.ENCHANTED_INLAID_LAPIS.get())
+				.key('|', AllBlocks.FLUID_PIPE)
+				.key('+', AllItems.PRECISION_MECHANISM)
+				.patternLine("C= =C")
+				.patternLine("C|S|C")
+				.patternLine("C+=+C")
+				.patternLine(" CCC ")
+				.disallowMirrored()
+				.build(recipeOutput, SoulHarvestMod.id("craft_necronium_charm"));
 	}
 
 	public static void registerCompactingRecipes(RecipeOutput recipeOutput) {

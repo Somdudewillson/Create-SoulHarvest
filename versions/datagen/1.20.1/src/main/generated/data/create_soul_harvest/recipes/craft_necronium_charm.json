@@ -1,0 +1,33 @@
+{
+    "type": "create:mechanical_crafting",
+    "acceptMirrored": false,
+    "category": "misc",
+    "key": {
+        "+": {
+            "item": "create:precision_mechanism"
+        },
+        "=": {
+            "item": "create_soul_harvest:necronium_plate"
+        },
+        "C": {
+            "item": "create_soul_harvest:magic_gold"
+        },
+        "S": {
+            "item": "create_soul_harvest:enchanted_inlaid_lapis"
+        },
+        "|": {
+            "item": "create:fluid_pipe"
+        }
+    },
+    "pattern": [
+        "C= =C",
+        "C|S|C",
+        "C+=+C",
+        " CCC "
+    ],
+    "result": {
+        "item": "create_soul_harvest:necronium_charm",
+        "count": 1
+    },
+    "showNotification": false
+}

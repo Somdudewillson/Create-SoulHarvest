@@ -26,7 +26,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 public class NecroniumWasteItem extends Item {
-	public static final float DECAY_PROBABILITY = 0.0006f;
+	public static final float DECAY_PROBABILITY = 0.004f;
 	public static final float DECAY_CASCADE_PROBABILITY = 0.015f;
 	public static final int ITEM_ENTITY_LIFESPAN = 1200; // 60 seconds (1 minute)
 
@@ -45,7 +45,7 @@ public class NecroniumWasteItem extends Item {
 		if (entity instanceof Player playerEntity && playerEntity.isSpectator()) return;
 		
 		long tickOffset = entity.tickCount + (slot * 7);
-		if ((tickOffset & 16) == 0) {
+		if ((tickOffset & 15) == 0) {
 			return;
 		}
 		

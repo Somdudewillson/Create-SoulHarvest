@@ -138,6 +138,11 @@ public class ModItems {
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
 			.build();
+	public static final DeferredHolder<Item, Item> NECRONIUM_CHARM = ITEM_BUILDER_FACTORY.registerItem("necronium_charm", NecroniumCharmItem::new)
+			.properties(new Item.Properties().stacksTo(1).fireResistant().rarity(Rarity.UNCOMMON))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
 
 	// Soul Harvest items
 	public static final DeferredHolder<Item, Item> SOUL_DEPOSIT_SEED = ITEM_BUILDER_FACTORY.registerItem("soul_deposit_seed", SoulDepositSeedItem::new)
