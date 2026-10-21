@@ -57,6 +57,11 @@ public final class ModTags {
 		public static final TagKey<Item> BIOCIDE_GAS_PROTECTION = modTag("biocide_gas_protection");
 		public static final TagKey<Item> COMPOSTABLES = modTag("compostables");
 		
+		public static final TagKey<Item> LOOT_TOKEN_ONLY = modTag("loot_token_only");
+		public static final TagKey<Item> GRIND_DROP_FORBIDDEN = modTag("grind_drop_forbidden");
+		public static final TagKey<Item> ENHANCED_GRIND_DROP_FORBIDDEN = modTag("enhanced_grind_drop_forbidden");
+		public static final TagKey<Item> STANDARD_GRIND_DROP_FORBIDDEN = modTag("standard_grind_drop_forbidden");
+		
 		public static final TagKey<Item> C_NECRONIUM_INGOTS = commonTag("ingots/necronium");
 		public static final TagKey<Item> FORGE_NECRONIUM_INGOTS = forgeTag("ingots/necronium");
 		public static final TagKey<Item> C_NECRONIUM_RODS = commonTag("rods/necronium");

@@ -18,6 +18,13 @@ public interface ISoulHolder {
 
 	void setSoulPortion(int portion);
 
+	default boolean isEnhanced() {
+		return false;
+	}
+
+	default void setEnhanced(boolean enhanced) {
+	}
+
 	default boolean isComplete() {
 		return getSoulPortion() >= 100;
 	}
@@ -64,6 +71,10 @@ public interface ISoulHolder {
 
 	public static int getSoulPortion(ItemStack stack) {
 		return ISoulHolder.get(stack).map(ISoulHolder::getSoulPortion).orElse(0);
+	}
+
+	public static boolean isEnhanced(ItemStack stack) {
+		return ISoulHolder.get(stack).map(ISoulHolder::isEnhanced).orElse(false);
 	}
 
 	public static Optional<EntityType<?>> tryGetHeldSoulEntityType(ItemStack stack) {

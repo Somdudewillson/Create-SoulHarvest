@@ -1,20 +1,20 @@
 package somdudewillson.create_soul_harvest.content.soul;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.phys.Vec3;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.event.SoulHarvestDataEvents;
 import somdudewillson.create_soul_harvest.content.recipe.grinding.MobGrindingDynamicData;
+import somdudewillson.create_soul_harvest.content.soul.sampling.DropSamplingPass;
+import somdudewillson.create_soul_harvest.content.soul.sampling.PlayerKillDropSamplingPass;
+import somdudewillson.create_soul_harvest.content.soul.sampling.StandardDropSamplingPass;
 
 //? >= 1.21 {
 import net.minecraft.resources.ResourceKey;
@@ -24,10 +24,20 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.jetbrains.annotations.Nullable;
+
 import static somdudewillson.create_soul_harvest.registry.ModTags.EntityTypes.*;
 
 public class SoulDataManager {
 	private static final SoulDropCache DROP_CACHE = new SoulDropCache();
+	private static final List<DropSamplingPass> SAMPLING_PASSES = new ArrayList<>(List.of(
+			new StandardDropSamplingPass(),
+			new PlayerKillDropSamplingPass()
+	));
+
+	public static void registerSamplingPass(DropSamplingPass pass) {
+		SAMPLING_PASSES.add(pass);
+	}
 
 	private static Map<ResourceLocation, SoulData> rawFullData = Collections.emptyMap();
 	private static Map<ResourceLocation, List<PartialSoulData>> rawPartialData = Collections.emptyMap();
@@ -57,9 +67,11 @@ public class SoulDataManager {
 	//? forge {
 	/*@SuppressWarnings("deprecation")
 	*///?}
-	public static synchronized void recalculate(@org.jetbrains.annotations.Nullable MinecraftServer server) {
+	public static synchronized void recalculate(@Nullable MinecraftServer server) {
+		RegistryAccess nullableRegistryAccess = null;
 		if (server != null) {
 			DROP_CACHE.load(server);
+			nullableRegistryAccess = server.registryAccess();
 		}
 		pendingSamplingQueue.clear();
 
@@ -191,7 +203,7 @@ public class SoulDataManager {
 			}
 
 			// Pruning: if not queued for sampling and has neither drops nor xp, omit from final manager entries
-			if (!queuedForSampling && !soulData.hasDrops() && soulData.xp() <= 0) {
+			if (!queuedForSampling && !soulData.hasDrops(nullableRegistryAccess, true) && soulData.xp() <= 0) {
 				continue;
 			}
 
@@ -293,28 +305,39 @@ public class SoulDataManager {
 				return new SoulDropCache.CachedSoulData(xp, Collections.emptyList());
 			}
 
-			DamageSource damageSource = level.damageSources().genericKill();
-			Vec3 pos = entity != null ? entity.position() : Vec3.atCenterOf(level.getSharedSpawnPos());
+			Map<ResourceLocation, SoulDropEntry> resolvedEntries = new LinkedHashMap<>();
 
-			LootParams.Builder paramsBuilder = new LootParams.Builder(level)
-					.withParameter(LootContextParams.ORIGIN, pos)
-					.withParameter(LootContextParams.DAMAGE_SOURCE, damageSource);
+			for (DropSamplingPass pass : SAMPLING_PASSES) {
+				try {
+					LootParams params = pass.createLootParams(level, entity);
+					Map<ResourceLocation, DropStats> passStats = new HashMap<>();
+					int totalRolls = pass.rolls();
 
-			if (entity != null) {
-				paramsBuilder.withParameter(LootContextParams.THIS_ENTITY, entity);
-			}
+					for (int i = 0; i < totalRolls; i++) {
+						List<ItemStack> drops = lootTable.getRandomItems(params);
+						for (ItemStack stack : drops) {
+							if (stack.isEmpty()) continue;
+							ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+							passStats.computeIfAbsent(itemId, k -> new DropStats()).record(stack.getCount());
+						}
+					}
 
-			LootParams params = paramsBuilder.create(LootContextParamSets.ENTITY);
-
-			Map<ResourceLocation, DropStats> statsMap = new HashMap<>();
-			int totalRolls = 100;
-
-			for (int i = 0; i < totalRolls; i++) {
-				List<ItemStack> drops = lootTable.getRandomItems(params);
-				for (ItemStack stack : drops) {
-					if (stack.isEmpty()) continue;
-					ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-					statsMap.computeIfAbsent(itemId, k -> new DropStats()).record(stack.getCount());
+					for (Map.Entry<ResourceLocation, DropStats> entry : passStats.entrySet()) {
+						ResourceLocation itemId = entry.getKey();
+						DropStats stats = entry.getValue();
+						if (!resolvedEntries.containsKey(itemId)) {
+							resolvedEntries.put(itemId, new SoulDropEntry(
+									itemId,
+									stats.occurrences,
+									stats.minCount,
+									stats.maxCount,
+									pass.restriction()
+							));
+						}
+					}
+				} catch (Exception e) {
+					SoulHarvestMod.LOGGER.debug("Failed sampling pass '{}' for {}: {}",
+							pass.name(), BuiltInRegistries.ENTITY_TYPE.getKey(entityType), e.getMessage());
 				}
 			}
 
@@ -322,12 +345,7 @@ public class SoulDataManager {
 				entity.discard();
 			}
 
-			List<SoulDropEntry> entries = new ArrayList<>();
-			for (Map.Entry<ResourceLocation, DropStats> entry : statsMap.entrySet()) {
-				DropStats stats = entry.getValue();
-				entries.add(new SoulDropEntry(entry.getKey(), stats.occurrences, stats.minCount, stats.maxCount));
-			}
-
+			List<SoulDropEntry> entries = new ArrayList<>(resolvedEntries.values());
 			List<SoulDropPool> pools = entries.isEmpty()
 					? Collections.emptyList()
 					: List.of(new SoulDropPool("main", 1, entries));

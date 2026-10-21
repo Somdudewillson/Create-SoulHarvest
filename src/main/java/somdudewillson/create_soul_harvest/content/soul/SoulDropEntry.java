@@ -10,12 +10,17 @@ import net.minecraft.world.item.Items;
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.Nullable;
 
-public record SoulDropEntry(ResourceLocation item, int weight, int min, int max) {
+public record SoulDropEntry(ResourceLocation item, int weight, int min, int max, DropRestriction restriction) {
 
 	public SoulDropEntry {
 		if (weight < 1) weight = 1;
 		if (min < 1) min = 1;
 		if (max < min) max = min;
+		if (restriction == null) restriction = DropRestriction.STANDARD;
+	}
+
+	public SoulDropEntry(ResourceLocation item, int weight, int min, int max) {
+		this(item, weight, min, max, DropRestriction.STANDARD);
 	}
 
 	public JsonObject toJson() {
@@ -24,6 +29,9 @@ public record SoulDropEntry(ResourceLocation item, int weight, int min, int max)
 		obj.addProperty("weight", weight);
 		obj.addProperty("min", min);
 		obj.addProperty("max", max);
+		if (restriction != DropRestriction.STANDARD) {
+			obj.addProperty("restriction", restriction.name());
+		}
 		return obj;
 	}
 
@@ -35,7 +43,10 @@ public record SoulDropEntry(ResourceLocation item, int weight, int min, int max)
 		int weight = json.has("weight") ? json.get("weight").getAsInt() : 1;
 		int min = json.has("min") ? json.get("min").getAsInt() : 1;
 		int max = json.has("max") ? json.get("max").getAsInt() : 1;
-		return new SoulDropEntry(itemId, weight, min, max);
+		DropRestriction restriction = json.has("restriction")
+				? DropRestriction.fromString(json.get("restriction").getAsString())
+				: DropRestriction.STANDARD;
+		return new SoulDropEntry(itemId, weight, min, max, restriction);
 	}
 
 	//? forge {

@@ -1,0 +1,7 @@
+{
+  "values": [
+    "#create_soul_harvest:loot_token_only",
+    "#create_soul_harvest:grind_drop_forbidden",
+    "#minecraft:trim_templates"
+  ]
+}

@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import lombok.Getter;
 
 //? >= 1.21 {
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
@@ -47,17 +48,21 @@ public class AttunedPolyclayIngredient implements ICustomIngredient {
 	private final ResourceLocation soul;
 	@Nullable
 	private final Item item;
+	@Nullable
+	private final Boolean enhanced;
 
 	//? >= 1.21 {
 	public static final MapCodec<AttunedPolyclayIngredient> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
 			ResourceLocation.CODEC.fieldOf("soul").forGetter(AttunedPolyclayIngredient::getSoul),
-			BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("item").forGetter(i -> Optional.ofNullable(i.getItem()))
-	).apply(inst, (soul, itemOpt) -> new AttunedPolyclayIngredient(soul, itemOpt.orElse(null))));
+			BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("item").forGetter(i -> Optional.ofNullable(i.getItem())),
+			Codec.BOOL.optionalFieldOf("enhanced").forGetter(i -> Optional.ofNullable(i.getEnhanced()))
+	).apply(inst, (soul, itemOpt, enhOpt) -> new AttunedPolyclayIngredient(soul, itemOpt.orElse(null), enhOpt.orElse(null))));
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, AttunedPolyclayIngredient> STREAM_CODEC = StreamCodec.composite(
 			ResourceLocation.STREAM_CODEC, AttunedPolyclayIngredient::getSoul,
 			ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.ITEM)), i -> Optional.ofNullable(i.getItem()),
-			(soul, itemOpt) -> new AttunedPolyclayIngredient(soul, itemOpt.orElse(null))
+			ByteBufCodecs.optional(ByteBufCodecs.BOOL), i -> Optional.ofNullable(i.getEnhanced()),
+			(soul, itemOpt, enhOpt) -> new AttunedPolyclayIngredient(soul, itemOpt.orElse(null), enhOpt.orElse(null))
 	);
 	//?} else {
 	/*public static final IIngredientSerializer<AttunedPolyclayIngredient> SERIALIZER = new IIngredientSerializer<>() {
@@ -65,14 +70,16 @@ public class AttunedPolyclayIngredient implements ICustomIngredient {
 		public AttunedPolyclayIngredient parse(FriendlyByteBuf buffer) {
 			ResourceLocation soul = buffer.readResourceLocation();
 			Item item = buffer.readBoolean() ? ForgeRegistries.ITEMS.getValue(buffer.readResourceLocation()) : null;
-			return new AttunedPolyclayIngredient(soul, item);
+			Boolean enhanced = buffer.readBoolean() ? buffer.readBoolean() : null;
+			return new AttunedPolyclayIngredient(soul, item, enhanced);
 		}
 
 		@Override
 		public AttunedPolyclayIngredient parse(JsonObject json) {
 			ResourceLocation soul = ResourceLocation.tryParse(json.get("soul").getAsString());
 			Item item = json.has("item") ? ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(json.get("item").getAsString())) : null;
-			return new AttunedPolyclayIngredient(soul, item);
+			Boolean enhanced = json.has("enhanced") ? json.get("enhanced").getAsBoolean() : null;
+			return new AttunedPolyclayIngredient(soul, item, enhanced);
 		}
 
 		@Override
@@ -82,20 +89,29 @@ public class AttunedPolyclayIngredient implements ICustomIngredient {
 			if (ingredient.getItem() != null) {
 				buffer.writeResourceLocation(ForgeRegistries.ITEMS.getKey(ingredient.getItem()));
 			}
+			buffer.writeBoolean(ingredient.getEnhanced() != null);
+			if (ingredient.getEnhanced() != null) {
+				buffer.writeBoolean(ingredient.getEnhanced());
+			}
 		}
 	};
 	*///?}
 
-	public AttunedPolyclayIngredient(ResourceLocation soul, @Nullable Item item) {
+	public AttunedPolyclayIngredient(ResourceLocation soul, @Nullable Item item, @Nullable Boolean enhanced) {
 		//? forge {
-		/*super(makeDisplayStacks(soul, item).stream().map(Ingredient.ItemValue::new));
+		/*super(makeDisplayStacks(soul, item, enhanced).stream().map(Ingredient.ItemValue::new));
 		*///?}
 		this.soul = soul;
 		this.item = item;
+		this.enhanced = enhanced;
+	}
+
+	public AttunedPolyclayIngredient(ResourceLocation soul, @Nullable Item item) {
+		this(soul, item, null);
 	}
 
 	public AttunedPolyclayIngredient(ResourceLocation soul) {
-		this(soul, null);
+		this(soul, null, null);
 	}
 
 	@Override
@@ -112,6 +128,11 @@ public class AttunedPolyclayIngredient implements ICustomIngredient {
 				return false;
 			}
 		}
+		if (enhanced != null) {
+			if (ISoulHolder.isEnhanced(stack) != enhanced) {
+				return false;
+			}
+		}
 		return ISoulHolder.get(stack)
 				.map(holder -> java.util.Objects.equals(soul, holder.getHeldSoul()))
 				.orElse(false);
@@ -120,7 +141,7 @@ public class AttunedPolyclayIngredient implements ICustomIngredient {
 	//? >= 1.21 {
 	@Override
 	public Stream<ItemStack> getItems() {
-		return makeDisplayStacks(soul, item).stream();
+		return makeDisplayStacks(soul, item, enhanced).stream();
 	}
 
 	@Override
@@ -151,27 +172,35 @@ public class AttunedPolyclayIngredient implements ICustomIngredient {
 		if (item != null) {
 			json.addProperty("item", BuiltInRegistries.ITEM.getKey(item).toString());
 		}
+		if (enhanced != null) {
+			json.addProperty("enhanced", enhanced);
+		}
 		return json;
 	}
 	*///?}
 
-	public static List<ItemStack> makeDisplayStacks(ResourceLocation soul, @Nullable Item item) {
+	public static List<ItemStack> makeDisplayStacks(ResourceLocation soul, @Nullable Item item, @Nullable Boolean enhanced) {
+		boolean isEnh = Boolean.TRUE.equals(enhanced);
 		if (item != null) {
-			return Collections.singletonList(PolyclayAttunedItem.createAttunedPolyclay(item, soul));
+			return Collections.singletonList(PolyclayAttunedItem.createAttunedPolyclay(item, soul, isEnh));
 		}
 		List<ItemStack> list = new ArrayList<>();
 		for (Item registered : BuiltInRegistries.ITEM) {
 			if (registered instanceof PolyclayAttunedItem) {
-				list.add(PolyclayAttunedItem.createAttunedPolyclay(registered, soul));
+				list.add(PolyclayAttunedItem.createAttunedPolyclay(registered, soul, isEnh));
 			}
 		}
 		if (list.isEmpty()) {
-			list.add(PolyclayAttunedItem.createAttunedPolyclay(ModItems.POLYCLAY_ATTUNED.get(), soul));
+			list.add(PolyclayAttunedItem.createAttunedPolyclay(ModItems.POLYCLAY_ATTUNED.get(), soul, isEnh));
 		}
 		return list;
 	}
 
+	public static List<ItemStack> makeDisplayStacks(ResourceLocation soul, @Nullable Item item) {
+		return makeDisplayStacks(soul, item, null);
+	}
+
 	public static List<ItemStack> makeDisplayStacks(ResourceLocation soul) {
-		return makeDisplayStacks(soul, null);
+		return makeDisplayStacks(soul, null, null);
 	}
 }

@@ -92,6 +92,24 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		tag(ModTags.Items.BIOCIDE_GAS_PROTECTION)
 				.addOptional(ResourceLocation.fromNamespaceAndPath("create", "copper_diving_helmet"))
 				.addOptional(ResourceLocation.fromNamespaceAndPath("create", "netherite_diving_helmet"));
+		
+		// Mob drop tags
+		tag(ModTags.Items.GRIND_DROP_FORBIDDEN);
+		
+		tag(ModTags.Items.LOOT_TOKEN_ONLY)
+				.add(Items.NETHER_STAR)
+				.add(Items.SCULK_CATALYST)
+				.add(Items.DRAGON_EGG)
+				.add(Items.TOTEM_OF_UNDYING);
+		
+		tag(ModTags.Items.STANDARD_GRIND_DROP_FORBIDDEN)
+				.addTag(ModTags.Items.LOOT_TOKEN_ONLY)
+				.addTag(ModTags.Items.GRIND_DROP_FORBIDDEN)
+				.addTag(ItemTags.TRIM_TEMPLATES);
+		
+		tag(ModTags.Items.ENHANCED_GRIND_DROP_FORBIDDEN)
+				.addTag(ModTags.Items.LOOT_TOKEN_ONLY)
+				.addTag(ModTags.Items.GRIND_DROP_FORBIDDEN);
 
 		// Convention tags
 		tag(Tags.Items.DYES_BLUE)

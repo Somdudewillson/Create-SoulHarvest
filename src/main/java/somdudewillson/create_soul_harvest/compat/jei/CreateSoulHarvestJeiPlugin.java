@@ -8,6 +8,7 @@ import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -73,12 +74,15 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 
 		Minecraft.getInstance().execute(() -> {
 			if (jeiRuntime != null) {
+				HolderLookup.Provider registries = Minecraft.getInstance().level != null
+						? Minecraft.getInstance().level.registryAccess()
+						: null;
 				IIngredientManager ingredientManager = jeiRuntime.getIngredientManager();
-				List<ItemStack> soulBooks = ModCreativeTabs.generateAllCompletedSoulBooks();
+				List<ItemStack> soulBooks = ModCreativeTabs.generateAllCompletedSoulBooks(registries);
 				if (!soulBooks.isEmpty()) {
 					ingredientManager.addIngredientsAtRuntime(VanillaTypes.ITEM_STACK, soulBooks);
 				}
-				List<ItemStack> polyclays = ModCreativeTabs.generateAllAttunedPolyclay();
+				List<ItemStack> polyclays = ModCreativeTabs.generateAllAttunedPolyclay(registries);
 				if (!polyclays.isEmpty()) {
 					ingredientManager.addIngredientsAtRuntime(VanillaTypes.ITEM_STACK, polyclays);
 				}
@@ -137,10 +141,14 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 	*///?}
 
 		protected String getSubtypeString(ItemStack ingredient, UidContext context) {
-			return ISoulHolder.get(ingredient)
+			String base = ISoulHolder.get(ingredient)
 					.map(ISoulHolder::getHeldSoul)
 					.map(ResourceLocation::toString)
 					.orElse("");
+			if (base.isEmpty()) {
+				return "";
+			}
+			return base + (ISoulHolder.isEnhanced(ingredient) ? ":enhanced" : "");
 		}
 	}
 }

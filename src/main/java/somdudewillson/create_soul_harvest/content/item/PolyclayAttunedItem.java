@@ -35,13 +35,26 @@ public class PolyclayAttunedItem extends Item {
 		return tier;
 	}
 
-	public static ItemStack createAttunedPolyclay(Item item, ResourceLocation entityId) {
+	public static ItemStack createAttunedPolyclay(Item item, ResourceLocation entityId, boolean enhanced) {
 		ItemStack stack = new ItemStack(item);
 		ISoulHolder.get(stack).ifPresent(holder -> {
 			holder.setHeldSoul(entityId);
 			holder.setSoulPortion(100);
+			holder.setEnhanced(enhanced);
 		});
 		return stack;
+	}
+
+	public static ItemStack createAttunedPolyclay(Item item, ResourceLocation entityId) {
+		return createAttunedPolyclay(item, entityId, false);
+	}
+
+	public static boolean isEnhanced(ItemStack stack) {
+		return ISoulHolder.isEnhanced(stack);
+	}
+
+	public static void setEnhanced(ItemStack stack, boolean enhanced) {
+		ISoulHolder.get(stack).ifPresent(holder -> holder.setEnhanced(enhanced));
 	}
 
 	@Override
@@ -96,6 +109,10 @@ public class PolyclayAttunedItem extends Item {
 				}
 			}
 			tooltipComponents.add(tierComp);
+
+			if (isEnhanced(stack)) {
+				tooltipComponents.add(Component.translatable("tooltip.create_soul_harvest.polyclay_enhanced").withStyle(ChatFormatting.GOLD));
+			}
 		}
 	}
 }

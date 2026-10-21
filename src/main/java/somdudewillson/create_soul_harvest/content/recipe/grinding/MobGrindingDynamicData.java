@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundUpdateRecipesPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +20,7 @@ import somdudewillson.create_soul_harvest.content.soul.SoulData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
 import somdudewillson.create_soul_harvest.content.soul.SoulDropEntry;
 import somdudewillson.create_soul_harvest.content.soul.SoulDropPool;
+import somdudewillson.create_soul_harvest.content.soul.DropRestriction;
 
 //? >= 1.21 {
 import com.google.gson.JsonParseException;
@@ -29,7 +32,11 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import javax.annotation.Nullable;
+
 public class MobGrindingDynamicData {
+	private static final float ENHANCED_ONLY_MULT = 0.25f;
+	
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 	public static Map<String, byte[]> generate() {
@@ -47,7 +54,7 @@ public class MobGrindingDynamicData {
 		packMeta.add("pack", packObj);
 		files.put("pack.mcmeta", GSON.toJson(packMeta).getBytes(StandardCharsets.UTF_8));
 
-		Map<ResourceLocation, JsonObject> recipes = generateRecipeJsons();
+		Map<ResourceLocation, JsonObject> recipes = generateRecipeJsons(null);
 		SoulHarvestMod.LOGGER.info("Generating mob grinding recipes for {} capturable souls ({} recipes)",
 				SoulDataManager.getKnownSoulData().size(), recipes.size());
 
@@ -61,7 +68,10 @@ public class MobGrindingDynamicData {
 		return files;
 	}
 
-	public static Map<ResourceLocation, JsonObject> generateRecipeJsons() {
+	public static Map<ResourceLocation, JsonObject> generateRecipeJsons(@Nullable MinecraftServer server) {
+		Optional<MinecraftServer> optMinecraftServer = Optional.ofNullable(server);
+		RegistryAccess nullableRegistryAccess = optMinecraftServer.map(MinecraftServer::registryAccess).orElse(null);
+		
 		Map<ResourceLocation, JsonObject> recipes = new HashMap<>();
 		Map<ResourceLocation, SoulData> knownSouls = SoulDataManager.getKnownSoulData();
 
@@ -92,26 +102,38 @@ public class MobGrindingDynamicData {
 					continue;
 				}
 
-				if (!soulData.hasDrops()) {
+				if (!soulData.hasDrops(nullableRegistryAccess, true)) {
 					continue;
 				}
+				
 
 				String recipeSuffix = polyclayId.getPath() + "_" + entityId.getNamespace() + "_" + entityId.getPath();
 				String washSuffix = attunedId.getPath() + "_" + entityId.getNamespace() + "_" + entityId.getPath();
 
-				recipes.put(SoulHarvestMod.id("sequenced_assembly/attune_" + recipeSuffix),
-						makeSequencedAssemblyRecipe(polyclay, transItem, attunedItem, entityId, mobTier));
-
+				// Attuned processing
 				float multiplier = PolyclayItem.getDropMultiplier(polyclayTier, mobTier);
-				JsonObject splashing = makeSplashingRecipe(attunedItem, entityId, soulData, multiplier);
+				JsonObject splashing = makeSplashingRecipe(attunedItem, entityId, soulData, multiplier, false, nullableRegistryAccess);
 				if (splashing != null) {
 					recipes.put(SoulHarvestMod.id("splashing/wash_" + washSuffix), splashing);
 				}
+
+				if (soulData.hasEnhancedSpecificDrops(nullableRegistryAccess)) {
+					JsonObject enhancedSplashing = makeSplashingRecipe(attunedItem, entityId, soulData, multiplier, true, nullableRegistryAccess);
+					if (enhancedSplashing != null) {
+						recipes.put(SoulHarvestMod.id("splashing/wash_enhanced_" + washSuffix), enhancedSplashing);
+						recipes.put(SoulHarvestMod.id("deploying/enhance_" + washSuffix),
+								makeDeployEnhanceRecipe(attunedItem, entityId));
+					}
+				}
 				
-				JsonObject grinding = makeGrindingRecipe(entityId, soulData);
+				JsonObject grinding = makeGrindingRecipe(entityId, soulData, nullableRegistryAccess);
 				if (grinding != null) {
 					recipes.put(SoulHarvestMod.id("splashing/grind_" + washSuffix), grinding);
 				}
+
+				// Attuning
+				recipes.put(SoulHarvestMod.id("sequenced_assembly/attune_" + recipeSuffix),
+						makeSequencedAssemblyRecipe(polyclay, transItem, attunedItem, entityId, mobTier));
 			}
 		}
 
@@ -123,7 +145,7 @@ public class MobGrindingDynamicData {
 			return;
 		}
 
-		Map<ResourceLocation, JsonObject> recipeJsons = generateRecipeJsons();
+		Map<ResourceLocation, JsonObject> recipeJsons = generateRecipeJsons(server);
 		if (recipeJsons.isEmpty()) {
 			return;
 		}
@@ -309,7 +331,48 @@ public class MobGrindingDynamicData {
 		return recipe;
 	}
 
-	private static JsonObject makeSplashingRecipe(Item attunedItem, ResourceLocation entityId, SoulData soulData, float multiplier) {
+	private static JsonObject makeDeployEnhanceRecipe(Item attunedItem, ResourceLocation entityId) {
+		JsonObject recipe = new JsonObject();
+		recipe.addProperty("type", "create:deploying");
+
+		ResourceLocation attunedId = BuiltInRegistries.ITEM.getKey(attunedItem);
+		String attunedStr = attunedId != null ? attunedId.toString() : "create_soul_harvest:polyclay_attuned";
+
+		JsonArray ingredients = new JsonArray();
+		JsonObject polyclayIng = new JsonObject();
+		polyclayIng.addProperty("type", "create_soul_harvest:attuned_polyclay");
+		polyclayIng.addProperty("item", attunedStr);
+		polyclayIng.addProperty("soul", entityId.toString());
+		polyclayIng.addProperty("enhanced", false);
+		ingredients.add(polyclayIng);
+
+		JsonObject catalystIng = new JsonObject();
+		catalystIng.addProperty("item", "create_soul_harvest:enchanted_inlaid_lapis");
+		ingredients.add(catalystIng);
+		recipe.add("ingredients", ingredients);
+
+		JsonArray results = new JsonArray();
+		JsonObject result = new JsonObject();
+		result.addProperty("id", attunedStr);
+		result.addProperty("item", attunedStr);
+
+		JsonObject soulDataTag = new JsonObject();
+		soulDataTag.addProperty("soul_harvest:held_soul", entityId.toString());
+		soulDataTag.addProperty("soul_harvest:soul_portion", 100);
+		soulDataTag.addProperty("soul_harvest:enhanced", true);
+
+		JsonObject components = new JsonObject();
+		components.add("minecraft:custom_data", soulDataTag);
+		result.add("components", components);
+		result.add("nbt", soulDataTag);
+
+		results.add(result);
+		recipe.add("results", results);
+
+		return recipe;
+	}
+
+	private static JsonObject makeSplashingRecipe(Item attunedItem, ResourceLocation entityId, SoulData soulData, float multiplier, boolean enhanced, @Nullable RegistryAccess registryAccess) {
 		JsonObject recipe = new JsonObject();
 		recipe.addProperty("type", "create:splashing");
 
@@ -322,6 +385,7 @@ public class MobGrindingDynamicData {
 		ing.addProperty("type", "create_soul_harvest:attuned_polyclay");
 		ing.addProperty("item", attunedStr);
 		ing.addProperty("soul", entityId.toString());
+		ing.addProperty("enhanced", enhanced);
 		ingredients.add(ing);
 		recipe.add("ingredients", ingredients);
 
@@ -335,12 +399,29 @@ public class MobGrindingDynamicData {
 					break;
 				}
 
+				if (entry.restriction() == DropRestriction.LOOT_TOKEN) {
+					continue;
+				}
+				if (entry.restriction() == DropRestriction.ENHANCED && !enhanced) {
+					continue;
+				}
+
+				if (!SoulData.isDropAllowed(entry.item(), registryAccess, enhanced)) {
+					continue;
+				}
+				boolean enhancedOnly = enhanced && !SoulData.isDropAllowedStandard(entry.item(), registryAccess);
+
 				float baseCount = (entry.min() + entry.max()) / 2.0f;
 				float baseChance = Math.min(1.0f, Math.max(0.01f, entry.weight() / 100.0f));
-				float expected = baseCount * baseChance * multiplier;
+				float enhanceFac = enhancedOnly ? ENHANCED_ONLY_MULT : 1;
+				float expected = baseCount * baseChance * multiplier * enhanceFac;
 
 				if (expected <= 0.001f) {
-					continue;
+					if (enhancedOnly) {
+						expected = 0.001f;
+					} else {
+						continue;
+					}
 				}
 
 				JsonObject out = new JsonObject();
@@ -373,7 +454,7 @@ public class MobGrindingDynamicData {
 		return recipe;
 	}
 
-	private static JsonObject makeGrindingRecipe(ResourceLocation entityId, SoulData soulData) {
+	private static JsonObject makeGrindingRecipe(ResourceLocation entityId, SoulData soulData, @Nullable RegistryAccess registryAccess) {
 		// TODO Is this even possible? Consider later.
 		return null;
 	}

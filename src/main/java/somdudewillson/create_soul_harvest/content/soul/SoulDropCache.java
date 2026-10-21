@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SoulDropCache {
-	public static final int CURRENT_VERSION = 1;
+	public static final int CURRENT_VERSION = 2;
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final String CACHE_FILE_NAME = "soul_harvest_drop_cache.json";
 

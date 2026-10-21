@@ -192,6 +192,7 @@
 
   "tooltip.create_soul_harvest.polyclay_tuned": " Tuned (T%s)",
   "tooltip.create_soul_harvest.polyclay_tier": "Tier %s",
+  "tooltip.create_soul_harvest.polyclay_enhanced": "Enhanced Attunement",
   "tooltip.create_soul_harvest.necronium_charm_desc": "Protects from poison and wither using pressurized air or durability.",
   "tooltip.create_soul_harvest.necronium_decay_warning": "Highly unsafe to handle directly!",
   "tooltip.create_soul_harvest.necronium_despawn_warning": "Will despawn unsafely!",

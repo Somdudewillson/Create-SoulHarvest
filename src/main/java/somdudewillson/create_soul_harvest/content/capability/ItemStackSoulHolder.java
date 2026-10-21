@@ -16,6 +16,7 @@ public class ItemStackSoulHolder implements ISoulHolder {
 
 	public static final String TAG_HELD_SOUL = "soul_harvest:held_soul";
 	public static final String TAG_SOUL_PORTION = "soul_harvest:soul_portion";
+	public static final String TAG_ENHANCED = "soul_harvest:enhanced";
 
 	private final ItemStack stack;
 
@@ -87,6 +88,40 @@ public class ItemStackSoulHolder implements ISoulHolder {
 		//?} else {
 		/*CompoundTag tag = stack.getOrCreateTag();
 		tag.putInt(TAG_SOUL_PORTION, portion);
+		*///?}
+	}
+
+	@Override
+	public boolean isEnhanced() {
+		//? >= 1.21 {
+		CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
+		if (customData != null) {
+			return customData.copyTag().getBoolean(TAG_ENHANCED);
+		}
+		return false;
+		//?} else {
+		/*CompoundTag tag = stack.getTag();
+		return tag != null && tag.getBoolean(TAG_ENHANCED);
+		*///?}
+	}
+
+	@Override
+	public void setEnhanced(boolean enhanced) {
+		//? >= 1.21 {
+		CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+		if (enhanced) {
+			tag.putBoolean(TAG_ENHANCED, true);
+		} else {
+			tag.remove(TAG_ENHANCED);
+		}
+		CustomData.set(DataComponents.CUSTOM_DATA, stack, tag);
+		//?} else {
+		/*CompoundTag tag = stack.getOrCreateTag();
+		if (enhanced) {
+			tag.putBoolean(TAG_ENHANCED, true);
+		} else {
+			tag.remove(TAG_ENHANCED);
+		}
 		*///?}
 	}
 }

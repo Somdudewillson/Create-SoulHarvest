@@ -1,10 +1,18 @@
 package somdudewillson.create_soul_harvest.content.soul;
 
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import somdudewillson.create_soul_harvest.registry.ModTags;
 
 import java.util.*;
+
+import javax.annotation.Nullable;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -57,13 +65,60 @@ public class SoulData {
 		return Collections.unmodifiableMap(pools);
 	}
 
-	public boolean hasDrops() {
-		for (SoulDropPool pool : pools.values()) {
-			if (!pool.entries().isEmpty()) {
-				return true;
+	public static boolean isDropAllowed(ResourceLocation itemId, @Nullable HolderLookup.Provider registries, boolean enhanced) {
+		return enhanced ? isDropAllowedEnhanced(itemId, registries) : isDropAllowedStandard(itemId, registries);
+	}
+
+	public static boolean isDropAllowedStandard(ResourceLocation itemId, @Nullable HolderLookup.Provider registries) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, itemId);
+		if (registries != null) {
+			Optional<HolderLookup.RegistryLookup<Item>> registryLookup = registries.lookup(Registries.ITEM);
+			if (registryLookup.isPresent()) {
+				return registryLookup.get().get(key)
+						.map(h -> !h.is(ModTags.Items.STANDARD_GRIND_DROP_FORBIDDEN))
+						.orElse(true);
 			}
 		}
-		return false;
+		return BuiltInRegistries.ITEM.asLookup().get(key)
+				.map(h -> !h.is(ModTags.Items.STANDARD_GRIND_DROP_FORBIDDEN))
+				.orElse(true);
+	}
+
+	public static boolean isDropAllowedEnhanced(ResourceLocation itemId, @Nullable HolderLookup.Provider registries) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, itemId);
+		if (registries != null) {
+			Optional<HolderLookup.RegistryLookup<Item>> registryLookup = registries.lookup(Registries.ITEM);
+			if (registryLookup.isPresent()) {
+				return registryLookup.get().get(key)
+						.map(h -> !h.is(ModTags.Items.ENHANCED_GRIND_DROP_FORBIDDEN))
+						.orElse(true);
+			}
+		}
+		return BuiltInRegistries.ITEM.asLookup().get(key)
+				.map(h -> !h.is(ModTags.Items.ENHANCED_GRIND_DROP_FORBIDDEN))
+				.orElse(true);
+	}
+
+	public boolean hasDrops(@Nullable HolderLookup.Provider registries, boolean enhanced) {
+		return pools.values().stream()
+			.map(SoulDropPool::entries)
+			.flatMap(List::stream)
+			.filter(e -> e.restriction() != DropRestriction.LOOT_TOKEN)
+			.filter(e -> enhanced || e.restriction() == DropRestriction.STANDARD)
+			.filter(e -> isDropAllowedStandard(e.item(), registries))
+			.findAny()
+			.isPresent();
+	}
+
+	public boolean hasEnhancedSpecificDrops(@Nullable HolderLookup.Provider registries) {
+		return pools.values().stream()
+			.map(SoulDropPool::entries)
+			.flatMap(List::stream)
+			.filter(e -> e.restriction() != DropRestriction.LOOT_TOKEN)
+			.filter(e -> e.restriction() == DropRestriction.ENHANCED || !isDropAllowedStandard(e.item(), registries))
+			.filter(e -> isDropAllowedEnhanced(e.item(), registries))
+			.findAny()
+			.isPresent();
 	}
 
 	public void mergePool(SoulDropPool partialPool) {
