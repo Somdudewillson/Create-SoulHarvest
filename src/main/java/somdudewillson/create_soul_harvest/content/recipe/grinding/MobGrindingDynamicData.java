@@ -347,7 +347,7 @@ public class MobGrindingDynamicData {
 		ingredients.add(polyclayIng);
 
 		JsonObject catalystIng = new JsonObject();
-		catalystIng.addProperty("item", "create_soul_harvest:enchanted_inlaid_lapis");
+		catalystIng.addProperty("item", "create_soul_harvest:soul_mechanism");
 		ingredients.add(catalystIng);
 		recipe.add("ingredients", ingredients);
 

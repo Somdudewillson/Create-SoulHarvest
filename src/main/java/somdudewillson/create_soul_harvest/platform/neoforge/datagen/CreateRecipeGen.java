@@ -405,6 +405,24 @@ public final class CreateRecipeGen {
 				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ModItems.NECRONIUM_WASTE.get()))
 				.addOutput(ModItems.NECRONIUM_WASTE_BOTTLE.get(), 1.0f)
 				.build(recipeOutput);
+
+		// Soul Mechanism
+		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_sequenced_soul_mechanism"))
+				.require(ModItems.NECRONIUM_PLATE.get())
+				.transitionTo(ModItems.SOUL_MECHANISM_INCOMPLETE.get())
+				.loops(4)
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(AllBlocks.COGWHEEL))
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ModItems.ENCHANTED_INLAID_LAPIS.get()))
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ModItems.SOUL_SHARD.get()))
+				.addOutput(ModItems.SOUL_MECHANISM.get(), 0.7f)
+				.addOutput(ModItems.NECRONIUM_WASTE.get(), 0.1f)
+				.addOutput(ModItems.ENCHANTED_INLAID_LAPIS.get(), 0.05f)
+				.addOutput(ModItems.POLISHED_INLAID_LAPIS.get(), 0.03f)
+				.addOutput(ModItems.INLAID_LAPIS.get(), 0.07f)
+				.addOutput(AllBlocks.COGWHEEL, 0.023f)
+				.addOutput(ModItems.SOUL_SHARD.get(), 0.02f)
+				.addOutput(ModItems.NECRONIUM_PLATE.get(), 0.01f)
+				.build(recipeOutput);
 	}
 	
 	public static void registerSoulBookRecipes(RecipeOutput recipeOutput) {
@@ -499,6 +517,7 @@ public final class CreateRecipeGen {
 
 	public static void registerCuttingRecipes(RecipeOutput recipeOutput) {
 		new StandardProcessingRecipe.Builder<>(CuttingRecipe::new, SoulHarvestMod.id("cut_necronium_ingot_to_sticks"))
+				.duration(250)
 				.require(ModItems.NECRONIUM_INGOT.get())
 				.output(ModItems.NECRONIUM_ROD.get(), 2)
 				.output(0.75f, ModItems.NECRONIUM_WASTE.get())

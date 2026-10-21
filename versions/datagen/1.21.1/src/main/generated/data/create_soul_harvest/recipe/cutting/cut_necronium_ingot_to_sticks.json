@@ -5,6 +5,7 @@
       "item": "create_soul_harvest:necronium_ingot"
     }
   ],
+  "processing_time": 250,
   "results": [
     {
       "count": 2,

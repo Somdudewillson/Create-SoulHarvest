@@ -1,5 +1,7 @@
 package somdudewillson.create_soul_harvest.registry;
 
+import java.util.function.Supplier;
+
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
 
 import net.minecraft.core.registries.Registries;
@@ -24,7 +26,7 @@ public class ModItems {
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, SoulHarvestMod.MOD_ID);
 	public static final ItemRegistryBuilderFactory ITEM_BUILDER_FACTORY = new ItemRegistryBuilderFactory(SoulHarvestMod.MOD_ID, ITEMS);
 
-	private static <T extends Item> DeferredHolder<Item, T> registerWithTab(String name, java.util.function.Supplier<T> supplier) {
+	private static <T extends Item> DeferredHolder<Item, T> registerWithTab(String name, Supplier<T> supplier) {
 		DeferredHolder<Item, T> holder = ITEMS.register(name, supplier);
 		ModCreativeTabs.addToMainTab(holder);
 		return holder;
@@ -160,6 +162,15 @@ public class ModItems {
 	public static final DeferredHolder<Item, Item> CONTAGION_CHARGE = ITEM_BUILDER_FACTORY.registerSimpleItem("contagion_charge")
 			.properties(new Item.Properties())
 			.simpleItem()
+			.build();
+	public static final DeferredHolder<Item, Item> SOUL_MECHANISM_INCOMPLETE = ITEM_BUILDER_FACTORY.registerItem("soul_mechanism_incomplete", SequencedAssemblyItem::new)
+			.properties(new Item.Properties())
+			.simpleItem()
+			.build();
+	public static final DeferredHolder<Item, Item> SOUL_MECHANISM = ITEM_BUILDER_FACTORY.registerSimpleItem("soul_mechanism")
+			.properties(new Item.Properties())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
 			.build();
 
 	

@@ -1,0 +1,94 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "create_soul_harvest:necronium_plate"
+  },
+  "loops": 4,
+  "results": [
+    {
+      "chance": 0.7,
+      "id": "create_soul_harvest:soul_mechanism"
+    },
+    {
+      "chance": 0.1,
+      "id": "create_soul_harvest:necronium_waste"
+    },
+    {
+      "chance": 0.05,
+      "id": "create_soul_harvest:enchanted_inlaid_lapis"
+    },
+    {
+      "chance": 0.03,
+      "id": "create_soul_harvest:polished_inlaid_lapis"
+    },
+    {
+      "chance": 0.07,
+      "id": "create_soul_harvest:inlaid_lapis"
+    },
+    {
+      "chance": 0.023,
+      "id": "create:cogwheel"
+    },
+    {
+      "chance": 0.02,
+      "id": "create_soul_harvest:soul_shard"
+    },
+    {
+      "chance": 0.01,
+      "id": "create_soul_harvest:necronium_plate"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_soul_harvest:soul_mechanism_incomplete"
+        },
+        {
+          "item": "create:cogwheel"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_soul_harvest:soul_mechanism_incomplete"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_soul_harvest:soul_mechanism_incomplete"
+        },
+        {
+          "item": "create_soul_harvest:enchanted_inlaid_lapis"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_soul_harvest:soul_mechanism_incomplete"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_soul_harvest:soul_mechanism_incomplete"
+        },
+        {
+          "item": "create_soul_harvest:soul_shard"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_soul_harvest:soul_mechanism_incomplete"
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "create_soul_harvest:soul_mechanism_incomplete"
+  }
+}
