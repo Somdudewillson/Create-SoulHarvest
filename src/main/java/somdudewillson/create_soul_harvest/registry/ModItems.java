@@ -135,7 +135,7 @@ public class ModItems {
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
 			.build();
-	public static final DeferredHolder<Item, Item> NECRONIUM_WASTE_BOTTLE = ITEM_BUILDER_FACTORY.registerItem("necronium_waste_bottle", NecroniumWasteBottleItem::new)
+	public static final DeferredHolder<Item, Item> NECRONIUM_WASTE_BOTTLE = ITEM_BUILDER_FACTORY.registerSimpleItem("necronium_waste_bottle")
 			.properties(new Item.Properties().stacksTo(16).fireResistant())
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)

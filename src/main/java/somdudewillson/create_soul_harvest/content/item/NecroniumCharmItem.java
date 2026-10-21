@@ -1,7 +1,5 @@
 package somdudewillson.create_soul_harvest.content.item;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -13,16 +11,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
-//? >= 1.21 {
-
-//?} else {
-/*import net.minecraft.world.level.Level;
-*///?}
-
-import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -175,23 +165,5 @@ public class NecroniumCharmItem extends Item {
 
 	private static int maxUses() {
 		return MAX_AIR_USES;
-	}
-
-	//? >= 1.21 {
-	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-		super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-		addNecroniumCharmTooltip(stack, tooltipComponents);
-	}
-	//?} else {
-	/*@Override
-	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-		super.appendHoverText(stack, level, tooltipComponents, tooltipFlag);
-		addNecroniumCharmTooltip(stack, tooltipComponents);
-	}
-	*///?}
-
-	private void addNecroniumCharmTooltip(ItemStack stack, List<Component> tooltipComponents) {
-		tooltipComponents.add(Component.translatable("tooltip.create_soul_harvest.necronium_charm_desc").withStyle(ChatFormatting.GRAY));
 	}
 }

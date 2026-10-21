@@ -1,7 +1,5 @@
 package somdudewillson.create_soul_harvest.content.item;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -13,17 +11,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-
-//? >= 1.21 {
-
-//?} else {
-/*import net.minecraft.world.level.Level;
-*///?}
-
-import java.util.List;
 
 public class NecroniumWasteItem extends Item {
 	public static final float DECAY_PROBABILITY = 0.004f;
@@ -97,24 +86,5 @@ public class NecroniumWasteItem extends Item {
 
 	public static MobEffectInstance computeMobEffectInstance(int decayEvents) {
 		return new MobEffectInstance(MobEffects.WITHER, (20 * 2) + (decayEvents * 20 * 3), (decayEvents / 4));
-	}
-
-	//? >= 1.21 {
-	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-		super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-		addNecroniumWasteTooltip(stack, tooltipComponents);
-	}
-	//?} else {
-	/*@Override
-	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-		super.appendHoverText(stack, level, tooltipComponents, tooltipFlag);
-		addNecroniumWasteTooltip(stack, tooltipComponents);
-	}
-	*///?}
-
-	private void addNecroniumWasteTooltip(ItemStack stack, List<Component> tooltipComponents) {
-		tooltipComponents.add(Component.translatable("tooltip.create_soul_harvest.necronium_decay_warning").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD));
-		tooltipComponents.add(Component.translatable("tooltip.create_soul_harvest.necronium_despawn_warning").withStyle(ChatFormatting.YELLOW));
 	}
 }

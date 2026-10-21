@@ -191,12 +191,47 @@
   "create_soul_harvest.jei.output_mode.single.desc": "When processed, this recipe produces at most one of the possible output items.",
   "create_soul_harvest.jei.output_mode.independent": "✦ Rolls each output independently",
   "create_soul_harvest.jei.output_mode.independent.desc": "When processed, each item in the output list has an independent roll based on its chance.",
+  
+  "tooltip.create_soul_harvest.soul_item_tier": "Tier _%s_",
+  "tooltip.create_soul_harvest.biocide_reaction_warning": "Do not permit contact with lava!",
 
-  "tooltip.create_soul_harvest.polyclay_tuned": " Tuned (T%s)",
-  "tooltip.create_soul_harvest.polyclay_tier": "Tier %s",
+  "tooltip.create_soul_harvest.polyclay_tuned": "%s Tuned (T%s)",
   "tooltip.create_soul_harvest.polyclay_enhanced": "Enhanced Attunement",
-  "tooltip.create_soul_harvest.necronium_charm_desc": "Protects from poison and wither using pressurized air or durability.",
-  "tooltip.create_soul_harvest.necronium_decay_warning": "Highly unsafe to handle directly!",
-  "tooltip.create_soul_harvest.necronium_despawn_warning": "Will despawn unsafely!",
-  "tooltip.create_soul_harvest.biocide_reaction_warning": "Do not permit contact with lava!"
+  "tooltip.create_soul_harvest.polyclay_attuned_desc": "Polyclay, _attuned_ to the soul of a creature and ready to be processed into its _drops_.",
+  "tooltip.create_soul_harvest.polyclay_attuned.inferior_polyclay_tier": "This soul is nearly _too high tier_ for this _tier_ of polyclay. Drops will be _reduced_.",
+  "tooltip.create_soul_harvest.polyclay_attuned.superior_polyclay_tier": "Polyclay of this _tier_ can easily handle this soul. Drops will be _increased_.",
+  "tooltip.create_soul_harvest.polyclay_attuned.equal_polyclay_tier": "The _tier_ of the soul and polyclay are perfectly matched. Drop rate _100%_",
+  "tooltip.create_soul_harvest.polyclay_attuned.enhanced_desc": "This polyclay has been _enhanced_, allowing it to form rarer items. _Player-only_ drops can now be produced.",
+  
+  "tooltip.create_soul_harvest.soul_book_desc": "Hold in offhand to capture the souls of your enemies!",
+  "tooltip.create_soul_harvest.soul_partial": "_%s_ Soul (_%s%%_)",
+  "tooltip.create_soul_harvest.soul_complete": "_%s_ Soul (_Complete_)",
+  
+  "block.create_soul_harvest.soul_deposit_seed.tooltip.summary": "A _seed_ of sillica and soul energies, ready to sprout if given the right soil.",
+  "block.create_soul_harvest.soul_deposit_seed.tooltip.condition1": "When R-Clicked onto a spawner",
+  "block.create_soul_harvest.soul_deposit_seed.tooltip.behaviour1": "Will sproud into a soul crystal _bud_ which will grow over time.",
+  
+  "block.create_soul_harvest.midas_core.tooltip.summary": "Gold, infused with enough magic that it can transmute base materials into _Anima Gold_.",
+  "block.create_soul_harvest.midas_core.tooltip.condition1": "When placed in the world",
+  "block.create_soul_harvest.midas_core.tooltip.behaviour1": "Will convert neaby compatible blocks, such as _stone_, into _Anima Gold_ foam.",
+  
+  "block.create_soul_harvest.absolute_ice.tooltip.summary": "A seed formed from soul energy and the densest ice.",
+  "block.create_soul_harvest.absolute_ice.tooltip.condition1": "When placed in the world",
+  "block.create_soul_harvest.absolute_ice.tooltip.behaviour1": "Will _freeze_ the environment in a large radius.",
+  
+  "item.create_soul_harvest.necronium_waste.tooltip.summary": "Waste _cuttings_, _scraps_, and _powder_ from processing _Necronium_. Unsafe to hold!",
+  "item.create_soul_harvest.necronium_waste.tooltip.condition1": "When held",
+  "item.create_soul_harvest.necronium_waste.tooltip.behaviour1": "Will _decay_ over time, releasing _necrotic energies_",
+  "item.create_soul_harvest.necronium_waste.tooltip.condition2": "When allowed to despawn",
+  "item.create_soul_harvest.necronium_waste.tooltip.behaviour2": "Will _decay_, releasing _necrotic energies_",
+  
+  "item.create_soul_harvest.necronium_waste_bottle.tooltip.summary": "Waste materials from processing _Necronium,_ stored securely. Safe to hold.",
+  "item.create_soul_harvest.necronium_waste_bottle.tooltip.condition1": "When allowed to despawn",
+  "item.create_soul_harvest.necronium_waste_bottle.tooltip.behaviour1": "Will _decay_, releasing _necrotic energies_",
+  
+  "item.create_soul_harvest.necronium_charm.tooltip.summary": "Protects wielder from _Poison_ and _Wither_ effects. Can be powered with _Air_ _Pressure_ from a _Backtank_",
+  "item.create_soul_harvest.necronium_charm.tooltip.condition1": "When afflicted by Poison or Wither",
+  "item.create_soul_harvest.necronium_charm.tooltip.behaviour1": "Wielder will be cured at the cost of _Durability_",
+  "item.create_soul_harvest.necronium_charm.tooltip.condition2": "While wearing Backtank",
+  "item.create_soul_harvest.necronium_charm.tooltip.behaviour2": "_No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank"
 }

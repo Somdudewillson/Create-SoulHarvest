@@ -1,10 +1,13 @@
 package somdudewillson.create_soul_harvest.content.item;
 
-import net.minecraft.ChatFormatting;
+import net.createmod.catnip.lang.FontHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import somdudewillson.create_soul_harvest.util.SimplePalettizedTooltipModifier;
+
+import java.util.ArrayList;
 
 //? >= 1.21 {
 
@@ -14,6 +17,8 @@ import net.minecraft.world.item.TooltipFlag;
 
 import java.util.List;
 import java.util.function.Supplier;
+
+import com.simibubi.create.foundation.item.TooltipHelper;
 
 public class PolyclayItem extends Item {
 
@@ -58,22 +63,29 @@ public class PolyclayItem extends Item {
 		}
 		return 0.0f;
 	}
+	
+	public static class PolyclayTooltipModifier extends SimplePalettizedTooltipModifier {
+		protected final Item item;
 
-	//? >= 1.21 {
-	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-		super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-		addPolyclayTooltip(stack, tooltipComponents);
-	}
-	//?} else {
-	/*@Override
-	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-		super.appendHoverText(stack, level, tooltipComponents, tooltipFlag);
-		addPolyclayTooltip(stack, tooltipComponents);
-	}
-	*///?}
+		public PolyclayTooltipModifier(FontHelper.Palette palette, Item item) {
+			super(palette);
+			this.item = item;
+		}
 
-	private void addPolyclayTooltip(ItemStack stack, List<Component> tooltipComponents) {
-		tooltipComponents.add(Component.translatable("tooltip.create_soul_harvest.polyclay_tier", tier).withStyle(ChatFormatting.GRAY));
+		@Override
+		public void modify(ItemTooltipEvent context) {
+			List<Component> tooltip = context.getToolTip();
+			tooltip.addAll(getPolyclayInfo(context.getItemStack()));
+		}
+		
+		public List<Component> getPolyclayInfo(ItemStack stack) {
+			List<Component> tooltipComponents = new ArrayList<>();
+			
+			if (item instanceof PolyclayItem polyclayItem) {
+				tooltipComponents.addAll(TooltipHelper.cutTextComponent(Component.translatable("tooltip.create_soul_harvest.soul_item_tier", polyclayItem.getTier()), palette));
+			}
+			
+			return tooltipComponents;
+		}
 	}
 }
