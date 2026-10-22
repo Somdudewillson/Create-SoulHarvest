@@ -15,8 +15,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class NecroniumWasteItem extends Item {
-	public static final float DECAY_PROBABILITY = 0.004f;
-	public static final float DECAY_CASCADE_PROBABILITY = 0.015f;
+	public static final float DECAY_PROBABILITY = 0.003f;
+	public static final float DECAY_CASCADE_PROBABILITY = 0.025f;
 	public static final int ITEM_ENTITY_LIFESPAN = 1200; // 60 seconds (1 minute)
 
 	public NecroniumWasteItem(Properties properties) {
@@ -30,11 +30,12 @@ public class NecroniumWasteItem extends Item {
 
 	@Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean slotSelected) {
+		if (level.isClientSide()) return;
 		if (entity == null) return;
 		if (entity instanceof Player playerEntity && playerEntity.isSpectator()) return;
 		
 		long tickOffset = entity.tickCount + (slot * 7);
-		if ((tickOffset & 15) == 0) {
+		if ((tickOffset & 31) == 0) {
 			return;
 		}
 		
@@ -62,6 +63,13 @@ public class NecroniumWasteItem extends Item {
 		Vec3 entityPos = entity.position();
     	MobEffectInstance witherEffect = computeMobEffectInstance(decayEvents);
     	if (entity instanceof LivingEntity livingEntity) {
+    		MobEffectInstance existingEff = livingEntity.getEffect(witherEffect.getEffect());
+    		if (existingEff != null && existingEff.getDuration() > witherEffect.getDuration()) {
+    			witherEffect = new MobEffectInstance(
+    					witherEffect.getEffect(), 
+    					Math.min(existingEff.getDuration()+witherEffect.getDuration(), witherEffect.getDuration()*2), 
+    					witherEffect.getAmplifier());
+    		}
     		livingEntity.addEffect(witherEffect);
     	} else if (level instanceof ServerLevel serverLevel) {
     		AreaEffectCloud witherCloudEntity = computeAreaEffectCloud(serverLevel, decayEvents, entityPos);
