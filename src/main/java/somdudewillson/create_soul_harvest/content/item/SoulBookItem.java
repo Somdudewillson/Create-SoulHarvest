@@ -7,7 +7,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+//? neoforge {
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+//?} forge {
+/*import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+*///?}
 
 import java.util.ArrayList;
 

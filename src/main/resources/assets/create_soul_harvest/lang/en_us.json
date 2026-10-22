@@ -192,6 +192,12 @@
   "create_soul_harvest.jei.output_mode.independent": "✦ Rolls each output independently",
   "create_soul_harvest.jei.output_mode.independent.desc": "When processed, each item in the output list has an independent roll based on its chance.",
   
+  "create_soul_harvest.jei.loot_token": "Loot Token Rewards",
+  "create_soul_harvest.jei.loot_token.chance": "%s Chance",
+  "create_soul_harvest.jei.loot_token.count_range": "Count: %s - %s",
+  "tooltip.create_soul_harvest.loot_token_tuned": "%s Tuned",
+  "tooltip.create_soul_harvest.loot_token_empty": "Untuned Loot Token",
+  
   "tooltip.create_soul_harvest.soul_item_tier": "Tier _%s_",
   "tooltip.create_soul_harvest.biocide_reaction_warning": "Do not permit contact with lava!",
 

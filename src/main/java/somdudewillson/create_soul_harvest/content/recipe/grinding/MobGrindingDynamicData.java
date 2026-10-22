@@ -11,10 +11,21 @@ import net.minecraft.network.protocol.game.ClientboundUpdateRecipesPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayItem;
 import somdudewillson.create_soul_harvest.content.soul.SoulData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
@@ -31,13 +42,95 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
 
 public class MobGrindingDynamicData {
 	private static final float ENHANCED_ONLY_MULT = 0.25f;
-	
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+	private static final Map<ResourceLocation, LootTable> DYNAMIC_LOOT_TABLES = new ConcurrentHashMap<>();
+
+	public static void updateLootTables(@Nullable MinecraftServer server) {
+		DYNAMIC_LOOT_TABLES.clear();
+		Map<ResourceLocation, SoulData> knownSouls = SoulDataManager.getKnownSoulData();
+		RegistryAccess registryAccess = server != null ? server.registryAccess() : null;
+
+		for (Map.Entry<ResourceLocation, SoulData> entry : knownSouls.entrySet()) {
+			ResourceLocation entityId = entry.getKey();
+			SoulData soulData = entry.getValue();
+			if (!soulData.hasLootTokenDrops(registryAccess)) {
+				continue;
+			}
+			ResourceLocation tableId = SoulHarvestMod.id("loot_tokens/" + entityId.getNamespace() + "/" + entityId.getPath());
+			LootTable table = buildLootTable(tableId, soulData, registryAccess);
+			DYNAMIC_LOOT_TABLES.put(tableId, table);
+		}
+		SoulHarvestMod.LOGGER.info("Built {} dynamic loot token tables", DYNAMIC_LOOT_TABLES.size());
+	}
+
+	public static LootTable getDynamicLootTable(ResourceLocation lootTableId, @Nullable RegistryAccess registryAccess) {
+		LootTable cached = DYNAMIC_LOOT_TABLES.get(lootTableId);
+		if (cached != null) {
+			return cached;
+		}
+
+		String path = lootTableId.getPath();
+		if (!path.startsWith("loot_tokens/")) {
+			return LootTable.EMPTY;
+		}
+		String sub = path.substring("loot_tokens/".length());
+		int slash = sub.indexOf('/');
+		if (slash < 0) {
+			return LootTable.EMPTY;
+		}
+		String ns = sub.substring(0, slash);
+		String entPath = sub.substring(slash + 1);
+		ResourceLocation entityId = ResourceLocation.fromNamespaceAndPath(ns, entPath);
+
+		SoulData data = SoulDataManager.get(entityId);
+		if (data == null || !data.hasLootTokenDrops(registryAccess)) {
+			return LootTable.EMPTY;
+		}
+
+		LootTable table = buildLootTable(lootTableId, data, registryAccess);
+		DYNAMIC_LOOT_TABLES.put(lootTableId, table);
+		return table;
+	}
+
+	public static LootTable buildLootTable(ResourceLocation tableId, SoulData soulData, @Nullable RegistryAccess registryAccess) {
+		List<SoulDropEntry> tokenEntries = soulData.getLootTokenEntries(registryAccess);
+		if (tokenEntries.isEmpty()) {
+			return LootTable.EMPTY;
+		}
+
+		LootPool.Builder poolBuilder = LootPool.lootPool()
+				.setRolls(ConstantValue.exactly(1));
+
+		for (SoulDropEntry entry : tokenEntries) {
+			Item item = BuiltInRegistries.ITEM.get(entry.item());
+			if (item == null || item == Items.AIR) continue;
+
+			LootPoolSingletonContainer.Builder<?> entryBuilder = LootItem.lootTableItem(item)
+					.setWeight(entry.weight());
+
+			if (entry.min() != 1 || entry.max() != 1) {
+				entryBuilder.apply(SetItemCountFunction.setCount(UniformGenerator.between(entry.min(), entry.max())));
+			}
+			poolBuilder.add(entryBuilder);
+		}
+
+		LootTable table = LootTable.lootTable()
+				.setParamSet(LootContextParamSets.ENCHANTED_ENTITY)
+				.withPool(poolBuilder)
+				.build();
+		table.setLootTableId(tableId);
+		return table;
+	}
+
+	public static void clear() {
+		DYNAMIC_LOOT_TABLES.clear();
+	}
 
 	public static Map<String, byte[]> generate() {
 		Map<String, byte[]> files = new HashMap<>();
@@ -63,6 +156,16 @@ public class MobGrindingDynamicData {
 			byte[] bytes = GSON.toJson(entry.getValue()).getBytes(StandardCharsets.UTF_8);
 			files.put("data/create_soul_harvest/recipe/" + id.getPath() + ".json", bytes);
 			files.put("data/create_soul_harvest/recipes/" + id.getPath() + ".json", bytes);
+		}
+
+		Map<ResourceLocation, JsonObject> lootTables = generateLootTableJsons(null);
+		SoulHarvestMod.LOGGER.info("Generating loot token tables for {} souls", lootTables.size());
+
+		for (Map.Entry<ResourceLocation, JsonObject> entry : lootTables.entrySet()) {
+			ResourceLocation id = entry.getKey();
+			byte[] bytes = GSON.toJson(entry.getValue()).getBytes(StandardCharsets.UTF_8);
+			files.put("data/create_soul_harvest/loot_table/" + id.getPath() + ".json", bytes);
+			files.put("data/create_soul_harvest/loot_tables/" + id.getPath() + ".json", bytes);
 		}
 
 		return files;
@@ -135,6 +238,18 @@ public class MobGrindingDynamicData {
 				recipes.put(SoulHarvestMod.id("sequenced_assembly/attune_" + recipeSuffix),
 						makeSequencedAssemblyRecipe(polyclay, transItem, attunedItem, entityId, mobTier));
 			}
+		}
+
+		// Loot Token Sequenced Assembly Recipes
+		for (Map.Entry<ResourceLocation, SoulData> entry : knownSouls.entrySet()) {
+			ResourceLocation entityId = entry.getKey();
+			SoulData soulData = entry.getValue();
+			if (!soulData.hasLootTokenDrops(nullableRegistryAccess)) {
+				continue;
+			}
+			int mobTier = soulData.tier();
+			JsonObject lootTokenRecipe = makeLootTokenSequencedAssemblyRecipe(entityId, mobTier);
+			recipes.put(SoulHarvestMod.id("sequenced_assembly/loot_token_" + entityId.getNamespace() + "_" + entityId.getPath()), lootTokenRecipe);
 		}
 
 		return recipes;
@@ -399,7 +514,7 @@ public class MobGrindingDynamicData {
 					break;
 				}
 
-				if (entry.restriction() == DropRestriction.LOOT_TOKEN) {
+				if (SoulData.isLootTokenEntry(entry, registryAccess)) {
 					continue;
 				}
 				if (entry.restriction() == DropRestriction.ENHANCED && !enhanced) {
@@ -457,5 +572,198 @@ public class MobGrindingDynamicData {
 	private static JsonObject makeGrindingRecipe(ResourceLocation entityId, SoulData soulData, @Nullable RegistryAccess registryAccess) {
 		// TODO Is this even possible? Consider later.
 		return null;
+	}
+
+	public static Map<ResourceLocation, JsonObject> generateLootTableJsons(@Nullable MinecraftServer server) {
+		Optional<MinecraftServer> optMinecraftServer = Optional.ofNullable(server);
+		RegistryAccess nullableRegistryAccess = optMinecraftServer.map(MinecraftServer::registryAccess).orElse(null);
+
+		Map<ResourceLocation, JsonObject> tables = new HashMap<>();
+		Map<ResourceLocation, SoulData> knownSouls = SoulDataManager.getKnownSoulData();
+
+		for (Map.Entry<ResourceLocation, SoulData> entry : knownSouls.entrySet()) {
+			ResourceLocation entityId = entry.getKey();
+			SoulData soulData = entry.getValue();
+			if (!soulData.hasLootTokenDrops(nullableRegistryAccess)) {
+				continue;
+			}
+			JsonObject tableJson = makeLootTokenLootTable(soulData, nullableRegistryAccess);
+			tables.put(SoulHarvestMod.id("loot_tokens/" + entityId.getNamespace() + "/" + entityId.getPath()), tableJson);
+		}
+		return tables;
+	}
+
+	public static JsonObject makeLootTokenLootTable(SoulData soulData, @Nullable RegistryAccess registryAccess) {
+		JsonObject root = new JsonObject();
+		root.addProperty("type", "minecraft:generic");
+
+		JsonArray poolsArray = new JsonArray();
+		JsonObject poolObj = new JsonObject();
+		poolObj.addProperty("rolls", 1);
+
+		JsonArray entriesArray = new JsonArray();
+		List<SoulDropEntry> tokenEntries = soulData.getLootTokenEntries(registryAccess);
+		for (SoulDropEntry entry : tokenEntries) {
+			JsonObject entryObj = new JsonObject();
+			entryObj.addProperty("type", "minecraft:item");
+			entryObj.addProperty("name", entry.item().toString());
+			entryObj.addProperty("weight", entry.weight());
+
+			JsonArray functionsArray = new JsonArray();
+			JsonObject setCountObj = new JsonObject();
+			setCountObj.addProperty("function", "minecraft:set_count");
+
+			if (entry.min() == entry.max()) {
+				setCountObj.addProperty("count", entry.min());
+			} else {
+				JsonObject uniformObj = new JsonObject();
+				uniformObj.addProperty("type", "minecraft:uniform");
+				uniformObj.addProperty("min", (float) entry.min());
+				uniformObj.addProperty("max", (float) entry.max());
+				setCountObj.add("count", uniformObj);
+			}
+			functionsArray.add(setCountObj);
+			entryObj.add("functions", functionsArray);
+
+			entriesArray.add(entryObj);
+		}
+
+		poolObj.add("entries", entriesArray);
+		poolsArray.add(poolObj);
+		root.add("pools", poolsArray);
+		return root;
+	}
+
+	private static JsonObject makeLootTokenSequencedAssemblyRecipe(ResourceLocation entityId, int mobTier) {
+		JsonObject recipe = new JsonObject();
+		recipe.addProperty("type", "create:sequenced_assembly");
+
+		// --- Base input
+		JsonObject baseIng = new JsonObject();
+		baseIng.addProperty("item", "create_soul_harvest:loot_token_blank");
+		recipe.add("ingredient", baseIng);
+
+		// --- Transitional item
+		JsonObject transItemJson = new JsonObject();
+		transItemJson.addProperty("id", "create_soul_harvest:loot_token_blank");
+		transItemJson.addProperty("item", "create_soul_harvest:loot_token_blank");
+		recipe.add("transitional_item", transItemJson);
+
+		recipe.addProperty("loops", 1);
+
+		JsonArray sequence = new JsonArray();
+
+		// --- Deployer application of Soul Book with soul
+		JsonObject deployStep = new JsonObject();
+		deployStep.addProperty("type", "create:deploying");
+
+		JsonArray deployIngredients = new JsonArray();
+		JsonObject ingTrans = new JsonObject();
+		ingTrans.addProperty("id", "create_soul_harvest:loot_token_blank");
+		ingTrans.addProperty("item", "create_soul_harvest:loot_token_blank");
+		deployIngredients.add(ingTrans);
+
+		JsonObject soulBookIng = new JsonObject();
+		soulBookIng.addProperty("type", "create_soul_harvest:soul_book");
+		soulBookIng.addProperty("soul", entityId.toString());
+		soulBookIng.addProperty("min_tier", mobTier);
+		deployIngredients.add(soulBookIng);
+		deployStep.add("ingredients", deployIngredients);
+
+		JsonArray deployResults = new JsonArray();
+		JsonObject deployResult = new JsonObject();
+		deployResult.addProperty("id", "create_soul_harvest:loot_token_blank");
+		deployResult.addProperty("item", "create_soul_harvest:loot_token_blank");
+		deployResults.add(deployResult);
+		deployStep.add("results", deployResults);
+
+		deployStep.addProperty("keep_held_item", true);
+		deployStep.addProperty("keepHeldItem", true);
+		sequence.add(deployStep);
+
+		// --- Spouting liquid soul crystal
+		JsonObject spoutStep = new JsonObject();
+		spoutStep.addProperty("type", "create:filling");
+
+		JsonArray spoutIngredients = new JsonArray();
+		JsonObject spoutItemIng = new JsonObject();
+		spoutItemIng.addProperty("item", "create_soul_harvest:loot_token_blank");
+		spoutIngredients.add(spoutItemIng);
+
+		int fluidAmount = switch (mobTier) {
+			case 1 -> 250;
+			case 2 -> 500;
+			case 3 -> 1000;
+			default -> 250;
+		};
+
+		JsonObject fluidIng = new JsonObject();
+		//? >= 1.21 {
+		fluidIng.addProperty("type", "neoforge:single");
+		fluidIng.addProperty("fluid", "create_soul_harvest:liquid_soul_crystal");
+		fluidIng.addProperty("amount", fluidAmount);
+		//?} else {
+		/*fluidIng.addProperty("fluid", "create_soul_harvest:liquid_soul_crystal");
+		fluidIng.addProperty("amount", fluidAmount);
+		fluidIng.add("nbt", new JsonObject());
+		*///?}
+		spoutIngredients.add(fluidIng);
+		spoutStep.add("ingredients", spoutIngredients);
+
+		JsonArray spoutResults = new JsonArray();
+		JsonObject spoutResult = new JsonObject();
+		spoutResult.addProperty("id", "create_soul_harvest:loot_token_blank");
+		spoutResult.addProperty("item", "create_soul_harvest:loot_token_blank");
+		spoutResults.add(spoutResult);
+		spoutStep.add("results", spoutResults);
+		sequence.add(spoutStep);
+
+		// --- Pressing
+		JsonObject pressStep = new JsonObject();
+		pressStep.addProperty("type", "create:pressing");
+
+		JsonArray pressIngredients = new JsonArray();
+		JsonObject pressItemIng = new JsonObject();
+		pressItemIng.addProperty("item", "create_soul_harvest:loot_token_blank");
+		pressIngredients.add(pressItemIng);
+		pressStep.add("ingredients", pressIngredients);
+
+		JsonArray pressResults = new JsonArray();
+		JsonObject pressResult = new JsonObject();
+		pressResult.addProperty("id", "create_soul_harvest:loot_token_blank");
+		pressResult.addProperty("item", "create_soul_harvest:loot_token_blank");
+		pressResults.add(pressResult);
+		pressStep.add("results", pressResults);
+		sequence.add(pressStep);
+
+		recipe.add("sequence", sequence);
+
+		// --- Final Result
+		ResourceLocation lootTableId = SoulHarvestMod.id("loot_tokens/" + entityId.getNamespace() + "/" + entityId.getPath());
+		String mobLocKey = BuiltInRegistries.ENTITY_TYPE.getOptional(entityId)
+				.map(EntityType::getDescriptionId)
+				.orElse("entity." + entityId.getNamespace() + "." + entityId.getPath());
+
+		JsonArray finalResults = new JsonArray();
+		JsonObject finalResult = new JsonObject();
+		finalResult.addProperty("id", "create_soul_harvest:loot_token");
+		finalResult.addProperty("item", "create_soul_harvest:loot_token");
+
+		JsonObject customTag = new JsonObject();
+		customTag.addProperty(LootTokenItem.TAG_LOOT_TABLE, lootTableId.toString());
+		customTag.addProperty(LootTokenItem.TAG_LOCALIZATION_KEY, mobLocKey);
+
+		// 1.21 NeoForge components
+		JsonObject components = new JsonObject();
+		components.add("minecraft:custom_data", customTag);
+		finalResult.add("components", components);
+
+		// 1.20 Forge NBT
+		finalResult.add("nbt", customTag);
+
+		finalResults.add(finalResult);
+		recipe.add("results", finalResults);
+
+		return recipe;
 	}
 }

@@ -99,11 +99,30 @@ public class SoulData {
 				.orElse(true);
 	}
 
+	public static boolean isLootTokenOnly(ResourceLocation itemId, @Nullable HolderLookup.Provider registries) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, itemId);
+		if (registries != null) {
+			Optional<HolderLookup.RegistryLookup<Item>> registryLookup = registries.lookup(Registries.ITEM);
+			if (registryLookup.isPresent()) {
+				return registryLookup.get().get(key)
+						.map(h -> h.is(ModTags.Items.LOOT_TOKEN_ONLY))
+						.orElse(false);
+			}
+		}
+		return BuiltInRegistries.ITEM.asLookup().get(key)
+				.map(h -> h.is(ModTags.Items.LOOT_TOKEN_ONLY))
+				.orElse(false);
+	}
+
+	public static boolean isLootTokenEntry(SoulDropEntry entry, @Nullable HolderLookup.Provider registries) {
+		return entry.restriction() == DropRestriction.LOOT_TOKEN || isLootTokenOnly(entry.item(), registries);
+	}
+
 	public boolean hasDrops(@Nullable HolderLookup.Provider registries, boolean enhanced) {
 		return pools.values().stream()
 			.map(SoulDropPool::entries)
 			.flatMap(List::stream)
-			.filter(e -> e.restriction() != DropRestriction.LOOT_TOKEN)
+			.filter(e -> !isLootTokenEntry(e, registries))
 			.filter(e -> enhanced || e.restriction() == DropRestriction.STANDARD)
 			.filter(e -> isDropAllowedStandard(e.item(), registries))
 			.findAny()
@@ -114,11 +133,28 @@ public class SoulData {
 		return pools.values().stream()
 			.map(SoulDropPool::entries)
 			.flatMap(List::stream)
-			.filter(e -> e.restriction() != DropRestriction.LOOT_TOKEN)
+			.filter(e -> !isLootTokenEntry(e, registries))
 			.filter(e -> e.restriction() == DropRestriction.ENHANCED || !isDropAllowedStandard(e.item(), registries))
 			.filter(e -> isDropAllowedEnhanced(e.item(), registries))
 			.findAny()
 			.isPresent();
+	}
+
+	public boolean hasLootTokenDrops(@Nullable HolderLookup.Provider registries) {
+		return pools.values().stream()
+			.map(SoulDropPool::entries)
+			.flatMap(List::stream)
+			.filter(e -> isLootTokenEntry(e, registries))
+			.findAny()
+			.isPresent();
+	}
+
+	public List<SoulDropEntry> getLootTokenEntries(@Nullable HolderLookup.Provider registries) {
+		return pools.values().stream()
+			.map(SoulDropPool::entries)
+			.flatMap(List::stream)
+			.filter(e -> isLootTokenEntry(e, registries))
+			.toList();
 	}
 
 	public void mergePool(SoulDropPool partialPool) {

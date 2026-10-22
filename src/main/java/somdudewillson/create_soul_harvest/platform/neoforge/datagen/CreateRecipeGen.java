@@ -355,18 +355,6 @@ public final class CreateRecipeGen {
 	}
 
 	public static void registerSequencedAssemblyRecipes(RecipeOutput recipeOutput) {
-		// Assemble Loot Token
-		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_assemble_loot_token"))
-				.require(ModItems.LOOT_TOKEN_BLANK.get())
-				.transitionTo(ModItems.LOOT_TOKEN_BLANK.get())
-				.loops(2)
-				.addStep(FillingRecipe::new, rb -> rb.require(Fluids.LAVA, 1000))
-				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ModItems.ENCHANTED_INLAID_LAPIS.get()))
-				.addStep(PressingRecipe::new, rb -> rb)
-				.addStep(PressingRecipe::new, rb -> rb)
-				.addOutput(ModItems.LOOT_TOKEN.get(), 1.0f)
-				.build(recipeOutput);
-
 		// Print Glyph Page
 		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_print_glyph_page"))
 				.require(Items.PAPER)

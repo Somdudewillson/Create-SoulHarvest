@@ -1,6 +1,7 @@
 package somdudewillson.create_soul_harvest.content.event;
 
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
@@ -9,19 +10,33 @@ import com.simibubi.create.foundation.item.TooltipModifier;
 import net.createmod.catnip.lang.FontHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+
+//? neoforge {
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.registries.DeferredHolder;
+//?} forge {
+/*import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+*///?}
+
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayItem;
 import somdudewillson.create_soul_harvest.content.item.SoulBookItem;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 import somdudewillson.create_soul_harvest.registry.ModItems;
 
+//? neoforge {
 @EventBusSubscriber(modid = SoulHarvestMod.MOD_ID, value = Dist.CLIENT)
+//?} forge {
+/*@EventBusSubscriber(modid = SoulHarvestMod.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+*///?}
 public class TooltipProvisionEvents {
 	@SubscribeEvent
 	public static void provisionTooltips(final FMLClientSetupEvent event) {
@@ -43,9 +58,11 @@ public class TooltipProvisionEvents {
 		registerTooltip(ModItems.POLYCLAY_ATTUNED, FontHelper.Palette.STANDARD_CREATE, PolyclayAttunedItem.PolyclayAttunedTooltipModifier::new);
 		registerTooltip(ModItems.POLYCLAY_ANDESITE_ATTUNED, FontHelper.Palette.STANDARD_CREATE, PolyclayAttunedItem.PolyclayAttunedTooltipModifier::new);
 		registerTooltip(ModItems.POLYCLAY_BRASS_ATTUNED, FontHelper.Palette.STANDARD_CREATE, PolyclayAttunedItem.PolyclayAttunedTooltipModifier::new);
+		
+		registerTooltip(ModItems.LOOT_TOKEN, FontHelper.Palette.STANDARD_CREATE, LootTokenItem.LootTokenTooltipModifier::new);
 	}
 	
-	protected static void registerStandardTooltipBlock(DeferredHolder<Block, ? extends Block> block) {
+	protected static void registerStandardTooltipBlock(Supplier<? extends Block> block) {
 		registerStandardTooltipBlock(block.get());
 	}
 
@@ -53,7 +70,7 @@ public class TooltipProvisionEvents {
 		registerStandardTooltip(block.asItem());
 	}
 	
-	protected static void registerStandardTooltip(DeferredHolder<Item, ? extends Item> item) {
+	protected static void registerStandardTooltip(Supplier<? extends Item> item) {
 		registerStandardTooltip(item.get());
 	}
 
@@ -62,7 +79,7 @@ public class TooltipProvisionEvents {
 	}
 	
 	protected static void registerTooltip(
-			DeferredHolder<Item, ? extends Item> item, 
+			Supplier<? extends Item> item, 
 			FontHelper.Palette palette, 
 			BiFunction<FontHelper.Palette, Item, TooltipModifier> tooltipModifierFactory) {
 		registerTooltip(item.get(), palette, tooltipModifierFactory);

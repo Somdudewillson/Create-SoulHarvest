@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
+import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
 import somdudewillson.create_soul_harvest.registry.ModCreativeTabs;
 import somdudewillson.create_soul_harvest.registry.ModItems;
@@ -55,6 +56,9 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 				registration.registerSubtypeInterpreter(item, polyclayInterpreter);
 			}
 		}
+
+		val lootTokenInterpreter = new LootTokenSubtypeInterpreter();
+		registration.registerSubtypeInterpreter(ModItems.LOOT_TOKEN.get(), lootTokenInterpreter);
 	}
 
 	@Override
@@ -85,6 +89,10 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 				List<ItemStack> polyclays = ModCreativeTabs.generateAllAttunedPolyclay(registries);
 				if (!polyclays.isEmpty()) {
 					ingredientManager.addIngredientsAtRuntime(VanillaTypes.ITEM_STACK, polyclays);
+				}
+				List<ItemStack> lootTokens = ModCreativeTabs.generateAllCompletedLootTokens(registries);
+				if (!lootTokens.isEmpty()) {
+					ingredientManager.addIngredientsAtRuntime(VanillaTypes.ITEM_STACK, lootTokens);
 				}
 			}
 		});
@@ -149,6 +157,36 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 				return "";
 			}
 			return base + (ISoulHolder.isEnhanced(ingredient) ? ":enhanced" : "");
+		}
+	}
+
+	//? >= 1.21 {
+	public static class LootTokenSubtypeInterpreter implements ISubtypeInterpreter<ItemStack> {
+
+		@Override
+		public @Nullable Object getSubtypeData(ItemStack ingredient, UidContext context) {
+			return getSubtypeString(ingredient, context);
+		}
+
+		@Override
+		public String getLegacyStringSubtypeInfo(ItemStack ingredient, UidContext context) {
+			return getSubtypeString(ingredient, context);
+		}
+	//?} else {
+	/*public static class LootTokenSubtypeInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
+		@Override
+		public String apply(ItemStack ingredient, UidContext context) {
+			return getSubtypeString(ingredient, context);
+		}
+	*///?}
+
+		protected String getSubtypeString(ItemStack ingredient, UidContext context) {
+			ResourceLocation lootTable = LootTokenItem.getLootTable(ingredient);
+			if (lootTable == null) {
+				return "";
+			}
+			String customKey = LootTokenItem.getCustomLocalizationKey(ingredient);
+			return lootTable.toString() + (customKey != null ? ":" + customKey : "");
 		}
 	}
 }

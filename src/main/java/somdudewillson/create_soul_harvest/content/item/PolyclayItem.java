@@ -4,7 +4,11 @@ import net.createmod.catnip.lang.FontHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+//? neoforge {
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+//?} forge {
+/*import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+*///?}
 import somdudewillson.create_soul_harvest.util.SimplePalettizedTooltipModifier;
 
 import java.util.ArrayList;

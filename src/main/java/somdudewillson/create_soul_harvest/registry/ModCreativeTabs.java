@@ -21,6 +21,7 @@ import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayItem;
 import somdudewillson.create_soul_harvest.content.item.SoulBookItem;
@@ -141,6 +142,39 @@ public class ModCreativeTabs {
 		return list;
 	}
 
+	public static List<ItemStack> generateAllCompletedLootTokens(@Nullable HolderLookup.Provider registries) {
+		List<ItemStack> list = new ArrayList<>();
+		Map<ResourceLocation, SoulData> dataMap = SoulDataManager.getKnownSoulData();
+
+		List<Map.Entry<ResourceLocation, SoulData>> sortedEntries = dataMap.entrySet()
+				.stream()
+				.filter(e -> e.getValue() != null && e.getValue().hasLootTokenDrops(registries))
+				.collect(Collectors.toCollection(ArrayList::new));
+
+		sortedEntries.sort((e1, e2) -> {
+			int tier1 = e1.getValue() != null ? e1.getValue().tier() : 0;
+			int tier2 = e2.getValue() != null ? e2.getValue().tier() : 0;
+			if (tier1 != tier2) {
+				return Integer.compare(tier1, tier2);
+			}
+
+			String name1 = getEntityDisplayName(e1.getKey());
+			String name2 = getEntityDisplayName(e2.getKey());
+			return name1.compareToIgnoreCase(name2);
+		});
+
+		for (Map.Entry<ResourceLocation, SoulData> entry : sortedEntries) {
+			ResourceLocation entityId = entry.getKey();
+			ResourceLocation lootTableId = SoulHarvestMod.id("loot_tokens/" + entityId.getNamespace() + "/" + entityId.getPath());
+			String mobLocKey = BuiltInRegistries.ENTITY_TYPE.getOptional(entityId)
+					.map(EntityType::getDescriptionId)
+					.orElse("entity." + entityId.getNamespace() + "." + entityId.getPath());
+
+			list.add(LootTokenItem.createWithLootTable(ModItems.LOOT_TOKEN.get(), lootTableId, mobLocKey));
+		}
+		return list;
+	}
+
 	private static String getEntityDisplayName(ResourceLocation id) {
 		Optional<EntityType<?>> entityType = EntityType.byString(id.toString());
 		if (entityType.isPresent()) {
@@ -160,6 +194,9 @@ public class ModCreativeTabs {
 							}
 							for (ItemStack polyclayStack : generateAllAttunedPolyclay(parameters.holders())) {
 								output.accept(polyclayStack);
+							}
+							for (ItemStack tokenStack : generateAllCompletedLootTokens(parameters.holders())) {
+								output.accept(tokenStack);
 							}
 						})
 						.build()

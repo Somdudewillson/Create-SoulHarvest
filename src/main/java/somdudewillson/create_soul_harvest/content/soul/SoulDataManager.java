@@ -203,7 +203,7 @@ public class SoulDataManager {
 			}
 
 			// Pruning: if not queued for sampling and has neither drops nor xp, omit from final manager entries
-			if (!queuedForSampling && !soulData.hasDrops(nullableRegistryAccess, true) && soulData.xp() <= 0) {
+			if (!queuedForSampling && soulData.xp() <= 0 && !soulData.hasLootTokenDrops(nullableRegistryAccess) && !soulData.hasDrops(nullableRegistryAccess, true)) {
 				continue;
 			}
 
@@ -251,6 +251,7 @@ public class SoulDataManager {
 
 		if (pendingSamplingQueue.isEmpty()) {
 			MobGrindingDynamicData.updateRecipeManager(server);
+			MobGrindingDynamicData.updateLootTables(server);
 			SoulHarvestDataEvents.onSoulDataUpdated();
 		}
 	}

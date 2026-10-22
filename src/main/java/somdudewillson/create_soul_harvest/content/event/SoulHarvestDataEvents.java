@@ -40,6 +40,7 @@ public class SoulHarvestDataEvents {
 		if (server != null) {
 			SoulDataManager.recalculate(server);
 			MobGrindingDynamicData.updateRecipeManager(server);
+			MobGrindingDynamicData.updateLootTables(server);
 			onSoulDataUpdated();
 		}
 	}
@@ -48,6 +49,7 @@ public class SoulHarvestDataEvents {
 	public static void onServerStarted(ServerStartedEvent event) {
 		SoulDataManager.recalculate(event.getServer());
 		MobGrindingDynamicData.updateRecipeManager(event.getServer());
+		MobGrindingDynamicData.updateLootTables(event.getServer());
 		onSoulDataUpdated();
 	}
 
@@ -83,6 +85,7 @@ public class SoulHarvestDataEvents {
 	@SubscribeEvent
 	public static void onServerStopped(ServerStoppedEvent event) {
 		SoulDataManager.clear();
+		MobGrindingDynamicData.clear();
 	}
 
 	@SubscribeEvent
