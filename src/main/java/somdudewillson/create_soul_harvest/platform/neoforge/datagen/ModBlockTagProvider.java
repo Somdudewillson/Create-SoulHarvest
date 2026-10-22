@@ -3,6 +3,8 @@ package somdudewillson.create_soul_harvest.platform.neoforge.datagen;
 //? neoforge {
 
 import com.simibubi.create.AllTags;
+import com.simibubi.create.AllTags.AllBlockTags;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -32,8 +34,14 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 
 		tag(ModTags.Blocks.FAN_PROCESSING_CATALYSTS_SOUL_INFUSION)
 				.add(ModBlocks.SOUL_CLUSTER.get());
-
-		// Create fan transparent tag
+		
+		// Create tags
+		tag(AllBlockTags.NON_BREAKABLE.tag).add(
+				ModBlocks.SOUL_BUD_SMALL.get(),
+				ModBlocks.SOUL_BUD_MEDIUM.get(),
+				ModBlocks.SOUL_BUD_LARGE.get()
+		);
+		
 		tag(AllTags.AllBlockTags.FAN_TRANSPARENT.tag).add(
 				ModBlocks.SOUL_BUD_SMALL.get(),
 				ModBlocks.SOUL_BUD_MEDIUM.get(),
