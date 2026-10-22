@@ -1,6 +1,8 @@
 package somdudewillson.create_soul_harvest;
 
+import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.resources.ResourceLocation;
+import somdudewillson.create_soul_harvest.content.ponder.SoulHarvestPonderPlugin;
 import somdudewillson.create_soul_harvest.platform.Platform;
 
 import org.slf4j.Logger;
@@ -29,6 +31,8 @@ public class SoulHarvestMod {
 	public static void onInitializeClient() {
 		LOGGER.info("Initializing {} Client on {}", MOD_ID, SoulHarvestMod.xplat().loader());
 		LOGGER.debug("{}: { version: {}; friendly_name: {} }", MOD_ID, MOD_VERSION, MOD_FRIENDLY_NAME);
+		
+		PonderIndex.addPlugin(new SoulHarvestPonderPlugin());
 	}
 
 	static Platform xplat() {

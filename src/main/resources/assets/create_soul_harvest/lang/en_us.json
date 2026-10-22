@@ -182,6 +182,12 @@
   "tag.create_soul_harvest.requires_high_kills": "Requires High Kills",
   "tag.create_soul_harvest.soul_can_be_captured": "Capturable Soul Mobs",
   "tag.create_soul_harvest.contagion_immune": "Contagion Immune Entities",
+  
+  "create_soul_harvest.ponder.soul_cluster_growth.header": "Growing Soul Crystals",
+  "create_soul_harvest.ponder.soul_cluster_growth.text_1": "Use a seed on any face of a spawner to plant a bud",
+  "create_soul_harvest.ponder.soul_cluster_growth.text_2": "The soul bud will grow over time",
+  "create_soul_harvest.ponder.soul_cluster_growth.text_3": "When broken...",
+  "create_soul_harvest.ponder.soul_cluster_growth.text_4": "it will drop soul crystals and reset to its initial growth phase",
 
   "create_soul_harvest.jei.glyph_page_chance_per_page": "12.5% Chance (1 in 8)",
   "create_soul_harvest.jei.glyph_page_random_output": "Randomly produces one of the 8 Glyph Pages",
