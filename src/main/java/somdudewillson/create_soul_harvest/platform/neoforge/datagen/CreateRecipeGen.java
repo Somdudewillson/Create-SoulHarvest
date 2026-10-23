@@ -10,6 +10,7 @@ import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 import com.simibubi.create.content.kinetics.crusher.CrushingRecipe;
 import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipe;
+import com.simibubi.create.content.kinetics.millstone.MillingRecipe;
 import com.simibubi.create.content.kinetics.mixer.CompactingRecipe;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
@@ -70,6 +71,7 @@ public final class CreateRecipeGen {
 		registerMixingRecipes(recipeOutput);
 		registerSandpaperPolishingRecipes(recipeOutput);
 		registerSequencedAssemblyRecipes(recipeOutput);
+		registerMillingRecipes(recipeOutput);
 		registerCrushingRecipes(recipeOutput);
 		registerSplashingRecipes(recipeOutput);
 		registerCuttingRecipes(recipeOutput);
@@ -95,14 +97,13 @@ public final class CreateRecipeGen {
 				.build(recipeOutput, SoulHarvestMod.id("craft_loot_token_blank_netherite"));
 		
 		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.LOOT_TOKEN_BLANK.get(), 1)
-				.key('N', ModItems.NECRONIUM_INGOT.get())
+				.key('N', ModItems.NECRONIUM_PLATE.get())
 				.key('G', ModItems.MAGIC_GOLD_CHUNK.get())
-				.key('M', ModItems.MAGIC_GOLD.get())
-				.patternLine(" MMM ")
-				.patternLine("MGNGM")
-				.patternLine("MNNNM")
-				.patternLine("MGNGM")
-				.patternLine(" MMM ")
+				.patternLine(" GGG ")
+				.patternLine("GGNGG")
+				.patternLine("GNNNG")
+				.patternLine("GGNGG")
+				.patternLine(" GGG ")
 				.disallowMirrored()
 				.build(recipeOutput, SoulHarvestMod.id("craft_loot_token_blank_necronium"));
 
@@ -230,8 +231,8 @@ public final class CreateRecipeGen {
 				.require(AllItems.POWDERED_OBSIDIAN)
 				.require(AllItems.POWDERED_OBSIDIAN)
 				.requiresHeat(HeatCondition.SUPERHEATED)
-				.output(ModItems.NECRONIUM_INGOT.get())
-				.output(0.15f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.9f, ModItems.NECRONIUM_INGOT.get())
+				.output(0.2f, ModItems.NECRONIUM_WASTE.get())
 				.build(recipeOutput);
 		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_alloy_necronium_reuse_waste"))
 				.require(ModFluids.WITHER_SLURRY.get(), 1000)
@@ -246,8 +247,8 @@ public final class CreateRecipeGen {
 				.require(ModItems.NECRONIUM_WASTE.get())
 				.require(ModItems.NECRONIUM_WASTE.get())
 				.requiresHeat(HeatCondition.SUPERHEATED)
-				.output(ModItems.NECRONIUM_INGOT.get())
-				.output(0.15f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.9f, ModItems.NECRONIUM_INGOT.get())
+				.output(0.2f, ModItems.NECRONIUM_WASTE.get())
 				.build(recipeOutput);
 	}
 
@@ -480,10 +481,50 @@ public final class CreateRecipeGen {
 				.build(recipeOutput);
 	}
 
-	public static void registerCrushingRecipes(RecipeOutput recipeOutput) {
-		new StandardProcessingRecipe.Builder<>(CrushingRecipe::new, SoulHarvestMod.id("crush_soul_shard"))
+	public static void registerMillingRecipes(RecipeOutput recipeOutput) {
+		new StandardProcessingRecipe.Builder<>(MillingRecipe::new, SoulHarvestMod.id("mill_soul_shard"))
 				.require(ModItems.SOUL_SHARD.get())
 				.output(0.05f, AllItems.EXP_NUGGET)
+				.build(recipeOutput);
+		
+		new StandardProcessingRecipe.Builder<>(MillingRecipe::new, SoulHarvestMod.id("mill_necronium_waste_bottle"))
+				.require(ModItems.NECRONIUM_WASTE_BOTTLE.get())
+				.output(1f, ModItems.NECRONIUM_WASTE.get(), 8)
+				.build(recipeOutput);
+	}
+
+	public static void registerCrushingRecipes(RecipeOutput recipeOutput) {
+		new StandardProcessingRecipe.Builder<>(CrushingRecipe::new, SoulHarvestMod.id("crush_necronium_ingot"))
+				.require(ModItems.NECRONIUM_INGOT.get())
+				.output(1f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.438f, ModItems.NECRONIUM_WASTE.get(), 3)
+				.output(0.438f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.438f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.438f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.438f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.438f, ModItems.NECRONIUM_WASTE.get())
+				.build(recipeOutput);
+		
+		new StandardProcessingRecipe.Builder<>(CrushingRecipe::new, SoulHarvestMod.id("crush_necronium_rod"))
+				.require(ModItems.NECRONIUM_ROD.get())
+				.output(1f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.4f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.4f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.4f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.4f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.4f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.4f, ModItems.NECRONIUM_WASTE.get())
+				.build(recipeOutput);
+		
+		new StandardProcessingRecipe.Builder<>(CrushingRecipe::new, SoulHarvestMod.id("crush_necronium_plate"))
+				.require(ModItems.NECRONIUM_PLATE.get())
+				.output(1f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.421f, ModItems.NECRONIUM_WASTE.get(), 2)
+				.output(0.421f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.421f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.421f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.421f, ModItems.NECRONIUM_WASTE.get())
+				.output(0.421f, ModItems.NECRONIUM_WASTE.get())
 				.build(recipeOutput);
 	}
 

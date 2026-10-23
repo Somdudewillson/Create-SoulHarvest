@@ -28,11 +28,12 @@
     ],
     "results": [
         {
-            "item": "create_soul_harvest:necronium_ingot"
+            "item": "create_soul_harvest:necronium_ingot",
+            "chance": 0.9
         },
         {
             "item": "create_soul_harvest:necronium_waste",
-            "chance": 0.15
+            "chance": 0.2
         }
     ]
 }

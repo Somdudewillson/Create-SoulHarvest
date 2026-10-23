@@ -6,19 +6,16 @@
         "G": {
             "item": "create_soul_harvest:magic_gold_chunk"
         },
-        "M": {
-            "item": "create_soul_harvest:magic_gold"
-        },
         "N": {
-            "item": "create_soul_harvest:necronium_ingot"
+            "item": "create_soul_harvest:necronium_plate"
         }
     },
     "pattern": [
-        " MMM ",
-        "MGNGM",
-        "MNNNM",
-        "MGNGM",
-        " MMM "
+        " GGG ",
+        "GGNGG",
+        "GNNNG",
+        "GGNGG",
+        " GGG "
     ],
     "result": {
         "item": "create_soul_harvest:loot_token_blank",

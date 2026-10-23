@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "create_soul_harvest:necronium_waste_bottle"
+    }
+  ],
+  "results": [
+    {
+      "count": 8,
+      "id": "create_soul_harvest:necronium_waste"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "create_soul_harvest:necronium_ingot"
+    }
+  ],
+  "results": [
+    {
+      "id": "create_soul_harvest:necronium_waste"
+    },
+    {
+      "chance": 0.438,
+      "count": 3,
+      "id": "create_soul_harvest:necronium_waste"
+    },
+    {
+      "chance": 0.438,
+      "id": "create_soul_harvest:necronium_waste"
+    },
+    {
+      "chance": 0.438,
+      "id": "create_soul_harvest:necronium_waste"
+    },
+    {
+      "chance": 0.438,
+      "id": "create_soul_harvest:necronium_waste"
+    },
+    {
+      "chance": 0.438,
+      "id": "create_soul_harvest:necronium_waste"
+    },
+    {
+      "chance": 0.438,
+      "id": "create_soul_harvest:necronium_waste"
+    }
+  ]
+}

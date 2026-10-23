@@ -1,0 +1,37 @@
+{
+    "type": "create:crushing",
+    "ingredients": [
+        {
+            "item": "create_soul_harvest:necronium_rod"
+        }
+    ],
+    "results": [
+        {
+            "item": "create_soul_harvest:necronium_waste"
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste",
+            "chance": 0.4
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste",
+            "chance": 0.4
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste",
+            "chance": 0.4
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste",
+            "chance": 0.4
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste",
+            "chance": 0.4
+        },
+        {
+            "item": "create_soul_harvest:necronium_waste",
+            "chance": 0.4
+        }
+    ]
+}

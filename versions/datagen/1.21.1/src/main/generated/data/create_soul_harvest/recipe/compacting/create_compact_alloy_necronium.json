@@ -30,10 +30,11 @@
   ],
   "results": [
     {
+      "chance": 0.9,
       "id": "create_soul_harvest:necronium_ingot"
     },
     {
-      "chance": 0.15,
+      "chance": 0.2,
       "id": "create_soul_harvest:necronium_waste"
     }
   ]
