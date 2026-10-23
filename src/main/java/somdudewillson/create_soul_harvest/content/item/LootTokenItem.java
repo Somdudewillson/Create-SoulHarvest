@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -50,6 +50,13 @@ public class LootTokenItem extends Item {
 
 	public static final String TAG_LOOT_TABLE = SoulHarvestMod.id("loot_table").toString();
 	public static final String TAG_LOCALIZATION_KEY = SoulHarvestMod.id("localization_key").toString();
+
+	public static final LootContextParamSet LOOT_TOKEN_PARAM_SET = new LootContextParamSet.Builder()
+			.required(LootContextParams.THIS_ENTITY)
+			.required(LootContextParams.ORIGIN)
+			.required(LootContextParams.TOOL)
+			.build();
+	public static final LootContextParamSet PARAM_SET = LOOT_TOKEN_PARAM_SET;
 
 	public LootTokenItem(Properties properties) {
 		super(properties);
@@ -196,10 +203,10 @@ public class LootTokenItem extends Item {
 			if (lootTable != null && lootTable != LootTable.EMPTY) {
 				LootParams params = new LootParams.Builder(serverLevel)
 						.withParameter(LootContextParams.THIS_ENTITY, player)
-						.withParameter(LootContextParams.ENCHANTMENT_LEVEL, 0)
 						.withParameter(LootContextParams.ORIGIN, player.position())
+						.withParameter(LootContextParams.TOOL, stack)
 						.withLuck(player.getLuck())
-						.create(LootContextParamSets.ENCHANTED_ENTITY);
+						.create(LOOT_TOKEN_PARAM_SET);
 				drops.addAll(lootTable.getRandomItems(params));
 			} else {
 				LOGGER.warn("Failed to load loot table "+lootTableId);

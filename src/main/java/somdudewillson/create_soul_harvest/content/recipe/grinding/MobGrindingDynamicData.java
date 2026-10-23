@@ -23,7 +23,6 @@ import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayItem;
@@ -121,7 +120,7 @@ public class MobGrindingDynamicData {
 		}
 
 		LootTable table = LootTable.lootTable()
-				.setParamSet(LootContextParamSets.ENCHANTED_ENTITY)
+				.setParamSet(LootTokenItem.LOOT_TOKEN_PARAM_SET)
 				.withPool(poolBuilder)
 				.build();
 		table.setLootTableId(tableId);

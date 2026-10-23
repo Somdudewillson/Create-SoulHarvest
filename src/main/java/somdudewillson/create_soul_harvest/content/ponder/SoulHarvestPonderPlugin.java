@@ -60,7 +60,7 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 			.colored(PonderPalette.WHITE)
 			.text("Use a seed on any face of a spawner to plant a soul bud");
 		scene.idle(20*2);
-		ItemStack seed = new ItemStack(ModItems.SOUL_DEPOSIT_SEED);
+		ItemStack seed = new ItemStack(ModItems.SOUL_DEPOSIT_SEED.get());
 		scene.overlay().showControls(util.vector().blockSurface(spawner, Direction.NORTH), Pointing.RIGHT, 20).rightClick()
 			.withItem(seed);
 		scene.world().setBlock(
@@ -106,7 +106,7 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 			.pointAt(util.vector().blockSurface(spawner, Direction.NORTH))
 			.text("When broken...");
 		scene.idle(20*3);
-		ItemStack shard = new ItemStack(ModItems.SOUL_SHARD, 2);
+		ItemStack shard = new ItemStack(ModItems.SOUL_SHARD.get(), 2);
 		scene.world().destroyBlock(cluster);
 		scene.world().setBlock(
 				cluster, 
