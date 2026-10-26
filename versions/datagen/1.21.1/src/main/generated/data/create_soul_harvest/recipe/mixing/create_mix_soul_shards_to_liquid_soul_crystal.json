@@ -7,13 +7,13 @@
     },
     {
       "type": "neoforge:single",
-      "amount": 125,
+      "amount": 24,
       "fluid": "create_soul_harvest:silica_solution"
     }
   ],
   "results": [
     {
-      "amount": 250,
+      "amount": 12,
       "id": "create_soul_harvest:liquid_soul_crystal"
     }
   ]

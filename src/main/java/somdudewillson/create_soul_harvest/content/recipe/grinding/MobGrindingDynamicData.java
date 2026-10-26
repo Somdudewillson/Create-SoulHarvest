@@ -437,10 +437,10 @@ public class MobGrindingDynamicData {
 		spoutIngredients.add(spoutItemIng);
 
 		int fluidAmount = switch (mobTier) {
-			case 1 -> 250;
-			case 2 -> 500;
-			case 3 -> 1000;
-			default -> 250;
+			case 1 -> 48;
+			case 2 -> 192;
+			case 3 -> 960;
+			default -> 48;
 		};
 
 		JsonObject fluidIng = new JsonObject();
@@ -741,10 +741,10 @@ public class MobGrindingDynamicData {
 		spoutIngredients1.add(spoutItemIng1);
 
 		int fluidAmount1 = switch (mobTier) {
-			case 1 -> 500;
-			case 2 -> 1000;
-			case 3 -> 2000;
-			default -> 500;
+			case 1 -> 96;
+			case 2 -> 384;
+			case 3 -> 1920;
+			default -> 96;
 		};
 
 		JsonObject fluidIng1 = new JsonObject();

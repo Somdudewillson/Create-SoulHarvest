@@ -296,7 +296,7 @@ public final class CreateRecipeGen {
 		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_silica_solution_from_quartz"))
 				.require(Items.QUARTZ)
 				.require(Fluids.WATER, 1000)
-				.output(ModFluids.SILICA_SOLUTION.get(), 1000)
+				.output(ModFluids.SILICA_SOLUTION.get(), 120)
 				.build(recipeOutput);
 
 		// Mulch to Bioslurry
@@ -342,9 +342,9 @@ public final class CreateRecipeGen {
 		// Soul Shards to Liquid Soul Crystal
 		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_soul_shards_to_liquid_soul_crystal"))
 				.require(ModItems.SOUL_SHARD.get())
-				.require(ModFluids.SILICA_SOLUTION.get(), 125)
+				.require(ModFluids.SILICA_SOLUTION.get(), 24)
 				.requiresHeat(HeatCondition.HEATED)
-				.output(ModFluids.LIQUID_SOUL_CRYSTAL.get(), 250)
+				.output(ModFluids.LIQUID_SOUL_CRYSTAL.get(), 12)
 				.build(recipeOutput);
 	}
 
@@ -365,7 +365,7 @@ public final class CreateRecipeGen {
 				.addStep(PressingRecipe::new, rb -> rb)
 				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ModItems.INLAID_LAPIS_PLATE.get()))
 				.addStep(PressingRecipe::new, rb -> rb)
-				.addStep(FillingRecipe::new, rb -> rb.require(ModFluids.LIQUID_SOUL_CRYSTAL.get(), 500))
+				.addStep(FillingRecipe::new, rb -> rb.require(ModFluids.LIQUID_SOUL_CRYSTAL.get(), 96))
 				.addOutput(ModItems.GLYPH_1.get(), 0.125f)
 				.addOutput(ModItems.GLYPH_2.get(), 0.125f)
 				.addOutput(ModItems.GLYPH_3.get(), 0.125f)
@@ -475,7 +475,7 @@ public final class CreateRecipeGen {
 				.transitionTo(ModItems.SOUL_BOOK_INCOMPLETE_SUPERIOR.get())
 				.loops(4)
 				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ModItems.GLYPH_SHEAF.get()))
-				.addStep(FillingRecipe::new, rb -> rb.require(ModFluids.LIQUID_SOUL_CRYSTAL.get(), 125))
+				.addStep(FillingRecipe::new, rb -> rb.require(ModFluids.LIQUID_SOUL_CRYSTAL.get(), 24))
 				.addStep(PressingRecipe::new, rb -> rb)
 				.addOutput(ModItems.SOUL_BOOK_SUPERIOR.get(), 1.0f)
 				.build(recipeOutput);

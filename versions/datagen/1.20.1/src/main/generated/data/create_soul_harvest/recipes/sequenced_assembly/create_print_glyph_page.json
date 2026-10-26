@@ -104,7 +104,7 @@
                     "item": "minecraft:paper"
                 },
                 {
-                    "amount": 500,
+                    "amount": 96,
                     "fluid": "create_soul_harvest:liquid_soul_crystal"
                 }
             ],
