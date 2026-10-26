@@ -216,6 +216,51 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 				return converted
 			}
 
+			if (rtype == "enderio:alloy_smelting") {
+				for ((k, v) in data) {
+					when (k) {
+						"inputs" -> {
+							val list = v as? List<*> ?: emptyList<Any>()
+							converted["inputs"] = list.map { rawInput ->
+								val map = rawInput as? Map<String, Any?> ?: return@map rawInput
+								val count = map["count"] ?: 1
+								val ingredient = mutableMapOf<String, Any?>()
+								if ("tag" in map) {
+									var tag = map["tag"] as? String ?: ""
+									if (tag.startsWith("c:")) {
+										tag = "forge:" + tag.substring("c:".length)
+									}
+									if (tag == "forge:obsidians") {
+										tag = "forge:obsidian"
+									}
+									ingredient["tag"] = tag
+								} else if ("item" in map) {
+									ingredient["item"] = map["item"]
+								} else if ("ingredient" in map) {
+									ingredient.putAll(map["ingredient"] as Map<String, Any?>)
+								}
+								mapOf(
+									"count" to count,
+									"ingredient" to ingredient
+								)
+							}
+						}
+						"output" -> {
+							val outMap = v as? Map<String, Any?>
+							val item = outMap?.get("id") ?: outMap?.get("item")
+							val count = (outMap?.get("count") as? Number)?.toInt() ?: 1
+							val resultMap = mutableMapOf<String, Any?>("item" to item)
+							if (count > 1) {
+								resultMap["count"] = count
+							}
+							converted["result"] = resultMap
+						}
+						else -> converted[k] = v
+					}
+				}
+				return converted
+			}
+
 			for ((k, v) in data) {
 				when (k) {
 					"heat_requirement" -> converted["heatRequirement"] = v

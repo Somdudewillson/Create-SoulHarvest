@@ -1,5 +1,7 @@
 package somdudewillson.create_soul_harvest.platform.neoforge.datagen;
 
+import com.simibubi.create.AllItems;
+
 //? neoforge {
 
 import com.simibubi.create.AllTags;
@@ -124,6 +126,20 @@ public class ModItemTagProvider extends ItemTagsProvider {
 				.replace(false)
 				.add(Items.STRING)
 				.addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "strings"));
+
+		tag(ModTags.Items.C_DUSTS_OBSIDIAN)
+				.replace(false)
+				.addTag(ModTags.Items.FORGE_DUSTS_OBSIDIAN);
+		tag(ModTags.Items.FORGE_DUSTS_OBSIDIAN)
+				.replace(false)
+				.add(AllItems.POWDERED_OBSIDIAN.get());
+
+		tag(ModTags.Items.C_INGOTS_BRASS)
+				.replace(false)
+				.addTag(ModTags.Items.FORGE_INGOTS_BRASS);
+		tag(ModTags.Items.FORGE_INGOTS_BRASS)
+				.replace(false)
+				.add(AllItems.BRASS_INGOT.get());
 
 		tag(Tags.Items.HIDDEN_FROM_RECIPE_VIEWERS)
 				.replace(false)

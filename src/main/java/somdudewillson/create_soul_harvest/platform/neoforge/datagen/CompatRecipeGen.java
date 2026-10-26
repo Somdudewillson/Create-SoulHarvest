@@ -22,10 +22,15 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import com.simibubi.create.AllItems;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.recipe.condition.FluidExistsCondition;
+import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOAlloySmeltingRecipeBuilder;
+import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOSagMillingRecipeBuilder;
+import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOSagMillingRecipeBuilder.SagBonusType;
 import somdudewillson.create_soul_harvest.registry.ModFluids;
 import somdudewillson.create_soul_harvest.registry.ModItems;
+import somdudewillson.create_soul_harvest.registry.ModTags;
 
 public final class CompatRecipeGen {
 	private CompatRecipeGen() {	}
@@ -90,6 +95,8 @@ public final class CompatRecipeGen {
 	public static void register(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
 		generatePolyclayCompatRecipes(recipeOutput, registries);
 		generateFluidProductionCompatRecipes(recipeOutput, registries);
+		generateEnderIOSagMillingRecipes(recipeOutput, registries);
+		generateEnderIOAlloySmeltingRecipes(recipeOutput, registries);
 	}
 
 	private static void generatePolyclayCompatRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
@@ -142,6 +149,78 @@ public final class CompatRecipeGen {
 					.output(ModFluids.LIQUID_SOUL_CRYSTAL.get(), 18)
 					.build(recipeOutput);
 		}
+	}
+
+	private static void generateEnderIOSagMillingRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
+		// Soul Shard -> Create Experience Nugget
+		EnderIOSagMillingRecipeBuilder.sagMilling()
+				.input(ModItems.SOUL_SHARD.get())
+				.energy(2400)
+				.output(ResourceLocation.fromNamespaceAndPath("create", "experience_nugget"), 1, 0.05f)
+				.save(recipeOutput);
+
+		// Necronium Ingot -> Necronium Waste
+		EnderIOSagMillingRecipeBuilder.sagMilling()
+				.input(ModItems.NECRONIUM_INGOT.get())
+				.energy(3600)
+				.bonus(SagBonusType.CHANCE_ONLY)
+				.output(ModItems.NECRONIUM_WASTE.get(), 1)
+				.output(ModItems.NECRONIUM_WASTE.get(), 3, 0.438f)
+				.output(ModItems.NECRONIUM_WASTE.get(), 1, 0.438f)
+				.output(ModItems.NECRONIUM_WASTE.get(), 1, 0.438f)
+				.save(recipeOutput);
+
+		// Necronium Plate -> Necronium Waste
+		EnderIOSagMillingRecipeBuilder.sagMilling()
+				.input(ModItems.NECRONIUM_PLATE.get())
+				.energy(3600)
+				.bonus(SagBonusType.CHANCE_ONLY)
+				.output(ModItems.NECRONIUM_WASTE.get(), 1)
+				.output(ModItems.NECRONIUM_WASTE.get(), 2, 0.421f)
+				.output(ModItems.NECRONIUM_WASTE.get(), 1, 0.421f)
+				.output(ModItems.NECRONIUM_WASTE.get(), 1, 0.421f)
+				.save(recipeOutput);
+
+		// Necronium Rod -> Necronium Waste
+		EnderIOSagMillingRecipeBuilder.sagMilling()
+				.input(ModItems.NECRONIUM_ROD.get())
+				.energy(2400)
+				.bonus(SagBonusType.CHANCE_ONLY)
+				.output(ModItems.NECRONIUM_WASTE.get(), 1)
+				.output(ModItems.NECRONIUM_WASTE.get(), 1, 0.4f)
+				.output(ModItems.NECRONIUM_WASTE.get(), 1, 0.4f)
+				.save(recipeOutput);
+
+		// Necronium Waste Bottle -> Necronium Waste + Glass Bottle
+		EnderIOSagMillingRecipeBuilder.sagMilling()
+				.input(ModItems.NECRONIUM_WASTE_BOTTLE.get())
+				.energy(1200)
+				.bonus(SagBonusType.NONE)
+				.output(ModItems.NECRONIUM_WASTE.get(), 8)
+				.output(Items.SAND, 1, 0.5f)
+				.save(recipeOutput);
+	}
+
+	private static void generateEnderIOAlloySmeltingRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
+		// Brass Ingot + 4 Obsidian Dust + Wither Rose -> Necronium Ingot
+		EnderIOAlloySmeltingRecipeBuilder.alloySmelting()
+				.input(ModTags.Items.C_INGOTS_BRASS, 1)
+				.input(ModTags.Items.C_DUSTS_OBSIDIAN, 4)
+				.input(Items.WITHER_ROSE, 1)
+				.energy(12800)
+				.experience(0.3f)
+				.output(ModItems.NECRONIUM_INGOT.get(), 1)
+				.save(recipeOutput, SoulHarvestMod.id("compat/enderio/alloy_smelting/necronium_ingot_raw"));
+		
+		// Brass Ingot + 8 Necronium Waste + Wither Rose -> Necronium Ingot
+		EnderIOAlloySmeltingRecipeBuilder.alloySmelting()
+				.input(ModTags.Items.C_INGOTS_BRASS, 1)
+				.input(ModItems.NECRONIUM_WASTE.get(), 8)
+				.input(Items.WITHER_ROSE, 1)
+				.energy(11200)
+				.experience(0.3f)
+				.output(ModItems.NECRONIUM_INGOT.get(), 1)
+				.save(recipeOutput, SoulHarvestMod.id("compat/enderio/alloy_smelting/necronium_ingot_recycle"));
 	}
 }
 //?}

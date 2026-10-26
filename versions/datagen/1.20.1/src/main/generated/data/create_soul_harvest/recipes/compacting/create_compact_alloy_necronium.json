@@ -3,19 +3,19 @@
     "heatRequirement": "superheated",
     "ingredients": [
         {
-            "item": "create:brass_ingot"
+            "tag": "c:ingots/brass"
         },
         {
-            "item": "create:powdered_obsidian"
+            "tag": "c:dusts/obsidian"
         },
         {
-            "item": "create:powdered_obsidian"
+            "tag": "c:dusts/obsidian"
         },
         {
-            "item": "create:powdered_obsidian"
+            "tag": "c:dusts/obsidian"
         },
         {
-            "item": "create:powdered_obsidian"
+            "tag": "c:dusts/obsidian"
         },
         {
             "amount": 1000,

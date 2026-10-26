@@ -3,7 +3,7 @@
     "heatRequirement": "superheated",
     "ingredients": [
         {
-            "item": "create:brass_ingot"
+            "tag": "c:ingots/brass"
         },
         {
             "item": "create_soul_harvest:necronium_waste"

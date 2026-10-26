@@ -12,7 +12,7 @@ import net.neoforged.neoforge.common.conditions.ICondition;
 import net.minecraft.util.GsonHelper;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 *///?}
 

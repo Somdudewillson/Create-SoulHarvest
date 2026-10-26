@@ -1,0 +1,22 @@
+{
+    "type": "enderio:sag_milling",
+    "energy": 2400,
+    "input": {
+        "item": "create_soul_harvest:soul_shard"
+    },
+    "outputs": [
+        {
+            "chance": 0.05,
+            "item": {
+                "count": 1,
+                "id": "create:experience_nugget"
+            }
+        }
+    ],
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "enderio"
+        }
+    ]
+}

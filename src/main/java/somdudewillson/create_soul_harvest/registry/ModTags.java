@@ -74,6 +74,12 @@ public final class ModTags {
 		public static final TagKey<Item> C_MAGIC_NECRONIUM_RODS = commonTag("rods/magic_necronium");
 		public static final TagKey<Item> FORGE_MAGIC_NECRONIUM_RODS = forgeTag("rods/magic_necronium");
 		
+		public static final TagKey<Item> C_DUSTS_OBSIDIAN = commonTag("dusts/obsidian");
+		public static final TagKey<Item> FORGE_DUSTS_OBSIDIAN = forgeTag("dusts/obsidian");
+		
+		public static final TagKey<Item> C_INGOTS_BRASS = commonTag("ingots/brass");
+		public static final TagKey<Item> FORGE_INGOTS_BRASS = forgeTag("ingots/brass");
+		
 		public static final TagKey<Item> CURIO_CHARM = curioTag("charm");
 
 		public static TagKey<Item> compostableTag(int percent) {
