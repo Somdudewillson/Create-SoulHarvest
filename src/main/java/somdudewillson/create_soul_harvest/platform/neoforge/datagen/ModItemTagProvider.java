@@ -149,6 +149,20 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		tag(ModTags.Items.C_NECRONIUM_PLATES)
 				.replace(false)
 				.addTag(ModTags.Items.FORGE_NECRONIUM_PLATES);
+
+		tag(ModTags.Items.FORGE_MAGIC_WOOD_RODS)
+				.replace(false)
+				.add(ModItems.SPELL_ROD_WOOD.get());
+		tag(ModTags.Items.C_MAGIC_WOOD_RODS)
+				.replace(false)
+				.addTag(ModTags.Items.FORGE_MAGIC_WOOD_RODS);
+
+		tag(ModTags.Items.FORGE_MAGIC_NECRONIUM_RODS)
+				.replace(false)
+				.add(ModItems.SPELL_ROD_NECRONIUM.get());
+		tag(ModTags.Items.C_MAGIC_NECRONIUM_RODS)
+				.replace(false)
+				.addTag(ModTags.Items.FORGE_MAGIC_NECRONIUM_RODS);
 		
 		// Curio tags
 		tag(ModTags.Items.CURIO_CHARM)

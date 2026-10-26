@@ -7,7 +7,7 @@
             "item": "create_soul_harvest:glyph_overloaded"
         },
         "-": {
-            "item": "minecraft:stick"
+            "tag": "c:rods/magic_wood"
         },
         "G": {
             "item": "create_soul_harvest:magic_gold"

@@ -1,0 +1,33 @@
+{
+    "type": "create:sequenced_assembly",
+    "ingredient": {
+        "item": "minecraft:stick"
+    },
+    "loops": 3,
+    "results": [
+        {
+            "item": "create_soul_harvest:spell_rod_wood"
+        }
+    ],
+    "sequence": [
+        {
+            "type": "create:deploying",
+            "ingredients": [
+                {
+                    "item": "minecraft:stick"
+                },
+                {
+                    "item": "create_soul_harvest:magic_gold_string"
+                }
+            ],
+            "results": [
+                {
+                    "item": "minecraft:stick"
+                }
+            ]
+        }
+    ],
+    "transitionalItem": {
+        "item": "minecraft:stick"
+    }
+}

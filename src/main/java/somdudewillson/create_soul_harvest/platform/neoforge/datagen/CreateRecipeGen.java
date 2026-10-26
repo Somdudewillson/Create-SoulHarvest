@@ -149,7 +149,7 @@ public final class CreateRecipeGen {
 			int index = i + 1;
 			MechanicalCraftingRecipeBuilder.shapedRecipe(scrolls[i].get(), 1)
 					.key('G', ModItems.MAGIC_GOLD.get())
-					.key('-', Items.STICK)
+					.key('-', ModTags.Items.C_MAGIC_WOOD_RODS)
 					.key('O', glyphs[i].get())
 					.key('+', ModItems.GLYPH_OVERLOADED.get())
 					.key('P', Items.PAPER)
@@ -411,6 +411,23 @@ public final class CreateRecipeGen {
 				.addOutput(AllBlocks.COGWHEEL, 0.023f)
 				.addOutput(ModItems.SOUL_SHARD.get(), 0.02f)
 				.addOutput(ModItems.NECRONIUM_PLATE.get(), 0.01f)
+				.build(recipeOutput);
+		
+		// Spell Rods
+		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_sequenced_spell_rod_wood"))
+				.require(Items.STICK)
+				.transitionTo(Items.STICK)
+				.loops(3)
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ModItems.MAGIC_GOLD_STRING.get()))
+				.addOutput(ModItems.SPELL_ROD_WOOD.get(), 1f)
+				.build(recipeOutput);
+		
+		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_sequenced_spell_rod_necronium"))
+				.require(ModItems.NECRONIUM_ROD.get())
+				.transitionTo(ModItems.NECRONIUM_ROD.get())
+				.loops(3)
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ModItems.MAGIC_GOLD_STRING.get()))
+				.addOutput(ModItems.SPELL_ROD_NECRONIUM.get(), 1f)
 				.build(recipeOutput);
 	}
 	
@@ -726,7 +743,7 @@ public final class CreateRecipeGen {
 		int i = glyphId - 1;
 		MechanicalCraftingRecipeBuilder.shapedRecipe(scrolls[i].get(), 1)
 				.key('G', ModItems.MAGIC_GOLD_CHUNK.get())
-				.key('-', ModTags.Items.C_NECRONIUM_RODS)
+				.key('-', ModTags.Items.C_MAGIC_NECRONIUM_RODS)
 				.key('O', glyphs[i].get())
 				.key('+', ModItems.SOUL_SHARD.get())
 				.key('|', ModItems.INLAID_LAPIS_PLATE.get())

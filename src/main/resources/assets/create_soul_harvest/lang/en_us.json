@@ -41,6 +41,8 @@
   "item.create_soul_harvest.enchanted_inlaid_lapis": "Enchanted Inlaid Lapis Lazuli",
   "item.create_soul_harvest.molten_lapis_core": "Molten Lapis Core",
   "item.create_soul_harvest.magic_gold": "Anima Gold",
+  "item.create_soul_harvest.spell_rod_wood": "Wooden Spell Rod",
+  "item.create_soul_harvest.spell_rod_necronium": "Necronium Spell Rod",
   "item.create_soul_harvest.soul_mechanism_incomplete": "Incomplete Soul Mechanism",
   "item.create_soul_harvest.soul_mechanism": "Soul Mechanism",
   "item.create_soul_harvest.magic_gold_string": "Anima Gold String",
@@ -51,6 +53,7 @@
   "item.create_soul_harvest.loot_token": "Loot Token",
   "item.create_soul_harvest.biocide_gas_bottle": "Biocide Gas Bottle",
   "item.create_soul_harvest.contagion_charge": "Contagion Charge",
+  
   "entity.create_soul_harvest.contagion_charge": "Contagion Charge",
   "entity.create_soul_harvest.firebolt": "Firebolt",
   

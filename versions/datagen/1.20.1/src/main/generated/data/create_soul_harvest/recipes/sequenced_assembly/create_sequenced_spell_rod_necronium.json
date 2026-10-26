@@ -1,0 +1,33 @@
+{
+    "type": "create:sequenced_assembly",
+    "ingredient": {
+        "item": "create_soul_harvest:necronium_rod"
+    },
+    "loops": 3,
+    "results": [
+        {
+            "item": "create_soul_harvest:spell_rod_necronium"
+        }
+    ],
+    "sequence": [
+        {
+            "type": "create:deploying",
+            "ingredients": [
+                {
+                    "item": "create_soul_harvest:necronium_rod"
+                },
+                {
+                    "item": "create_soul_harvest:magic_gold_string"
+                }
+            ],
+            "results": [
+                {
+                    "item": "create_soul_harvest:necronium_rod"
+                }
+            ]
+        }
+    ],
+    "transitionalItem": {
+        "item": "create_soul_harvest:necronium_rod"
+    }
+}

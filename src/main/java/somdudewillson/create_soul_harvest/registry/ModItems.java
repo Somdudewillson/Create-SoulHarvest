@@ -331,6 +331,17 @@ public class ModItems {
 	public static final DeferredHolder<Item, Item> GLYPH_SHEAF = ITEM_BUILDER_FACTORY.registerItem("glyph_page_sheaf", ModItems::createGlyphPage).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
 
 	// Glyph Scrolls
+	public static final DeferredHolder<Item, Item> SPELL_ROD_WOOD = ITEM_BUILDER_FACTORY.registerSimpleItem("spell_rod_wood")
+			.properties(new Item.Properties().stacksTo(16))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> SPELL_ROD_NECRONIUM = ITEM_BUILDER_FACTORY.registerSimpleItem("spell_rod_necronium")
+			.properties(new Item.Properties().stacksTo(16).fireResistant().rarity(Rarity.UNCOMMON))
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	
 	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_1 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_1", props -> new GlyphScrollItem(RunicSpells.SPARK, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
 	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_2 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_2", props -> new GlyphScrollItem(RunicSpells.FIREBOLT, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
 	public static final DeferredHolder<Item, Item> GLYPH_SCROLL_3 = ITEM_BUILDER_FACTORY.registerItem("glyph_scroll_3", props -> new GlyphScrollItem(RunicSpells.BONEMEAL, props)).properties(new Item.Properties().stacksTo(16)).simpleItem().inCreativeTab(ModCreativeTabs::addToMainTab).build();
