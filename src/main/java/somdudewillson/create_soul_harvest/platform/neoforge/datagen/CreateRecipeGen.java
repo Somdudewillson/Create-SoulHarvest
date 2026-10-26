@@ -280,7 +280,7 @@ public final class CreateRecipeGen {
 		// Bioslurry to Wither Slurry
 		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_bioslurry_to_wither_slurry"))
 				.require(Items.WITHER_ROSE)
-				.require(ModFluids.BIOSLURRY.get(), 250)
+				.require(ModTags.Fluids.BIOSLURRY_LIKE, 250)
 				.output(ModFluids.WITHER_SLURRY.get(), 250)
 				.build(recipeOutput);
 

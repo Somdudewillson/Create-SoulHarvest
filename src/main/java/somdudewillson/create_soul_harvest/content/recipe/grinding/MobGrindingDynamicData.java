@@ -32,6 +32,7 @@ import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
 import somdudewillson.create_soul_harvest.content.soul.SoulDropEntry;
 import somdudewillson.create_soul_harvest.content.soul.SoulDropPool;
 import somdudewillson.create_soul_harvest.registry.ModItems;
+import somdudewillson.create_soul_harvest.registry.ModTags;
 import somdudewillson.create_soul_harvest.content.soul.DropRestriction;
 
 //? >= 1.21 {
@@ -733,7 +734,7 @@ public class MobGrindingDynamicData {
 		deployStep.addProperty("keepHeldItem", true);
 		sequence.add(deployStep);
 
-		// --- Spouting bioslurry
+		// --- Spouting bioslurry-like fluid
 		JsonObject spoutStep1 = new JsonObject();
 		spoutStep1.addProperty("type", "create:filling");
 
@@ -743,21 +744,20 @@ public class MobGrindingDynamicData {
 		spoutIngredients1.add(spoutItemIng1);
 
 		int fluidAmount1 = switch (mobTier) {
-			case 1 -> 96;
-			case 2 -> 384;
-			case 3 -> 1920;
-			default -> 96;
+			case 1 -> 250;
+			case 2 -> 500;
+			case 3 -> 1000;
+			default -> 250;
 		};
 
 		JsonObject fluidIng1 = new JsonObject();
 		//? >= 1.21 {
-		fluidIng1.addProperty("type", "neoforge:single");
-		fluidIng1.addProperty("fluid", "create_soul_harvest:bioslurry");
+		fluidIng1.addProperty("type", "neoforge:tag");
+		fluidIng1.addProperty("tag", ModTags.Fluids.BIOSLURRY_LIKE.location().toString());
 		fluidIng1.addProperty("amount", fluidAmount1);
 		//?} else {
-		/*fluidIng1.addProperty("fluid", "create_soul_harvest:bioslurry");
+		/*fluidIng1.addProperty("fluidTag", ModTags.Fluids.BIOSLURRY_LIKE.location().toString());
 		fluidIng1.addProperty("amount", fluidAmount1);
-		fluidIng1.add("nbt", new JsonObject());
 		*///?}
 		spoutIngredients1.add(fluidIng1);
 		spoutStep1.add("ingredients", spoutIngredients1);
@@ -780,10 +780,10 @@ public class MobGrindingDynamicData {
 		spoutIngredients.add(spoutItemIng);
 
 		int fluidAmount = switch (mobTier) {
-			case 1 -> 250;
-			case 2 -> 500;
-			case 3 -> 1000;
-			default -> 250;
+			case 1 -> 96;
+			case 2 -> 384;
+			case 3 -> 1920;
+			default -> 96;
 		};
 
 		JsonObject fluidIng = new JsonObject();

@@ -5,8 +5,9 @@
             "item": "minecraft:wither_rose"
         },
         {
+            "type": "neoforge:tag",
             "amount": 250,
-            "fluid": "create_soul_harvest:bioslurry"
+            "tag": "create_soul_harvest:bioslurry_like"
         }
     ],
     "results": [

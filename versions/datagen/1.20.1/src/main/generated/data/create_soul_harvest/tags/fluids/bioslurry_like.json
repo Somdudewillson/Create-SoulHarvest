@@ -1,0 +1,13 @@
+{
+  "values": [
+    "create_soul_harvest:bioslurry",
+    {
+      "id": "mekanism:nutritional_paste",
+      "required": false
+    },
+    {
+      "id": "enderio:fluid_nutrient_distillation_still",
+      "required": false
+    }
+  ]
+}

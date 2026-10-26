@@ -2,10 +2,12 @@ package somdudewillson.create_soul_harvest.registry;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 
 public final class ModTags {
@@ -104,6 +106,28 @@ public final class ModTags {
 
 		private static TagKey<Item> curioTag(String path) {
 			return tag("curio", path);
+		}
+	}
+
+	public static final class Fluids {
+		private Fluids() {}
+
+		public static final TagKey<Fluid> BIOSLURRY_LIKE = modTag("bioslurry_like");
+		
+		private static TagKey<Fluid> tag(String namespace, String path) {
+			return TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(namespace, path));
+		}
+
+		private static TagKey<Fluid> modTag(String path) {
+			return TagKey.create(Registries.FLUID, SoulHarvestMod.id(path));
+		}
+
+		private static TagKey<Fluid> commonTag(String path) {
+			return tag("c", path);
+		}
+
+		private static TagKey<Fluid> forgeTag(String path) {
+			return tag("forge", path);
 		}
 	}
 

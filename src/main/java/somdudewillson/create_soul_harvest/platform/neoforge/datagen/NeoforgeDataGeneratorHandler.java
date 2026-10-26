@@ -37,6 +37,7 @@ public class NeoforgeDataGeneratorHandler {
 
 		ModBlockTagProvider blockTags = new ModBlockTagProvider(packOutput, lookupProvider, event.getExistingFileHelper());
 		generator.addProvider(event.includeServer(), blockTags);
+		generator.addProvider(event.includeServer(), new ModFluidTagProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
 		generator.addProvider(event.includeServer(), new ModItemTagProvider(packOutput, lookupProvider, blockTags.contentsGetter(), event.getExistingFileHelper()));
 		generator.addProvider(event.includeServer(), new ModEntityTypeTagProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
 	}
