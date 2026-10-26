@@ -1,8 +1,8 @@
 package somdudewillson.create_soul_harvest.platform.neoforge.datagen;
 
+//? neoforge {
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.AllBlocks;
-//? neoforge {
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeBuilder;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
@@ -263,11 +263,18 @@ public final class CreateRecipeGen {
 	}
 
 	public static void registerMixingRecipes(RecipeOutput recipeOutput) {
+		// Polyclay Mixing
+		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_polyclay"))
+				.require(Items.CLAY_BALL)
+				.require(AllItems.EXP_NUGGET.get())
+				.output(ModItems.POLYCLAY.get(), CompatRecipeGen.POLYCLAY_PER_CRAFT)
+				.build(recipeOutput);
+		
 		// Bioslurry to Bonemeal
 		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_bioslurry_to_bonemeal"))
 				.require(Items.SAND)
-				.require(ModFluids.BIOSLURRY.get(), 500)
-				.output(Items.BONE_MEAL, 8)
+				.require(ModFluids.BIOSLURRY.get(), 1000)
+				.output(Items.BONE_MEAL, 9)
 				.build(recipeOutput);
 
 		// Bioslurry to Wither Slurry
@@ -311,16 +318,8 @@ public final class CreateRecipeGen {
 		// Bioslurry to Dirt
 		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_dirt_from_bioslurry"))
 				.require(ItemTags.SAND)
-				.require(ModFluids.BIOSLURRY.get(), 250)
+				.require(ModFluids.BIOSLURRY.get(), 50)
 				.output(Items.DIRT, 1)
-				.build(recipeOutput);
-
-		// Bioslurry to Bone Meal (Heated)
-		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_bone_meal_from_bioslurry"))
-				.require(ItemTags.DIRT)
-				.require(ModFluids.BIOSLURRY.get(), 1000)
-				.requiresHeat(HeatCondition.HEATED)
-				.output(Items.BONE_MEAL, 9)
 				.build(recipeOutput);
 
 		// Wither Slurry to Wither Rose

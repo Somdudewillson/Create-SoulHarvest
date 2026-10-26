@@ -5,14 +5,14 @@
             "item": "minecraft:sand"
         },
         {
-            "amount": 500,
+            "amount": 1000,
             "fluid": "create_soul_harvest:bioslurry"
         }
     ],
     "results": [
         {
             "item": "minecraft:bone_meal",
-            "count": 8
+            "count": 9
         }
     ]
 }

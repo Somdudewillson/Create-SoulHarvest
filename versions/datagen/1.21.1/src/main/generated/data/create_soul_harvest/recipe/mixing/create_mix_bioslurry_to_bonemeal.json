@@ -6,13 +6,13 @@
     },
     {
       "type": "neoforge:single",
-      "amount": 500,
+      "amount": 1000,
       "fluid": "create_soul_harvest:bioslurry"
     }
   ],
   "results": [
     {
-      "count": 8,
+      "count": 9,
       "id": "minecraft:bone_meal"
     }
   ]

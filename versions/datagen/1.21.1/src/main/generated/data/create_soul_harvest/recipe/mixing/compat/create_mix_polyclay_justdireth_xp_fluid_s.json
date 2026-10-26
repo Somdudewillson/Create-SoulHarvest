@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "justdirethings"
+    },
+    {
+      "type": "create_soul_harvest:fluid_exists",
+      "fluid": "justdirethings:xp_fluid_source"
+    }
+  ],
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:clay_ball"
+    },
+    {
+      "item": "minecraft:clay_ball"
+    },
+    {
+      "item": "minecraft:clay_ball"
+    },
+    {
+      "item": "minecraft:clay_ball"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 60,
+      "fluid": "justdirethings:xp_fluid_source"
+    }
+  ],
+  "results": [
+    {
+      "count": 8,
+      "id": "create_soul_harvest:polyclay"
+    }
+  ]
+}

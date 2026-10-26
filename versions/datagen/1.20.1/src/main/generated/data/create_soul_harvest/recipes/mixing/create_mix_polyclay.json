@@ -1,0 +1,17 @@
+{
+    "type": "create:mixing",
+    "ingredients": [
+        {
+            "item": "minecraft:clay_ball"
+        },
+        {
+            "item": "create:experience_nugget"
+        }
+    ],
+    "results": [
+        {
+            "item": "create_soul_harvest:polyclay",
+            "count": 2
+        }
+    ]
+}

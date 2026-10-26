@@ -50,6 +50,33 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 
 	companion object {
 		@Suppress("UNCHECKED_CAST")
+		fun convertCondition(cond: Any?): Any? {
+			if (cond !is Map<*, *>) return cond
+			val map = cond as Map<String, Any?>
+			val result = mutableMapOf<String, Any?>()
+			for ((k, v) in map) {
+				when (k) {
+					"type" -> {
+						if (v is String && v.startsWith("neoforge:")) {
+							result[k] = "forge:" + v.substring("neoforge:".length)
+						} else {
+							result[k] = v
+						}
+					}
+					"conditions", "values" -> {
+						val list = v as? List<*> ?: emptyList<Any>()
+						result[k] = list.map { convertCondition(it) }
+					}
+					"value" -> {
+						result[k] = convertCondition(v)
+					}
+					else -> result[k] = v
+				}
+			}
+			return result
+		}
+
+		@Suppress("UNCHECKED_CAST")
 		fun convertIngredient(ing: Any?): Any? {
 			if (ing !is Map<*, *>) return ing
 			val map = ing as Map<String, Any?>
@@ -92,6 +119,17 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 
 		@Suppress("UNCHECKED_CAST")
 		fun convertRecipe(data: Map<String, Any?>): Map<String, Any?> {
+			val converted = convertRecipeData(data)
+			val rawConditions = data["neoforge:conditions"] ?: data["conditions"]
+			if (rawConditions is List<*>) {
+				converted["conditions"] = rawConditions.map { convertCondition(it) }
+				converted.remove("neoforge:conditions")
+			}
+			return converted
+		}
+
+		@Suppress("UNCHECKED_CAST")
+		private fun convertRecipeData(data: Map<String, Any?>): MutableMap<String, Any?> {
 			val rtype = data["type"] as? String ?: ""
 			val converted = mutableMapOf<String, Any?>()
 
@@ -158,7 +196,7 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 									"item" to (ti["id"] ?: ti["item"])
 								)
 							} else {
-								converted["transitionalItem"] = v
+								converted[k] = v
 							}
 						}
 						"ingredient" -> converted["ingredient"] = convertIngredient(v)

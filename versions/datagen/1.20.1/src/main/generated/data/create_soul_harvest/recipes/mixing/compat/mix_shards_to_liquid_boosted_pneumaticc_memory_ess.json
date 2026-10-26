@@ -1,0 +1,33 @@
+{
+    "type": "create:mixing",
+    "heatRequirement": "heated",
+    "ingredients": [
+        {
+            "item": "create_soul_harvest:soul_shard"
+        },
+        {
+            "amount": 24,
+            "fluid": "create_soul_harvest:silica_solution"
+        },
+        {
+            "amount": 120,
+            "fluid": "pneumaticcraft:memory_essence"
+        }
+    ],
+    "results": [
+        {
+            "amount": 18,
+            "fluid": "create_soul_harvest:liquid_soul_crystal"
+        }
+    ],
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "pneumaticcraft"
+        },
+        {
+            "type": "create_soul_harvest:fluid_exists",
+            "fluid": "pneumaticcraft:memory_essence"
+        }
+    ]
+}

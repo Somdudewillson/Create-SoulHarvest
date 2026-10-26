@@ -34,6 +34,7 @@ public class NeoforgeEntrypoint {
 
 		ModCapabilities.register(modBus);
 		ModIngredients.register(modBus);
+		ModConditions.register(modBus);
 
 		SoulHarvestGameEvents.register(NeoForge.EVENT_BUS);
 	}

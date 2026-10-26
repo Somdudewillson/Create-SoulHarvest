@@ -1,8 +1,8 @@
 package somdudewillson.create_soul_harvest.platform.neoforge.datagen;
 
+//? neoforge {
 import com.simibubi.create.AllItems;
 
-//? neoforge {
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -132,7 +132,7 @@ public final class VanillaRecipeGen {
 	}
 
 	public static void registerPolyclayRecipes(RecipeOutput recipeOutput) {
-		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.POLYCLAY.get(), 8)
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.POLYCLAY.get(), CompatRecipeGen.POLYCLAY_PER_CRAFT)
 				.pattern("NC")
 				.pattern("CN")
 				.define('N', com.simibubi.create.AllItems.EXP_NUGGET.get())
