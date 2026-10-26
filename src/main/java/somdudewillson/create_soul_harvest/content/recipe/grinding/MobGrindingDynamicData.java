@@ -393,6 +393,7 @@ public class MobGrindingDynamicData {
 		transItemJson.addProperty("id", transStr);
 		transItemJson.addProperty("item", transStr);
 		recipe.add("transitional_item", transItemJson);
+		recipe.add("transitionalItem", transItemJson);
 
 		recipe.addProperty("loops", 1);
 
@@ -688,15 +689,16 @@ public class MobGrindingDynamicData {
 
 		// Base input
 		JsonObject baseIng = new JsonObject();
-		baseIng.addProperty("item", expDropId.toString());
+		baseIng.addProperty("item", expDropId != null ? expDropId.toString() : "create_soul_harvest:experience_effigy");
 		recipe.add("ingredient", baseIng);
 
 		// Transitional item
 		JsonObject transItemJson = new JsonObject();
-		String transStr = transId.toString();
+		String transStr = transId != null ? transId.toString() : "create_soul_harvest:experience_effigy_incomplete";
 		transItemJson.addProperty("id", transStr);
 		transItemJson.addProperty("item", transStr);
 		recipe.add("transitional_item", transItemJson);
+		recipe.add("transitionalItem", transItemJson);
 
 		recipe.addProperty("loops", 1);
 
@@ -950,6 +952,7 @@ public class MobGrindingDynamicData {
 		transItemJson.addProperty("id", "create_soul_harvest:loot_token_blank");
 		transItemJson.addProperty("item", "create_soul_harvest:loot_token_blank");
 		recipe.add("transitional_item", transItemJson);
+		recipe.add("transitionalItem", transItemJson);
 
 		recipe.addProperty("loops", 1);
 
