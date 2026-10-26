@@ -17,6 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
@@ -149,6 +150,16 @@ public final class VanillaRecipeGen {
 				.define('|', ModItems.SOUL_SHARD.get())
 				.unlockedBy("has_soul_shard", has(ModItems.SOUL_SHARD.get()))
 				.save(recipeOutput, SoulHarvestMod.id("polyclay_andesite"));
+		
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.EXPERIENCE_EFFIGY.get(), 1)
+				.pattern(" L ")
+				.pattern("|+|")
+				.pattern(" | ")
+				.define('L', Blocks.LAPIS_BLOCK)
+				.define('|', Items.STICK)
+				.define('+', Blocks.HAY_BLOCK)
+				.unlockedBy("has_soul_shard", has(ModItems.SOUL_SHARD.get()))
+				.save(recipeOutput, SoulHarvestMod.id("experience_effigy"));
 	}
 
 	public static void registerSoulBookRecipes(RecipeOutput recipeOutput) {

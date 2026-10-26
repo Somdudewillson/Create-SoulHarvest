@@ -226,6 +226,24 @@ public class ModItems {
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
 			.build();
 
+	// Experience Drops
+	public static final DeferredHolder<Item, Item> EXPERIENCE_EFFIGY = ITEM_BUILDER_FACTORY.registerItem("experience_effigy",
+			props -> new ExperienceDropItem(0.6f, 0.75f, ModItems.EXPERIENCE_EFFIGY_INCOMPLETE, ModItems.EXPERIENCE_EFFIGY_ATTUNED, props))
+			.properties(new Item.Properties())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+	public static final DeferredHolder<Item, Item> EXPERIENCE_EFFIGY_INCOMPLETE = ITEM_BUILDER_FACTORY.registerItem("experience_effigy_attuned_incomplete", SequencedAssemblyItem::new)
+			.properties(new Item.Properties())
+			.simpleItem()
+			.build();
+	public static final DeferredHolder<Item, Item> EXPERIENCE_EFFIGY_ATTUNED = ITEM_BUILDER_FACTORY.registerItem("experience_effigy_attuned",
+			props -> new ExperienceDropAttunedItem(0.6f, 0.75f, props))
+			.properties(new Item.Properties())
+			.simpleItem()
+			.inCreativeTab(ModCreativeTabs::addToMainTab)
+			.build();
+
 	// Tokens and hazardous items
 	public static final DeferredHolder<Item, Item> LOOT_TOKEN_BLANK = ITEM_BUILDER_FACTORY.registerSimpleItem("loot_token_blank")
 			.properties(new Item.Properties().stacksTo(1).fireResistant())

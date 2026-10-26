@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "key": {
+        "+": {
+            "item": "minecraft:hay_block"
+        },
+        "L": {
+            "item": "minecraft:lapis_block"
+        },
+        "|": {
+            "item": "minecraft:stick"
+        }
+    },
+    "pattern": [
+        " L ",
+        "|+|",
+        " | "
+    ],
+    "result": {
+        "item": "create_soul_harvest:experience_effigy",
+        "count": 1
+    }
+}

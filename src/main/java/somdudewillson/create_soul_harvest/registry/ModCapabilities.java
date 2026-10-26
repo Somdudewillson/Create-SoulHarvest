@@ -36,6 +36,9 @@ public class ModCapabilities {
 	private static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerItem(SOUL_HOLDER, (stack, ctx) -> new ItemStackSoulHolder(stack),
 				ModItems.POLYCLAY_ATTUNED.get(),
+				ModItems.POLYCLAY_ANDESITE_ATTUNED.get(),
+				ModItems.POLYCLAY_BRASS_ATTUNED.get(),
+				ModItems.EXPERIENCE_EFFIGY_ATTUNED.get(),
 				ModItems.SOUL_BOOK_SIMPLE.get(),
 				ModItems.SOUL_BOOK_STANDARD.get(),
 				ModItems.SOUL_BOOK_SUPERIOR.get()
@@ -54,6 +57,9 @@ public class ModCapabilities {
 		public static void onAttachCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
 			ItemStack stack = event.getObject();
 			if (stack.getItem() == ModItems.POLYCLAY_ATTUNED.get()
+					|| stack.getItem() == ModItems.POLYCLAY_ANDESITE_ATTUNED.get()
+					|| stack.getItem() == ModItems.POLYCLAY_BRASS_ATTUNED.get()
+					|| stack.getItem() == ModItems.EXPERIENCE_EFFIGY_ATTUNED.get()
 					|| stack.getItem() == ModItems.SOUL_BOOK_SIMPLE.get()
 					|| stack.getItem() == ModItems.SOUL_BOOK_STANDARD.get()
 					|| stack.getItem() == ModItems.SOUL_BOOK_SUPERIOR.get()) {

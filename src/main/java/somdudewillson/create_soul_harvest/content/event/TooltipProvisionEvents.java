@@ -25,6 +25,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 *///?}
 
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.item.ExperienceDropAttunedItem;
+import somdudewillson.create_soul_harvest.content.item.ExperienceDropItem;
 import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayItem;
@@ -58,6 +60,9 @@ public class TooltipProvisionEvents {
 		registerTooltip(ModItems.POLYCLAY_ATTUNED, FontHelper.Palette.STANDARD_CREATE, PolyclayAttunedItem.PolyclayAttunedTooltipModifier::new);
 		registerTooltip(ModItems.POLYCLAY_ANDESITE_ATTUNED, FontHelper.Palette.STANDARD_CREATE, PolyclayAttunedItem.PolyclayAttunedTooltipModifier::new);
 		registerTooltip(ModItems.POLYCLAY_BRASS_ATTUNED, FontHelper.Palette.STANDARD_CREATE, PolyclayAttunedItem.PolyclayAttunedTooltipModifier::new);
+
+		registerTooltip(ModItems.EXPERIENCE_EFFIGY, FontHelper.Palette.STANDARD_CREATE, ExperienceDropItem.ExperienceDropTooltipModifier::new);
+		registerTooltip(ModItems.EXPERIENCE_EFFIGY_ATTUNED, FontHelper.Palette.STANDARD_CREATE, ExperienceDropAttunedItem.ExperienceDropAttunedTooltipModifier::new);
 		
 		registerTooltip(ModItems.LOOT_TOKEN, FontHelper.Palette.STANDARD_CREATE, LootTokenItem.LootTokenTooltipModifier::new);
 	}

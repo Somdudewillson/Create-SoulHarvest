@@ -8,6 +8,9 @@
     "create_soul_harvest:polyclay_andesite_attuned",
     "create_soul_harvest:polyclay_brass",
     "create_soul_harvest:polyclay_brass_attuned_incomplete",
-    "create_soul_harvest:polyclay_brass_attuned"
+    "create_soul_harvest:polyclay_brass_attuned",
+    "create_soul_harvest:experience_effigy",
+    "create_soul_harvest:experience_effigy_attuned_incomplete",
+    "create_soul_harvest:experience_effigy_attuned"
   ]
 }

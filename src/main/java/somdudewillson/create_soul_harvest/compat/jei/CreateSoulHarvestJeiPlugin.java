@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
+import somdudewillson.create_soul_harvest.content.item.ExperienceDropAttunedItem;
 import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
 import somdudewillson.create_soul_harvest.registry.ModCreativeTabs;
@@ -57,6 +58,13 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 			}
 		}
 
+		val expDropInterpreter = new AttunedExperienceDropSubtypeInterpreter();
+		for (Item item : BuiltInRegistries.ITEM) {
+			if (item instanceof ExperienceDropAttunedItem) {
+				registration.registerSubtypeInterpreter(item, expDropInterpreter);
+			}
+		}
+
 		val lootTokenInterpreter = new LootTokenSubtypeInterpreter();
 		registration.registerSubtypeInterpreter(ModItems.LOOT_TOKEN.get(), lootTokenInterpreter);
 	}
@@ -89,6 +97,10 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 				List<ItemStack> polyclays = ModCreativeTabs.generateAllAttunedPolyclay(registries);
 				if (!polyclays.isEmpty()) {
 					ingredientManager.addIngredientsAtRuntime(VanillaTypes.ITEM_STACK, polyclays);
+				}
+				List<ItemStack> expDrops = ModCreativeTabs.generateAllAttunedExperienceDrops(registries);
+				if (!expDrops.isEmpty()) {
+					ingredientManager.addIngredientsAtRuntime(VanillaTypes.ITEM_STACK, expDrops);
 				}
 				List<ItemStack> lootTokens = ModCreativeTabs.generateAllCompletedLootTokens(registries);
 				if (!lootTokens.isEmpty()) {
@@ -187,6 +199,34 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 			}
 			String customKey = LootTokenItem.getCustomLocalizationKey(ingredient);
 			return lootTable.toString() + (customKey != null ? ":" + customKey : "");
+		}
+	}
+
+	//? >= 1.21 {
+	public static class AttunedExperienceDropSubtypeInterpreter implements ISubtypeInterpreter<ItemStack> {
+
+		@Override
+		public @Nullable Object getSubtypeData(ItemStack ingredient, UidContext context) {
+			return getSubtypeString(ingredient, context);
+		}
+
+		@Override
+		public String getLegacyStringSubtypeInfo(ItemStack ingredient, UidContext context) {
+			return getSubtypeString(ingredient, context);
+		}
+	//?} else {
+	/*public static class AttunedExperienceDropSubtypeInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
+		@Override
+		public String apply(ItemStack ingredient, UidContext context) {
+			return getSubtypeString(ingredient, context);
+		}
+	*///?}
+
+		protected String getSubtypeString(ItemStack ingredient, UidContext context) {
+			return ISoulHolder.get(ingredient)
+					.map(ISoulHolder::getHeldSoul)
+					.map(ResourceLocation::toString)
+					.orElse("");
 		}
 	}
 }

@@ -24,12 +24,14 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.item.ExperienceDropItem;
 import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayItem;
 import somdudewillson.create_soul_harvest.content.soul.SoulData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
 import somdudewillson.create_soul_harvest.content.soul.SoulDropEntry;
 import somdudewillson.create_soul_harvest.content.soul.SoulDropPool;
+import somdudewillson.create_soul_harvest.registry.ModItems;
 import somdudewillson.create_soul_harvest.content.soul.DropRestriction;
 
 //? >= 1.21 {
@@ -236,6 +238,50 @@ public class MobGrindingDynamicData {
 				// Attuning
 				recipes.put(SoulHarvestMod.id("sequenced_assembly/attune_" + recipeSuffix),
 						makeSequencedAssemblyRecipe(polyclay, transItem, attunedItem, entityId, mobTier));
+			}
+		}
+
+		// Experience Drops
+		List<ExperienceDropItem> expDropItems = new ArrayList<>();
+		for (Item item : BuiltInRegistries.ITEM) {
+			if (item instanceof ExperienceDropItem expItem) {
+				expDropItems.add(expItem);
+			}
+		}
+
+		for (ExperienceDropItem expDropItem : expDropItems) {
+			ResourceLocation expDropId = BuiltInRegistries.ITEM.getKey(expDropItem);
+			if (expDropId == null) continue;
+			float multiplier = expDropItem.getYieldMultiplier();
+			float exponent = expDropItem.getScalingExponent();
+			Item transItem = expDropItem.getTransitionalItem();
+			Item attunedItem = expDropItem.getAttunedItem();
+			if (attunedItem == null) continue;
+
+			ResourceLocation attunedId = BuiltInRegistries.ITEM.getKey(attunedItem);
+			if (attunedId == null) continue;
+
+			for (Map.Entry<ResourceLocation, SoulData> entry : knownSouls.entrySet()) {
+				ResourceLocation entityId = entry.getKey();
+				SoulData soulData = entry.getValue();
+
+				if (soulData.xp() <= 0) {
+					continue;
+				}
+
+				int mobTier = soulData.tier();
+				String recipeSuffix = expDropId.getPath() + "_" + entityId.getNamespace() + "_" + entityId.getPath();
+				String hauntSuffix = attunedId.getPath() + "_" + entityId.getNamespace() + "_" + entityId.getPath();
+
+				// Haunting extraction recipe
+				JsonObject haunting = makeHauntingRecipe(attunedItem, entityId, soulData, multiplier, exponent);
+				if (haunting != null) {
+					recipes.put(SoulHarvestMod.id("haunting/haunt_" + hauntSuffix), haunting);
+				}
+
+				// Sequenced Assembly attunement recipe
+				recipes.put(SoulHarvestMod.id("sequenced_assembly/attune_" + recipeSuffix),
+						makeExperienceDropSequencedAssemblyRecipe(expDropItem, transItem, attunedItem, entityId, mobTier));
 			}
 		}
 
@@ -571,6 +617,263 @@ public class MobGrindingDynamicData {
 	private static JsonObject makeGrindingRecipe(ResourceLocation entityId, SoulData soulData, @Nullable RegistryAccess registryAccess) {
 		// TODO Is this even possible? Consider later.
 		return null;
+	}
+
+	private static JsonObject makeHauntingRecipe(Item attunedItem, ResourceLocation entityId, SoulData soulData, float multiplier, float exponent) {
+		float expected = ExperienceDropItem.calculateExpectedNuggets(soulData.xp(), multiplier, exponent);
+		if (expected <= 0.001f) {
+			return null;
+		}
+
+		JsonObject recipe = new JsonObject();
+		recipe.addProperty("type", "create:haunting");
+
+		ResourceLocation attunedId = BuiltInRegistries.ITEM.getKey(attunedItem);
+		String attunedStr = attunedId != null ? attunedId.toString() : "create_soul_harvest:experience_effigy_attuned";
+
+		JsonArray ingredients = new JsonArray();
+		JsonObject ing = new JsonObject();
+		ing.addProperty("type", "create_soul_harvest:attuned_experience_drop");
+		ing.addProperty("item", attunedStr);
+		ing.addProperty("soul", entityId.toString());
+		ingredients.add(ing);
+		recipe.add("ingredients", ingredients);
+
+		JsonArray results = new JsonArray();
+		int maxOutputs = 12;
+
+		int guaranteedTotal = (int) Math.floor(expected);
+		float remainder = expected - guaranteedTotal;
+		remainder = Math.round(remainder * 1000.0f) / 1000.0f;
+
+		// Guaranteed minimum result stacks
+		int remainingGuaranteed = guaranteedTotal;
+		while (remainingGuaranteed > 0 && results.size() < maxOutputs) {
+			int count = Math.min(64, remainingGuaranteed);
+			remainingGuaranteed -= count;
+
+			JsonObject out = new JsonObject();
+			out.addProperty("id", "create:experience_nugget");
+			out.addProperty("item", "create:experience_nugget");
+			if (count > 1) {
+				out.addProperty("count", count);
+			}
+			results.add(out);
+		}
+
+		// Non-integer remainder chance result
+		if (remainder >= 0.001f && results.size() < maxOutputs) {
+			JsonObject out = new JsonObject();
+			out.addProperty("id", "create:experience_nugget");
+			out.addProperty("item", "create:experience_nugget");
+			out.addProperty("chance", remainder);
+			results.add(out);
+		}
+
+		if (results.isEmpty()) {
+			return null;
+		}
+
+		recipe.add("results", results);
+		return recipe;
+	}
+
+	private static JsonObject makeExperienceDropSequencedAssemblyRecipe(Item expDropItem, Item transItem, Item attunedItem, ResourceLocation entityId, int mobTier) {
+		JsonObject recipe = new JsonObject();
+		recipe.addProperty("type", "create:sequenced_assembly");
+
+		ResourceLocation expDropId = BuiltInRegistries.ITEM.getKey(expDropItem);
+		ResourceLocation transId = BuiltInRegistries.ITEM.getKey(transItem);
+		ResourceLocation attunedId = BuiltInRegistries.ITEM.getKey(attunedItem);
+
+		// Base input
+		JsonObject baseIng = new JsonObject();
+		baseIng.addProperty("item", expDropId.toString());
+		recipe.add("ingredient", baseIng);
+
+		// Transitional item
+		JsonObject transItemJson = new JsonObject();
+		String transStr = transId.toString();
+		transItemJson.addProperty("id", transStr);
+		transItemJson.addProperty("item", transStr);
+		recipe.add("transitional_item", transItemJson);
+
+		recipe.addProperty("loops", 1);
+
+		// Sequence steps
+		JsonArray sequence = new JsonArray();
+
+		// --- Deployer application of Soul Book
+		JsonObject deployStep = new JsonObject();
+		deployStep.addProperty("type", "create:deploying");
+
+		JsonArray deployIngredients = new JsonArray();
+		JsonObject ingTrans = new JsonObject();
+		ingTrans.addProperty("id", transStr);
+		ingTrans.addProperty("item", transStr);
+		deployIngredients.add(ingTrans);
+
+		JsonObject soulBookIng = new JsonObject();
+		soulBookIng.addProperty("type", "create_soul_harvest:soul_book");
+		soulBookIng.addProperty("soul", entityId.toString());
+		soulBookIng.addProperty("min_tier", mobTier);
+		deployIngredients.add(soulBookIng);
+		deployStep.add("ingredients", deployIngredients);
+
+		JsonArray deployResults = new JsonArray();
+		JsonObject deployResult = new JsonObject();
+		deployResult.addProperty("id", transStr);
+		deployResult.addProperty("item", transStr);
+		deployResults.add(deployResult);
+		deployStep.add("results", deployResults);
+
+		deployStep.addProperty("keep_held_item", true);
+		deployStep.addProperty("keepHeldItem", true);
+		sequence.add(deployStep);
+
+		// --- Spouting bioslurry
+		JsonObject spoutStep1 = new JsonObject();
+		spoutStep1.addProperty("type", "create:filling");
+
+		JsonArray spoutIngredients1 = new JsonArray();
+		JsonObject spoutItemIng1 = new JsonObject();
+		spoutItemIng1.addProperty("item", transStr);
+		spoutIngredients1.add(spoutItemIng1);
+
+		int fluidAmount1 = switch (mobTier) {
+			case 1 -> 500;
+			case 2 -> 1000;
+			case 3 -> 2000;
+			default -> 500;
+		};
+
+		JsonObject fluidIng1 = new JsonObject();
+		//? >= 1.21 {
+		fluidIng1.addProperty("type", "neoforge:single");
+		fluidIng1.addProperty("fluid", "create_soul_harvest:bioslurry");
+		fluidIng1.addProperty("amount", fluidAmount1);
+		//?} else {
+		/*fluidIng1.addProperty("fluid", "create_soul_harvest:bioslurry");
+		fluidIng1.addProperty("amount", fluidAmount1);
+		fluidIng1.add("nbt", new JsonObject());
+		*///?}
+		spoutIngredients1.add(fluidIng1);
+		spoutStep1.add("ingredients", spoutIngredients1);
+
+		JsonArray spoutResults1 = new JsonArray();
+		JsonObject spoutResult1 = new JsonObject();
+		spoutResult1.addProperty("id", transStr);
+		spoutResult1.addProperty("item", transStr);
+		spoutResults1.add(spoutResult1);
+		spoutStep1.add("results", spoutResults1);
+		sequence.add(spoutStep1);
+
+		// --- Spouting liquid soul crystal
+		JsonObject spoutStep = new JsonObject();
+		spoutStep.addProperty("type", "create:filling");
+
+		JsonArray spoutIngredients = new JsonArray();
+		JsonObject spoutItemIng = new JsonObject();
+		spoutItemIng.addProperty("item", transStr);
+		spoutIngredients.add(spoutItemIng);
+
+		int fluidAmount = switch (mobTier) {
+			case 1 -> 250;
+			case 2 -> 500;
+			case 3 -> 1000;
+			default -> 250;
+		};
+
+		JsonObject fluidIng = new JsonObject();
+		//? >= 1.21 {
+		fluidIng.addProperty("type", "neoforge:single");
+		fluidIng.addProperty("fluid", "create_soul_harvest:liquid_soul_crystal");
+		fluidIng.addProperty("amount", fluidAmount);
+		//?} else {
+		/*fluidIng.addProperty("fluid", "create_soul_harvest:liquid_soul_crystal");
+		fluidIng.addProperty("amount", fluidAmount);
+		fluidIng.add("nbt", new JsonObject());
+		*///?}
+		spoutIngredients.add(fluidIng);
+		spoutStep.add("ingredients", spoutIngredients);
+
+		JsonArray spoutResults = new JsonArray();
+		JsonObject spoutResult = new JsonObject();
+		spoutResult.addProperty("id", transStr);
+		spoutResult.addProperty("item", transStr);
+		spoutResults.add(spoutResult);
+		spoutStep.add("results", spoutResults);
+		sequence.add(spoutStep);
+
+		// --- Deployer application of magic gold
+		JsonObject deployStep2 = new JsonObject();
+		deployStep2.addProperty("type", "create:deploying");
+
+		JsonArray deployIngredients2 = new JsonArray();
+		JsonObject ingTrans2 = new JsonObject();
+		ingTrans2.addProperty("id", transStr);
+		ingTrans2.addProperty("item", transStr);
+		deployIngredients2.add(ingTrans2);
+
+		JsonObject magicGoldIng = new JsonObject();
+		magicGoldIng.addProperty("item", ModItems.MAGIC_GOLD.getId().toString());
+		deployIngredients2.add(magicGoldIng);
+		deployStep2.add("ingredients", deployIngredients2);
+
+		JsonArray deployResults2 = new JsonArray();
+		JsonObject deployResult2 = new JsonObject();
+		deployResult2.addProperty("id", transStr);
+		deployResult2.addProperty("item", transStr);
+		deployResults2.add(deployResult2);
+		deployStep2.add("results", deployResults2);
+
+		deployStep2.addProperty("keep_held_item", false);
+		deployStep2.addProperty("keepHeldItem", false);
+		sequence.add(deployStep2);
+
+		// --- Pressing
+		JsonObject pressStep = new JsonObject();
+		pressStep.addProperty("type", "create:pressing");
+
+		JsonArray pressIngredients = new JsonArray();
+		JsonObject pressItemIng = new JsonObject();
+		pressItemIng.addProperty("item", transStr);
+		pressIngredients.add(pressItemIng);
+		pressStep.add("ingredients", pressIngredients);
+
+		JsonArray pressResults = new JsonArray();
+		JsonObject pressResult = new JsonObject();
+		pressResult.addProperty("id", transStr);
+		pressResult.addProperty("item", transStr);
+		pressResults.add(pressResult);
+		pressStep.add("results", pressResults);
+		sequence.add(pressStep);
+
+		recipe.add("sequence", sequence);
+
+		// Output Attuned Experience Drop with soul component & nbt
+		String attunedStr = attunedId != null ? attunedId.toString() : "create_soul_harvest:experience_effigy_attuned";
+		JsonArray finalResults = new JsonArray();
+		JsonObject finalResult = new JsonObject();
+		finalResult.addProperty("id", attunedStr);
+		finalResult.addProperty("item", attunedStr);
+
+		JsonObject soulDataTag = new JsonObject();
+		soulDataTag.addProperty("soul_harvest:held_soul", entityId.toString());
+		soulDataTag.addProperty("soul_harvest:soul_portion", 100);
+
+		// 1.21 NeoForge components
+		JsonObject components = new JsonObject();
+		components.add("minecraft:custom_data", soulDataTag);
+		finalResult.add("components", components);
+
+		// 1.20 Forge NBT
+		finalResult.add("nbt", soulDataTag);
+
+		finalResults.add(finalResult);
+		recipe.add("results", finalResults);
+
+		return recipe;
 	}
 
 	public static Map<ResourceLocation, JsonObject> generateLootTableJsons(@Nullable MinecraftServer server) {

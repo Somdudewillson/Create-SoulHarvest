@@ -12,6 +12,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 *///?}
 
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.recipe.ingredient.AttunedExperienceDropIngredient;
 import somdudewillson.create_soul_harvest.content.recipe.ingredient.AttunedPolyclayIngredient;
 import somdudewillson.create_soul_harvest.content.recipe.ingredient.SoulBookIngredient;
 
@@ -27,6 +28,9 @@ public class ModIngredients {
 	public static final DeferredHolder<IngredientType<?>, IngredientType<AttunedPolyclayIngredient>> ATTUNED_POLYCLAY =
 			INGREDIENT_TYPES.register("attuned_polyclay", () -> new IngredientType<>(AttunedPolyclayIngredient.CODEC, AttunedPolyclayIngredient.STREAM_CODEC));
 
+	public static final DeferredHolder<IngredientType<?>, IngredientType<AttunedExperienceDropIngredient>> ATTUNED_EXPERIENCE_DROP =
+			INGREDIENT_TYPES.register("attuned_experience_drop", () -> new IngredientType<>(AttunedExperienceDropIngredient.CODEC, AttunedExperienceDropIngredient.STREAM_CODEC));
+
 	public static void register(IEventBus modBus) {
 		INGREDIENT_TYPES.register(modBus);
 	}
@@ -34,6 +38,7 @@ public class ModIngredients {
 	/*public static void register(IEventBus modBus) {
 		CraftingHelper.register(SoulHarvestMod.id("soul_book"), SoulBookIngredient.SERIALIZER);
 		CraftingHelper.register(SoulHarvestMod.id("attuned_polyclay"), AttunedPolyclayIngredient.SERIALIZER);
+		CraftingHelper.register(SoulHarvestMod.id("attuned_experience_drop"), AttunedExperienceDropIngredient.SERIALIZER);
 	}
 	*///?}
 }

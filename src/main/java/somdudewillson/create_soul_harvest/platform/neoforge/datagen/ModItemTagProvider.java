@@ -40,7 +40,10 @@ public class ModItemTagProvider extends ItemTagsProvider {
 				ModItems.POLYCLAY_ANDESITE_ATTUNED.get(),
 				ModItems.POLYCLAY_BRASS.get(),
 				ModItems.POLYCLAY_BRASS_INCOMPLETE.get(),
-				ModItems.POLYCLAY_BRASS_ATTUNED.get()
+				ModItems.POLYCLAY_BRASS_ATTUNED.get(),
+				ModItems.EXPERIENCE_EFFIGY.get(),
+				ModItems.EXPERIENCE_EFFIGY_INCOMPLETE.get(),
+				ModItems.EXPERIENCE_EFFIGY_ATTUNED.get()
 		);
 
 		tag(TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("create", "blaze_burner_fuel/special")))

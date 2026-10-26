@@ -21,6 +21,7 @@ import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.item.ExperienceDropAttunedItem;
 import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayItem;
@@ -175,6 +176,46 @@ public class ModCreativeTabs {
 		return list;
 	}
 
+	public static List<ItemStack> generateAllAttunedExperienceDrops(@Nullable HolderLookup.Provider registries) {
+		List<ItemStack> list = new ArrayList<>();
+		Map<ResourceLocation, SoulData> dataMap = SoulDataManager.getKnownSoulData();
+
+		List<Map.Entry<ResourceLocation, SoulData>> sortedEntries = dataMap.entrySet()
+				.stream()
+				.filter(e -> e.getValue() != null && e.getValue().xp() > 0)
+				.collect(Collectors.toCollection(ArrayList::new));
+
+		sortedEntries.sort((e1, e2) -> {
+			int tier1 = e1.getValue() != null ? e1.getValue().tier() : 0;
+			int tier2 = e2.getValue() != null ? e2.getValue().tier() : 0;
+			if (tier1 != tier2) {
+				return Integer.compare(tier1, tier2);
+			}
+
+			String name1 = getEntityDisplayName(e1.getKey());
+			String name2 = getEntityDisplayName(e2.getKey());
+			return name1.compareToIgnoreCase(name2);
+		});
+
+		List<Item> expDropItems = new ArrayList<>();
+		for (Item item : BuiltInRegistries.ITEM) {
+			if (item instanceof ExperienceDropAttunedItem) {
+				expDropItems.add(item);
+			}
+		}
+		if (expDropItems.isEmpty() && ModItems.EXPERIENCE_EFFIGY_ATTUNED != null && ModItems.EXPERIENCE_EFFIGY_ATTUNED.get() != null) {
+			expDropItems.add(ModItems.EXPERIENCE_EFFIGY_ATTUNED.get());
+		}
+
+		for (Map.Entry<ResourceLocation, SoulData> entry : sortedEntries) {
+			ResourceLocation entityId = entry.getKey();
+			for (Item attunedItem : expDropItems) {
+				list.add(ExperienceDropAttunedItem.createAttunedExperienceDrop(attunedItem, entityId));
+			}
+		}
+		return list;
+	}
+
 	private static String getEntityDisplayName(ResourceLocation id) {
 		Optional<EntityType<?>> entityType = EntityType.byString(id.toString());
 		if (entityType.isPresent()) {
@@ -194,6 +235,9 @@ public class ModCreativeTabs {
 							}
 							for (ItemStack polyclayStack : generateAllAttunedPolyclay(parameters.holders())) {
 								output.accept(polyclayStack);
+							}
+							for (ItemStack expDropStack : generateAllAttunedExperienceDrops(parameters.holders())) {
+								output.accept(expDropStack);
 							}
 							for (ItemStack tokenStack : generateAllCompletedLootTokens(parameters.holders())) {
 								output.accept(tokenStack);

@@ -71,6 +71,10 @@
   "item.create_soul_harvest.polyclay_brass_incomplete": "Untuned Brass Polyclay Vessel",
   "item.create_soul_harvest.polyclay_brass_attuned": "Attuned Brass Polyclay Vessel",
   
+  "item.create_soul_harvest.experience_effigy": "Experience Drop",
+  "item.create_soul_harvest.experience_effigy_attuned_incomplete": "Untuned Experience Drop",
+  "item.create_soul_harvest.experience_effigy_attuned": "Attuned Experience Drop",
+  
   "item.create_soul_harvest.soul_book_cover_simple": "Simple Soul Book Cover",
   "item.create_soul_harvest.soul_book_cover_standard": "Soul Book Cover",
   "item.create_soul_harvest.soul_book_cover_superior": "Superior Soul Book Cover",
@@ -214,6 +218,13 @@
   "tooltip.create_soul_harvest.polyclay_attuned.superior_polyclay_tier": "Polyclay of this _tier_ can easily handle this soul. Drops will be _increased_.",
   "tooltip.create_soul_harvest.polyclay_attuned.equal_polyclay_tier": "The _tier_ of the soul and polyclay are perfectly matched. Drop rate _100%_",
   "tooltip.create_soul_harvest.polyclay_attuned.enhanced_desc": "This polyclay has been _enhanced_, allowing it to form rarer items. _Player-only_ drops can now be produced.",
+  
+  "tooltip.create_soul_harvest.experience_drop.yield": "Yield Multiplier: _%sx_",
+  "tooltip.create_soul_harvest.experience_drop.efficiency": "Efficiency: _%s%%_",
+  "tooltip.create_soul_harvest.experience_drop_desc": "An _Experience Effigy_, ready to be attuned to the soul of a creature through sequenced assembly.",
+  "tooltip.create_soul_harvest.experience_drop_tuned": "%s Tuned",
+  "tooltip.create_soul_harvest.experience_drop_attuned_desc": "An _Experience Effigy_, _attuned_ to the soul of a creature and ready to be haunted into _experience nuggets_.",
+  "tooltip.create_soul_harvest.experience_drop_attuned.expected_nuggets": "Yield: ~_%s_ Experience Nuggets",
   
   "tooltip.create_soul_harvest.soul_book_desc": "Hold in offhand to capture the souls of your enemies!",
   "tooltip.create_soul_harvest.soul_partial": "_%s_ Soul (_%s%%_)",
