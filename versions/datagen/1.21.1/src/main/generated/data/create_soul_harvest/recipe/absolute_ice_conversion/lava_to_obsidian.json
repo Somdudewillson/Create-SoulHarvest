@@ -1,0 +1,10 @@
+{
+  "type": "create_soul_harvest:absolute_ice_conversion",
+  "min_effect_strength": 0.9,
+  "result": {
+    "block": "minecraft:obsidian"
+  },
+  "target": {
+    "block": "minecraft:lava"
+  }
+}

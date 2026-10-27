@@ -1,0 +1,13 @@
+{
+    "type": "create_soul_harvest:absolute_ice_conversion",
+    "above": {
+        "fluid": "minecraft:water",
+        "inverted": true
+    },
+    "result": {
+        "block": "minecraft:ice"
+    },
+    "target": {
+        "block": "minecraft:water"
+    }
+}

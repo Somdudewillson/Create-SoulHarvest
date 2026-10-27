@@ -16,16 +16,20 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import somdudewillson.create_soul_harvest.content.chunk.AbsoluteIceChunkData;
 import somdudewillson.create_soul_harvest.content.chunk.AbsoluteIceChunkHelper;
+import somdudewillson.create_soul_harvest.content.recipe.AbsoluteIceRecipe;
 import somdudewillson.create_soul_harvest.registry.ModBlockEntities;
+import somdudewillson.create_soul_harvest.registry.ModRecipeTypes;
 //? >= 1.21 {
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.Connection;
+import net.minecraft.world.item.crafting.RecipeHolder;
 //?}
 
 public class AbsoluteIceBlockEntity extends BlockEntity {
@@ -189,10 +193,22 @@ public class AbsoluteIceBlockEntity extends BlockEntity {
 		buildSpire(level, pos, spirePerTick, spireHeight);
 	}
 
+	private List<AbsoluteIceRecipe> getConversionRecipes(Level level) {
+		//? >= 1.21 {
+		net.minecraft.world.item.crafting.RecipeType<AbsoluteIceRecipe> type = ModRecipeTypes.ABSOLUTE_ICE_CONVERSION.getType();
+		return level.getRecipeManager().getAllRecipesFor(type)
+				.stream().map(RecipeHolder::value).toList();
+		//?} else {
+		/*net.minecraft.world.item.crafting.RecipeType<AbsoluteIceRecipe> type = ModRecipeTypes.ABSOLUTE_ICE_CONVERSION.getType();
+		return level.getRecipeManager().getAllRecipesFor(type);
+		*///?}
+	}
+
 	protected void freezeEnvironment(Level level, BlockPos pos, BlockState state, 
 			double maxDist, BlockPos[] volumePositions, int maxPerTick) {
 		int step = volumePositions.length/maxPerTick;
 		int offset = (int) ((freezeStep) % maxPerTick);
+		List<AbsoluteIceRecipe> recipes = getConversionRecipes(level);
 		
 		for (int i = 0; i < maxPerTick && (i * step + offset) < volumePositions.length; i++) {
 			int idx = i * step + offset;
@@ -205,15 +221,19 @@ public class AbsoluteIceBlockEntity extends BlockEntity {
 
 			BlockState testState = level.getBlockState(testPos);
 			BlockState aboveState = level.getBlockState(testPos.above());
+			boolean seesSky = level.canSeeSky(pos.above());
+			int blockLight = level.getBrightness(LightLayer.BLOCK, pos.above());
 
-			if (testState.is(Blocks.LAVA) && effectStrength >= 0.9) {
-				level.setBlockAndUpdate(testPos, Blocks.OBSIDIAN.defaultBlockState());
-				continue;
+			boolean converted = false;
+			for (AbsoluteIceRecipe recipe : recipes) {
+				if (recipe.matches(testPos, testState, aboveState, seesSky, blockLight, effectStrength)) {
+					recipe.apply(level, testPos);
+					converted = true;
+					break;
+				}
 			}
-			if (testState.is(Blocks.WATER) && !aboveState.is(Blocks.WATER)) {
-				level.setBlockAndUpdate(testPos, Blocks.ICE.defaultBlockState());
-				continue;
-			}
+			if (converted) continue;
+
 			if (!testState.is(BlockTags.ICE) && !testState.is(BlockTags.SNOW) && !testState.is(state.getBlock())
 					&& !aboveState.is(Blocks.SNOW) && aboveState.getFluidState().isEmpty()
 					&& aboveState.canBeReplaced() && testState.isFaceSturdy(level, testPos, Direction.UP, SupportType.FULL)) {

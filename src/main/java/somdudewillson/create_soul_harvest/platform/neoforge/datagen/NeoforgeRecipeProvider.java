@@ -48,6 +48,7 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 		VanillaRecipeGen.register(recipeOutput, lookup);
 		CreateRecipeGen.register(recipeOutput, lookup);
 		CompatRecipeGen.register(recipeOutput, lookup);
+		SpecialRecipeGen.register(recipeOutput, lookup);
 	}
 }
 //?}

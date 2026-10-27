@@ -11,6 +11,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.recipe.AbsoluteIceRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.ISelectiveOutputRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.MidasFluidBoostRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.SelectiveSplashingRecipe;
@@ -58,6 +59,9 @@ public enum ModRecipeTypes implements IRecipeTypeInfo {
 	),
 	MIDAS_FLUID_BOOST(
 		() -> new MidasFluidBoostRecipe.Serializer()
+	),
+	ABSOLUTE_ICE_CONVERSION(
+		() -> new AbsoluteIceRecipe.Serializer()
 	);
 
 	private final ResourceLocation id;

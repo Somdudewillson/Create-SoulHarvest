@@ -227,6 +227,39 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 				return converted
 			}
 
+			if (rtype == "create_soul_harvest:absolute_ice_conversion") {
+				fun convertBlockCondition(cond: Any?): Any? {
+					val m = cond as? Map<String, Any?> ?: return cond
+					val res = mutableMapOf<String, Any?>()
+					res.putAll(m)
+					if ("tag" in m) {
+						var tag = m["tag"] as? String ?: ""
+						if (tag.startsWith("c:")) tag = "forge:" + tag.substring("c:".length)
+						res["tag"] = tag
+					}
+					if ("block_tag" in m) {
+						var tag = m["block_tag"] as? String ?: ""
+						if (tag.startsWith("c:")) tag = "forge:" + tag.substring("c:".length)
+						res["block_tag"] = tag
+					}
+					if ("fluid_tag" in m) {
+						var tag = m["fluid_tag"] as? String ?: ""
+						if (tag.startsWith("c:")) tag = "forge:" + tag.substring("c:".length)
+						res["fluid_tag"] = tag
+					}
+					return res
+				}
+
+				for ((k, v) in data) {
+					when (k) {
+						"target" -> converted["target"] = convertBlockCondition(v)
+						"above" -> converted["above"] = convertBlockCondition(v)
+						else -> converted[k] = v
+					}
+				}
+				return converted
+			}
+
 			if (rtype == "minecraft:crafting_shaped" || rtype == "minecraft:crafting_shapeless") {
 				for ((k, v) in data) {
 					if (k == "result") {
