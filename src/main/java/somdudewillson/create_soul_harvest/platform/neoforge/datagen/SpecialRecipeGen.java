@@ -14,6 +14,7 @@ import somdudewillson.create_soul_harvest.content.recipe.AbsoluteIceRecipe.Block
 import somdudewillson.create_soul_harvest.content.recipe.AbsoluteIceRecipe.ConversionResult;
 import somdudewillson.create_soul_harvest.content.recipe.MidasFluidBoostRecipe;
 import somdudewillson.create_soul_harvest.registry.ModFluids;
+import somdudewillson.create_soul_harvest.registry.ModTags;
 
 public final class SpecialRecipeGen {
 	private SpecialRecipeGen() {
@@ -58,6 +59,21 @@ public final class SpecialRecipeGen {
 						BlockCondition.of(Blocks.WATER),
 						Optional.of(BlockCondition.ofFluid(Fluids.WATER).inverted()),
 						ConversionResult.setBlock(Blocks.ICE),
+						Optional.empty(),
+						Optional.empty(),
+						Optional.empty(),
+						Optional.empty(),
+						Optional.empty()
+				),
+				null
+		);
+
+		recipeOutput.accept(
+				SoulHarvestMod.id("absolute_ice_conversion/break_small_plants"),
+				new AbsoluteIceRecipe(
+						BlockCondition.of(ModTags.Blocks.SMALL_PLANTS_THAT_FREEZE),
+						Optional.empty(),
+						ConversionResult.destroy(),
 						Optional.empty(),
 						Optional.empty(),
 						Optional.empty(),

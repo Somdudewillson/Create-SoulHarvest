@@ -1,0 +1,7 @@
+{
+  "type": "create_soul_harvest:absolute_ice_conversion",
+  "result": "destroy",
+  "target": {
+    "block_tag": "create_soul_harvest:small_plants_that_freeze"
+  }
+}

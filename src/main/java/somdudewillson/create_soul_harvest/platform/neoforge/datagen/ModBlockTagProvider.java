@@ -113,6 +113,14 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				.addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "gravel"))
 				.addOptionalTag(ResourceLocation.fromNamespaceAndPath("c", "sandstone/blocks"))
 				.addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "sandstone"));
+		
+		// Absolute Ice tags
+		tag(ModTags.Blocks.SMALL_PLANTS_THAT_FREEZE)
+				.add(Blocks.BAMBOO)
+				.add(Blocks.DEAD_BUSH)
+				.add(Blocks.FERN, Blocks.LARGE_FERN)
+				.add(Blocks.SHORT_GRASS, Blocks.TALL_GRASS)
+				.addTag(BlockTags.FLOWERS);
 
 		// Mineable tags
 		tag(BlockTags.MINEABLE_WITH_PICKAXE).add(

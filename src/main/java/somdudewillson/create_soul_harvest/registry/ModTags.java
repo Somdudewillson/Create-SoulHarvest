@@ -42,6 +42,8 @@ public final class ModTags {
 
 		public static final TagKey<Block> PLANETOID_STONE_VARIANTS = modTag("planetoid_stone_variants");
 
+		public static final TagKey<Block> SMALL_PLANTS_THAT_FREEZE = modTag("small_plants_that_freeze");
+
 		private static TagKey<Block> modTag(String path) {
 			return TagKey.create(Registries.BLOCK, SoulHarvestMod.id(path));
 		}

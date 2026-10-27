@@ -26,6 +26,8 @@ import somdudewillson.create_soul_harvest.content.chunk.AbsoluteIceChunkHelper;
 import somdudewillson.create_soul_harvest.content.recipe.AbsoluteIceRecipe;
 import somdudewillson.create_soul_harvest.registry.ModBlockEntities;
 import somdudewillson.create_soul_harvest.registry.ModRecipeTypes;
+import net.minecraft.world.item.crafting.RecipeType;
+
 //? >= 1.21 {
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.Connection;
@@ -181,8 +183,8 @@ public class AbsoluteIceBlockEntity extends BlockEntity {
 		
 		// Snow & freezing environmental aura
 		final double maxDist = MAX_RADIUS;
-		final int maxDistY = 15;
-		final int maxPerTick = 64;
+		final int maxDistY = 20;
+		final int maxPerTick = 512;
 		BlockPos[] volumePositions = VOLUME_CACHE.getUnchecked(new CylinderProps((int)Math.floor(maxDist), maxDistY));
 		freezeEnvironment(level, pos, state, maxDist, volumePositions, maxPerTick);
 
@@ -195,11 +197,11 @@ public class AbsoluteIceBlockEntity extends BlockEntity {
 
 	private List<AbsoluteIceRecipe> getConversionRecipes(Level level) {
 		//? >= 1.21 {
-		net.minecraft.world.item.crafting.RecipeType<AbsoluteIceRecipe> type = ModRecipeTypes.ABSOLUTE_ICE_CONVERSION.getType();
+		RecipeType<AbsoluteIceRecipe> type = ModRecipeTypes.ABSOLUTE_ICE_CONVERSION.getType();
 		return level.getRecipeManager().getAllRecipesFor(type)
 				.stream().map(RecipeHolder::value).toList();
 		//?} else {
-		/*net.minecraft.world.item.crafting.RecipeType<AbsoluteIceRecipe> type = ModRecipeTypes.ABSOLUTE_ICE_CONVERSION.getType();
+		/*RecipeType<AbsoluteIceRecipe> type = ModRecipeTypes.ABSOLUTE_ICE_CONVERSION.getType();
 		return level.getRecipeManager().getAllRecipesFor(type);
 		*///?}
 	}
@@ -218,7 +220,16 @@ public class AbsoluteIceBlockEntity extends BlockEntity {
 
 			double distSqr = pos.distSqr(testPos);
 			double effectStrength = 1.0 - (Math.sqrt(distSqr) / maxDist);
+			
+			int posMux = 17;
+			posMux = posMux * 31 + testPos.getX();
+			posMux = posMux * 31 + testPos.getY();
+			posMux = posMux * 31 + testPos.getZ();
+			if (effectStrength - ((posMux & 15)/600f) <= 0) {
+				continue;
+			}
 
+			if (level.getBlockEntity(testPos) != null) continue;
 			BlockState testState = level.getBlockState(testPos);
 			BlockState aboveState = level.getBlockState(testPos.above());
 			boolean seesSky = level.canSeeSky(pos.above());
