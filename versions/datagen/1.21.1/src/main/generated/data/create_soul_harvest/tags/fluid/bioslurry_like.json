@@ -8,6 +8,10 @@
     {
       "id": "enderio:fluid_nutrient_distillation_still",
       "required": false
+    },
+    {
+      "id": "biofactory:nutrients_fluid",
+      "required": false
     }
   ]
 }

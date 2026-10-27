@@ -25,7 +25,8 @@ public class ModFluidTagProvider extends FluidTagsProvider {
 		tag(ModTags.Fluids.BIOSLURRY_LIKE)
 				.add(ModFluids.BIOSLURRY.get())
 				.addOptional(ResourceLocation.fromNamespaceAndPath("mekanism", "nutritional_paste"))
-				.addOptional(ResourceLocation.fromNamespaceAndPath("enderio", "fluid_nutrient_distillation_still"));
+				.addOptional(ResourceLocation.fromNamespaceAndPath("enderio", "fluid_nutrient_distillation_still"))
+				.addOptional(ResourceLocation.fromNamespaceAndPath("biofactory", "nutrients_fluid"));
 	}
 
 	@Override
