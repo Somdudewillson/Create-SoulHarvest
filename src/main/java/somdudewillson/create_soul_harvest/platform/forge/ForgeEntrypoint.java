@@ -7,6 +7,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.compat.mekanism.MekanismCompat;
 import somdudewillson.create_soul_harvest.content.event.SoulHarvestGameEvents;
 import somdudewillson.create_soul_harvest.content.recipe.mulching.MulchPackFinder;
 import somdudewillson.create_soul_harvest.content.recipe.grinding.MobGrindingPackFinder;
@@ -38,6 +39,7 @@ public class ForgeEntrypoint {
 		ModCapabilities.register(modBus);
 		ModIngredients.register(modBus);
 		ModConditions.register(modBus);
+		MekanismCompat.register(modBus);
 
 		SoulHarvestGameEvents.register(MinecraftForge.EVENT_BUS);
 	}

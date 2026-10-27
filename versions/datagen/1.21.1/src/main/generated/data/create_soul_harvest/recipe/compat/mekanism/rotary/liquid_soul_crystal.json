@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "mekanism:rotary",
+  "chemical_input": {
+    "amount": 1,
+    "chemical": "create_soul_harvest:liquid_soul_crystal"
+  },
+  "chemical_output": {
+    "amount": 1,
+    "id": "create_soul_harvest:liquid_soul_crystal"
+  },
+  "fluid_input": {
+    "amount": 1,
+    "fluid": "create_soul_harvest:liquid_soul_crystal"
+  },
+  "fluid_output": {
+    "amount": 1,
+    "id": "create_soul_harvest:liquid_soul_crystal"
+  }
+}

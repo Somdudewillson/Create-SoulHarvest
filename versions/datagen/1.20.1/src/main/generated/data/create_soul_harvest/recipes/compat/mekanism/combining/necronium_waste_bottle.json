@@ -1,0 +1,24 @@
+{
+    "type": "mekanism:combining",
+    "extraInput": {
+        "amount": 1,
+        "ingredient": {
+            "item": "minecraft:glass_bottle"
+        }
+    },
+    "mainInput": {
+        "amount": 8,
+        "ingredient": {
+            "item": "create_soul_harvest:necronium_waste"
+        }
+    },
+    "output": {
+        "item": "create_soul_harvest:necronium_waste_bottle"
+    },
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "mekanism"
+        }
+    ]
+}

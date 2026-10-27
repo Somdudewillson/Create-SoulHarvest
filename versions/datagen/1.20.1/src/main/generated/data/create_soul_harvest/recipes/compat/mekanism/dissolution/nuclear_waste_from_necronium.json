@@ -1,0 +1,25 @@
+{
+    "type": "mekanism:dissolution",
+    "gasInput": {
+        "amount": 4,
+        "gas": "mekanism:uranium_hexafluoride"
+    },
+    "itemInput": {
+        "amount": 1,
+        "ingredient": {
+            "item": "create_soul_harvest:necronium_waste"
+        }
+    },
+    "output": {
+        "amount": 200,
+        "gas": "mekanism:nuclear_waste",
+        "slurry": "mekanism:nuclear_waste"
+    },
+    "perTickUsage": true,
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "mekanism"
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "mekanism:dissolution",
+  "chemical_input": {
+    "amount": 4,
+    "chemical": "mekanism:uranium_hexafluoride"
+  },
+  "item_input": {
+    "count": 1,
+    "item": "create_soul_harvest:necronium_waste"
+  },
+  "output": {
+    "amount": 200,
+    "id": "mekanism:nuclear_waste"
+  },
+  "per_tick_usage": true
+}

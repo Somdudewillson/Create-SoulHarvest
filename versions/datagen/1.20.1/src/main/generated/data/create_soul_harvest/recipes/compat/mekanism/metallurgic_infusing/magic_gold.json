@@ -1,0 +1,23 @@
+{
+    "type": "mekanism:metallurgic_infusing",
+    "infusionInput": {
+        "amount": 80,
+        "infuse_type": "mekanism:gold"
+    },
+    "itemInput": {
+        "amount": 1,
+        "ingredient": {
+            "item": "create_soul_harvest:soul_shard"
+        }
+    },
+    "output": {
+        "item": "create_soul_harvest:magic_gold"
+    },
+    "perTickUsage": false,
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "mekanism"
+        }
+    ]
+}

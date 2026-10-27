@@ -1,0 +1,25 @@
+{
+    "type": "mekanism:rotary",
+    "gasInput": {
+        "amount": 1,
+        "gas": "create_soul_harvest:liquid_soul_crystal"
+    },
+    "gasOutput": {
+        "amount": 1,
+        "gas": "create_soul_harvest:liquid_soul_crystal"
+    },
+    "fluidInput": {
+        "amount": 1,
+        "fluid": "create_soul_harvest:liquid_soul_crystal"
+    },
+    "fluidOutput": {
+        "amount": 1,
+        "fluid": "create_soul_harvest:liquid_soul_crystal"
+    },
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "mekanism"
+        }
+    ]
+}

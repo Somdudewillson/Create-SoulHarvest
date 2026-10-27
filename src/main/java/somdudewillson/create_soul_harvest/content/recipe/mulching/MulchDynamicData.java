@@ -75,6 +75,7 @@ public class MulchDynamicData {
 			parentValues.add("#"+tagId);
 
 			makeMulchingRecipe(files, percent, tagId);
+			makeMekanismReactionRecipe(files, percent, tagId);
 		}
 
 		parentTagJson.add("values", parentValues);
@@ -153,5 +154,83 @@ public class MulchDynamicData {
 		files.put("data/" + SoulHarvestMod.MOD_ID + "/tags/items/compostables/" + percent + ".json", tagBytes);
 		
 		return SoulHarvestMod.MOD_ID + ":compostables/" + percent;
+	}
+
+	private static void makeMekanismReactionRecipe(Map<String, byte[]> files, int percent, String tagId) {
+		int yieldMb = Math.round(5 * percent); // 100% -> 500 mB, 50% -> 250 mB, etc.
+
+		// 1.21 NeoForge version
+		JsonObject neoJson = new JsonObject();
+		neoJson.addProperty("type", "mekanism:reaction");
+
+		JsonArray neoConditions = new JsonArray();
+		JsonObject neoCond = new JsonObject();
+		neoCond.addProperty("type", "neoforge:mod_loaded");
+		neoCond.addProperty("modid", "mekanism");
+		neoConditions.add(neoCond);
+		neoJson.add("neoforge:conditions", neoConditions);
+
+		JsonObject itemIn = new JsonObject();
+		itemIn.addProperty("count", 1);
+		itemIn.addProperty("tag", tagId);
+		neoJson.add("item_input", itemIn);
+
+		JsonObject fluidIn = new JsonObject();
+		fluidIn.addProperty("amount", 100);
+		fluidIn.addProperty("fluid", "minecraft:water");
+		neoJson.add("fluid_input", fluidIn);
+
+		JsonObject chemIn = new JsonObject();
+		chemIn.addProperty("amount", 10);
+		chemIn.addProperty("chemical", "mekanism:sulfuric_acid");
+		neoJson.add("chemical_input", chemIn);
+
+		neoJson.addProperty("duration", 100);
+
+		JsonObject chemOut = new JsonObject();
+		chemOut.addProperty("amount", yieldMb);
+		chemOut.addProperty("id", SoulHarvestMod.MOD_ID + ":bioslurry");
+		neoJson.add("chemical_output", chemOut);
+
+		files.put("data/" + SoulHarvestMod.MOD_ID + "/recipe/compat/mekanism/reaction/bioslurry_" + percent + ".json",
+				GSON.toJson(neoJson).getBytes(StandardCharsets.UTF_8));
+
+		// 1.20 Forge version
+		JsonObject forgeJson = new JsonObject();
+		forgeJson.addProperty("type", "mekanism:reaction");
+
+		JsonArray forgeConditions = new JsonArray();
+		JsonObject forgeCond = new JsonObject();
+		forgeCond.addProperty("type", "forge:mod_loaded");
+		forgeCond.addProperty("modid", "mekanism");
+		forgeConditions.add(forgeCond);
+		forgeJson.add("conditions", forgeConditions);
+
+		JsonObject forgeItemIn = new JsonObject();
+		forgeItemIn.addProperty("amount", 1);
+		JsonObject forgeItemIng = new JsonObject();
+		forgeItemIng.addProperty("tag", tagId);
+		forgeItemIn.add("ingredient", forgeItemIng);
+		forgeJson.add("itemInput", forgeItemIn);
+
+		JsonObject forgeFluidIn = new JsonObject();
+		forgeFluidIn.addProperty("amount", 100);
+		forgeFluidIn.addProperty("fluid", "minecraft:water");
+		forgeJson.add("fluidInput", forgeFluidIn);
+
+		JsonObject forgeGasIn = new JsonObject();
+		forgeGasIn.addProperty("amount", 10);
+		forgeGasIn.addProperty("gas", "mekanism:sulfuric_acid");
+		forgeJson.add("gasInput", forgeGasIn);
+
+		forgeJson.addProperty("duration", 100);
+
+		JsonObject forgeGasOut = new JsonObject();
+		forgeGasOut.addProperty("amount", yieldMb);
+		forgeGasOut.addProperty("gas", SoulHarvestMod.MOD_ID + ":bioslurry");
+		forgeJson.add("gasOutput", forgeGasOut);
+
+		files.put("data/" + SoulHarvestMod.MOD_ID + "/recipes/compat/mekanism/reaction/bioslurry_" + percent + ".json",
+				GSON.toJson(forgeJson).getBytes(StandardCharsets.UTF_8));
 	}
 }

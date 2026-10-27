@@ -1,0 +1,23 @@
+{
+    "type": "mekanism:metallurgic_infusing",
+    "infusionInput": {
+        "amount": 24,
+        "infuse_type": "create_soul_harvest:liquid_soul_crystal"
+    },
+    "itemInput": {
+        "amount": 1,
+        "ingredient": {
+            "item": "create_soul_harvest:polished_inlaid_lapis"
+        }
+    },
+    "output": {
+        "item": "create_soul_harvest:enchanted_inlaid_lapis"
+    },
+    "perTickUsage": false,
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "mekanism"
+        }
+    ]
+}

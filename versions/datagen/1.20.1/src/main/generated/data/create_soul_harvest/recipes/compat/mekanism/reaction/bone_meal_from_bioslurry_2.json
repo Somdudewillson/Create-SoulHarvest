@@ -1,0 +1,28 @@
+{
+    "type": "mekanism:reaction",
+    "gasInput": {
+        "amount": 1000,
+        "gas": "create_soul_harvest:bioslurry"
+    },
+    "duration": 100,
+    "fluidInput": {
+        "amount": 1000,
+        "fluid": "minecraft:water"
+    },
+    "itemInput": {
+        "amount": 1,
+        "ingredient": {
+            "tag": "minecraft:smelts_to_glass"
+        }
+    },
+    "itemOutput": {
+        "item": "minecraft:bone_meal",
+        "count": 16
+    },
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "mekanism"
+        }
+    ]
+}

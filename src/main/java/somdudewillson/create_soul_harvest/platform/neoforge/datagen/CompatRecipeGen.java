@@ -17,8 +17,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
@@ -28,6 +30,7 @@ import somdudewillson.create_soul_harvest.content.recipe.condition.FluidExistsCo
 import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOAlloySmeltingRecipeBuilder;
 import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOSagMillingRecipeBuilder;
 import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOSagMillingRecipeBuilder.SagBonusType;
+import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.mekanism.*;
 import somdudewillson.create_soul_harvest.registry.ModFluids;
 import somdudewillson.create_soul_harvest.registry.ModItems;
 import somdudewillson.create_soul_harvest.registry.ModTags;
@@ -97,6 +100,7 @@ public final class CompatRecipeGen {
 		generateFluidProductionCompatRecipes(recipeOutput, registries);
 		generateEnderIOSagMillingRecipes(recipeOutput, registries);
 		generateEnderIOAlloySmeltingRecipes(recipeOutput, registries);
+		generateMekanismRecipes(recipeOutput, registries);
 	}
 
 	private static void generatePolyclayCompatRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
@@ -221,6 +225,137 @@ public final class CompatRecipeGen {
 				.experience(0.3f)
 				.output(ModItems.NECRONIUM_INGOT.get(), 1)
 				.save(recipeOutput, SoulHarvestMod.id("compat/enderio/alloy_smelting/necronium_ingot_recycle"));
+	}
+
+	private static void generateMekanismRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
+		// --- PRC
+		
+		// 1 Sand + 1000 mB Bioslurry + 1000 mB Water Vapor -> 2 Bone Meal
+		MekanismReactionRecipeBuilder.reaction()
+				.itemInput(ItemTags.SMELTS_TO_GLASS, 1)
+				.fluidInput(ModFluids.BIOSLURRY.get(), 1000)
+				.chemicalInput("mekanism:water_vapor", 1000)
+				.duration(100)
+				.itemOutput(Items.BONE_MEAL, 16)
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/reaction/bone_meal_from_bioslurry_1"));
+		
+		// 1 Sand + 1000 mB Water + 1000 mB Biogas -> 2 Bone Meal
+		MekanismReactionRecipeBuilder.reaction()
+				.itemInput(ItemTags.SMELTS_TO_GLASS, 1)
+				.fluidInput(Fluids.WATER, 1000)
+				.chemicalInput(SoulHarvestMod.MOD_ID+":bioslurry", 1000)
+				.duration(100)
+				.itemOutput(Items.BONE_MEAL, 16)
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/reaction/bone_meal_from_bioslurry_2"));
+
+		// 1 Brass Ingot + 1000 mB Wither Slurry + 80 * 8 mB Refined Obsidian -> 1 Necronium Ingot
+		MekanismReactionRecipeBuilder.reaction()
+				.itemInput(ModTags.Items.C_INGOTS_BRASS, 1)
+				.fluidInput(ModFluids.WITHER_SLURRY.get(), 1000)
+				.chemicalInput("mekanism:refined_obsidian", 80 * 8)
+				.duration(200)
+				.energyRequired(100000)
+				.itemOutput(ModItems.NECRONIUM_INGOT.get(), 1)
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/reaction/necronium_ingot"));
+		
+		// --- Rotary
+
+		// Bioslurry Fluid <=> Bioslurry Chemical
+		MekanismRotaryRecipeBuilder.rotary()
+				.fluid(ModFluids.BIOSLURRY.get())
+				.chemical(SoulHarvestMod.id("bioslurry"))
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/rotary/bioslurry"));
+
+		// Liquid Soul Crystal Fluid <=> Liquid Soul Crystal Chemical
+		MekanismRotaryRecipeBuilder.rotary()
+				.fluid(ModFluids.LIQUID_SOUL_CRYSTAL.get())
+				.chemical(SoulHarvestMod.id("liquid_soul_crystal"))
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/rotary/liquid_soul_crystal"));
+		
+		// --- Enriching
+
+		// 8 Organic Mulch -> 1 Bone Meal
+		MekanismEnrichingRecipeBuilder.enriching()
+				.input(ModItems.ORGANIC_MULCH.get(), 8)
+				.output(Items.BONE_MEAL, 1)
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/enriching/bone_meal_from_organic_mulch"));
+
+		// Inlaid Lapis Lazuli -> Polished Inlaid Lapis Lazuli
+		MekanismEnrichingRecipeBuilder.enriching()
+				.input(ModItems.INLAID_LAPIS.get(), 1)
+				.output(ModItems.POLISHED_INLAID_LAPIS.get(), 1)
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/enriching/polished_inlaid_lapis"));
+		
+		// --- Metallurgic Infusing
+
+		// 1 Lapis Lazuli + 10 mB Gold -> 2 Inlaid Lapis Lazuli
+		MekanismInfuserRecipeBuilder.metallurgicInfusing()
+				.itemInput(Items.LAPIS_LAZULI, 1)
+				.chemicalInput("mekanism:gold", 10)
+				.output(ModItems.INLAID_LAPIS.get(), 2)
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/metallurgic_infusing/inlaid_lapis"));
+
+		// Polished Inlaid Lapis + 24 mB Soulgas -> Enchanted Lapis Lazuli
+		MekanismInfuserRecipeBuilder.metallurgicInfusing()
+				.itemInput(ModItems.POLISHED_INLAID_LAPIS.get(), 1)
+				.chemicalInput(SoulHarvestMod.id("liquid_soul_crystal"), 24)
+				.output(ModItems.ENCHANTED_INLAID_LAPIS.get(), 1)
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/metallurgic_infusing/enchanted_inlaid_lapis"));
+
+		// 1 Lapis Lazuli + 80 mB Gold -> 1 Anima Gold
+		MekanismInfuserRecipeBuilder.metallurgicInfusing()
+				.itemInput(ModItems.SOUL_SHARD.get(), 1)
+				.chemicalInput("mekanism:gold", 80)
+				.output(ModItems.MAGIC_GOLD.get(), 1)
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/metallurgic_infusing/magic_gold"));
+		
+		// --- Combiner
+
+		// 1 Clay Ball + 1 Create Experience Nugget -> 4 Polyclay
+		MekanismCombinerRecipeBuilder.combining()
+				.mainInput(AllItems.EXP_NUGGET, 1)
+				.extraInput(Items.CLAY_BALL, 1)
+				.output(ModItems.POLYCLAY.get(), 4)
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/combining/polyclay"));
+
+		// 1 Glass Bottle + 8 Necronium Waste -> 1 Necronium Waste Bottle
+		MekanismCombinerRecipeBuilder.combining()
+		.mainInput(ModItems.NECRONIUM_WASTE.get(), 8)
+				.extraInput(Items.GLASS_BOTTLE, 1)
+				.output(ModItems.NECRONIUM_WASTE_BOTTLE.get(), 1)
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/combining/necronium_waste_bottle"));
+		
+		// --- Crushing
+
+		MekanismCrushingRecipeBuilder.crushing()
+				.input(ModItems.NECRONIUM_INGOT.get(), 1)
+				.output(ModItems.NECRONIUM_WASTE.get(), 5)
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/crushing/necronium_waste_from_ingot"));
+
+		MekanismCrushingRecipeBuilder.crushing()
+				.input(ModItems.NECRONIUM_PLATE.get(), 1)
+				.output(ModItems.NECRONIUM_WASTE.get(), 4)
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/crushing/necronium_waste_from_plate"));
+
+		MekanismCrushingRecipeBuilder.crushing()
+				.input(ModItems.NECRONIUM_ROD.get(), 1)
+				.output(ModItems.NECRONIUM_WASTE.get(), 4)
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/crushing/necronium_waste_from_rod"));
+
+		MekanismCrushingRecipeBuilder.crushing()
+				.input(ModItems.NECRONIUM_WASTE_BOTTLE.get(), 1)
+				.output(ModItems.NECRONIUM_WASTE.get(), 8)
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/crushing/necronium_waste_from_bottle"));
+
+		// --- Dissolution
+
+		// 1 Necronium Waste + Uranium Hexafluoride -> 1000 mB Nuclear Waste
+		MekanismDissolutionRecipeBuilder.dissolution()
+				.itemInput(ModItems.NECRONIUM_WASTE.get(), 1)
+				.chemicalInput("mekanism:uranium_hexafluoride", 4)
+				.output("mekanism:nuclear_waste", 200)
+				.perTickUsage(true)
+				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/dissolution/nuclear_waste_from_necronium"));
 	}
 }
 //?}

@@ -6,6 +6,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.compat.mekanism.MekanismCompat;
 import somdudewillson.create_soul_harvest.content.event.SoulHarvestGameEvents;
 import somdudewillson.create_soul_harvest.content.recipe.grinding.MobGrindingPackFinder;
 import somdudewillson.create_soul_harvest.content.recipe.mulching.MulchPackFinder;
@@ -35,6 +36,7 @@ public class NeoforgeEntrypoint {
 		ModCapabilities.register(modBus);
 		ModIngredients.register(modBus);
 		ModConditions.register(modBus);
+		MekanismCompat.register(modBus);
 
 		SoulHarvestGameEvents.register(NeoForge.EVENT_BUS);
 	}

@@ -1,0 +1,25 @@
+{
+    "type": "mekanism:combining",
+    "extraInput": {
+        "amount": 1,
+        "ingredient": {
+            "item": "minecraft:clay_ball"
+        }
+    },
+    "mainInput": {
+        "amount": 1,
+        "ingredient": {
+            "item": "create:experience_nugget"
+        }
+    },
+    "output": {
+        "item": "create_soul_harvest:polyclay",
+        "count": 4
+    },
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "mekanism"
+        }
+    ]
+}

@@ -1,0 +1,25 @@
+{
+    "type": "mekanism:rotary",
+    "gasInput": {
+        "amount": 1,
+        "gas": "create_soul_harvest:bioslurry"
+    },
+    "gasOutput": {
+        "amount": 1,
+        "gas": "create_soul_harvest:bioslurry"
+    },
+    "fluidInput": {
+        "amount": 1,
+        "fluid": "create_soul_harvest:bioslurry"
+    },
+    "fluidOutput": {
+        "amount": 1,
+        "fluid": "create_soul_harvest:bioslurry"
+    },
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "mekanism"
+        }
+    ]
+}

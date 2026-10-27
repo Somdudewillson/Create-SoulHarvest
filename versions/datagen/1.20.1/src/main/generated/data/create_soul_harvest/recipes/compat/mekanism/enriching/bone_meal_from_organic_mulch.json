@@ -1,0 +1,18 @@
+{
+    "type": "mekanism:enriching",
+    "input": {
+        "amount": 8,
+        "ingredient": {
+            "item": "create_soul_harvest:organic_mulch"
+        }
+    },
+    "output": {
+        "item": "minecraft:bone_meal"
+    },
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "mekanism"
+        }
+    ]
+}

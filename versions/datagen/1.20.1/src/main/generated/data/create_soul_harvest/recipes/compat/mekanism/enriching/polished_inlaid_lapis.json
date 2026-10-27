@@ -1,0 +1,18 @@
+{
+    "type": "mekanism:enriching",
+    "input": {
+        "amount": 1,
+        "ingredient": {
+            "item": "create_soul_harvest:inlaid_lapis"
+        }
+    },
+    "output": {
+        "item": "create_soul_harvest:polished_inlaid_lapis"
+    },
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "mekanism"
+        }
+    ]
+}

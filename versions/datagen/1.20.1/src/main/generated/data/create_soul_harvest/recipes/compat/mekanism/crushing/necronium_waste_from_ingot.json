@@ -1,0 +1,19 @@
+{
+    "type": "mekanism:crushing",
+    "input": {
+        "amount": 1,
+        "ingredient": {
+            "item": "create_soul_harvest:necronium_ingot"
+        }
+    },
+    "output": {
+        "item": "create_soul_harvest:necronium_waste",
+        "count": 5
+    },
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "mekanism"
+        }
+    ]
+}

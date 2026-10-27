@@ -1,0 +1,28 @@
+{
+    "type": "mekanism:reaction",
+    "gasInput": {
+        "amount": 640,
+        "gas": "mekanism:refined_obsidian"
+    },
+    "duration": 200,
+    "energyRequired": 100000,
+    "fluidInput": {
+        "amount": 1000,
+        "fluid": "create_soul_harvest:wither_slurry"
+    },
+    "itemInput": {
+        "amount": 1,
+        "ingredient": {
+            "tag": "forge:ingots/brass"
+        }
+    },
+    "itemOutput": {
+        "item": "create_soul_harvest:necronium_ingot"
+    },
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "mekanism"
+        }
+    ]
+}

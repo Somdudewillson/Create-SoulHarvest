@@ -118,9 +118,11 @@
   "item.create_soul_harvest.glyph_scroll_enhanced_8": "Enhanced Glyph Scroll ♊",
 
   "fluid_type.create_soul_harvest.bioslurry": "Bioslurry",
+  "chemical.create_soul_harvest.bioslurry": "Biogas",
   "fluid_type.create_soul_harvest.wither_slurry": "Wither Slurry",
   "fluid_type.create_soul_harvest.silica_solution": "Silica Solution",
   "fluid_type.create_soul_harvest.liquid_soul_crystal": "Liquid Soul Crystal",
+  "chemical.create_soul_harvest.liquid_soul_crystal": "Soulgas",
 
   "effect.create_soul_harvest.contagion": "Contagion",
   "death.attack.create_soul_harvest.contagion": "%1$s succumbed to contagion",

@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "mekanism:metallurgic_infusing",
+  "chemical_input": {
+    "amount": 80,
+    "chemical": "mekanism:gold"
+  },
+  "item_input": {
+    "count": 1,
+    "item": "create_soul_harvest:soul_shard"
+  },
+  "output": {
+    "count": 1,
+    "id": "create_soul_harvest:magic_gold"
+  },
+  "per_tick_usage": false
+}

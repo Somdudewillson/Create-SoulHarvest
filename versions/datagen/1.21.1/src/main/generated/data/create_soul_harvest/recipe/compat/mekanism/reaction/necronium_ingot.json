@@ -1,0 +1,27 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "mekanism:reaction",
+  "chemical_input": {
+    "amount": 640,
+    "chemical": "mekanism:refined_obsidian"
+  },
+  "duration": 200,
+  "energy_required": 100000,
+  "fluid_input": {
+    "amount": 1000,
+    "fluid": "create_soul_harvest:wither_slurry"
+  },
+  "item_input": {
+    "count": 1,
+    "tag": "c:ingots/brass"
+  },
+  "item_output": {
+    "count": 1,
+    "id": "create_soul_harvest:necronium_ingot"
+  }
+}

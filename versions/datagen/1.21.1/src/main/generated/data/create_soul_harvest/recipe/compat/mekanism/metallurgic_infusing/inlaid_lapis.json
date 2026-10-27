@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "mekanism:metallurgic_infusing",
+  "chemical_input": {
+    "amount": 10,
+    "chemical": "mekanism:gold"
+  },
+  "item_input": {
+    "count": 1,
+    "item": "minecraft:lapis_lazuli"
+  },
+  "output": {
+    "count": 2,
+    "id": "create_soul_harvest:inlaid_lapis"
+  },
+  "per_tick_usage": false
+}

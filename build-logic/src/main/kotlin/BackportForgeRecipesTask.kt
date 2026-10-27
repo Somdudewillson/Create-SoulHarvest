@@ -118,6 +118,75 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 		}
 
 		@Suppress("UNCHECKED_CAST")
+		fun convertMekanismItemInput(map: Map<String, Any?>): Map<String, Any?> {
+			val count = map["count"] ?: 1
+			val ing = mutableMapOf<String, Any?>()
+			if ("tag" in map) {
+				var tag = map["tag"] as? String ?: ""
+				if (tag.startsWith("c:")) {
+					tag = "forge:" + tag.substring("c:".length)
+				}
+				if (tag == "forge:obsidians") {
+					tag = "forge:obsidian"
+				}
+				ing["tag"] = tag
+			} else if ("item" in map) {
+				ing["item"] = map["item"]
+			} else if ("ingredient" in map) {
+				ing.putAll(map["ingredient"] as Map<String, Any?>)
+			}
+			return mapOf(
+				"amount" to count,
+				"ingredient" to ing
+			)
+		}
+
+		@Suppress("UNCHECKED_CAST")
+		fun convertMekanismItemOutput(map: Map<String, Any?>): Map<String, Any?> {
+			val item = map["id"] ?: map["item"]
+			val count = (map["count"] as? Number)?.toInt() ?: 1
+			val out = mutableMapOf<String, Any?>("item" to item)
+			if (count > 1) {
+				out["count"] = count
+			}
+			return out
+		}
+
+		@Suppress("UNCHECKED_CAST")
+		fun convertMekanismFluidInput(map: Map<String, Any?>): Map<String, Any?> {
+			val amount = map["amount"] ?: 1
+			val out = mutableMapOf<String, Any?>("amount" to amount)
+			if ("fluid" in map) {
+				out["fluid"] = map["fluid"]
+			} else if ("tag" in map) {
+				var tag = map["tag"] as? String ?: ""
+				if (tag.startsWith("c:")) tag = "forge:" + tag.substring("c:".length)
+				out["tag"] = tag
+			}
+			return out
+		}
+
+		@Suppress("UNCHECKED_CAST")
+		fun convertMekanismGasInput(map: Map<String, Any?>): Map<String, Any?> {
+			val amount = map["amount"] ?: 1
+			val gas = map["chemical"] ?: map["gas"]
+			return mapOf(
+				"amount" to amount,
+				"gas" to gas
+			)
+		}
+
+		@Suppress("UNCHECKED_CAST")
+		fun convertMekanismGasOutput(map: Map<String, Any?>): Map<String, Any?> {
+			val amount = map["amount"] ?: 1
+			val gas = map["id"] ?: map["gas"] ?: map["chemical"]
+			return mapOf(
+				"amount" to amount,
+				"gas" to gas
+			)
+		}
+
+		@Suppress("UNCHECKED_CAST")
 		fun convertRecipe(data: Map<String, Any?>): Map<String, Any?> {
 			val converted = convertRecipeData(data)
 			val rawConditions = data["neoforge:conditions"] ?: data["conditions"]
@@ -254,6 +323,165 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 								resultMap["count"] = count
 							}
 							converted["result"] = resultMap
+						}
+						else -> converted[k] = v
+					}
+				}
+				return converted
+			}
+
+			if (rtype == "mekanism:reaction") {
+				for ((k, v) in data) {
+					when (k) {
+						"item_input" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["itemInput"] = convertMekanismItemInput(m)
+						}
+						"fluid_input" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["fluidInput"] = convertMekanismFluidInput(m)
+						}
+						"chemical_input" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["gasInput"] = convertMekanismGasInput(m)
+						}
+						"energy_required" -> converted["energyRequired"] = v
+						"item_output" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["itemOutput"] = convertMekanismItemOutput(m)
+						}
+						"chemical_output" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["gasOutput"] = convertMekanismGasOutput(m)
+						}
+						else -> converted[k] = v
+					}
+				}
+				return converted
+			}
+
+			if (rtype == "mekanism:dissolution") {
+				for ((k, v) in data) {
+					when (k) {
+						"item_input" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["itemInput"] = convertMekanismItemInput(m)
+						}
+						"chemical_input" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["gasInput"] = convertMekanismGasInput(m)
+						}
+						"output" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) {
+								val amount = m["amount"] ?: 1
+								val id = m["id"] ?: m["gas"] ?: m["slurry"]
+								converted["output"] = mapOf(
+									"amount" to amount,
+									"gas" to id,
+									"slurry" to id
+								)
+							}
+						}
+						"per_tick_usage" -> converted["perTickUsage"] = v
+						else -> converted[k] = v
+					}
+				}
+				return converted
+			}
+
+			if (rtype == "mekanism:enriching" || rtype == "mekanism:crushing") {
+				for ((k, v) in data) {
+					when (k) {
+						"input" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["input"] = convertMekanismItemInput(m)
+						}
+						"output" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["output"] = convertMekanismItemOutput(m)
+						}
+						else -> converted[k] = v
+					}
+				}
+				return converted
+			}
+
+			if (rtype == "mekanism:combining") {
+				for ((k, v) in data) {
+					when (k) {
+						"main_input" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["mainInput"] = convertMekanismItemInput(m)
+						}
+						"extra_input" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["extraInput"] = convertMekanismItemInput(m)
+						}
+						"output" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["output"] = convertMekanismItemOutput(m)
+						}
+						else -> converted[k] = v
+					}
+				}
+				return converted
+			}
+
+			if (rtype == "mekanism:metallurgic_infusing") {
+				for ((k, v) in data) {
+					when (k) {
+						"item_input" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["itemInput"] = convertMekanismItemInput(m)
+						}
+						"chemical_input" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) {
+								val amount = m["amount"] ?: 1
+								val infuse = m["chemical"] ?: m["tag"]
+								converted["infusionInput"] = mapOf(
+									"amount" to amount,
+									"infuse_type" to infuse
+								)
+							}
+						}
+						"per_tick_usage" -> converted["perTickUsage"] = v
+						"output" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["output"] = convertMekanismItemOutput(m)
+						}
+						else -> converted[k] = v
+					}
+				}
+				return converted
+			}
+
+			if (rtype == "mekanism:rotary") {
+				for ((k, v) in data) {
+					when (k) {
+						"fluid_input" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["fluidInput"] = convertMekanismFluidInput(m)
+						}
+						"chemical_output" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["gasOutput"] = convertMekanismGasOutput(m)
+						}
+						"chemical_input" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) converted["gasInput"] = convertMekanismGasInput(m)
+						}
+						"fluid_output" -> {
+							val m = v as? Map<String, Any?>
+							if (m != null) {
+								val amount = m["amount"] ?: 1
+								val fluid = m["id"] ?: m["fluid"]
+								converted["fluidOutput"] = mapOf(
+									"amount" to amount,
+									"fluid" to fluid
+								)
+							}
 						}
 						else -> converted[k] = v
 					}
