@@ -14,6 +14,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -22,6 +23,9 @@ import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.nbt.CompoundTag;
+import somdudewillson.create_soul_harvest.content.chunk.AbsoluteIceChunkData;
 *///?}
 
 public class ModCapabilities {
@@ -55,11 +59,36 @@ public class ModCapabilities {
 	/*public static final Capability<ISoulHolder> SOUL_HOLDER =
 			CapabilityManager.get(new CapabilityToken<>() {});
 
+	public static final Capability<AbsoluteIceChunkData> ABSOLUTE_ICE_CHUNK_DATA =
+			CapabilityManager.get(new CapabilityToken<>() {});
+
 	public static void register(IEventBus modBus) {
 		MinecraftForge.EVENT_BUS.register(ForgeCapabilityHandler.class);
 	}
 
 	public static class ForgeCapabilityHandler {
+		@SubscribeEvent
+		public static void onAttachChunkCapabilities(AttachCapabilitiesEvent<LevelChunk> event) {
+			AbsoluteIceChunkData data = new AbsoluteIceChunkData();
+			LazyOptional<AbsoluteIceChunkData> opt = LazyOptional.of(() -> data);
+			event.addCapability(SoulHarvestMod.id("absolute_ice_chunk_data"), new ICapabilitySerializable<CompoundTag>() {
+				@Override
+				public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
+					return cap == ABSOLUTE_ICE_CHUNK_DATA ? opt.cast() : LazyOptional.empty();
+				}
+
+				@Override
+				public CompoundTag serializeNBT() {
+					return data.serializeNBT();
+				}
+
+				@Override
+				public void deserializeNBT(CompoundTag nbt) {
+					data.deserializeNBT(nbt);
+				}
+			});
+		}
+
 		@SubscribeEvent
 		public static void onAttachCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
 			ItemStack stack = event.getObject();

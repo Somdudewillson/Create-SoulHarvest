@@ -16,5 +16,6 @@ public class SoulHarvestGameEvents {
 		eventBus.register(SpellGameEvents.class);
 		eventBus.register(SoulHarvestDataEvents.class);
 		eventBus.register(NecroniumDecayEvents.class);
+		eventBus.register(AbsoluteIceEvents.class);
 	}
 }

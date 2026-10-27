@@ -34,6 +34,7 @@ public class NeoforgeEntrypoint {
 		MobGrindingPackFinder.register(modBus);
 
 		ModCapabilities.register(modBus);
+		ModAttachments.register(modBus);
 		ModIngredients.register(modBus);
 		ModConditions.register(modBus);
 		MekanismCompat.register(modBus);
