@@ -1,0 +1,9 @@
+{
+  "type": "create_soul_harvest:midas_fluid_boost",
+  "duration": 12000,
+  "fluid": {
+    "amount": 12,
+    "fluid": "create_soul_harvest:liquid_soul_crystal"
+  },
+  "multiplier": 4.0
+}

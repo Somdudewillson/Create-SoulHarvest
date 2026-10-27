@@ -202,6 +202,31 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 			val rtype = data["type"] as? String ?: ""
 			val converted = mutableMapOf<String, Any?>()
 
+			if (rtype == "create_soul_harvest:midas_fluid_boost") {
+				for ((k, v) in data) {
+					if (k == "fluid") {
+						val f = v as? Map<String, Any?>
+						if (f != null) {
+							val convertedFluid = mutableMapOf<String, Any?>()
+							convertedFluid.putAll(f)
+							if ("tag" in f) {
+								var tag = f["tag"] as? String ?: ""
+								if (tag.startsWith("c:")) {
+									tag = "forge:" + tag.substring("c:".length)
+								}
+								convertedFluid["tag"] = tag
+							}
+							converted[k] = convertedFluid
+						} else {
+							converted[k] = v
+						}
+					} else {
+						converted[k] = v
+					}
+				}
+				return converted
+			}
+
 			if (rtype == "minecraft:crafting_shaped" || rtype == "minecraft:crafting_shapeless") {
 				for ((k, v) in data) {
 					if (k == "result") {

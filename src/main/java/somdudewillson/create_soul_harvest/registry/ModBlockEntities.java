@@ -6,6 +6,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.block.AnimaGlassBlockEntity;
+import somdudewillson.create_soul_harvest.content.block.MidasCoreBlockEntity;
 
 public class ModBlockEntities {
 
@@ -13,4 +14,7 @@ public class ModBlockEntities {
 
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AnimaGlassBlockEntity>> MAGIC_GLASS_BE = BLOCK_ENTITY_TYPES.register("magic_glass",
 			() -> BlockEntityType.Builder.of(AnimaGlassBlockEntity::new, ModBlocks.MAGIC_GLASS.get()).build(null));
+
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MidasCoreBlockEntity>> MIDAS_CORE_BE = BLOCK_ENTITY_TYPES.register("midas_core",
+			() -> BlockEntityType.Builder.of(MidasCoreBlockEntity::new, ModBlocks.MIDAS_CORE.get()).build(null));
 }

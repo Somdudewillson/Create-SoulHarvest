@@ -22,13 +22,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.DoubleItemIcon;
+import com.simibubi.create.compat.jei.ItemIcon;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.compat.jei.category.FanSoulInfusionCategory;
 import somdudewillson.create_soul_harvest.compat.jei.category.LootTokenCategory;
+import somdudewillson.create_soul_harvest.compat.jei.category.MidasFluidBoostCategory;
 import somdudewillson.create_soul_harvest.compat.jei.recipe.LootTokenJeiRecipe;
 import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
+import somdudewillson.create_soul_harvest.content.recipe.MidasFluidBoostRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.SoulInfusionRecipe;
 import somdudewillson.create_soul_harvest.content.soul.SoulData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
@@ -49,13 +52,18 @@ public class SoulHarvestJEI implements IModPlugin {
 	//? >= 1.21 {
 	public static final mezz.jei.api.recipe.RecipeType<RecipeHolder<SoulInfusionRecipe>> SOUL_INFUSION_TYPE =
 			mezz.jei.api.recipe.RecipeType.createRecipeHolderType(SoulHarvestMod.id("soul_infusion"));
+	public static final mezz.jei.api.recipe.RecipeType<RecipeHolder<MidasFluidBoostRecipe>> MIDAS_FLUID_BOOST_TYPE =
+			mezz.jei.api.recipe.RecipeType.createRecipeHolderType(SoulHarvestMod.id("midas_fluid_boost"));
 	//?} else {
 	/*public static final mezz.jei.api.recipe.RecipeType<SoulInfusionRecipe> SOUL_INFUSION_TYPE =
 			new mezz.jei.api.recipe.RecipeType<>(SoulHarvestMod.id("soul_infusion"), SoulInfusionRecipe.class);
+	public static final mezz.jei.api.recipe.RecipeType<MidasFluidBoostRecipe> MIDAS_FLUID_BOOST_TYPE =
+			new mezz.jei.api.recipe.RecipeType<>(SoulHarvestMod.id("midas_fluid_boost"), MidasFluidBoostRecipe.class);
 	*///?}
 
 	private FanSoulInfusionCategory category;
 	private LootTokenCategory lootTokenCategory;
+	private MidasFluidBoostCategory midasFluidBoostCategory;
 
 	@Override
 	public ResourceLocation getPluginUid() {
@@ -86,12 +94,32 @@ public class SoulHarvestJEI implements IModPlugin {
 
 		this.lootTokenCategory = new LootTokenCategory();
 		registration.addRecipeCategories(lootTokenCategory);
+
+		CreateRecipeCategory.Info<MidasFluidBoostRecipe> boostInfo = new CreateRecipeCategory.Info<>(
+				MIDAS_FLUID_BOOST_TYPE,
+				Component.translatable("create_soul_harvest.recipe.midas_fluid_boost"),
+				registration.getJeiHelpers().getGuiHelper().createBlankDrawable(178, 72),
+				new ItemIcon(() -> new ItemStack(ModBlocks.MIDAS_CORE.get())),
+				() -> {
+					ClientPacketListener connection = Minecraft.getInstance().getConnection();
+					if (connection != null) {
+						return connection.getRecipeManager().getAllRecipesFor(ModRecipeTypes.MIDAS_FLUID_BOOST.getType());
+					}
+					return Collections.emptyList();
+				},
+				List.of(() -> new ItemStack(ModBlocks.MIDAS_CORE.get()))
+		);
+		this.midasFluidBoostCategory = new MidasFluidBoostCategory(boostInfo);
+		registration.addRecipeCategories(midasFluidBoostCategory);
 	}
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
 		if (category != null) {
 			category.registerRecipes(registration);
+		}
+		if (midasFluidBoostCategory != null) {
+			midasFluidBoostCategory.registerRecipes(registration);
 		}
 
 		List<LootTokenJeiRecipe> tokenRecipes = new ArrayList<>();
@@ -148,6 +176,9 @@ public class SoulHarvestJEI implements IModPlugin {
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
 		if (category != null) {
 			category.registerCatalysts(registration);
+		}
+		if (midasFluidBoostCategory != null) {
+			midasFluidBoostCategory.registerCatalysts(registration);
 		}
 		registration.addRecipeCatalyst(new ItemStack(ModItems.LOOT_TOKEN.get()), LootTokenCategory.TYPE);
 	}

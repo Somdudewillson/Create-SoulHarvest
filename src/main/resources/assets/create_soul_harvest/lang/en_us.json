@@ -261,5 +261,13 @@
   "item.create_soul_harvest.necronium_charm.tooltip.condition1": "When afflicted by Poison or Wither",
   "item.create_soul_harvest.necronium_charm.tooltip.behaviour1": "Wielder will be cured at the cost of _Durability_",
   "item.create_soul_harvest.necronium_charm.tooltip.condition2": "While wearing Backtank",
-  "item.create_soul_harvest.necronium_charm.tooltip.behaviour2": "_No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank"
+  "item.create_soul_harvest.necronium_charm.tooltip.behaviour2": "_No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
+
+  "create_soul_harvest.gui.goggles.midas_core": "Midas Core:",
+  "create_soul_harvest.gui.goggles.conversion_countdown_heading": "Next Wave:",
+  "create_soul_harvest.gui.goggles.boost_heading": "Boost:",
+  "create_soul_harvest.gui.goggles.boost_active": "(%s remaining)",
+  "create_soul_harvest.gui.goggles.boost_inactive": "Inactive (1.0x)",
+
+  "create_soul_harvest.recipe.midas_fluid_boost": "Midas Core Transmutation Boost"
 }

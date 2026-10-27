@@ -6,6 +6,7 @@ import somdudewillson.create_soul_harvest.content.capability.ItemStackSoulHolder
 
 //? neoforge {
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ItemCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 //?} forge {
@@ -42,6 +43,12 @@ public class ModCapabilities {
 				ModItems.SOUL_BOOK_SIMPLE.get(),
 				ModItems.SOUL_BOOK_STANDARD.get(),
 				ModItems.SOUL_BOOK_SUPERIOR.get()
+		);
+
+		event.registerBlockEntity(
+				Capabilities.FluidHandler.BLOCK,
+				ModBlockEntities.MIDAS_CORE_BE.get(),
+				(be, side) -> be.getFluidHandler()
 		);
 	}
 	//?} forge {

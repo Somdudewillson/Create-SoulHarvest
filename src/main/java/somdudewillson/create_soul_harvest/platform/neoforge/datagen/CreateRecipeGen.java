@@ -49,9 +49,11 @@ import org.slf4j.Logger;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.item.GlyphScrollItem;
 import somdudewillson.create_soul_harvest.content.recipe.ISelectiveOutputRecipe;
+import somdudewillson.create_soul_harvest.content.recipe.MidasFluidBoostRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.SelectiveSplashingRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.SoulInfusionRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.UniformSequencedAssemblyRecipe;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 import somdudewillson.create_soul_harvest.registry.ModFluids;
 import somdudewillson.create_soul_harvest.registry.ModItems;
@@ -81,6 +83,7 @@ public final class CreateRecipeGen {
 		registerSoulBookRecipes(recipeOutput);
 		registerGlyphFoldingRecipes(recipeOutput);
 		registerEnhancedSpellRecipes(recipeOutput);
+		registerMidasFluidBoostRecipes(recipeOutput);
 	}
 
 	public static void registerMechanicalCraftingRecipes(RecipeOutput recipeOutput) {
@@ -771,7 +774,18 @@ public final class CreateRecipeGen {
 		registerEnhancedSpellRecipe(recipeOutput, 7, Items.GLASS, Items.OBSIDIAN);
 	}
 
-	@SuppressWarnings("unused")
+	public static void registerMidasFluidBoostRecipes(RecipeOutput recipeOutput) {
+		recipeOutput.accept(
+				SoulHarvestMod.id("midas_fluid_boost/liquid_soul_crystal"),
+				new MidasFluidBoostRecipe(
+						SizedFluidIngredient.of(ModFluids.LIQUID_SOUL_CRYSTAL.get(), 12),
+						12000,
+						4.0f
+				),
+				null
+		);
+	}
+
 	public static RecipeOutput withUniformSerializer(final RecipeOutput output) {
 		return withUniformSerializer(output, null);
 	}

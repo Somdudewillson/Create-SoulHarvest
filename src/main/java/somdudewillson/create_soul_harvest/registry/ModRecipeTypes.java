@@ -12,6 +12,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.recipe.ISelectiveOutputRecipe;
+import somdudewillson.create_soul_harvest.content.recipe.MidasFluidBoostRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.SelectiveSplashingRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.SoulInfusionRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.UniformSequencedAssemblyRecipeSerializer;
@@ -54,6 +55,9 @@ public enum ModRecipeTypes implements IRecipeTypeInfo {
 	),
 	UNIFORM_SEQUENCED_ASSEMBLY(
 		() -> new UniformSequencedAssemblyRecipeSerializer()
+	),
+	MIDAS_FLUID_BOOST(
+		() -> new MidasFluidBoostRecipe.Serializer()
 	);
 
 	private final ResourceLocation id;
