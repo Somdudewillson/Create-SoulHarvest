@@ -1,0 +1,9 @@
+{
+    "type": "create_soul_harvest:midas_fluid_boost",
+    "duration": 600,
+    "fluid": {
+        "amount": 40,
+        "fluid": "enderio:xpjuice"
+    },
+    "multiplier": 2.0
+}

@@ -1,0 +1,9 @@
+{
+  "type": "create_soul_harvest:midas_fluid_boost",
+  "duration": 6000,
+  "fluid": {
+    "amount": 20,
+    "fluid": "create_enchantment_industry:experience"
+  },
+  "multiplier": 2.0
+}

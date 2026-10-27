@@ -26,6 +26,7 @@ import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import com.simibubi.create.AllItems;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.recipe.MidasFluidBoostRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.condition.FluidExistsCondition;
 import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOAlloySmeltingRecipeBuilder;
 import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOSagMillingRecipeBuilder;
@@ -72,6 +73,10 @@ public final class CompatRecipeGen {
 	public static final int XP_PER_POLYCLAY_CRAFT = 3;
 	public static final int POLYCLAY_PER_CRAFT = 2;
 	public static final int XP_BOOST_LIQUID_SOUL_YIELD = 6;
+	public static final float XP_BOOST_CATALYST_FAC = 2f;
+	public static final int BOOST_CATALYST_MIN_Mb = 20;
+	public static final int BOOST_CATALYST_DURATION_PER_XP = 20 * 15;
+	public static final int BOOST_CATALYST_MIN_DURATION = 20 * 30;
 
 	public static List<ExperienceUnitRecord> XP_FLUID_COMPAT_DATA = ImmutableList.of(
 			new ExperienceUnitRecord("create_enchantment_industry", "experience", 1),
@@ -98,6 +103,7 @@ public final class CompatRecipeGen {
 	public static void register(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
 		generatePolyclayCompatRecipes(recipeOutput, registries);
 		generateFluidProductionCompatRecipes(recipeOutput, registries);
+		generateMidasCoreCatalystRecipes(recipeOutput, registries);
 		generateEnderIOSagMillingRecipes(recipeOutput, registries);
 		generateEnderIOAlloySmeltingRecipes(recipeOutput, registries);
 		generateMekanismRecipes(recipeOutput, registries);
@@ -152,6 +158,29 @@ public final class CompatRecipeGen {
 					.requiresHeat(HeatCondition.HEATED)
 					.output(ModFluids.LIQUID_SOUL_CRYSTAL.get(), 18)
 					.build(recipeOutput);
+		}
+	}
+	
+	private static void generateMidasCoreCatalystRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
+		for (ExperienceUnitRecord xpFluid : XP_FLUID_COMPAT_DATA) {
+			int fluidAmt = BOOST_CATALYST_MIN_Mb;
+			int duration = (int) (BOOST_CATALYST_DURATION_PER_XP * ((float)fluidAmt/xpFluid.xp()));
+			int amtMult = 1;
+			while (duration < BOOST_CATALYST_MIN_DURATION) {
+				amtMult++;
+				fluidAmt = BOOST_CATALYST_MIN_Mb*amtMult;
+				duration = (int) (BOOST_CATALYST_DURATION_PER_XP * ((float)fluidAmt/xpFluid.xp()));
+			}
+			
+			recipeOutput.accept(
+					SoulHarvestMod.id("midas_fluid_boost/"+xpFluid.shortIdString()),
+					new MidasFluidBoostRecipe(
+							fluidIngredient(xpFluid.fluidId(), fluidAmt),
+							duration,
+							XP_BOOST_CATALYST_FAC
+					),
+					null
+			);
 		}
 	}
 
