@@ -63,6 +63,7 @@ legacyForge {
 	mods {
 		register(prop("mod.id")) {
 			sourceSet(sourceSets["main"])
+			sourceSet(sourceSets["test"])
 		}
 	}
 }

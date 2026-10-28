@@ -14,5 +14,11 @@
     "result": {
         "item": "minecraft:gold_ingot",
         "count": 2
-    }
+    },
+    "conditions": [
+        {
+            "type": "create_soul_harvest:item_reachable",
+            "item": "create_soul_harvest:magic_gold"
+        }
+    ]
 }

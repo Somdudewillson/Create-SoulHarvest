@@ -20,6 +20,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.recipe.condition.ItemReachableCondition;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 import somdudewillson.create_soul_harvest.registry.ModItems;
 import somdudewillson.create_soul_harvest.registry.ModTags;
@@ -71,7 +72,9 @@ public final class VanillaRecipeGen {
 				.define('L', Items.LAPIS_LAZULI)
 				.define('G', Items.GOLD_NUGGET)
 				.unlockedBy("has_lapis", has(Items.LAPIS_LAZULI))
-				.save(recipeOutput, SoulHarvestMod.id("inlaid_lapis"));
+				.save(recipeOutput
+							.withConditions(new ItemReachableCondition(ModItems.INLAID_LAPIS.getId())), 
+						SoulHarvestMod.id("inlaid_lapis"));
 	}
 
 	public static void registerMagicGoldRecipes(RecipeOutput recipeOutput) {
@@ -80,7 +83,9 @@ public final class VanillaRecipeGen {
 				.pattern(" M ")
 				.define('M', ModItems.MAGIC_GOLD.get())
 				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
-				.save(recipeOutput, SoulHarvestMod.id("magic_gold_to_copper"));
+				.save(recipeOutput
+							.withConditions(new ItemReachableCondition(ModItems.MAGIC_GOLD.getId())), 
+						SoulHarvestMod.id("magic_gold_to_copper"));
 
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.IRON_NUGGET, 2)
 				.pattern("M M")
@@ -88,7 +93,9 @@ public final class VanillaRecipeGen {
 				.pattern("M M")
 				.define('M', ModItems.MAGIC_GOLD.get())
 				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
-				.save(recipeOutput, SoulHarvestMod.id("magic_gold_to_iron"));
+				.save(recipeOutput
+							.withConditions(new ItemReachableCondition(ModItems.MAGIC_GOLD.getId())), 
+						SoulHarvestMod.id("magic_gold_to_iron"));
 
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.MAGIC_GOLD_STRING.get())
 				.pattern(" M ")
@@ -96,7 +103,9 @@ public final class VanillaRecipeGen {
 				.pattern(" M ")
 				.define('M', ModItems.MAGIC_GOLD.get())
 				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
-				.save(recipeOutput, SoulHarvestMod.id("magic_gold_stringify"));
+				.save(recipeOutput
+							.withConditions(new ItemReachableCondition(ModItems.MAGIC_GOLD.getId())), 
+						SoulHarvestMod.id("magic_gold_stringify"));
 		
 		
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.COPPER_INGOT, 2)
@@ -104,7 +113,9 @@ public final class VanillaRecipeGen {
 				.pattern(" M ")
 				.define('M', ModItems.MAGIC_GOLD_CHUNK.get())
 				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
-				.save(recipeOutput, SoulHarvestMod.id("magic_gold_chunk_to_copper"));
+				.save(recipeOutput
+							.withConditions(new ItemReachableCondition(ModItems.MAGIC_GOLD.getId())), 
+						SoulHarvestMod.id("magic_gold_chunk_to_copper"));
 
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.IRON_INGOT, 2)
 				.pattern("M M")
@@ -112,7 +123,9 @@ public final class VanillaRecipeGen {
 				.pattern("M M")
 				.define('M', ModItems.MAGIC_GOLD_CHUNK.get())
 				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
-				.save(recipeOutput, SoulHarvestMod.id("magic_gold_chunk_to_iron"));
+				.save(recipeOutput
+							.withConditions(new ItemReachableCondition(ModItems.MAGIC_GOLD.getId())), 
+						SoulHarvestMod.id("magic_gold_chunk_to_iron"));
 
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.GOLD_INGOT, 2)
 				.pattern("M M")
@@ -120,7 +133,9 @@ public final class VanillaRecipeGen {
 				.pattern("M M")
 				.define('M', ModItems.MAGIC_GOLD_CHUNK.get())
 				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
-				.save(recipeOutput, SoulHarvestMod.id("magic_gold_chunk_to_gold"));
+				.save(recipeOutput
+							.withConditions(new ItemReachableCondition(ModItems.MAGIC_GOLD.getId())), 
+						SoulHarvestMod.id("magic_gold_chunk_to_gold"));
 
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, AllItems.ZINC_INGOT, 2)
 				.pattern("M M")
@@ -128,7 +143,9 @@ public final class VanillaRecipeGen {
 				.pattern("MMM")
 				.define('M', ModItems.MAGIC_GOLD_CHUNK.get())
 				.unlockedBy("has_magic_gold", has(ModItems.MAGIC_GOLD.get()))
-				.save(recipeOutput, SoulHarvestMod.id("magic_gold_chunk_to_zinc"));
+				.save(recipeOutput
+							.withConditions(new ItemReachableCondition(ModItems.MAGIC_GOLD.getId())), 
+						SoulHarvestMod.id("magic_gold_chunk_to_zinc"));
 	}
 
 	public static void registerPolyclayRecipes(RecipeOutput recipeOutput) {
@@ -183,7 +200,9 @@ public final class VanillaRecipeGen {
 				.define('G', ModItems.MAGIC_GOLD.get())
 				.define('D', Tags.Items.DYES_BLUE)
 				.unlockedBy("has_glyph_pages", has(glyphPagesTag))
-				.save(recipeOutput, SoulHarvestMod.id("soul_book_cover_standard"));
+				.save(recipeOutput
+							.withConditions(new ItemReachableCondition(ModItems.MAGIC_GOLD.getId())), 
+						SoulHarvestMod.id("soul_book_cover_standard"));
 
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SOUL_BOOK_COVER_SUPERIOR.get())
 				.pattern("SBG")
@@ -193,7 +212,9 @@ public final class VanillaRecipeGen {
 				.define('G', ModItems.MAGIC_GOLD.get())
 				.define('D', Tags.Items.DYES_BLUE)
 				.unlockedBy("has_glyph_pages", has(glyphPagesTag))
-				.save(recipeOutput, SoulHarvestMod.id("soul_book_cover_superior"));
+				.save(recipeOutput
+							.withConditions(new ItemReachableCondition(ModItems.MAGIC_GOLD_STRING.getId())), 
+						SoulHarvestMod.id("soul_book_cover_superior"));
 
 		// Soul Books
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOUL_BOOK_SIMPLE.get())

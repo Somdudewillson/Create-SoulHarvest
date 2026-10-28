@@ -6,6 +6,7 @@ import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.provider.Property
+import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.Input
@@ -94,6 +95,7 @@ abstract class ModPlatformPlugin @Inject constructor() : Plugin<Project> {
 		configureProcessResources(ctx)
 		configureJava(ctx)
 		configureDependencies()
+		configureTesting()
 		registerBuildAndCollectTask(ctx)
 
 		configureModPublishing(ctx)
@@ -110,6 +112,22 @@ abstract class ModPlatformPlugin @Inject constructor() : Plugin<Project> {
 		dependencies.add("annotationProcessor", lombok)
 		dependencies.add("testCompileOnly", lombok)
 		dependencies.add("testAnnotationProcessor", lombok)
+
+		libs.findLibrary("junit-jupiter").ifPresent { dependencies.add("testImplementation", it) }
+		libs.findLibrary("junit-platform-launcher").ifPresent { dependencies.add("testRuntimeOnly", it) }
+
+		configurations.named("testCompileClasspath") {
+			extendsFrom(configurations.getByName("compileClasspath"))
+		}
+		configurations.named("testRuntimeClasspath") {
+			extendsFrom(configurations.getByName("runtimeClasspath"))
+		}
+	}
+
+	private fun Project.configureTesting() {
+		tasks.withType<Test>().configureEach {
+			useJUnitPlatform()
+		}
 	}
 
 	private fun Project.configureJava(ctx: Context) {

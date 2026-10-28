@@ -52,6 +52,7 @@ import somdudewillson.create_soul_harvest.content.recipe.ISelectiveOutputRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.SelectiveSplashingRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.SoulInfusionRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.UniformSequencedAssemblyRecipe;
+import somdudewillson.create_soul_harvest.content.recipe.condition.ItemReachableCondition;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 import somdudewillson.create_soul_harvest.registry.ModFluids;
 import somdudewillson.create_soul_harvest.registry.ModItems;
@@ -86,6 +87,7 @@ public final class CreateRecipeGen {
 	public static void registerMechanicalCraftingRecipes(RecipeOutput recipeOutput) {
 		// Loot Token Blank
 		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.LOOT_TOKEN_BLANK.get(), 1)
+				.withCondition(new ItemReachableCondition(ModItems.LOOT_TOKEN_BLANK.getId()))
 				.key('N', Items.NETHERITE_INGOT)
 				.key('G', ModItems.MAGIC_GOLD_CHUNK.get())
 				.patternLine(" GGG ")
@@ -97,6 +99,7 @@ public final class CreateRecipeGen {
 				.build(recipeOutput, SoulHarvestMod.id("craft_loot_token_blank_netherite"));
 		
 		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.LOOT_TOKEN_BLANK.get(), 1)
+				.withCondition(new ItemReachableCondition(ModItems.LOOT_TOKEN_BLANK.getId()))
 				.key('N', ModItems.NECRONIUM_PLATE.get())
 				.key('G', ModItems.MAGIC_GOLD_CHUNK.get())
 				.patternLine(" GGG ")
@@ -109,6 +112,7 @@ public final class CreateRecipeGen {
 
 		// Midas Core
 		MechanicalCraftingRecipeBuilder.shapedRecipe(ModBlocks.MIDAS_CORE.get(), 1)
+				.withCondition(new ItemReachableCondition(ModBlocks.MIDAS_CORE.getId()))
 				.key('I', ModItems.ENCHANTED_INLAID_LAPIS.get())
 				.key('G', Items.GOLD_BLOCK)
 				.key('B', AllItems.BRASS_INGOT)
@@ -148,6 +152,7 @@ public final class CreateRecipeGen {
 		for (int i = 0; i < GLYPH_COUNT; i++) {
 			int index = i + 1;
 			MechanicalCraftingRecipeBuilder.shapedRecipe(scrolls[i].get(), 1)
+					.withCondition(new ItemReachableCondition(scrolls[i].getId()))
 					.key('G', ModItems.MAGIC_GOLD.get())
 					.key('-', ModTags.Items.C_MAGIC_WOOD_RODS)
 					.key('O', glyphs[i].get())
@@ -164,6 +169,7 @@ public final class CreateRecipeGen {
 
 		// Necronium Charm
 		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.NECRONIUM_CHARM.get(), 1)
+				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_CHARM.getId()))
 				.key('=', ModItems.NECRONIUM_PLATE.get())
 				.key('C', ModItems.MAGIC_GOLD.get())
 				.key('S', ModItems.ENCHANTED_INLAID_LAPIS.get())
@@ -180,6 +186,7 @@ public final class CreateRecipeGen {
 	public static void registerCompactingRecipes(RecipeOutput recipeOutput) {
 		// Absolute Ice
 		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_absolute_ice"))
+				.withCondition(new ItemReachableCondition(ModBlocks.ABSOLUTE_ICE.getId()))
 				.require(ModItems.ENCHANTED_INLAID_LAPIS.get())
 				.require(Blocks.BLUE_ICE)
 				.require(Blocks.BLUE_ICE)
@@ -194,6 +201,7 @@ public final class CreateRecipeGen {
 
 		// Biofuel Block
 		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_bioslurry_to_biofuel"))
+				.withCondition(new ItemReachableCondition(ModBlocks.BIOFUEL_BLOCK.getId()))
 				.require(ModFluids.BIOSLURRY.get(), 1000)
 				.requiresHeat(HeatCondition.HEATED)
 				.output(ModBlocks.BIOFUEL_BLOCK.get())
@@ -201,6 +209,7 @@ public final class CreateRecipeGen {
 
 		// Inlaid Lapis Plate
 		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_inlaid_lapis_to_plate"))
+				.withCondition(new ItemReachableCondition(ModItems.INLAID_LAPIS_PLATE.getId()))
 				.require(Items.PAPER)
 				.require(ModItems.INLAID_LAPIS.get())
 				.require(Items.PAPER)
@@ -209,6 +218,7 @@ public final class CreateRecipeGen {
 
 		// Magic Gold Chunk
 		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_magic_gold"))
+				.withCondition(new ItemReachableCondition(ModItems.MAGIC_GOLD_CHUNK.getId()))
 				.require(ModItems.MAGIC_GOLD.get())
 				.require(ModItems.MAGIC_GOLD.get())
 				.require(ModItems.MAGIC_GOLD.get())
@@ -223,6 +233,7 @@ public final class CreateRecipeGen {
 
 		// Necronium Ingot
 		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_alloy_necronium"))
+				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_INGOT.getId()))
 				.require(ModFluids.WITHER_SLURRY.get(), 1000)
 				.require(Fluids.LAVA, 1000)
 				.require(ModTags.Items.C_INGOTS_BRASS)
@@ -235,6 +246,7 @@ public final class CreateRecipeGen {
 				.output(0.2f, ModItems.NECRONIUM_WASTE.get())
 				.build(recipeOutput);
 		new StandardProcessingRecipe.Builder<>(CompactingRecipe::new, SoulHarvestMod.id("create_compact_alloy_necronium_reuse_waste"))
+				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_INGOT.getId()))
 				.require(ModFluids.WITHER_SLURRY.get(), 1000)
 				.require(Fluids.LAVA, 1000)
 				.require(ModTags.Items.C_INGOTS_BRASS)
@@ -741,6 +753,7 @@ public final class CreateRecipeGen {
 		
 		int i = glyphId - 1;
 		MechanicalCraftingRecipeBuilder.shapedRecipe(scrolls[i].get(), 1)
+				.withCondition(new ItemReachableCondition(scrolls[i].getId()))
 				.key('G', ModItems.MAGIC_GOLD_CHUNK.get())
 				.key('-', ModTags.Items.C_MAGIC_NECRONIUM_RODS)
 				.key('O', glyphs[i].get())

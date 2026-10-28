@@ -24,5 +24,11 @@
         "item": "create_soul_harvest:midas_core",
         "count": 1
     },
-    "showNotification": false
+    "showNotification": false,
+    "conditions": [
+        {
+            "type": "create_soul_harvest:item_reachable",
+            "item": "create_soul_harvest:midas_core"
+        }
+    ]
 }

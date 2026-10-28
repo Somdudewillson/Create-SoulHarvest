@@ -18,6 +18,10 @@
         {
             "type": "forge:mod_loaded",
             "modid": "mekanism"
+        },
+        {
+            "type": "create_soul_harvest:item_reachable",
+            "item": "create_soul_harvest:enchanted_inlaid_lapis"
         }
     ]
 }

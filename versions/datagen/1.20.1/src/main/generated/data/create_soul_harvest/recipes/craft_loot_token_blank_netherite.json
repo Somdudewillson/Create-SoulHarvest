@@ -21,5 +21,11 @@
         "item": "create_soul_harvest:loot_token_blank",
         "count": 1
     },
-    "showNotification": false
+    "showNotification": false,
+    "conditions": [
+        {
+            "type": "create_soul_harvest:item_reachable",
+            "item": "create_soul_harvest:loot_token_blank"
+        }
+    ]
 }

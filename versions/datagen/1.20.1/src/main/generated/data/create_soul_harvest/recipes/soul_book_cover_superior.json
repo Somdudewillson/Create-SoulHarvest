@@ -22,5 +22,11 @@
     "result": {
         "item": "create_soul_harvest:soul_book_cover_superior",
         "count": 1
-    }
+    },
+    "conditions": [
+        {
+            "type": "create_soul_harvest:item_reachable",
+            "item": "create_soul_harvest:magic_gold_string"
+        }
+    ]
 }

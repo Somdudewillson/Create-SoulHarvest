@@ -3,10 +3,16 @@ package somdudewillson.create_soul_harvest.platform.neoforge;
 //? neoforge {
 
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.compat.mekanism.MekanismCompat;
+import somdudewillson.create_soul_harvest.config.SoulHarvestConfig;
+import somdudewillson.create_soul_harvest.config.graph.ModDependencyGraph;
 import somdudewillson.create_soul_harvest.content.event.SoulHarvestGameEvents;
 import somdudewillson.create_soul_harvest.content.recipe.grinding.MobGrindingPackFinder;
 import somdudewillson.create_soul_harvest.content.recipe.mulching.MulchPackFinder;
@@ -15,8 +21,14 @@ import somdudewillson.create_soul_harvest.registry.*;
 @Mod(SoulHarvestMod.MOD_ID)
 public class NeoforgeEntrypoint {
 
-	public NeoforgeEntrypoint(IEventBus modBus) {
+	public NeoforgeEntrypoint(IEventBus modBus, ModContainer modContainer) {
 		SoulHarvestMod.onInitialize();
+
+		SoulHarvestConfig.register(ModDependencyGraph.get());
+		modContainer.registerConfig(ModConfig.Type.COMMON, SoulHarvestConfig.COMMON_SPEC);
+		modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+		modBus.addListener(SoulHarvestConfig::onLoad);
+		modBus.addListener(SoulHarvestConfig::onReload);
 
 		ModBlocks.BLOCKS.register(modBus);
 		ModItems.ITEMS.register(modBus);

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.config.graph.ModDependencyGraph;
 import somdudewillson.create_soul_harvest.content.item.ExperienceDropAttunedItem;
 import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
@@ -45,7 +47,11 @@ public class ModCreativeTabs {
 					.title(Component.translatable("itemGroup.create_soul_harvest"))
 					.icon(() -> new ItemStack(ModItems.SOUL_SHARD.get()))
 					.displayItems((parameters, output) -> {
-						MAIN_TAB_ITEMS.forEach(holder -> output.accept(holder.get()));
+						MAIN_TAB_ITEMS.forEach(holder -> {
+							if (isItemReachable(holder.getId())) {
+								output.accept(holder.get());
+							}
+						});
 					})
 					.build());
 
@@ -245,4 +251,42 @@ public class ModCreativeTabs {
 						})
 						.build()
 			);
+
+	public static boolean isItemReachable(ResourceLocation id) {
+		return ModDependencyGraph.get().isReachable(id);
+	}
+
+	public static boolean isStackReachable(ItemStack stack) {
+		//? >= 1.21 {
+		ResourceLocation key = BuiltInRegistries.ITEM.getKey(stack.getItem());
+		//?} else {
+		/*ResourceLocation key = net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(stack.getItem());
+		*///?}
+		return isItemReachable(key);
+	}
+
+	public static void refreshCreativeTabs() {
+		try {
+			var mc = Minecraft.getInstance();
+			if (mc.level != null && mc.getConnection() != null) {
+				mc.execute(() -> {
+					try {
+						CreativeModeTab.ItemDisplayParameters params = new CreativeModeTab.ItemDisplayParameters(
+								mc.getConnection().enabledFeatures(),
+								mc.options.operatorItemsTab().get(),
+								mc.level.registryAccess()
+						);
+						if (MAIN_TAB != null && MAIN_TAB.get() != null) {
+							MAIN_TAB.get().buildContents(params);
+						}
+						if (SOUL_ITEMS_TAB != null && SOUL_ITEMS_TAB.get() != null) {
+							SOUL_ITEMS_TAB.get().buildContents(params);
+						}
+					} catch (Throwable ignored) {
+					}
+				});
+			}
+		} catch (Throwable ignored) {
+		}
+	}
 }

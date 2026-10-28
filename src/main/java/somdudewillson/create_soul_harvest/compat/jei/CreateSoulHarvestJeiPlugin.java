@@ -14,6 +14,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.config.graph.ItemDependencyGraph;
+import somdudewillson.create_soul_harvest.config.graph.ItemDependencyNode;
+import somdudewillson.create_soul_harvest.config.graph.ModDependencyGraph;
 import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 import somdudewillson.create_soul_harvest.content.item.ExperienceDropAttunedItem;
 import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
@@ -21,7 +24,12 @@ import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
 import somdudewillson.create_soul_harvest.registry.ModCreativeTabs;
 import somdudewillson.create_soul_harvest.registry.ModItems;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import lombok.val;
 
@@ -69,14 +77,72 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 		registration.registerSubtypeInterpreter(ModItems.LOOT_TOKEN.get(), lootTokenInterpreter);
 	}
 
+	private static final Set<ResourceLocation> currentlyHiddenIds = new HashSet<>();
+	private static final Map<ResourceLocation, List<ItemStack>> removedStacksMap = new HashMap<>();
+
 	@Override
 	public void onRuntimeAvailable(IJeiRuntime runtime) {
 		jeiRuntime = runtime;
+		updateHiddenIngredients();
 	}
 
 	@Override
 	public void onRuntimeUnavailable() {
 		jeiRuntime = null;
+		currentlyHiddenIds.clear();
+		removedStacksMap.clear();
+	}
+
+	public static void updateHiddenIngredients() {
+		if (jeiRuntime == null) {
+			return;
+		}
+
+		Minecraft.getInstance().execute(() -> {
+			if (jeiRuntime == null) {
+				return;
+			}
+			IIngredientManager ingredientManager = jeiRuntime.getIngredientManager();
+			ItemDependencyGraph graph = ModDependencyGraph.get();
+
+			Collection<ItemStack> allIngredients = ingredientManager.getAllIngredients(VanillaTypes.ITEM_STACK);
+
+			for (ItemDependencyNode node : graph.getAllNodes()) {
+				ResourceLocation id = node.getId();
+				boolean reachable = graph.isReachable(id);
+
+				if (!reachable && !currentlyHiddenIds.contains(id)) {
+					List<ItemStack> toRemove = allIngredients.stream()
+							//? >= 1.21 {
+							.filter(s -> BuiltInRegistries.ITEM.getKey(s.getItem()).equals(id))
+							//?} else {
+							/*.filter(s -> net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(s.getItem()).equals(id))
+							*///?}
+							.toList();
+
+					if (!toRemove.isEmpty()) {
+						ingredientManager.removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, toRemove);
+						removedStacksMap.put(id, toRemove);
+					}
+					currentlyHiddenIds.add(id);
+				} else if (reachable && currentlyHiddenIds.contains(id)) {
+					List<ItemStack> previouslyRemoved = removedStacksMap.remove(id);
+					if (previouslyRemoved != null && !previouslyRemoved.isEmpty()) {
+						ingredientManager.addIngredientsAtRuntime(VanillaTypes.ITEM_STACK, previouslyRemoved);
+					} else {
+						//? >= 1.21 {
+						Item item = BuiltInRegistries.ITEM.get(id);
+						//?} else {
+						/*Item item = net.minecraftforge.registries.ForgeRegistries.ITEMS.getValue(id);
+						*///?}
+						if (item != null && item != net.minecraft.world.item.Items.AIR) {
+							ingredientManager.addIngredientsAtRuntime(VanillaTypes.ITEM_STACK, List.of(new ItemStack(item)));
+						}
+					}
+					currentlyHiddenIds.remove(id);
+				}
+			}
+		});
 	}
 
 	public static void refreshSoulBooksInJei() {

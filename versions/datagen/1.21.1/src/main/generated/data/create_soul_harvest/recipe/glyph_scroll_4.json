@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "create_soul_harvest:item_reachable",
+      "item": "create_soul_harvest:glyph_scroll_4"
+    }
+  ],
   "type": "create:mechanical_crafting",
   "accept_mirrored": false,
   "category": "misc",

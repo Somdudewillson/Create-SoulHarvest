@@ -3,6 +3,10 @@
     {
       "type": "neoforge:mod_loaded",
       "modid": "enderio"
+    },
+    {
+      "type": "create_soul_harvest:item_reachable",
+      "item": "create_soul_harvest:necronium_ingot"
     }
   ],
   "type": "enderio:alloy_smelting",

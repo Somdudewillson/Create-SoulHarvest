@@ -131,12 +131,6 @@
   "effect.create_soul_harvest.stoneskin": "Stoneskin",
   "effect.create_soul_harvest.vaccination": "Vaccination",
 
-  "create_soul_harvest.recipe.soul_infusion": "Soul Infusion",
-  "create.recipe.soul_infusion.fan": "Fan behind Active Soul Crystal",
-  "recipe.soul_infusion": "Soul Infusion",
-  "recipe.soul_infusion.fan": "Encased Fan (Soul Infusion)",
-  "recipe.fan_soul_infusion": "Soul Infusion",
-  "recipe.fan_soul_infusion.fan": "Encased Fan (Soul Infusion)",
 
   "tag.item.create_soul_harvest.glyph_pages": "Glyph Pages",
   "tag.item.create_soul_harvest.glyph_scrolls": "Glyph Scrolls",
@@ -192,6 +186,7 @@
   "tag.create_soul_harvest.soul_can_be_captured": "Capturable Soul Mobs",
   "tag.create_soul_harvest.contagion_immune": "Contagion Immune Entities",
   
+  
   "create_soul_harvest.ponder.soul_cluster_growth.header": "Growing Soul Crystals",
   "create_soul_harvest.ponder.soul_cluster_growth.text_1": "Use a seed on any face of a spawner to plant a bud",
   "create_soul_harvest.ponder.soul_cluster_growth.text_2": "The soul bud will grow over time",
@@ -207,6 +202,7 @@
   "create_soul_harvest.ponder.midas_core_boost.text_2": "Liquid Soul Crystal",
   "create_soul_harvest.ponder.midas_core_boost.text_3": "8x Boost",
 
+
   "create_soul_harvest.jei.glyph_page_chance_per_page": "12.5% Chance (1 in 8)",
   "create_soul_harvest.jei.glyph_page_random_output": "Randomly produces one of the 8 Glyph Pages",
   "create_soul_harvest.jei.uniform_chance": "%s Chance (1 in %s)",
@@ -219,6 +215,16 @@
   "create_soul_harvest.jei.loot_token": "Loot Token Rewards",
   "create_soul_harvest.jei.loot_token.chance": "%s Chance",
   "create_soul_harvest.jei.loot_token.count_range": "Count: %s - %s",
+
+  "create_soul_harvest.recipe.soul_infusion": "Soul Infusion",
+  "create_soul_harvest.recipe.midas_fluid_boost": "Midas Core Transmutation Boost",
+  "create.recipe.soul_infusion.fan": "Fan behind Active Soul Crystal",
+  "recipe.soul_infusion": "Soul Infusion",
+  "recipe.soul_infusion.fan": "Encased Fan (Soul Infusion)",
+  "recipe.fan_soul_infusion": "Soul Infusion",
+  "recipe.fan_soul_infusion.fan": "Encased Fan (Soul Infusion)",
+  
+  
   "tooltip.create_soul_harvest.loot_token_tuned": "%s Tuned",
   "tooltip.create_soul_harvest.loot_token_empty": "Untuned Loot Token",
   
@@ -243,6 +249,7 @@
   "tooltip.create_soul_harvest.soul_book_desc": "Hold in offhand to capture the souls of your enemies!",
   "tooltip.create_soul_harvest.soul_partial": "_%s_ Soul (_%s%%_)",
   "tooltip.create_soul_harvest.soul_complete": "_%s_ Soul (_Complete_)",
+  
   
   "block.create_soul_harvest.soul_deposit_seed.tooltip.summary": "A _seed_ of sillica and soul energies, ready to sprout if given the right soil.",
   "block.create_soul_harvest.soul_deposit_seed.tooltip.condition1": "When R-Clicked onto a spawner",
@@ -271,6 +278,7 @@
   "item.create_soul_harvest.necronium_charm.tooltip.behaviour1": "Wielder will be cured at the cost of _Durability_",
   "item.create_soul_harvest.necronium_charm.tooltip.condition2": "While wearing Backtank",
   "item.create_soul_harvest.necronium_charm.tooltip.behaviour2": "_No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
+  
 
   "create_soul_harvest.gui.goggles.midas_core": "Midas Core:",
   "create_soul_harvest.gui.goggles.conversion_countdown_heading": "Next Wave:",
@@ -278,5 +286,8 @@
   "create_soul_harvest.gui.goggles.boost_active": "(%s remaining)",
   "create_soul_harvest.gui.goggles.boost_inactive": "Inactive (1.0x)",
 
-  "create_soul_harvest.recipe.midas_fluid_boost": "Midas Core Transmutation Boost"
+  "create_soul_harvest.configuration.features": "Features",
+  "create_soul_harvest.configuration.enableSpells": "All Spell Scrolls",
+  "create_soul_harvest.configuration.enableEnhancedSpells": "Enhanced Spell Scrolls",
+  "create_soul_harvest.configuration.enableAbsoluteIce": "Absolute Ice"
 }

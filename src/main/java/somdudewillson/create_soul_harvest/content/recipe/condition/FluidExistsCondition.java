@@ -53,7 +53,7 @@ public record FluidExistsCondition(ResourceLocation fluid) implements ICondition
 	}
 
 	public FluidExistsCondition(String namespace, String path) {
-		this(new ResourceLocation(namespace, path));
+		this(ResourceLocation.fromNamespaceAndPath(namespace, path));
 	}
 
 	public ResourceLocation fluid() {
@@ -85,7 +85,7 @@ public record FluidExistsCondition(ResourceLocation fluid) implements ICondition
 
 		@Override
 		public FluidExistsCondition read(JsonObject json) {
-			return new FluidExistsCondition(new ResourceLocation(GsonHelper.getAsString(json, "fluid")));
+			return new FluidExistsCondition(ResourceLocation.parse(GsonHelper.getAsString(json, "fluid")));
 		}
 
 		@Override

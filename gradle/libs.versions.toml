@@ -14,6 +14,8 @@ mixin = "0.8.5"
 serialization-json = "1.7.3"
 serialization-toml = "0.6.0"
 lombok = "1.18.36"
+junit = "5.11.4"
+junit-platform = "1.11.4"
 
 [libraries]
 kikugie-postprocess = { module = "dev.kikugie:postprocess", version.ref = "stonecutter-postprocess" }
@@ -27,6 +29,8 @@ vanniktech-maven-publish = { module = "com.vanniktech.maven.publish:com.vannikte
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization-json" }
 serialization-toml = { module = "dev.eav.tomlkt:tomlkt", version.ref = "serialization-toml" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform" }
 
 [plugins]
 stonecutter = { id = "dev.kikugie.stonecutter", version.ref = "stonecutter" }

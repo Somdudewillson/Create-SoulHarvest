@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "create_soul_harvest:item_reachable",
+      "item": "create_soul_harvest:magic_gold_string"
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_glyph_pages": {

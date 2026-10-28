@@ -33,5 +33,11 @@
         {
             "item": "create_soul_harvest:absolute_ice"
         }
+    ],
+    "conditions": [
+        {
+            "type": "create_soul_harvest:item_reachable",
+            "item": "create_soul_harvest:absolute_ice"
+        }
     ]
 }

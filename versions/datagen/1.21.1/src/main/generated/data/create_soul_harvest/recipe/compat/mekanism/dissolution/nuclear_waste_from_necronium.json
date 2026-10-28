@@ -3,6 +3,10 @@
     {
       "type": "neoforge:mod_loaded",
       "modid": "mekanism"
+    },
+    {
+      "type": "create_soul_harvest:item_reachable",
+      "item": "create_soul_harvest:necronium_waste"
     }
   ],
   "type": "mekanism:dissolution",

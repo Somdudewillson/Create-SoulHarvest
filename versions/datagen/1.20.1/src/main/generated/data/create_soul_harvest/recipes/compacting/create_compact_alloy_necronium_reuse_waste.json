@@ -47,5 +47,11 @@
             "item": "create_soul_harvest:necronium_waste",
             "chance": 0.2
         }
+    ],
+    "conditions": [
+        {
+            "type": "create_soul_harvest:item_reachable",
+            "item": "create_soul_harvest:necronium_ingot"
+        }
     ]
 }

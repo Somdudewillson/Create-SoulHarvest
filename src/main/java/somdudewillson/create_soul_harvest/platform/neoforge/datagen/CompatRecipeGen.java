@@ -28,6 +28,7 @@ import com.simibubi.create.AllItems;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.recipe.MidasFluidBoostRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.condition.FluidExistsCondition;
+import somdudewillson.create_soul_harvest.content.recipe.condition.ItemReachableCondition;
 import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOAlloySmeltingRecipeBuilder;
 import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOSagMillingRecipeBuilder;
 import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOSagMillingRecipeBuilder.SagBonusType;
@@ -194,6 +195,7 @@ public final class CompatRecipeGen {
 
 		// Necronium Ingot -> Necronium Waste
 		EnderIOSagMillingRecipeBuilder.sagMilling()
+				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_INGOT.getId()))
 				.input(ModItems.NECRONIUM_INGOT.get())
 				.energy(3600)
 				.bonus(SagBonusType.CHANCE_ONLY)
@@ -205,6 +207,7 @@ public final class CompatRecipeGen {
 
 		// Necronium Plate -> Necronium Waste
 		EnderIOSagMillingRecipeBuilder.sagMilling()
+				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_PLATE.getId()))
 				.input(ModItems.NECRONIUM_PLATE.get())
 				.energy(3600)
 				.bonus(SagBonusType.CHANCE_ONLY)
@@ -216,6 +219,7 @@ public final class CompatRecipeGen {
 
 		// Necronium Rod -> Necronium Waste
 		EnderIOSagMillingRecipeBuilder.sagMilling()
+				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_ROD.getId()))
 				.input(ModItems.NECRONIUM_ROD.get())
 				.energy(2400)
 				.bonus(SagBonusType.CHANCE_ONLY)
@@ -237,6 +241,7 @@ public final class CompatRecipeGen {
 	private static void generateEnderIOAlloySmeltingRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
 		// Brass Ingot + 4 Obsidian Dust + Wither Rose -> Necronium Ingot
 		EnderIOAlloySmeltingRecipeBuilder.alloySmelting()
+				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_INGOT.getId()))
 				.input(ModTags.Items.C_INGOTS_BRASS, 1)
 				.input(ModTags.Items.C_DUSTS_OBSIDIAN, 4)
 				.input(Items.WITHER_ROSE, 1)
@@ -247,6 +252,7 @@ public final class CompatRecipeGen {
 		
 		// Brass Ingot + 8 Necronium Waste + Wither Rose -> Necronium Ingot
 		EnderIOAlloySmeltingRecipeBuilder.alloySmelting()
+				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_INGOT.getId()))
 				.input(ModTags.Items.C_INGOTS_BRASS, 1)
 				.input(ModItems.NECRONIUM_WASTE.get(), 8)
 				.input(Items.WITHER_ROSE, 1)
@@ -279,6 +285,7 @@ public final class CompatRecipeGen {
 
 		// 1 Brass Ingot + 1000 mB Wither Slurry + 80 * 8 mB Refined Obsidian -> 1 Necronium Ingot
 		MekanismReactionRecipeBuilder.reaction()
+				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_INGOT.getId()))
 				.itemInput(ModTags.Items.C_INGOTS_BRASS, 1)
 				.fluidInput(ModFluids.WITHER_SLURRY.get(), 1000)
 				.chemicalInput("mekanism:refined_obsidian", 80 * 8)
@@ -311,6 +318,7 @@ public final class CompatRecipeGen {
 
 		// Inlaid Lapis Lazuli -> Polished Inlaid Lapis Lazuli
 		MekanismEnrichingRecipeBuilder.enriching()
+				.withCondition(new ItemReachableCondition(ModItems.POLISHED_INLAID_LAPIS.getId()))
 				.input(ModItems.INLAID_LAPIS.get(), 1)
 				.output(ModItems.POLISHED_INLAID_LAPIS.get(), 1)
 				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/enriching/polished_inlaid_lapis"));
@@ -319,6 +327,7 @@ public final class CompatRecipeGen {
 
 		// 1 Lapis Lazuli + 10 mB Gold -> 2 Inlaid Lapis Lazuli
 		MekanismInfuserRecipeBuilder.metallurgicInfusing()
+				.withCondition(new ItemReachableCondition(ModItems.INLAID_LAPIS.getId()))
 				.itemInput(Items.LAPIS_LAZULI, 1)
 				.chemicalInput("mekanism:gold", 10)
 				.output(ModItems.INLAID_LAPIS.get(), 2)
@@ -326,13 +335,15 @@ public final class CompatRecipeGen {
 
 		// Polished Inlaid Lapis + 24 mB Soulgas -> Enchanted Lapis Lazuli
 		MekanismInfuserRecipeBuilder.metallurgicInfusing()
+				.withCondition(new ItemReachableCondition(ModItems.ENCHANTED_INLAID_LAPIS.getId()))
 				.itemInput(ModItems.POLISHED_INLAID_LAPIS.get(), 1)
 				.chemicalInput(SoulHarvestMod.id("liquid_soul_crystal"), 24)
 				.output(ModItems.ENCHANTED_INLAID_LAPIS.get(), 1)
 				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/metallurgic_infusing/enchanted_inlaid_lapis"));
 
-		// 1 Lapis Lazuli + 80 mB Gold -> 1 Anima Gold
+		// 1 Soul Shard + 80 mB Gold -> 1 Anima Gold
 		MekanismInfuserRecipeBuilder.metallurgicInfusing()
+				.withCondition(new ItemReachableCondition(ModItems.MAGIC_GOLD.getId()))
 				.itemInput(ModItems.SOUL_SHARD.get(), 1)
 				.chemicalInput("mekanism:gold", 80)
 				.output(ModItems.MAGIC_GOLD.get(), 1)
@@ -349,7 +360,7 @@ public final class CompatRecipeGen {
 
 		// 1 Glass Bottle + 8 Necronium Waste -> 1 Necronium Waste Bottle
 		MekanismCombinerRecipeBuilder.combining()
-		.mainInput(ModItems.NECRONIUM_WASTE.get(), 8)
+				.mainInput(ModItems.NECRONIUM_WASTE.get(), 8)
 				.extraInput(Items.GLASS_BOTTLE, 1)
 				.output(ModItems.NECRONIUM_WASTE_BOTTLE.get(), 1)
 				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/combining/necronium_waste_bottle"));
@@ -357,21 +368,25 @@ public final class CompatRecipeGen {
 		// --- Crushing
 
 		MekanismCrushingRecipeBuilder.crushing()
+				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_INGOT.getId()))
 				.input(ModItems.NECRONIUM_INGOT.get(), 1)
 				.output(ModItems.NECRONIUM_WASTE.get(), 5)
 				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/crushing/necronium_waste_from_ingot"));
 
 		MekanismCrushingRecipeBuilder.crushing()
+				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_PLATE.getId()))
 				.input(ModItems.NECRONIUM_PLATE.get(), 1)
 				.output(ModItems.NECRONIUM_WASTE.get(), 4)
 				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/crushing/necronium_waste_from_plate"));
 
 		MekanismCrushingRecipeBuilder.crushing()
+				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_ROD.getId()))
 				.input(ModItems.NECRONIUM_ROD.get(), 1)
 				.output(ModItems.NECRONIUM_WASTE.get(), 4)
 				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/crushing/necronium_waste_from_rod"));
 
 		MekanismCrushingRecipeBuilder.crushing()
+				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_WASTE_BOTTLE.getId()))
 				.input(ModItems.NECRONIUM_WASTE_BOTTLE.get(), 1)
 				.output(ModItems.NECRONIUM_WASTE.get(), 8)
 				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/crushing/necronium_waste_from_bottle"));
@@ -380,6 +395,7 @@ public final class CompatRecipeGen {
 
 		// 1 Necronium Waste + Uranium Hexafluoride -> 1000 mB Nuclear Waste
 		MekanismDissolutionRecipeBuilder.dissolution()
+				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_WASTE.getId()))
 				.itemInput(ModItems.NECRONIUM_WASTE.get(), 1)
 				.chemicalInput("mekanism:uranium_hexafluoride", 4)
 				.output("mekanism:nuclear_waste", 200)

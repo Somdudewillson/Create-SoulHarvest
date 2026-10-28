@@ -30,5 +30,11 @@
         "item": "create_soul_harvest:glyph_scroll_6",
         "count": 1
     },
-    "showNotification": false
+    "showNotification": false,
+    "conditions": [
+        {
+            "type": "create_soul_harvest:item_reachable",
+            "item": "create_soul_harvest:glyph_scroll_6"
+        }
+    ]
 }
