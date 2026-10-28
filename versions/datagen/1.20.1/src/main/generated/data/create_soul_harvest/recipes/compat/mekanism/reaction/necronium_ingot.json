@@ -27,6 +27,10 @@
         {
             "type": "create_soul_harvest:item_reachable",
             "item": "create_soul_harvest:necronium_ingot"
+        },
+        {
+            "type": "create_soul_harvest:minecraft_version",
+            "min_version": "1.21"
         }
     ]
 }

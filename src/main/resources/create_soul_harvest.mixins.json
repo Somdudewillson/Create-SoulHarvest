@@ -1,6 +1,7 @@
 {
   "package": "somdudewillson.create_soul_harvest.mixin",
   "required": true,
+  "refmap": "create_soul_harvest.mixins.refmap.json",
   "plugin": "somdudewillson.create_soul_harvest.mixin.SoulHarvestMixinPlugin",
   "minVersion": "0.8",
   "compatibilityLevel": "${java}",

@@ -8,8 +8,8 @@
         {
             "chance": 0.05,
             "item": {
-                "count": 1,
-                "id": "create:experience_nugget"
+                "item": "create:experience_nugget",
+                "count": 1
             }
         }
     ],

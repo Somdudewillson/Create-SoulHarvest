@@ -30,6 +30,7 @@ import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.recipe.MidasFluidBoostRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.condition.FluidExistsCondition;
 import somdudewillson.create_soul_harvest.content.recipe.condition.ItemReachableCondition;
+import somdudewillson.create_soul_harvest.content.recipe.condition.MinecraftVersionCondition;
 import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOAlloySmeltingRecipeBuilder;
 import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOSagMillingRecipeBuilder;
 import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOSagMillingRecipeBuilder.SagBonusType;
@@ -290,6 +291,7 @@ public final class CompatRecipeGen {
 		// 1 Brass Ingot + 1000 mB Wither Slurry + 80 * 8 mB Refined Obsidian -> 1 Necronium Ingot
 		MekanismReactionRecipeBuilder.reaction()
 				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_INGOT.getId()))
+				.withCondition(new MinecraftVersionCondition("1.21"))
 				.itemInput(ModTags.Items.C_INGOTS_BRASS, 1)
 				.fluidInput(ModFluids.WITHER_SLURRY.get(), 1000)
 				.chemicalInput("mekanism:refined_obsidian", 80 * 8)

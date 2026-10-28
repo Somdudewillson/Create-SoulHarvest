@@ -40,6 +40,8 @@ public class MekanismRegistration {
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.gas.Gas;
 import mekanism.api.chemical.gas.GasBuilder;
+import mekanism.api.chemical.infuse.InfuseType;
+import mekanism.api.chemical.infuse.InfuseTypeBuilder;
 import mekanism.api.chemical.slurry.Slurry;
 import mekanism.api.chemical.slurry.SlurryBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -54,10 +56,13 @@ public class MekanismRegistration {
 	}
 
 	public static void onRegister(RegisterEvent event) {
-		if (event.getRegistryKey().equals(MekanismAPI.SLURRY_REGISTRY_NAME)) {
-			registerSlurry(event, "bioslurry", 0x546924);
-		} else if (event.getRegistryKey().equals(MekanismAPI.GAS_REGISTRY_NAME)) {
+		if (event.getRegistryKey().equals(MekanismAPI.GAS_REGISTRY_NAME)) {
+			registerGas(event, "bioslurry", 0x546924);
 			registerGas(event, "liquid_soul_crystal", 0xBD42FF);
+		} else if (event.getRegistryKey().equals(MekanismAPI.INFUSE_TYPE_REGISTRY_NAME)) {
+			registerInfuseType(event, "liquid_soul_crystal", 0xBD42FF);
+		} else if (event.getRegistryKey().equals(MekanismAPI.SLURRY_REGISTRY_NAME)) {
+			registerSlurry(event, "bioslurry", 0x546924);
 		}
 	}
 
@@ -79,6 +84,18 @@ public class MekanismRegistration {
 			);
 			SoulHarvestMod.LOGGER.info("Registered Mekanism legacy gas: {}", id);
 			return gas;
+		});
+	}
+
+	private static void registerInfuseType(RegisterEvent event, String path, int tint) {
+		ResourceLocation id = SoulHarvestMod.id(path);
+		event.register(MekanismAPI.INFUSE_TYPE_REGISTRY_NAME, id, () -> {
+			InfuseType infuseType = new InfuseType(
+					InfuseTypeBuilder.builder(new ResourceLocation(MekanismCompat.MEKANISM_MODID, "infuse_type/bio"))
+							.tint(tint)
+			);
+			SoulHarvestMod.LOGGER.info("Registered Mekanism legacy infuse type: {}", id);
+			return infuseType;
 		});
 	}
 }

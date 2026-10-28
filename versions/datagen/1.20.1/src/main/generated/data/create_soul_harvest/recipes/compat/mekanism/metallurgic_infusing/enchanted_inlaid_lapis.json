@@ -1,6 +1,6 @@
 {
     "type": "mekanism:metallurgic_infusing",
-    "infusionInput": {
+    "chemicalInput": {
         "amount": 24,
         "infuse_type": "create_soul_harvest:liquid_soul_crystal"
     },

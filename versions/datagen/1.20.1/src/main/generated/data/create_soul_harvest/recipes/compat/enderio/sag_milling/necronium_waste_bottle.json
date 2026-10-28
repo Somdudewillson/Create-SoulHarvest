@@ -8,15 +8,15 @@
     "outputs": [
         {
             "item": {
-                "count": 8,
-                "id": "create_soul_harvest:necronium_waste"
+                "item": "create_soul_harvest:necronium_waste",
+                "count": 8
             }
         },
         {
             "chance": 0.5,
             "item": {
-                "count": 1,
-                "id": "minecraft:sand"
+                "item": "minecraft:sand",
+                "count": 1
             }
         }
     ],

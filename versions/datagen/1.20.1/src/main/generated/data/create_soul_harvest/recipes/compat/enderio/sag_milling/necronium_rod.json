@@ -8,22 +8,22 @@
     "outputs": [
         {
             "item": {
-                "count": 1,
-                "id": "create_soul_harvest:necronium_waste"
+                "item": "create_soul_harvest:necronium_waste",
+                "count": 1
             }
         },
         {
             "chance": 0.4,
             "item": {
-                "count": 1,
-                "id": "create_soul_harvest:necronium_waste"
+                "item": "create_soul_harvest:necronium_waste",
+                "count": 1
             }
         },
         {
             "chance": 0.4,
             "item": {
-                "count": 1,
-                "id": "create_soul_harvest:necronium_waste"
+                "item": "create_soul_harvest:necronium_waste",
+                "count": 1
             }
         }
     ],

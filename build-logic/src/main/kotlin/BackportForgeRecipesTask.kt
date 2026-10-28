@@ -390,6 +390,36 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 				return converted
 			}
 
+			if (rtype == "enderio:sag_milling") {
+				for ((k, v) in data) {
+					when (k) {
+						"outputs" -> {
+							val list = v as? List<*> ?: emptyList<Any>()
+							converted["outputs"] = list.map { rawOut ->
+								val outMap = rawOut as? Map<String, Any?> ?: return@map rawOut
+								val itemObj = outMap["item"] as? Map<String, Any?>
+								if (itemObj != null) {
+									val resItem = mutableMapOf<String, Any?>()
+									val itemId = itemObj["id"] ?: itemObj["item"]
+									resItem["item"] = itemId
+									if ("count" in itemObj) {
+										resItem["count"] = itemObj["count"]
+									}
+									val resOut = mutableMapOf<String, Any?>()
+									resOut.putAll(outMap)
+									resOut["item"] = resItem
+									resOut
+								} else {
+									outMap
+								}
+							}
+						}
+						else -> converted[k] = v
+					}
+				}
+				return converted
+			}
+
 			if (rtype == "mekanism:reaction") {
 				for ((k, v) in data) {
 					when (k) {
@@ -435,11 +465,18 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 							val m = v as? Map<String, Any?>
 							if (m != null) {
 								val amount = m["amount"] ?: 1
-								val id = m["id"] ?: m["gas"] ?: m["slurry"]
+								val id = (m["id"] ?: m["gas"] ?: m["slurry"] ?: "") as String
+								val chemType = if (m.containsKey("chemicalType")) {
+									m["chemicalType"] as String
+								} else if (id.contains("slurry") || id.contains("dirty_") || id.contains("clean_")) {
+									"slurry"
+								} else {
+									"gas"
+								}
 								converted["output"] = mapOf(
 									"amount" to amount,
-									"gas" to id,
-									"slurry" to id
+									"chemicalType" to chemType,
+									chemType to id
 								)
 							}
 						}
@@ -499,11 +536,13 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 							val m = v as? Map<String, Any?>
 							if (m != null) {
 								val amount = m["amount"] ?: 1
-								val infuse = m["chemical"] ?: m["tag"]
-								converted["infusionInput"] = mapOf(
-									"amount" to amount,
-									"infuse_type" to infuse
-								)
+								val out = mutableMapOf<String, Any?>("amount" to amount)
+								if ("tag" in m) {
+									out["tag"] = m["tag"]
+								} else {
+									out["infuse_type"] = m["chemical"] ?: m["infuse_type"]
+								}
+								converted["chemicalInput"] = out
 							}
 						}
 						"per_tick_usage" -> converted["perTickUsage"] = v

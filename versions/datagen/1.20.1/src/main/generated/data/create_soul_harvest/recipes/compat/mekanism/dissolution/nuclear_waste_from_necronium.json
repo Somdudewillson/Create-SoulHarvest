@@ -12,8 +12,8 @@
     },
     "output": {
         "amount": 200,
-        "gas": "mekanism:nuclear_waste",
-        "slurry": "mekanism:nuclear_waste"
+        "chemicalType": "gas",
+        "gas": "mekanism:nuclear_waste"
     },
     "perTickUsage": true,
     "conditions": [
