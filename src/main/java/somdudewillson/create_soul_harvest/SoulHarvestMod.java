@@ -18,7 +18,7 @@ import somdudewillson.create_soul_harvest.platform.neoforge.NeoforgePlatform;
 public class SoulHarvestMod {
 
 	public static final String MOD_ID = /*$ mod_id*/ "create_soul_harvest";
-	public static final String MOD_VERSION = /*$ mod_version*/ "0.1.3";
+	public static final String MOD_VERSION = /*$ mod_version*/ "0.2.0";
 	public static final String MOD_FRIENDLY_NAME = /*$ mod_name*/ "Create: Soul Harvest";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
