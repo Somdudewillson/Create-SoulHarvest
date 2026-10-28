@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+	  "modid": "create_mechanical_extruder"
+	}
+  ],
+  "type": "create_mechanical_extruder:extruding",
+  "result": {
+    "id": "create_soul_harvest:soul_shard",
+    "chance": 0.6
+  },
+  "blockIngredients": {
+    "first": {
+      "blocks": "create_soul_harvest:soul_cluster",
+	  "state": {
+        "active": "true"
+      }
+    },
+    "second": {
+      "blocks": "minecraft:quartz_block"
+    }
+  },
+  "advanced": true,
+  "requiredBonks": 15
+}
