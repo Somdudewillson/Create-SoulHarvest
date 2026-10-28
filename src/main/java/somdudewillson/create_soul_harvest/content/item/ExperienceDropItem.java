@@ -11,6 +11,7 @@ import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 /*import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 *///?}
 import somdudewillson.create_soul_harvest.util.SimplePalettizedTooltipModifier;
+import somdudewillson.create_soul_harvest.config.SoulHarvestConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,7 @@ public class ExperienceDropItem extends Item {
 	}
 
 	public static float calculateExpectedNuggets(int xp, float yieldMultiplier, float scalingExponent) {
+		xp *= SoulHarvestConfig.XP_DROP_MULT.get();
 		if (xp <= 0) return 0.0f;
 		float baseNuggets = xp / 3.0f;
 		return (float) (yieldMultiplier * Math.pow(baseNuggets, scalingExponent));

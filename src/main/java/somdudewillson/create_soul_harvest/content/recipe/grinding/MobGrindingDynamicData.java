@@ -24,6 +24,7 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.config.SoulHarvestConfig;
 import somdudewillson.create_soul_harvest.content.item.ExperienceDropItem;
 import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayItem;
@@ -49,7 +50,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 
 public class MobGrindingDynamicData {
-	private static final float ENHANCED_ONLY_MULT = 0.25f;
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final Map<ResourceLocation, LootTable> DYNAMIC_LOOT_TABLES = new ConcurrentHashMap<>();
 
@@ -575,7 +575,7 @@ public class MobGrindingDynamicData {
 
 				float baseCount = (entry.min() + entry.max()) / 2.0f;
 				float baseChance = Math.min(1.0f, Math.max(0.01f, entry.weight() / 100.0f));
-				float enhanceFac = enhancedOnly ? ENHANCED_ONLY_MULT : 1;
+				float enhanceFac = (float) (enhancedOnly ? SoulHarvestConfig.ENHANCED_ONLY_DROPS_MULT.get() : 1);
 				float expected = baseCount * baseChance * multiplier * enhanceFac;
 
 				if (expected <= 0.001f) {

@@ -30,6 +30,11 @@ public class PlayerKillDropSamplingPass implements DropSamplingPass {
 	}
 
 	@Override
+	public int rolls() {
+		return DropSamplingPass.getBaseRollsScaled(1.5);
+	}
+
+	@Override
 	public LootParams createLootParams(ServerLevel level, @Nullable Entity entity) {
 		Player player = FakePlayerFactory.getMinecraft(level);
 		Vec3 pos = entity != null ? entity.position() : Vec3.atCenterOf(level.getSharedSpawnPos());

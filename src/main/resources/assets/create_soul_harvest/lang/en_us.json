@@ -289,5 +289,15 @@
   "create_soul_harvest.configuration.features": "Features",
   "create_soul_harvest.configuration.enableSpells": "All Spell Scrolls",
   "create_soul_harvest.configuration.enableEnhancedSpells": "Enhanced Spell Scrolls",
-  "create_soul_harvest.configuration.enableAbsoluteIce": "Absolute Ice"
+  "create_soul_harvest.configuration.enableAbsoluteIce": "Absolute Ice",
+  
+  "create_soul_harvest.configuration.entityScanning": "Entity Scanning",
+  "create_soul_harvest.configuration.scanDefaultRolls": "Default Rolls",
+  "create_soul_harvest.configuration.scanRollsMult": "Roll Count Multiplier",
+  
+  "create_soul_harvest.configuration.mobDrops": "Mob Drops",
+  "create_soul_harvest.configuration.mobDropsItems": "Item Drops",
+  "create_soul_harvest.configuration.mobDropsExperience": "XP Drops",
+  "create_soul_harvest.configuration.enhancedDropsMult": "Player-Only Drops Multiplier",
+  "create_soul_harvest.configuration.experienceDropsMult": "XP Multiplier"
 }
