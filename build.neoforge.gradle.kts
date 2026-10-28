@@ -25,6 +25,14 @@ platform {
 		required("create") {
 			forgeLikeVersionRange.set("[${prop("deps.create").substringBefore('-')},)")
 		}
+		optional("jei") {
+			forgeLikeVersionRange.set("[${prop("deps.jei").substringBefore('.')},)")
+			slug("jei")
+		}
+		optional("mekanism") {
+			forgeLikeVersionRange.set("[${prop("deps.mekanism").substringBefore('.')},)")
+			slug("mekanism")
+		}
 	}
 }
 
@@ -79,6 +87,7 @@ repositories {
 	maven("https://maven.createmod.net") { name = "Create" }
 	maven("https://maven.ithundxr.dev/snapshots") { name = "Registrate" }
 	maven("https://maven.blamejared.com") { name = "BlameJared" }
+	maven("https://modmaven.dev") { name = "ModMaven" }
 }
 
 dependencies {
@@ -93,6 +102,8 @@ dependencies {
 	compileOnly("mezz.jei:jei-${prop("deps.minecraft")}-common-api:${prop("deps.jei")}")
 	compileOnly("mezz.jei:jei-${prop("deps.minecraft")}-neoforge-api:${prop("deps.jei")}")
 	runtimeOnly("mezz.jei:jei-${prop("deps.minecraft")}-neoforge:${prop("deps.jei")}")
+
+	compileOnly("mekanism:Mekanism:${prop("deps.minecraft")}-${prop("deps.mekanism")}:api")
 }
 
 tasks.named("createMinecraftArtifacts") {

@@ -40,7 +40,7 @@ public class ModCreativeTabs {
 		MAIN_TAB_ITEMS.add(item);
 	}
 
-	public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN_TAB = CREATIVE_MODE_TABS.register("main_tab",
+	public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN_TAB = CREATIVE_MODE_TABS.register("creative_tab_main",
 			() -> CreativeModeTab.builder()
 					.title(Component.translatable("itemGroup.create_soul_harvest"))
 					.icon(() -> new ItemStack(ModItems.SOUL_SHARD.get()))
@@ -225,7 +225,7 @@ public class ModCreativeTabs {
 	}
 
 	public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SOUL_ITEMS_TAB = CREATIVE_MODE_TABS.register(
-				"soul_items_tab",
+				"creative_tab_soul_items",
 				() -> CreativeModeTab.builder()
 						.title(Component.translatable("itemGroup.create_soul_harvest_soul_items"))
 						.icon(() -> new ItemStack(ModItems.SOUL_BOOK_SUPERIOR.get()))

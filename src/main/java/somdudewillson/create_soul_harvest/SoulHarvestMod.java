@@ -17,7 +17,7 @@ import somdudewillson.create_soul_harvest.platform.neoforge.NeoforgePlatform;
 public class SoulHarvestMod {
 
 	public static final String MOD_ID = /*$ mod_id*/ "create_soul_harvest";
-	public static final String MOD_VERSION = /*$ mod_version*/ "0.1.0";
+	public static final String MOD_VERSION = /*$ mod_version*/ "0.1.2";
 	public static final String MOD_FRIENDLY_NAME = /*$ mod_name*/ "Create: Soul Harvest";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
@@ -35,7 +35,7 @@ public class SoulHarvestMod {
 		PonderIndex.addPlugin(new SoulHarvestPonderPlugin());
 	}
 
-	static Platform xplat() {
+	public static Platform xplat() {
 		return PLATFORM;
 	}
 

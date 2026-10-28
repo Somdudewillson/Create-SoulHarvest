@@ -1,7 +1,8 @@
 package somdudewillson.create_soul_harvest.content.event;
 
 import net.minecraft.server.MinecraftServer;
-import somdudewillson.create_soul_harvest.compat.jei.CreateSoulHarvestJeiPlugin;
+import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.compat.jei.SoulHarvestJeiHelper;
 import somdudewillson.create_soul_harvest.content.command.SoulHarvestCommands;
 import somdudewillson.create_soul_harvest.content.recipe.grinding.MobGrindingDynamicData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataLoader;
@@ -73,7 +74,9 @@ public class SoulHarvestDataEvents {
 									mc.level.registryAccess()
 							);
 						}
-						CreateSoulHarvestJeiPlugin.refreshSoulBooksInJei();
+						if (SoulHarvestMod.xplat().isModLoaded("jei")) {
+							SoulHarvestJeiHelper.refreshSoulBooks();
+						}
 					});
 				}
 			}

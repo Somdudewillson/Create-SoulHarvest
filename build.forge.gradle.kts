@@ -25,6 +25,14 @@ platform {
 		required("create") {
 			forgeLikeVersionRange.set("[${prop("deps.create").substringBefore('-')},)")
 		}
+		optional("jei") {
+			forgeLikeVersionRange.set("[${prop("deps.jei").substringBefore('.')},)")
+			slug("jei")
+		}
+		optional("mekanism") {
+			forgeLikeVersionRange.set("[${prop("deps.mekanism").substringBefore('.')},)")
+			slug("mekanism")
+		}
 	}
 }
 
@@ -72,6 +80,7 @@ repositories {
 	maven("https://maven.ithundxr.dev/mirror") { name = "Registrate" }
 	maven("https://raw.githubusercontent.com/Fuzss/modresources/main/maven/") { name = "Fuzs" }
 	maven("https://maven.blamejared.com") { name = "BlameJared" }
+	maven("https://modmaven.dev") { name = "ModMaven" }
 }
 
 dependencies {
@@ -90,6 +99,8 @@ dependencies {
 	modCompileOnly("mezz.jei:jei-${prop("deps.minecraft")}-common-api:${prop("deps.jei")}")
 	modCompileOnly("mezz.jei:jei-${prop("deps.minecraft")}-forge-api:${prop("deps.jei")}")
 	modRuntimeOnly("mezz.jei:jei-${prop("deps.minecraft")}-forge:${prop("deps.jei")}")
+
+	modCompileOnly("mekanism:Mekanism:${prop("deps.minecraft")}-${prop("deps.mekanism")}:api")
 }
 
 val backportForgeRecipes = tasks.register<BackportForgeRecipesTask>("backportForgeRecipes") {
