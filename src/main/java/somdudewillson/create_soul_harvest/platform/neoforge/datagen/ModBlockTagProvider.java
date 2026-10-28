@@ -103,7 +103,7 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				.addOptional(ResourceLocation.withDefaultNamespace("grass"));
 
 		tag(ModTags.Blocks.MIDAS_CAN_CONVERT)
-				.add(Blocks.STONE, Blocks.GRAVEL, Blocks.SANDSTONE, Blocks.RED_SANDSTONE)
+				.add(Blocks.COBBLESTONE, Blocks.STONE, Blocks.GRAVEL, Blocks.SANDSTONE, Blocks.RED_SANDSTONE)
 				.addTag(BlockTags.DIRT)
 				.addTag(BlockTags.SAND)
 				.addTag(BlockTags.STONE_BRICKS)

@@ -197,6 +197,15 @@
   "create_soul_harvest.ponder.soul_cluster_growth.text_2": "The soul bud will grow over time",
   "create_soul_harvest.ponder.soul_cluster_growth.text_3": "When broken...",
   "create_soul_harvest.ponder.soul_cluster_growth.text_4": "it will drop soul crystals and reset to its initial growth phase",
+  
+  "create_soul_harvest.ponder.midas_core_convert.header": "Growing Anima Gold",
+  "create_soul_harvest.ponder.midas_core_convert.text_1": "The Midas Core will periodically convert compatible blocks to Gold Foam",
+  "create_soul_harvest.ponder.midas_core_convert.text_2": "The Gold Foam can then be mined for Anima Gold",
+  
+  "create_soul_harvest.ponder.midas_core_boost.header": "Boosting the Midas Core",
+  "create_soul_harvest.ponder.midas_core_boost.text_1": "The Midas Core can be accelerated by supplying a liquid catalyst",
+  "create_soul_harvest.ponder.midas_core_boost.text_2": "Liquid Soul Crystal",
+  "create_soul_harvest.ponder.midas_core_boost.text_3": "8x Boost",
 
   "create_soul_harvest.jei.glyph_page_chance_per_page": "12.5% Chance (1 in 8)",
   "create_soul_harvest.jei.glyph_page_random_output": "Randomly produces one of the 8 Glyph Pages",
