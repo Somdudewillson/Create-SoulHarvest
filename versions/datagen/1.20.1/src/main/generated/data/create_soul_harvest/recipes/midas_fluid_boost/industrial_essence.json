@@ -5,5 +5,15 @@
         "amount": 40,
         "fluid": "industrialforegoing:essence"
     },
-    "multiplier": 2.0
+    "multiplier": 2.0,
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "industrialforegoing"
+        },
+        {
+            "type": "create_soul_harvest:fluid_exists",
+            "fluid": "industrialforegoing:essence"
+        }
+    ]
 }

@@ -1,4 +1,14 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "cyclic"
+    },
+    {
+      "type": "create_soul_harvest:fluid_exists",
+      "fluid": "cyclic:xpjuice"
+    }
+  ],
   "type": "create_soul_harvest:midas_fluid_boost",
   "duration": 600,
   "fluid": {

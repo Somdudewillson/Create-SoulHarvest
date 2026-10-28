@@ -5,5 +5,15 @@
         "amount": 60,
         "fluid": "cofh_core:experience"
     },
-    "multiplier": 2.0
+    "multiplier": 2.0,
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "cofh_core"
+        },
+        {
+            "type": "create_soul_harvest:fluid_exists",
+            "fluid": "cofh_core:experience"
+        }
+    ]
 }

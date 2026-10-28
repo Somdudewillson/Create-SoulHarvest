@@ -1,4 +1,14 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "cofh_core"
+    },
+    {
+      "type": "create_soul_harvest:fluid_exists",
+      "fluid": "cofh_core:experience"
+    }
+  ],
   "type": "create_soul_harvest:midas_fluid_boost",
   "duration": 720,
   "fluid": {

@@ -22,6 +22,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import com.simibubi.create.AllItems;
@@ -173,7 +174,10 @@ public final class CompatRecipeGen {
 				duration = (int) (BOOST_CATALYST_DURATION_PER_XP * ((float)fluidAmt/xpFluid.xp()));
 			}
 			
-			recipeOutput.accept(
+			recipeOutput
+				.withConditions(new ModLoadedCondition(xpFluid.modid()))
+				.withConditions(new FluidExistsCondition(xpFluid.fluidId()))
+				.accept(
 					SoulHarvestMod.id("midas_fluid_boost/"+xpFluid.shortIdString()),
 					new MidasFluidBoostRecipe(
 							fluidIngredient(xpFluid.fluidId(), fluidAmt),
@@ -181,7 +185,7 @@ public final class CompatRecipeGen {
 							XP_BOOST_CATALYST_FAC
 					),
 					null
-			);
+				);
 		}
 	}
 

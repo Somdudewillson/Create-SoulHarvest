@@ -5,5 +5,15 @@
         "amount": 40,
         "fluid": "cyclic:xpjuice"
     },
-    "multiplier": 2.0
+    "multiplier": 2.0,
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "cyclic"
+        },
+        {
+            "type": "create_soul_harvest:fluid_exists",
+            "fluid": "cyclic:xpjuice"
+        }
+    ]
 }

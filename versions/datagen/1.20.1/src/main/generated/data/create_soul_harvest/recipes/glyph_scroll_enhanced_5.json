@@ -10,7 +10,7 @@
             "tag": "c:rods/magic_necronium"
         },
         "1": {
-            "item": "minecraft:turtle_scute"
+            "tag": "create_soul_harvest:scutes"
         },
         "2": {
             "item": "minecraft:iron_block"

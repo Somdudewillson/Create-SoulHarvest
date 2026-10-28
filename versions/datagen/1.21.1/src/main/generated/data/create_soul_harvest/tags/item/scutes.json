@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "minecraft:turtle_scute",
+      "required": false
+    },
+    {
+      "id": "minecraft:scute",
+      "required": false
+    }
+  ]
+}

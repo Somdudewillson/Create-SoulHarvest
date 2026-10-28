@@ -6,13 +6,13 @@
         {
             "count": 1,
             "ingredient": {
-                "tag": "forge:ingots/brass"
+                "tag": "c:ingots/brass"
             }
         },
         {
             "count": 4,
             "ingredient": {
-                "tag": "forge:dusts/obsidian"
+                "tag": "c:dusts/obsidian"
             }
         },
         {

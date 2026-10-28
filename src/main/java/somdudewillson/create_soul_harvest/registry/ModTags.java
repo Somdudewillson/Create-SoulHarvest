@@ -54,9 +54,13 @@ public final class ModTags {
 
 		public static final TagKey<Item> GLYPH_PAGES = modTag("glyph_pages");
 		public static final TagKey<Item> GLYPH_SCROLLS = modTag("glyph_scrolls");
+		public static final TagKey<Item> GLYPH_SCROLLS_T1 = modTag("glyph_scrolls_t1");
+		public static final TagKey<Item> GLYPH_SCROLLS_T2 = modTag("glyph_scrolls_t2");
 		public static final TagKey<Item> BOOK_COVER_INGREDIENTS = modTag("book_cover_ingredients");
 		public static final TagKey<Item> SOUL_BOOKS = modTag("soul_books");
 		public static final TagKey<Item> SOUL_BOOK_COVERS = modTag("soul_book_covers");
+		
+		public static final TagKey<Item> SCUTES = modTag("scutes");
 
 		public static final TagKey<Item> BIOCIDE_GAS_PROTECTION = modTag("biocide_gas_protection");
 		public static final TagKey<Item> COMPOSTABLES = modTag("compostables");

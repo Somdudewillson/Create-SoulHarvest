@@ -64,7 +64,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		);
 
 		// Glyph scrolls
-		tag(ModTags.Items.GLYPH_SCROLLS).add(
+		tag(ModTags.Items.GLYPH_SCROLLS_T1).add(
 				ModItems.GLYPH_SCROLL_1.get(),
 				ModItems.GLYPH_SCROLL_2.get(),
 				ModItems.GLYPH_SCROLL_3.get(),
@@ -74,6 +74,21 @@ public class ModItemTagProvider extends ItemTagsProvider {
 				ModItems.GLYPH_SCROLL_7.get(),
 				ModItems.GLYPH_SCROLL_8.get()
 		);
+		
+		tag(ModTags.Items.GLYPH_SCROLLS_T2).add(
+				ModItems.GLYPH_SCROLL_ENHANCED_1.get(),
+				ModItems.GLYPH_SCROLL_ENHANCED_2.get(),
+				ModItems.GLYPH_SCROLL_ENHANCED_3.get(),
+				ModItems.GLYPH_SCROLL_ENHANCED_4.get(),
+				ModItems.GLYPH_SCROLL_ENHANCED_5.get(),
+				ModItems.GLYPH_SCROLL_ENHANCED_6.get(),
+				ModItems.GLYPH_SCROLL_ENHANCED_7.get(),
+				ModItems.GLYPH_SCROLL_ENHANCED_8.get()
+		);
+		
+		tag(ModTags.Items.GLYPH_SCROLLS)
+			.addTag(ModTags.Items.GLYPH_SCROLLS_T1)
+			.addTag(ModTags.Items.GLYPH_SCROLLS_T2);
 
 		// Soul books & covers
 		tag(ModTags.Items.SOUL_BOOKS).add(
@@ -132,7 +147,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
 				.addTag(ModTags.Items.FORGE_DUSTS_OBSIDIAN);
 		tag(ModTags.Items.FORGE_DUSTS_OBSIDIAN)
 				.replace(false)
-				.add(AllItems.POWDERED_OBSIDIAN.get());
+				.add(AllItems.POWDERED_OBSIDIAN.get())
+				.addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "obsidian_dust"));
 
 		tag(ModTags.Items.C_INGOTS_BRASS)
 				.replace(false)
@@ -179,6 +195,10 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		tag(ModTags.Items.C_MAGIC_NECRONIUM_RODS)
 				.replace(false)
 				.addTag(ModTags.Items.FORGE_MAGIC_NECRONIUM_RODS);
+		
+		tag(ModTags.Items.SCUTES)
+				.addOptional(ResourceLocation.withDefaultNamespace("turtle_scute"))
+				.addOptional(ResourceLocation.withDefaultNamespace("scute"));
 		
 		// Curio tags
 		tag(ModTags.Items.CURIO_CHARM)

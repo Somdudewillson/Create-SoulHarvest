@@ -5,5 +5,15 @@
         "amount": 20,
         "fluid": "create_enchantment_industry:experience"
     },
-    "multiplier": 2.0
+    "multiplier": 2.0,
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "create_enchantment_industry"
+        },
+        {
+            "type": "create_soul_harvest:fluid_exists",
+            "fluid": "create_enchantment_industry:experience"
+        }
+    ]
 }

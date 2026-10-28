@@ -5,5 +5,15 @@
         "amount": 40,
         "fluid": "reliquary:xp_juice_still"
     },
-    "multiplier": 2.0
+    "multiplier": 2.0,
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "reliquary"
+        },
+        {
+            "type": "create_soul_harvest:fluid_exists",
+            "fluid": "reliquary:xp_juice_still"
+        }
+    ]
 }

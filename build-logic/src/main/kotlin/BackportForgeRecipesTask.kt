@@ -78,11 +78,35 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 
 		@Suppress("UNCHECKED_CAST")
 		fun convertIngredient(ing: Any?): Any? {
+			if (ing is List<*>) {
+				return ing.map { convertIngredient(it) }
+			}
 			if (ing !is Map<*, *>) return ing
 			val map = ing as Map<String, Any?>
+
+			val isFluidTag = map["type"] == "neoforge:tag" ||
+					map.containsKey("fluidTag") ||
+					map.containsKey("fluid_tag") ||
+					(map.containsKey("tag") && map.containsKey("amount"))
+
+			if (isFluidTag) {
+				val result = mutableMapOf<String, Any?>()
+				val tag = (map["fluidTag"] ?: map["fluid_tag"] ?: map["tag"]) as? String ?: ""
+				result["fluidTag"] = tag
+				if ("amount" in map) {
+					result["amount"] = map["amount"]
+				}
+				for ((k, v) in map) {
+					if (k !in setOf("type", "tag", "fluidTag", "fluid_tag", "amount")) {
+						result[k] = v
+					}
+				}
+				return result
+			}
+
 			val result = mutableMapOf<String, Any?>()
 			for ((k, v) in map) {
-				if (k == "type" && v == "neoforge:single") continue
+				if (k == "type" && (v == "neoforge:single" || (v is String && v.startsWith("neoforge:")))) continue
 				result[k] = v
 			}
 			return result
@@ -123,11 +147,8 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 			val ing = mutableMapOf<String, Any?>()
 			if ("tag" in map) {
 				var tag = map["tag"] as? String ?: ""
-				if (tag.startsWith("c:")) {
-					tag = "forge:" + tag.substring("c:".length)
-				}
-				if (tag == "forge:obsidians") {
-					tag = "forge:obsidian"
+				if (tag == "forge:obsidians" || tag == "c:obsidians") {
+					tag = "c:obsidian"
 				}
 				ing["tag"] = tag
 			} else if ("item" in map) {
@@ -158,9 +179,8 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 			val out = mutableMapOf<String, Any?>("amount" to amount)
 			if ("fluid" in map) {
 				out["fluid"] = map["fluid"]
-			} else if ("tag" in map) {
-				var tag = map["tag"] as? String ?: ""
-				if (tag.startsWith("c:")) tag = "forge:" + tag.substring("c:".length)
+			} else if ("tag" in map || "fluidTag" in map || "fluid_tag" in map) {
+				val tag = (map["tag"] ?: map["fluidTag"] ?: map["fluid_tag"]) as? String ?: ""
 				out["tag"] = tag
 			}
 			return out
@@ -209,13 +229,13 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 						if (f != null) {
 							val convertedFluid = mutableMapOf<String, Any?>()
 							convertedFluid.putAll(f)
-							if ("tag" in f) {
-								var tag = f["tag"] as? String ?: ""
-								if (tag.startsWith("c:")) {
-									tag = "forge:" + tag.substring("c:".length)
-								}
-								convertedFluid["tag"] = tag
+							val rawTag = (f["tag"] ?: f["fluidTag"] ?: f["fluid_tag"]) as? String
+							if (rawTag != null) {
+								convertedFluid["tag"] = rawTag
+								convertedFluid.remove("fluidTag")
+								convertedFluid.remove("fluid_tag")
 							}
+							convertedFluid.remove("type")
 							converted[k] = convertedFluid
 						} else {
 							converted[k] = v
@@ -232,21 +252,6 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 					val m = cond as? Map<String, Any?> ?: return cond
 					val res = mutableMapOf<String, Any?>()
 					res.putAll(m)
-					if ("tag" in m) {
-						var tag = m["tag"] as? String ?: ""
-						if (tag.startsWith("c:")) tag = "forge:" + tag.substring("c:".length)
-						res["tag"] = tag
-					}
-					if ("block_tag" in m) {
-						var tag = m["block_tag"] as? String ?: ""
-						if (tag.startsWith("c:")) tag = "forge:" + tag.substring("c:".length)
-						res["block_tag"] = tag
-					}
-					if ("fluid_tag" in m) {
-						var tag = m["fluid_tag"] as? String ?: ""
-						if (tag.startsWith("c:")) tag = "forge:" + tag.substring("c:".length)
-						res["fluid_tag"] = tag
-					}
 					return res
 				}
 
@@ -354,11 +359,8 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 								val ingredient = mutableMapOf<String, Any?>()
 								if ("tag" in map) {
 									var tag = map["tag"] as? String ?: ""
-									if (tag.startsWith("c:")) {
-										tag = "forge:" + tag.substring("c:".length)
-									}
-									if (tag == "forge:obsidians") {
-										tag = "forge:obsidian"
+									if (tag == "forge:obsidians" || tag == "c:obsidians") {
+										tag = "c:obsidian"
 									}
 									ingredient["tag"] = tag
 								} else if ("item" in map) {

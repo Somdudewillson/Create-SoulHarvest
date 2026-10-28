@@ -1,5 +1,9 @@
 {
   "values": [
-    "create:powdered_obsidian"
+    "create:powdered_obsidian",
+    {
+      "id": "#forge:obsidian_dust",
+      "required": false
+    }
   ]
 }

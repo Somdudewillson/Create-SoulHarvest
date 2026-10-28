@@ -1,12 +1,6 @@
 {
   "values": [
-    "create_soul_harvest:glyph_scroll_1",
-    "create_soul_harvest:glyph_scroll_2",
-    "create_soul_harvest:glyph_scroll_3",
-    "create_soul_harvest:glyph_scroll_4",
-    "create_soul_harvest:glyph_scroll_5",
-    "create_soul_harvest:glyph_scroll_6",
-    "create_soul_harvest:glyph_scroll_7",
-    "create_soul_harvest:glyph_scroll_8"
+    "#create_soul_harvest:glyph_scrolls_t1",
+    "#create_soul_harvest:glyph_scrolls_t2"
   ]
 }

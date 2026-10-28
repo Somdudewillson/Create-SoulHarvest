@@ -29,6 +29,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
@@ -738,8 +739,11 @@ public final class CreateRecipeGen {
 			}
 		}
 	}
-	
+
 	public static void registerEnhancedSpellRecipe(RecipeOutput recipeOutput, int glyphId, ItemLike extraIngredientOne, ItemLike extraIngredientTwo) {
+		registerEnhancedSpellRecipe(recipeOutput, glyphId, Ingredient.of(extraIngredientOne), Ingredient.of(extraIngredientTwo));
+	}
+	public static void registerEnhancedSpellRecipe(RecipeOutput recipeOutput, int glyphId, Ingredient extraIngredientOne, Ingredient extraIngredientTwo) {
 		@SuppressWarnings("unchecked")
 		DeferredHolder<Item, Item>[] glyphs = new DeferredHolder[] {
 				ModItems.GLYPH_1, ModItems.GLYPH_2, ModItems.GLYPH_3, ModItems.GLYPH_4,
@@ -779,7 +783,7 @@ public final class CreateRecipeGen {
 		registerEnhancedSpellRecipe(recipeOutput, 2, Items.FIRE_CHARGE, Items.TNT);
 		registerEnhancedSpellRecipe(recipeOutput, 3, Items.BONE_BLOCK, Items.BONE_BLOCK);
 		registerEnhancedSpellRecipe(recipeOutput, 4, Items.FERMENTED_SPIDER_EYE, ModItems.NECRONIUM_WASTE.get());
-		registerEnhancedSpellRecipe(recipeOutput, 5, Items.TURTLE_SCUTE, Items.IRON_BLOCK);
+		registerEnhancedSpellRecipe(recipeOutput, 5, Ingredient.of(ModTags.Items.SCUTES), Ingredient.of(Items.IRON_BLOCK));
 		registerEnhancedSpellRecipe(recipeOutput, 6, Items.FEATHER, Items.PHANTOM_MEMBRANE);
 		registerEnhancedSpellRecipe(recipeOutput, 7, Items.GLASS, Items.OBSIDIAN);
 	}

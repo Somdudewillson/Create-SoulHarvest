@@ -119,7 +119,9 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				.add(Blocks.BAMBOO)
 				.add(Blocks.DEAD_BUSH)
 				.add(Blocks.FERN, Blocks.LARGE_FERN)
-				.add(Blocks.SHORT_GRASS, Blocks.TALL_GRASS)
+				.add(Blocks.TALL_GRASS)
+				.addOptional(ResourceLocation.withDefaultNamespace("short_grass"))
+				.addOptional(ResourceLocation.withDefaultNamespace("grass"))
 				.addTag(BlockTags.FLOWERS);
 
 		// Mineable tags

@@ -5,5 +5,15 @@
         "amount": 40,
         "fluid": "mob_grinding_utils:fluid_xp"
     },
-    "multiplier": 2.0
+    "multiplier": 2.0,
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "mob_grinding_utils"
+        },
+        {
+            "type": "create_soul_harvest:fluid_exists",
+            "fluid": "mob_grinding_utils:fluid_xp"
+        }
+    ]
 }

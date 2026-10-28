@@ -2,12 +2,16 @@ package somdudewillson.create_soul_harvest.platform.forge;
 
 //? forge {
 
-/*import net.minecraftforge.common.MinecraftForge;
+/*import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.createmod.catnip.config.ui.BaseConfigScreen;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.compat.mekanism.MekanismCompat;
 import somdudewillson.create_soul_harvest.config.SoulHarvestConfig;
@@ -28,6 +32,12 @@ public class ForgeEntrypoint {
 
 		SoulHarvestConfig.register(ModDependencyGraph.get());
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SoulHarvestConfig.COMMON_SPEC);
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			ModLoadingContext.get().registerExtensionPoint(
+					ConfigScreenHandler.ConfigScreenFactory.class,
+					() -> new ConfigScreenHandler.ConfigScreenFactory((mc, previousScreen) -> new BaseConfigScreen(previousScreen, SoulHarvestMod.MOD_ID))
+			);
+		});
 		modBus.addListener(SoulHarvestConfig::onLoad);
 		modBus.addListener(SoulHarvestConfig::onReload);
 		ModBlocks.BLOCKS.register(modBus);
