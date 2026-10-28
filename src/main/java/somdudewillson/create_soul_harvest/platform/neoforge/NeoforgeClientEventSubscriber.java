@@ -2,6 +2,13 @@ package somdudewillson.create_soul_harvest.platform.neoforge;
 
 //? neoforge {
 
+import java.util.function.Supplier;
+
+import net.createmod.catnip.config.ui.BaseConfigScreen;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -26,6 +33,15 @@ public class NeoforgeClientEventSubscriber {
 	@SubscribeEvent
 	public static void onClientSetup(final FMLClientSetupEvent event) {
 		SoulHarvestMod.onInitializeClient();
+	}
+
+	@SubscribeEvent
+	public static void onLoadComplete(final FMLLoadCompleteEvent event) {
+		ModContainer modContainer = ModList.get()
+			.getModContainerById(SoulHarvestMod.MOD_ID)
+			.orElseThrow(() -> new IllegalStateException("Soul Harvest mod container missing on LoadComplete"));
+		Supplier<IConfigScreenFactory> configScreen = () -> (mc, previousScreen) -> new BaseConfigScreen(previousScreen, SoulHarvestMod.MOD_ID);
+		modContainer.registerExtensionPoint(IConfigScreenFactory.class, configScreen);
 	}
 
 	@SubscribeEvent
