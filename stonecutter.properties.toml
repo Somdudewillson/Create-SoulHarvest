@@ -1,7 +1,7 @@
 mod.id = "create_soul_harvest"
 mod.name = "Create: Soul Harvest"
 mod.group = "com.github.somdudewillson"
-mod.version = "0.2.2"
+mod.version = "0.3.0"
 mod.channel_tag = ""
 mod.description = "Entity-less mob grinding for Create"
 mod.authors = ["Somdudewillson"]
