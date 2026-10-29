@@ -1,11 +1,16 @@
 package somdudewillson.create_soul_harvest.content.soul;
 
 import com.google.gson.*;
+
+import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
+import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
 import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.registry.ModTags;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -46,6 +51,7 @@ public class SoulDropCache {
 	}
 
 	private final Map<ResourceLocation, CachedSoulData> cache = new ConcurrentHashMap<>();
+	transient private final Object2BooleanMap<ResourceLocation> entityPresentCache = new Object2BooleanOpenHashMap<>();
 
 	private Path getCachePath(MinecraftServer server) {
 		if (server == null) return null;
@@ -60,6 +66,7 @@ public class SoulDropCache {
 
 	public synchronized void load(MinecraftServer server) {
 		cache.clear();
+		entityPresentCache.clear();
 		Path path = getCachePath(server);
 		if (path == null || !Files.exists(path)) {
 			return;
@@ -124,16 +131,6 @@ public class SoulDropCache {
 		return result;
 	}
 
-	private void dropCacheFile(Path path, String reason) {
-		cache.clear();
-		try {
-			Files.deleteIfExists(path);
-			SoulHarvestMod.LOGGER.info("Dropped out-of-date or invalid soul drop cache file at {} (reason: {}). Will regenerate from scratch.", path.getFileName(), reason);
-		} catch (Exception e) {
-			SoulHarvestMod.LOGGER.error("Failed to delete out-of-date cache file at {}: {}", path, e.getMessage());
-		}
-	}
-
 	public synchronized void save(MinecraftServer server) {
 		Path path = getCachePath(server);
 		if (path == null) return;
@@ -160,22 +157,31 @@ public class SoulDropCache {
 		root.add("entities", entitiesObj);
 		return root;
 	}
-
-	public boolean contains(ResourceLocation entityId) {
-		return cache.containsKey(entityId);
+	
+	private boolean getEntityPresent(ResourceLocation entityId) {
+		return entityPresentCache.computeIfAbsent(entityId, k->{
+				boolean inRegistry = BuiltInRegistries.ENTITY_TYPE.containsKey((ResourceLocation) k);
+				if (!inRegistry) return false;
+				return !BuiltInRegistries.ENTITY_TYPE.get((ResourceLocation) k).is(ModTags.EntityTypes.SOUL_CAPTURE_FORBIDDEN);
+			});
 	}
 
+	public boolean contains(ResourceLocation entityId) {
+		return getEntityPresent(entityId) && cache.containsKey(entityId);
+	}
+
+	@Nullable
 	public CachedSoulData get(ResourceLocation entityId) {
-		return cache.get(entityId);
+		return getEntityPresent(entityId) ? cache.get(entityId) : null;
 	}
 
 	public List<SoulDropPool> getPools(ResourceLocation entityId) {
-		CachedSoulData data = cache.get(entityId);
+		CachedSoulData data = get(entityId);
 		return data != null ? data.pools() : Collections.emptyList();
 	}
 
 	public int getXp(ResourceLocation entityId) {
-		CachedSoulData data = cache.get(entityId);
+		CachedSoulData data = get(entityId);
 		return data != null ? data.xp() : 0;
 	}
 
@@ -188,8 +194,20 @@ public class SoulDropCache {
 		save(server);
 	}
 
+	private void dropCacheFile(Path path, String reason) {
+		cache.clear();
+		entityPresentCache.clear();
+		try {
+			Files.deleteIfExists(path);
+			SoulHarvestMod.LOGGER.info("Dropped out-of-date or invalid soul drop cache file at {} (reason: {}). Will regenerate from scratch.", path.getFileName(), reason);
+		} catch (Exception e) {
+			SoulHarvestMod.LOGGER.error("Failed to delete out-of-date cache file at {}: {}", path, e.getMessage());
+		}
+	}
+
 	public synchronized void clear(MinecraftServer server) {
 		cache.clear();
+		entityPresentCache.clear();
 		Path path = getCachePath(server);
 		if (path != null && Files.exists(path)) {
 			try {
