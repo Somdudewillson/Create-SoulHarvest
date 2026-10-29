@@ -120,7 +120,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
 				.add(Items.NETHER_STAR)
 				.add(Items.SCULK_CATALYST)
 				.add(Items.DRAGON_EGG)
-				.add(Items.TOTEM_OF_UNDYING);
+				.add(Items.TOTEM_OF_UNDYING)
+				.addOptionalTag(ResourceLocation.fromNamespaceAndPath("artifacts", "artifacts"));
 		
 		tag(ModTags.Items.STANDARD_GRIND_DROP_FORBIDDEN)
 				.addTag(ModTags.Items.LOOT_TOKEN_ONLY)
@@ -202,6 +203,10 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		
 		// Curio tags
 		tag(ModTags.Items.CURIO_CHARM)
+			.replace(false)
+			.add(ModItems.NECRONIUM_CHARM.get());
+		
+		tag(ModTags.Items.CURIO_BELT)
 			.replace(false)
 			.add(ModItems.NECRONIUM_CHARM.get());
 		

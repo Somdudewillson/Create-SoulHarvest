@@ -89,6 +89,7 @@ public final class ModTags {
 		public static final TagKey<Item> FORGE_INGOTS_BRASS = forgeTag("ingots/brass");
 		
 		public static final TagKey<Item> CURIO_CHARM = curioTag("charm");
+		public static final TagKey<Item> CURIO_BELT = curioTag("belt");
 
 		public static TagKey<Item> compostableTag(int percent) {
 			return modTag("compostables/" + percent);
@@ -147,6 +148,7 @@ public final class ModTags {
 		public static final TagKey<EntityType<?>> REQUIRES_MEDIUM = modTag("requires_medium_kills");
 		public static final TagKey<EntityType<?>> REQUIRES_HIGH = modTag("requires_high_kills");
 		public static final TagKey<EntityType<?>> SOUL_CAN_BE_CAPTURED = modTag("soul_can_be_captured");
+		public static final TagKey<EntityType<?>> SOUL_CAPTURE_FORBIDDEN = modTag("soul_capture_forbidden");
 		public static final TagKey<EntityType<?>> CONTAGION_IMMUNE = modTag("contagion_immune");
 
 		private static TagKey<EntityType<?>> modTag(String path) {

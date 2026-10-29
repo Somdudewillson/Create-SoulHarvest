@@ -240,6 +240,9 @@ public class ModEntityTypeTagProvider extends EntityTypeTagsProvider {
 		.addOptional(ResourceLocation.fromNamespaceAndPath("friendsandfoes", "illusioner"))
 		.addOptional(ResourceLocation.fromNamespaceAndPath("friendsandfoes", "iceologer"))
 		.addOptional(ResourceLocation.fromNamespaceAndPath("artifacts", "mimic"));
+		
+		// Forbidden entities
+		tag(ModTags.EntityTypes.SOUL_CAPTURE_FORBIDDEN);
 
 		// Contagion immune entities
 		tag(ModTags.EntityTypes.CONTAGION_IMMUNE).add(

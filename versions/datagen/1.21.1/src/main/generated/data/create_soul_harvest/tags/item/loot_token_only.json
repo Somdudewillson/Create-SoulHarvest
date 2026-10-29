@@ -3,6 +3,10 @@
     "minecraft:nether_star",
     "minecraft:sculk_catalyst",
     "minecraft:dragon_egg",
-    "minecraft:totem_of_undying"
+    "minecraft:totem_of_undying",
+    {
+      "id": "#artifacts:artifacts",
+      "required": false
+    }
   ]
 }
