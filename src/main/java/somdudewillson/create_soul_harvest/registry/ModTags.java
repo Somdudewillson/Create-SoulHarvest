@@ -149,6 +149,7 @@ public final class ModTags {
 		public static final TagKey<EntityType<?>> REQUIRES_HIGH = modTag("requires_high_kills");
 		public static final TagKey<EntityType<?>> SOUL_CAN_BE_CAPTURED = modTag("soul_can_be_captured");
 		public static final TagKey<EntityType<?>> SOUL_CAPTURE_FORBIDDEN = modTag("soul_capture_forbidden");
+		public static final TagKey<EntityType<?>> SOUL_SAMPLING_FORBIDDEN = modTag("soul_sampling_forbidden");
 		public static final TagKey<EntityType<?>> CONTAGION_IMMUNE = modTag("contagion_immune");
 
 		private static TagKey<EntityType<?>> modTag(String path) {

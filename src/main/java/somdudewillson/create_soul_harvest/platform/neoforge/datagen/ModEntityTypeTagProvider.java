@@ -243,6 +243,8 @@ public class ModEntityTypeTagProvider extends EntityTypeTagsProvider {
 		
 		// Forbidden entities
 		tag(ModTags.EntityTypes.SOUL_CAPTURE_FORBIDDEN);
+		
+		tag(ModTags.EntityTypes.SOUL_SAMPLING_FORBIDDEN);
 
 		// Contagion immune entities
 		tag(ModTags.EntityTypes.CONTAGION_IMMUNE).add(

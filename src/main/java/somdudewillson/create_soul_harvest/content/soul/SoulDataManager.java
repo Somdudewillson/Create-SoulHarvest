@@ -7,6 +7,14 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootParams;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
@@ -18,7 +26,10 @@ import somdudewillson.create_soul_harvest.content.soul.sampling.StandardDropSamp
 
 //? >= 1.21 {
 import net.minecraft.resources.ResourceKey;
-//?}
+import net.neoforged.neoforge.common.Tags;
+//?} forge {
+/*import net.minecraftforge.common.Tags;
+*///?}
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -92,9 +103,8 @@ public class SoulDataManager {
 		return false;
 	}
 
-	//? forge {
-	/*@SuppressWarnings("deprecation")
-	*///?}
+
+	@SuppressWarnings("unchecked")
 	public static int determineTier(EntityType<?> entityType, ResourceLocation entityId) {
 		List<PartialSoulData> partials = rawPartialData.get(entityId);
 		if (partials != null) {
@@ -112,13 +122,43 @@ public class SoulDataManager {
 		} else if (entityType.is(T3_MOB)) {
 			return 3;
 		}
+		
+		// --- Heuristic time! Values calibrated from vanilla mob properties.
+		if (!LivingEntity.class.isAssignableFrom(entityType.getBaseClass())) return 0;
+		AttributeSupplier defaultAttributes = DefaultAttributes.getSupplier((EntityType<? extends LivingEntity>) entityType);
+		double health = defaultAttributes.getBaseValue(Attributes.MAX_HEALTH);
+		double damage = defaultAttributes.getBaseValue(Attributes.ATTACK_DAMAGE);
+		
+		float opinionT1 = 1.431f;
+		float opinionT2 = -0.112f;
+		float opinionT3 = -1.724f;
+		if (entityType.getCategory().isFriendly()) { opinionT1 += +1.717f; opinionT2 += -0.672f; opinionT3 += -1.036f; }
+		if (entityType.getCategory() == MobCategory.MONSTER) { opinionT1 += -1.694f; opinionT2 += +0.522f; }
+		if (entityType.getCategory() == MobCategory.AXOLOTLS || entityType.getCategory() == MobCategory.UNDERGROUND_WATER_CREATURE || entityType.getCategory() == MobCategory.WATER_CREATURE || entityType.getCategory() == MobCategory.WATER_AMBIENT) { opinionT2 += -0.013f; }
+		if (Monster.class.isAssignableFrom(entityType.getBaseClass())) { opinionT1 += -0.086f; opinionT3 += +0.016f; }
+		if (Animal.class.isAssignableFrom(entityType.getBaseClass())) { opinionT1 += +0.813f; }
+		if (Enemy.class.isAssignableFrom(entityType.getBaseClass())) { opinionT1 += -1.403f; opinionT2 += +0.379f; }
+		if (entityType.is(Tags.EntityTypes.BOSSES)) { opinionT2 += -1.873f; opinionT3 += +1.542f; }
+		if (entityType.fireImmune()) { opinionT1 += -0.011f; }
+		if (defaultAttributes.hasAttribute(Attributes.ATTACK_DAMAGE)) { opinionT1 += -0.513f; opinionT2 += +0.409f; }
+		if (defaultAttributes.hasAttribute(Attributes.KNOCKBACK_RESISTANCE) && defaultAttributes.getBaseValue(Attributes.KNOCKBACK_RESISTANCE) > 0) { opinionT2 += +0.879f; }
+		if (health >= 15.0) { opinionT1 += -0.248f; }
+		if (health >= 20.0) { opinionT1 += -0.465f; }
+		if (health >= 50.0) { opinionT3 += +1.365f; }
+		if (health >= 100.0) { opinionT1 += -0.014f; opinionT3 += +0.428f; }
+		if (damage >= 5.0) { opinionT1 += -1.652f; opinionT2 += +0.485f; }
+		if (damage >= 20.0) { opinionT2 += -1.167f; opinionT3 += +0.989f; }
+		if ((entityType.getWidth() * entityType.getWidth() * entityType.getHeight()) >= 1.5f) { opinionT1 += -0.283f; }
+
+		float maxOpinion = Math.max(opinionT1, Math.max(opinionT2, opinionT3));
+		if (maxOpinion == opinionT3 && opinionT3 > 0.0f) return 3;
+		if (maxOpinion == opinionT2 && opinionT2 > 0.0f) return 2;
+		if (maxOpinion == opinionT1 && opinionT1 > 0.0f) return 1;
+		// ---
 
 		return 0;
 	}
 
-	//? forge {
-	/*@SuppressWarnings("deprecation")
-	*///?}
 	public static int determineProgressPerKill(EntityType<?> entityType, ResourceLocation entityId, int tier) {
 		List<PartialSoulData> partials = rawPartialData.get(entityId);
 		if (partials != null) {
@@ -139,15 +179,12 @@ public class SoulDataManager {
 
 		return switch (tier) {
 			case 1 -> 10;
-			case 2 -> 4;
-			case 3 -> 100;
+			case 2 -> 100;
+			case 3 -> 4;
 			default -> 10;
 		};
 	}
 
-	//? forge {
-	/*@SuppressWarnings("deprecation")
-	*///?}
 	@Nullable
 	public static SoulData loadEntityData(EntityType<?> entityType, @Nullable RegistryAccess registryAccess) {
 		return loadEntityData(entityType, registryAccess, true);
@@ -347,7 +384,7 @@ public class SoulDataManager {
 	*///?}
 	private static SoulDropCache.CachedSoulData sampleEntityData(MinecraftServer server, EntityType<?> entityType) {
 		ServerLevel level = server.overworld();
-		if (level == null) {
+		if (level == null || entityType.is(SOUL_SAMPLING_FORBIDDEN)) {
 			return new SoulDropCache.CachedSoulData(0, Collections.emptyList());
 		}
 
