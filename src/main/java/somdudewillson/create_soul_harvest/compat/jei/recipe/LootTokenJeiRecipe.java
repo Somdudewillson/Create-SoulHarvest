@@ -10,8 +10,20 @@ public record LootTokenJeiRecipe(
 		ItemStack tokenStack,
 		ResourceLocation lootTableId,
 		Component displayName,
-		List<DropInfo> drops
+		List<DropInfo> drops,
+		int pageIndex,
+		int totalPages,
+		int totalDropCount
 ) {
+	public LootTokenJeiRecipe(
+			ItemStack tokenStack,
+			ResourceLocation lootTableId,
+			Component displayName,
+			List<DropInfo> drops
+	) {
+		this(tokenStack, lootTableId, displayName, drops, 0, 1, drops.size());
+	}
+
 	public record DropInfo(
 			ItemStack stack,
 			int min,

@@ -217,6 +217,8 @@
   "create_soul_harvest.jei.loot_token": "Loot Token Rewards",
   "create_soul_harvest.jei.loot_token.chance": "%s Chance",
   "create_soul_harvest.jei.loot_token.count_range": "Count: %s - %s",
+  "create_soul_harvest.jei.loot_token.page": "Page %d/%d",
+  "create_soul_harvest.jei.loot_token.drops_count": "%d Drops",
 
   "create_soul_harvest.recipe.soul_infusion": "Soul Infusion",
   "create_soul_harvest.recipe.midas_fluid_boost": "Midas Core Transmutation Boost",

@@ -2,6 +2,7 @@ package somdudewillson.create_soul_harvest.compat.jei;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -60,6 +61,8 @@ public class SoulHarvestJEI implements IModPlugin {
 	public static final mezz.jei.api.recipe.RecipeType<MidasFluidBoostRecipe> MIDAS_FLUID_BOOST_TYPE =
 			new mezz.jei.api.recipe.RecipeType<>(SoulHarvestMod.id("midas_fluid_boost"), MidasFluidBoostRecipe.class);
 	*///?}
+
+	public static final int LOOT_TOKEN_PAGE_SIZE = 16;
 
 	private FanSoulInfusionCategory category;
 	private LootTokenCategory lootTokenCategory;
@@ -122,11 +125,23 @@ public class SoulHarvestJEI implements IModPlugin {
 			midasFluidBoostCategory.registerRecipes(registration);
 		}
 
-		List<LootTokenJeiRecipe> tokenRecipes = new ArrayList<>();
 		HolderLookup.Provider registries = Minecraft.getInstance().level != null
 				? Minecraft.getInstance().level.registryAccess()
 				: null;
 		Map<ResourceLocation, SoulData> knownSouls = SoulDataManager.getKnownSoulData();
+
+		List<LootTokenJeiRecipe> tokenRecipes = buildLootTokenRecipes(knownSouls, registries, LOOT_TOKEN_PAGE_SIZE);
+		if (!tokenRecipes.isEmpty()) {
+			registration.addRecipes(LootTokenCategory.TYPE, tokenRecipes);
+		}
+	}
+
+	public static List<LootTokenJeiRecipe> buildLootTokenRecipes(
+			Map<ResourceLocation, SoulData> knownSouls,
+			@javax.annotation.Nullable HolderLookup.Provider registries,
+			int pageSize
+	) {
+		List<LootTokenJeiRecipe> tokenRecipes = new ArrayList<>();
 
 		for (Map.Entry<ResourceLocation, SoulData> entry : knownSouls.entrySet()) {
 			ResourceLocation entityId = entry.getKey();
@@ -162,14 +177,33 @@ public class SoulHarvestJEI implements IModPlugin {
 				}
 			}
 
-			if (!drops.isEmpty()) {
-				tokenRecipes.add(new LootTokenJeiRecipe(tokenStack, lootTableId, displayName, drops));
+			if (drops.isEmpty()) {
+				continue;
+			}
+
+			// Sort by weight descending, then by item description id for deterministic order
+			drops.sort(Comparator.comparingInt(LootTokenJeiRecipe.DropInfo::weight).reversed()
+					.thenComparing(d -> d.stack().getDescriptionId()));
+
+			int totalDrops = drops.size();
+			int totalPages = (totalDrops + pageSize - 1) / pageSize;
+			for (int page = 0; page < totalPages; page++) {
+				int from = page * pageSize;
+				int to = Math.min(totalDrops, from + pageSize);
+				List<LootTokenJeiRecipe.DropInfo> pageDrops = drops.subList(from, to);
+				tokenRecipes.add(new LootTokenJeiRecipe(
+						tokenStack,
+						lootTableId,
+						displayName,
+						pageDrops,
+						page,
+						totalPages,
+						totalDrops
+				));
 			}
 		}
 
-		if (!tokenRecipes.isEmpty()) {
-			registration.addRecipes(LootTokenCategory.TYPE, tokenRecipes);
-		}
+		return tokenRecipes;
 	}
 
 	@Override
