@@ -58,3 +58,4 @@ bin/
 !.idea/runConfigurations/Run_Active_Server.xml
 
 /versions/**/logs/
+.redsparklib/
