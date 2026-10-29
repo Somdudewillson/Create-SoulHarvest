@@ -220,6 +220,15 @@
   "create_soul_harvest.jei.loot_token.page": "Page %d/%d",
   "create_soul_harvest.jei.loot_token.drops_count": "%d Drops",
 
+  "create_soul_harvest.jei.soul_book": "Soul Harvesting",
+  "create_soul_harvest.jei.soul_book.kill_single": "%s Kill",
+  "create_soul_harvest.jei.soul_book.kill_plural": "%s Kills",
+  "create_soul_harvest.jei.soul_book.progress_per_kill": "+%s%% / kill",
+  "create_soul_harvest.jei.soul_book.offhand_instruction": "Hold book in offhand",
+  "create_soul_harvest.jei.soul_book.offhand_tip": "Hold in off-hand",
+  "create_soul_harvest.jei.soul_book.target_mob": "Target Entity",
+  "create_soul_harvest.jei.soul_book.tier": "Tier %s",
+
   "create_soul_harvest.recipe.soul_infusion": "Soul Infusion",
   "create_soul_harvest.recipe.midas_fluid_boost": "Midas Core Transmutation Boost",
   "create.recipe.soul_infusion.fan": "Fan behind Active Soul Crystal",

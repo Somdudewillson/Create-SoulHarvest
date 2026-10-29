@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.annotation.ParametersAreNonnullByDefault;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -21,6 +23,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SpawnEggItem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.DoubleItemIcon;
 import com.simibubi.create.compat.jei.ItemIcon;
@@ -30,8 +33,11 @@ import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.compat.jei.category.FanSoulInfusionCategory;
 import somdudewillson.create_soul_harvest.compat.jei.category.LootTokenCategory;
 import somdudewillson.create_soul_harvest.compat.jei.category.MidasFluidBoostCategory;
+import somdudewillson.create_soul_harvest.compat.jei.category.SoulBookCategory;
 import somdudewillson.create_soul_harvest.compat.jei.recipe.LootTokenJeiRecipe;
+import somdudewillson.create_soul_harvest.compat.jei.recipe.SoulBookJeiRecipe;
 import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
+import somdudewillson.create_soul_harvest.content.item.SoulBookItem;
 import somdudewillson.create_soul_harvest.content.recipe.MidasFluidBoostRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.SoulInfusionRecipe;
 import somdudewillson.create_soul_harvest.content.soul.SoulData;
@@ -67,6 +73,7 @@ public class SoulHarvestJEI implements IModPlugin {
 	private FanSoulInfusionCategory category;
 	private LootTokenCategory lootTokenCategory;
 	private MidasFluidBoostCategory midasFluidBoostCategory;
+	private SoulBookCategory soulBookCategory;
 
 	@Override
 	public ResourceLocation getPluginUid() {
@@ -114,6 +121,9 @@ public class SoulHarvestJEI implements IModPlugin {
 		);
 		this.midasFluidBoostCategory = new MidasFluidBoostCategory(boostInfo);
 		registration.addRecipeCategories(midasFluidBoostCategory);
+
+		this.soulBookCategory = new SoulBookCategory();
+		registration.addRecipeCategories(soulBookCategory);
 	}
 
 	@Override
@@ -133,6 +143,11 @@ public class SoulHarvestJEI implements IModPlugin {
 		List<LootTokenJeiRecipe> tokenRecipes = buildLootTokenRecipes(knownSouls, registries, LOOT_TOKEN_PAGE_SIZE);
 		if (!tokenRecipes.isEmpty()) {
 			registration.addRecipes(LootTokenCategory.TYPE, tokenRecipes);
+		}
+
+		List<SoulBookJeiRecipe> soulBookRecipes = buildSoulBookRecipes(knownSouls, registries);
+		if (!soulBookRecipes.isEmpty()) {
+			registration.addRecipes(SoulBookCategory.TYPE, soulBookRecipes);
 		}
 	}
 
@@ -206,6 +221,88 @@ public class SoulHarvestJEI implements IModPlugin {
 		return tokenRecipes;
 	}
 
+	public static List<SoulBookJeiRecipe> buildSoulBookRecipes(
+			Map<ResourceLocation, SoulData> knownSouls,
+			@javax.annotation.Nullable HolderLookup.Provider registries
+	) {
+		List<SoulBookJeiRecipe> recipes = new ArrayList<>();
+
+		List<Map.Entry<ResourceLocation, SoulData>> sortedEntries = knownSouls.entrySet()
+				.stream()
+				.filter(e -> e.getValue() != null && e.getValue().tier() > 0 && e.getValue().progressPerKill() > 0)
+				.filter(e -> e.getValue().xp() > 0 || e.getValue().hasDrops(registries, true))
+				.collect(Collectors.toCollection(ArrayList::new));
+
+		sortedEntries.sort((e1, e2) -> {
+			int tier1 = e1.getValue().tier();
+			int tier2 = e2.getValue().tier();
+			if (tier1 != tier2) {
+				return Integer.compare(tier1, tier2);
+			}
+			String name1 = getEntityDisplayName(e1.getKey());
+			String name2 = getEntityDisplayName(e2.getKey());
+			return name1.compareToIgnoreCase(name2);
+		});
+
+		for (Map.Entry<ResourceLocation, SoulData> entry : sortedEntries) {
+			ResourceLocation entityId = entry.getKey();
+			SoulData soulData = entry.getValue();
+
+			int tier = soulData.tier();
+			int progress = soulData.progressPerKill();
+			int killsNeeded = (100 + progress - 1) / progress;
+
+			Optional<EntityType<?>> entityTypeOpt = BuiltInRegistries.ENTITY_TYPE.getOptional(entityId);
+			Component displayName = entityTypeOpt
+					.map(EntityType::getDescriptionId)
+					.map(Component::translatable)
+					.orElse(Component.literal(entityId.toString()));
+
+			ItemStack spawnEgg = ItemStack.EMPTY;
+			if (entityTypeOpt.isPresent()) {
+				SpawnEggItem egg = SpawnEggItem.byId(entityTypeOpt.get());
+				if (egg != null) {
+					spawnEgg = new ItemStack(egg);
+				}
+			}
+
+			List<ItemStack> inputBooks = new ArrayList<>();
+			List<ItemStack> outputBooks = new ArrayList<>();
+
+			if (tier <= 1) {
+				inputBooks.add(new ItemStack(ModItems.SOUL_BOOK_SIMPLE.get()));
+				outputBooks.add(SoulBookItem.createCompletedSoulBook(ModItems.SOUL_BOOK_SIMPLE.get(), entityId));
+			}
+			if (tier <= 2) {
+				inputBooks.add(new ItemStack(ModItems.SOUL_BOOK_STANDARD.get()));
+				outputBooks.add(SoulBookItem.createCompletedSoulBook(ModItems.SOUL_BOOK_STANDARD.get(), entityId));
+			}
+			if (tier <= 3) {
+				inputBooks.add(new ItemStack(ModItems.SOUL_BOOK_SUPERIOR.get()));
+				outputBooks.add(SoulBookItem.createCompletedSoulBook(ModItems.SOUL_BOOK_SUPERIOR.get(), entityId));
+			}
+
+			recipes.add(new SoulBookJeiRecipe(
+					entityId,
+					displayName,
+					tier,
+					killsNeeded,
+					progress,
+					inputBooks,
+					spawnEgg,
+					outputBooks
+			));
+		}
+
+		return recipes;
+	}
+
+	private static String getEntityDisplayName(ResourceLocation id) {
+		return BuiltInRegistries.ENTITY_TYPE.getOptional(id)
+				.map(t -> Component.translatable(t.getDescriptionId()).getString())
+				.orElse(id.getPath());
+	}
+
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
 		if (category != null) {
@@ -215,5 +312,8 @@ public class SoulHarvestJEI implements IModPlugin {
 			midasFluidBoostCategory.registerCatalysts(registration);
 		}
 		registration.addRecipeCatalyst(new ItemStack(ModItems.LOOT_TOKEN.get()), LootTokenCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.SOUL_BOOK_SIMPLE.get()), SoulBookCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.SOUL_BOOK_STANDARD.get()), SoulBookCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.SOUL_BOOK_SUPERIOR.get()), SoulBookCategory.TYPE);
 	}
 }
