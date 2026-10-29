@@ -26,6 +26,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.google.common.collect.Sets;
+
 import static somdudewillson.create_soul_harvest.registry.ModTags.EntityTypes.*;
 
 public class SoulDataManager {
@@ -43,9 +45,25 @@ public class SoulDataManager {
 	private static Map<ResourceLocation, List<PartialSoulData>> rawPartialData = Collections.emptyMap();
 	private static Map<ResourceLocation, SoulDropCache.CachedSoulData> rawFallbackData = Collections.emptyMap();
 
+	private static volatile boolean rawDataLoaded = false;
+	private static volatile int dataVersion = 0;
+	private static volatile boolean samplingChanged = false;
+
 	private static final Map<ResourceLocation, SoulData> resolvedData = new ConcurrentHashMap<>();
 	private static final Queue<ResourceLocation> pendingSamplingQueue = new ConcurrentLinkedQueue<>();
 	private static volatile int totalBatchQueued = 0;
+
+	public static boolean isLoaded() {
+		return rawDataLoaded;
+	}
+
+	public static boolean hasSoulData() {
+		return !resolvedData.isEmpty();
+	}
+
+	public static int getDataVersion() {
+		return dataVersion;
+	}
 
 	public static synchronized void setRawData(
 			Map<ResourceLocation, SoulData> full,
@@ -55,6 +73,7 @@ public class SoulDataManager {
 		rawFullData = full != null ? full : Collections.emptyMap();
 		rawPartialData = partial != null ? partial : Collections.emptyMap();
 		rawFallbackData = fallback != null ? fallback : Collections.emptyMap();
+		rawDataLoaded = true;
 	}
 
 	public static synchronized void setRawData(
@@ -67,7 +86,12 @@ public class SoulDataManager {
 	//? forge {
 	/*@SuppressWarnings("deprecation")
 	*///?}
-	public static synchronized void recalculate(@Nullable MinecraftServer server) {
+	public static synchronized boolean recalculate(@Nullable MinecraftServer server) {
+		if (!rawDataLoaded) {
+			return false;
+		}
+		boolean changed = false;
+
 		RegistryAccess nullableRegistryAccess = null;
 		if (server != null) {
 			DROP_CACHE.load(server);
@@ -206,16 +230,28 @@ public class SoulDataManager {
 			if (!queuedForSampling && soulData.xp() <= 0 && !soulData.hasLootTokenDrops(nullableRegistryAccess) && !soulData.hasDrops(nullableRegistryAccess, true)) {
 				continue;
 			}
-
+			
+			changed |= !soulData.equals(resolvedData.get(entityId));
 			newResolved.put(entityId, soulData);
 		}
+		
+		changed |= resolvedData.size() != newResolved.size();
+		changed |= resolvedData.size() != Sets.intersection(resolvedData.keySet(), newResolved.keySet()).size();
 
-		resolvedData.clear();
-		resolvedData.putAll(newResolved);
-		totalBatchQueued = pendingSamplingQueue.size();
+		if (changed) {
+			resolvedData.clear();
+			resolvedData.putAll(newResolved);
+			dataVersion++;
+			MobGrindingDynamicData.invalidateCache();
+			totalBatchQueued = pendingSamplingQueue.size();
 
-		SoulHarvestMod.LOGGER.info("Resolved soul data for {} entities ({} queued for background drop computation)",
-				resolvedData.size(), pendingSamplingQueue.size());
+			SoulHarvestMod.LOGGER.info("Resolved soul data for {} entities ({} queued for background drop computation)",
+					resolvedData.size(), pendingSamplingQueue.size());
+			return true;
+		} else {
+			totalBatchQueued = Math.max(totalBatchQueued, pendingSamplingQueue.size());
+			return false;
+		}
 	}
 
 	//? forge {
@@ -243,16 +279,29 @@ public class SoulDataManager {
 		if (current != null) {
 			if (current.xp() <= 0 && sampled.xp() > 0) {
 				current.xp(sampled.xp());
+				samplingChanged = true;
 			}
 			for (SoulDropPool pool : sampled.pools()) {
+				SoulDropPool existing = current.pools().get(pool.name());
+				int prevSize = existing != null ? existing.entries().size() : 0;
 				current.mergePool(pool);
+				SoulDropPool updated = current.pools().get(pool.name());
+				int newSize = updated != null ? updated.entries().size() : 0;
+				if (newSize != prevSize) {
+					samplingChanged = true;
+				}
 			}
 		}
 
 		if (pendingSamplingQueue.isEmpty()) {
-			MobGrindingDynamicData.updateRecipeManager(server);
-			MobGrindingDynamicData.updateLootTables(server);
-			SoulHarvestDataEvents.onSoulDataUpdated();
+			if (samplingChanged) {
+				dataVersion++;
+				MobGrindingDynamicData.invalidateCache();
+				MobGrindingDynamicData.updateRecipeManager(server);
+				MobGrindingDynamicData.updateLootTables(server);
+				SoulHarvestDataEvents.onSoulDataUpdated();
+				samplingChanged = false;
+			}
 		}
 	}
 
@@ -395,6 +444,9 @@ public class SoulDataManager {
 		resolvedData.clear();
 		pendingSamplingQueue.clear();
 		totalBatchQueued = 0;
+		rawDataLoaded = false;
+		samplingChanged = false;
+		dataVersion = 0;
 	}
 
 	public record ScanProgress(int remaining, int totalBatch, int cachedCount, int resolvedCount) {

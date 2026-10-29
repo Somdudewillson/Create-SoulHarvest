@@ -8,6 +8,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
 import net.minecraft.server.packs.resources.IoSupplier;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
 
 //? >= 1.21 {
 import net.minecraft.server.packs.PackLocationInfo;
@@ -49,19 +50,23 @@ public class MobGrindingPackResources implements PackResources {
 	}
 	*///?}
 
-	private Map<String, byte[]> data;
-
 	private synchronized Map<String, byte[]> getData() {
-		if (data == null || data.size() <= 1) {
-			data = MobGrindingDynamicData.generate();
+		if (!SoulDataManager.hasSoulData()) {
+			return Collections.emptyMap();
 		}
-		return data;
+		return MobGrindingDynamicData.generate();
 	}
 
 	@Nullable
 	@Override
 	public IoSupplier<InputStream> getRootResource(String... segments) {
+		if (segments.length == 1 && "pack.mcmeta".equals(segments[0])) {
+			return () -> new ByteArrayInputStream(MobGrindingDynamicData.PACK_MCMETA_BYTES);
+		}
 		String path = String.join("/", segments);
+		if ("pack.mcmeta".equals(path)) {
+			return () -> new ByteArrayInputStream(MobGrindingDynamicData.PACK_MCMETA_BYTES);
+		}
 		byte[] bytes = getData().get(path);
 		if (bytes == null) {
 			return null;
@@ -129,6 +134,5 @@ public class MobGrindingPackResources implements PackResources {
 
 	@Override
 	public void close() {
-		data = null;
 	}
 }

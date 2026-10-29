@@ -53,7 +53,42 @@ public class MobGrindingDynamicData {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final Map<ResourceLocation, LootTable> DYNAMIC_LOOT_TABLES = new ConcurrentHashMap<>();
 
+	public static final byte[] PACK_MCMETA_BYTES;
+	static {
+		JsonObject packMeta = new JsonObject();
+		JsonObject packObj = new JsonObject();
+		packObj.addProperty("description", "Create: Soul Harvest Mob Grinding Recipes");
+		packObj.addProperty("pack_format", 48);
+		JsonArray supported = new JsonArray();
+		supported.add(0);
+		supported.add(999);
+		packObj.add("supported_formats", supported);
+		packMeta.add("pack", packObj);
+		PACK_MCMETA_BYTES = GSON.toJson(packMeta).getBytes(StandardCharsets.UTF_8);
+	}
+
+	private static volatile int lastRecipeDataVersion = -1;
+	private static volatile int lastLootTableDataVersion = -1;
+	private static volatile int lastPackDataVersion = -1;
+	private static volatile Map<String, byte[]> cachedPackFiles = null;
+
+	public static synchronized void invalidateCache() {
+		cachedPackFiles = null;
+		lastPackDataVersion = -1;
+		lastRecipeDataVersion = -1;
+		lastLootTableDataVersion = -1;
+	}
+
 	public static void updateLootTables(@Nullable MinecraftServer server) {
+		if (!SoulDataManager.hasSoulData()) {
+			return;
+		}
+
+		int currentVersion = SoulDataManager.getDataVersion();
+		if (lastLootTableDataVersion == currentVersion) {
+			return;
+		}
+
 		DYNAMIC_LOOT_TABLES.clear();
 		Map<ResourceLocation, SoulData> knownSouls = SoulDataManager.getKnownSoulData();
 		RegistryAccess registryAccess = server != null ? server.registryAccess() : null;
@@ -69,6 +104,7 @@ public class MobGrindingDynamicData {
 			DYNAMIC_LOOT_TABLES.put(tableId, table);
 		}
 		SoulHarvestMod.LOGGER.info("Built {} dynamic loot token tables", DYNAMIC_LOOT_TABLES.size());
+		lastLootTableDataVersion = currentVersion;
 	}
 
 	public static LootTable getDynamicLootTable(ResourceLocation lootTableId, @Nullable RegistryAccess registryAccess) {
@@ -132,22 +168,21 @@ public class MobGrindingDynamicData {
 
 	public static void clear() {
 		DYNAMIC_LOOT_TABLES.clear();
+		invalidateCache();
 	}
 
-	public static Map<String, byte[]> generate() {
-		Map<String, byte[]> files = new HashMap<>();
+	public static synchronized Map<String, byte[]> generate() {
+		if (!SoulDataManager.hasSoulData()) {
+			return Collections.emptyMap();
+		}
 
-		// Generate pack.mcmeta
-		JsonObject packMeta = new JsonObject();
-		JsonObject packObj = new JsonObject();
-		packObj.addProperty("description", "Create: Soul Harvest Mob Grinding Recipes");
-		packObj.addProperty("pack_format", 48);
-		JsonArray supported = new JsonArray();
-		supported.add(0);
-		supported.add(999);
-		packObj.add("supported_formats", supported);
-		packMeta.add("pack", packObj);
-		files.put("pack.mcmeta", GSON.toJson(packMeta).getBytes(StandardCharsets.UTF_8));
+		int currentVersion = SoulDataManager.getDataVersion();
+		if (cachedPackFiles != null && lastPackDataVersion == currentVersion) {
+			return cachedPackFiles;
+		}
+
+		Map<String, byte[]> files = new HashMap<>();
+		files.put("pack.mcmeta", PACK_MCMETA_BYTES);
 
 		Map<ResourceLocation, JsonObject> recipes = generateRecipeJsons(null);
 		SoulHarvestMod.LOGGER.info("Generating mob grinding recipes for {} capturable souls ({} recipes)",
@@ -170,6 +205,8 @@ public class MobGrindingDynamicData {
 			files.put("data/create_soul_harvest/loot_tables/" + id.getPath() + ".json", bytes);
 		}
 
+		cachedPackFiles = files;
+		lastPackDataVersion = currentVersion;
 		return files;
 	}
 
@@ -302,7 +339,12 @@ public class MobGrindingDynamicData {
 	}
 
 	public static void updateRecipeManager(MinecraftServer server) {
-		if (server == null) {
+		if (server == null || !SoulDataManager.hasSoulData()) {
+			return;
+		}
+
+		int currentVersion = SoulDataManager.getDataVersion();
+		if (lastRecipeDataVersion == currentVersion) {
 			return;
 		}
 
@@ -373,6 +415,7 @@ public class MobGrindingDynamicData {
 			}
 		}
 		*///?}
+		lastRecipeDataVersion = currentVersion;
 	}
 
 	private static JsonObject makeSequencedAssemblyRecipe(Item polyclay, Item transItem, Item attunedItem, ResourceLocation entityId, int mobTier) {

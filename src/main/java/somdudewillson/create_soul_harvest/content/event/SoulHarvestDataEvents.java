@@ -39,19 +39,23 @@ public class SoulHarvestDataEvents {
 	public static void onTagsUpdated(TagsUpdatedEvent event) {
 		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 		if (server != null) {
-			SoulDataManager.recalculate(server);
-			MobGrindingDynamicData.updateRecipeManager(server);
-			MobGrindingDynamicData.updateLootTables(server);
-			onSoulDataUpdated();
+			boolean changed = SoulDataManager.recalculate(server);
+			if (changed) {
+				MobGrindingDynamicData.updateRecipeManager(server);
+				MobGrindingDynamicData.updateLootTables(server);
+				onSoulDataUpdated();
+			}
 		}
 	}
 
 	@SubscribeEvent
 	public static void onServerStarted(ServerStartedEvent event) {
-		SoulDataManager.recalculate(event.getServer());
-		MobGrindingDynamicData.updateRecipeManager(event.getServer());
-		MobGrindingDynamicData.updateLootTables(event.getServer());
-		onSoulDataUpdated();
+		boolean changed = SoulDataManager.recalculate(event.getServer());
+		if (changed) {
+			MobGrindingDynamicData.updateRecipeManager(event.getServer());
+			MobGrindingDynamicData.updateLootTables(event.getServer());
+			onSoulDataUpdated();
+		}
 	}
 
 	public static void onSoulDataUpdated() {
