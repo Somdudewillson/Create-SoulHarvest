@@ -60,7 +60,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: Somdudewillson/RedSparkLib
-          path: .redsparklib
+          path: redsparklib
 
       - name: Setup Java 17 and 21
         uses: actions/setup-java@v4
@@ -75,9 +75,11 @@ jobs:
 
       - name: Build and install RedSparkLib
         run: |
-          cd .redsparklib
+          cd redsparklib
           chmod +x ./gradlew
           MOD_IS_RELEASE=false ./gradlew publishToMavenLocal --no-daemon --stacktrace --console=plain
+          cd ..
+          rm -rf redsparklib
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
