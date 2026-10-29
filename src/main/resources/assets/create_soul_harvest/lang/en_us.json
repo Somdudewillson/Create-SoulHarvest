@@ -65,13 +65,13 @@
   "item.create_soul_harvest.necronium_charm": "Necronium Charm",
   
   "item.create_soul_harvest.polyclay": "Polyclay",
-  "item.create_soul_harvest.polyclay_incomplete": "Untuned Polyclay",
+  "item.create_soul_harvest.polyclay_attuned_incomplete": "Semituned Polyclay",
   "item.create_soul_harvest.polyclay_attuned": "Attuned Polyclay",
   "item.create_soul_harvest.polyclay_andesite": "Andesite Polyclay Vessel",
-  "item.create_soul_harvest.polyclay_andesite_incomplete": "Untuned Andesite Polyclay Vessel",
+  "item.create_soul_harvest.polyclay_andesite_attuned_incomplete": "Semituned Andesite Polyclay Vessel",
   "item.create_soul_harvest.polyclay_andesite_attuned": "Attuned Andesite Polyclay Vessel",
   "item.create_soul_harvest.polyclay_brass": "Brass Polyclay Vessel",
-  "item.create_soul_harvest.polyclay_brass_incomplete": "Untuned Brass Polyclay Vessel",
+  "item.create_soul_harvest.polyclay_brass_attuned_incomplete": "Semituned Brass Polyclay Vessel",
   "item.create_soul_harvest.polyclay_brass_attuned": "Attuned Brass Polyclay Vessel",
   
   "item.create_soul_harvest.experience_effigy": "Experience Drop",
