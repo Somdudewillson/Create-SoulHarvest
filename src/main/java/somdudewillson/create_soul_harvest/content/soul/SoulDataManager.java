@@ -83,6 +83,165 @@ public class SoulDataManager {
 		setRawData(full, partial, Collections.emptyMap());
 	}
 
+	public static boolean queueForSampling(ResourceLocation entityId) {
+		if (entityId == null) return false;
+		if (!pendingSamplingQueue.contains(entityId)) {
+			pendingSamplingQueue.add(entityId);
+			return true;
+		}
+		return false;
+	}
+
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
+	public static int determineTier(EntityType<?> entityType, ResourceLocation entityId) {
+		List<PartialSoulData> partials = rawPartialData.get(entityId);
+		if (partials != null) {
+			for (PartialSoulData p : partials) {
+				if (p.tier().isPresent()) {
+					return p.tier().getAsInt();
+				}
+			}
+		}
+
+		if (entityType.is(T1_MOB)) {
+			return 1;
+		} else if (entityType.is(T2_MOB)) {
+			return 2;
+		} else if (entityType.is(T3_MOB)) {
+			return 3;
+		}
+
+		return 0;
+	}
+
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
+	public static int determineProgressPerKill(EntityType<?> entityType, ResourceLocation entityId, int tier) {
+		List<PartialSoulData> partials = rawPartialData.get(entityId);
+		if (partials != null) {
+			for (PartialSoulData p : partials) {
+				if (p.progressPerKill().isPresent()) {
+					return p.progressPerKill().getAsInt();
+				}
+			}
+		}
+
+		if (entityType.is(REQUIRES_LOW)) {
+			return 100;
+		} else if (entityType.is(REQUIRES_MEDIUM)) {
+			return 10;
+		} else if (entityType.is(REQUIRES_HIGH)) {
+			return 4;
+		}
+
+		return switch (tier) {
+			case 1 -> 10;
+			case 2 -> 4;
+			case 3 -> 100;
+			default -> 10;
+		};
+	}
+
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
+	@Nullable
+	public static SoulData loadEntityData(EntityType<?> entityType, @Nullable RegistryAccess registryAccess) {
+		return loadEntityData(entityType, registryAccess, true);
+	}
+
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
+	@Nullable
+	public static SoulData loadEntityData(EntityType<?> entityType, @Nullable RegistryAccess registryAccess, boolean queueForSampling) {
+		ResourceLocation entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+		if (entityId == null) return null;
+
+		SoulData soulData;
+		boolean wasFullData = false;
+		boolean queuedForSampling = false;
+
+		if (rawFullData.containsKey(entityId)) {
+			SoulData full = rawFullData.get(entityId);
+			soulData = new SoulData(full.tier(), full.progressPerKill(), full.xp(), full.pools().values());
+			wasFullData = true;
+		} else {
+			int tier = determineTier(entityType, entityId);
+			if (tier <= 0) {
+				return null;
+			}
+
+			int progress = determineProgressPerKill(entityType, entityId, tier);
+
+			List<SoulDropPool> pools;
+			int xp = 0;
+			List<PartialSoulData> partials = rawPartialData.get(entityId);
+			if (partials != null) {
+				for (PartialSoulData p : partials) {
+					if (p.xp().isPresent()) {
+						xp = p.xp().getAsInt();
+						break;
+					}
+				}
+			}
+
+			if (DROP_CACHE.contains(entityId)) {
+				SoulDropCache.CachedSoulData cached = DROP_CACHE.get(entityId);
+				pools = cached != null ? cached.pools() : Collections.emptyList();
+				if (xp <= 0 && cached != null) {
+					xp = cached.xp();
+				}
+			} else if (rawFallbackData.containsKey(entityId)) {
+				SoulDropCache.CachedSoulData fallback = rawFallbackData.get(entityId);
+				pools = new ArrayList<>(fallback.pools());
+				if (xp <= 0) {
+					xp = fallback.xp();
+				}
+				if (queueForSampling) {
+					queueForSampling(entityId);
+					queuedForSampling = true;
+				}
+			} else {
+				pools = Collections.emptyList();
+				if (queueForSampling) {
+					queueForSampling(entityId);
+					queuedForSampling = true;
+				}
+			}
+
+			soulData = new SoulData(tier, progress, xp, pools);
+		}
+
+		if (rawPartialData.containsKey(entityId)) {
+			for (PartialSoulData partial : rawPartialData.get(entityId)) {
+				if (!wasFullData) {
+					if (partial.tier().isPresent()) {
+						soulData.tier(partial.tier().getAsInt());
+					}
+					if (partial.progressPerKill().isPresent()) {
+						soulData.progressPerKill(partial.progressPerKill().getAsInt());
+					}
+					if (partial.xp().isPresent()) {
+						soulData.xp(partial.xp().getAsInt());
+					}
+				}
+				for (SoulDropPool partialPool : partial.pools()) {
+					soulData.mergePool(partialPool);
+				}
+			}
+		}
+
+		if (!queuedForSampling && soulData.xp() <= 0 && !soulData.hasLootTokenDrops(registryAccess) && !soulData.hasDrops(registryAccess, true)) {
+			return null;
+		}
+
+		return soulData;
+	}
+
 	//? forge {
 	/*@SuppressWarnings("deprecation")
 	*///?}
@@ -102,137 +261,15 @@ public class SoulDataManager {
 		Map<ResourceLocation, SoulData> newResolved = new ConcurrentHashMap<>();
 
 		for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
+			if (entityType.is(SOUL_CAPTURE_FORBIDDEN)) continue;
 			ResourceLocation entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
 			if (entityId == null) continue;
 
-			SoulData soulData = null;
-			boolean wasFullData = false;
-			boolean queuedForSampling = false;
-
-			if (rawFullData.containsKey(entityId)) {
-				SoulData full = rawFullData.get(entityId);
-				soulData = new SoulData(full.tier(), full.progressPerKill(), full.xp(), full.pools().values());
-				wasFullData = true;
-			} else {
-				// Determine tier from complete data, partial data, or tags
-				int tier = 0;
-				List<PartialSoulData> partials = rawPartialData.get(entityId);
-				if (partials != null) {
-					for (PartialSoulData p : partials) {
-						if (p.tier().isPresent()) {
-							tier = p.tier().getAsInt();
-							break;
-						}
-					}
-				}
-
-				if (tier <= 0) {
-					if (entityType.is(T1_MOB)) {
-						tier = 1;
-					} else if (entityType.is(T2_MOB)) {
-						tier = 2;
-					} else if (entityType.is(T3_MOB)) {
-						tier = 3;
-					}
-				}
-
-				// If entity has no tier, it is not capturable (even if fallback data exists)
-				if (tier <= 0) {
-					continue;
-				}
-
-				// Determine progress per kill
-				int progress = 0;
-				if (partials != null) {
-					for (PartialSoulData p : partials) {
-						if (p.progressPerKill().isPresent()) {
-							progress = p.progressPerKill().getAsInt();
-							break;
-						}
-					}
-				}
-
-				if (progress <= 0) {
-					if (entityType.is(REQUIRES_LOW)) {
-						progress = 100;
-					} else if (entityType.is(REQUIRES_MEDIUM)) {
-						progress = 10;
-					} else if (entityType.is(REQUIRES_HIGH)) {
-						progress = 4;
-					} else {
-						// Defaults based on tier
-						progress = switch (tier) {
-							case 1 -> 10;
-							case 2 -> 4;
-							case 3 -> 100;
-							default -> 10;
-						};
-					}
-				}
-
-				// Determine xp and drop pools
-				List<SoulDropPool> pools;
-				int xp = 0;
-				if (partials != null) {
-					for (PartialSoulData p : partials) {
-						if (p.xp().isPresent()) {
-							xp = p.xp().getAsInt();
-							break;
-						}
-					}
-				}
-
-				if (DROP_CACHE.contains(entityId)) {
-					SoulDropCache.CachedSoulData cached = DROP_CACHE.get(entityId);
-					pools = cached.pools();
-					if (xp <= 0) {
-						xp = cached.xp();
-					}
-				} else if (rawFallbackData.containsKey(entityId)) {
-					SoulDropCache.CachedSoulData fallback = rawFallbackData.get(entityId);
-					pools = new ArrayList<>(fallback.pools());
-					if (xp <= 0) {
-						xp = fallback.xp();
-					}
-					// Still queue for background sampling so world simulation refines the drops
-					pendingSamplingQueue.add(entityId);
-					queuedForSampling = true;
-				} else {
-					pools = Collections.emptyList();
-					pendingSamplingQueue.add(entityId);
-					queuedForSampling = true;
-				}
-
-				soulData = new SoulData(tier, progress, xp, pools);
+			SoulData soulData = loadEntityData(entityType, nullableRegistryAccess, true);
+			if (soulData != null) {
+				changed |= !soulData.equals(resolvedData.get(entityId));
+				newResolved.put(entityId, soulData);
 			}
-
-			// Apply partial data additions
-			if (rawPartialData.containsKey(entityId)) {
-				for (PartialSoulData partial : rawPartialData.get(entityId)) {
-					if (!wasFullData) {
-						if (partial.tier().isPresent()) {
-							soulData.tier(partial.tier().getAsInt());
-						}
-						if (partial.progressPerKill().isPresent()) {
-							soulData.progressPerKill(partial.progressPerKill().getAsInt());
-						}
-						if (partial.xp().isPresent()) {
-							soulData.xp(partial.xp().getAsInt());
-						}
-					}
-					for (SoulDropPool partialPool : partial.pools()) {
-						soulData.mergePool(partialPool);
-					}
-				}
-			}
-
-			// Pruning: if not queued for sampling and has neither drops nor xp, omit from final manager entries
-			if (!queuedForSampling && soulData.xp() <= 0 && !soulData.hasLootTokenDrops(nullableRegistryAccess) && !soulData.hasDrops(nullableRegistryAccess, true)) {
-				continue;
-			}
-			
-			changed |= !soulData.equals(resolvedData.get(entityId));
-			newResolved.put(entityId, soulData);
 		}
 		
 		changed |= resolvedData.size() != newResolved.size();
