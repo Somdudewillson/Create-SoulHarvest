@@ -1,4 +1,4 @@
-package somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat;
+package somdudewillson.create_soul_harvest.platform.neoforge.datagen;
 
 //? neoforge {
 
@@ -24,16 +24,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-public class CompatRecipeOutput implements RecipeOutput {
+public class SpecialRecipeOutput implements RecipeOutput {
 	private final CachedOutput output;
 	private final HolderLookup.Provider registries;
 	private final Set<ResourceLocation> registeredRecipes;
 	private final List<CompletableFuture<?>> futures;
 	private final PackOutput.PathProvider recipePathProvider;
 	private final PackOutput.PathProvider advancementPathProvider;
+	private final PackOutput.PathProvider soulDataPathProvider;
 	private final List<ICondition> defaultConditions;
 
-	public CompatRecipeOutput(
+	public SpecialRecipeOutput(
 			CachedOutput output,
 			HolderLookup.Provider registries,
 			Set<ResourceLocation> registeredRecipes,
@@ -41,10 +42,22 @@ public class CompatRecipeOutput implements RecipeOutput {
 			PackOutput.PathProvider recipePathProvider,
 			PackOutput.PathProvider advancementPathProvider
 	) {
-		this(output, registries, registeredRecipes, futures, recipePathProvider, advancementPathProvider, Collections.emptyList());
+		this(output, registries, registeredRecipes, futures, recipePathProvider, advancementPathProvider, null, Collections.emptyList());
 	}
 
-	public CompatRecipeOutput(
+	public SpecialRecipeOutput(
+			CachedOutput output,
+			HolderLookup.Provider registries,
+			Set<ResourceLocation> registeredRecipes,
+			List<CompletableFuture<?>> futures,
+			PackOutput.PathProvider recipePathProvider,
+			PackOutput.PathProvider advancementPathProvider,
+			@Nullable PackOutput.PathProvider soulDataPathProvider
+	) {
+		this(output, registries, registeredRecipes, futures, recipePathProvider, advancementPathProvider, soulDataPathProvider, Collections.emptyList());
+	}
+
+	public SpecialRecipeOutput(
 			CachedOutput output,
 			HolderLookup.Provider registries,
 			Set<ResourceLocation> registeredRecipes,
@@ -53,12 +66,26 @@ public class CompatRecipeOutput implements RecipeOutput {
 			PackOutput.PathProvider advancementPathProvider,
 			List<ICondition> defaultConditions
 	) {
+		this(output, registries, registeredRecipes, futures, recipePathProvider, advancementPathProvider, null, defaultConditions);
+	}
+
+	public SpecialRecipeOutput(
+			CachedOutput output,
+			HolderLookup.Provider registries,
+			Set<ResourceLocation> registeredRecipes,
+			List<CompletableFuture<?>> futures,
+			PackOutput.PathProvider recipePathProvider,
+			PackOutput.PathProvider advancementPathProvider,
+			@Nullable PackOutput.PathProvider soulDataPathProvider,
+			List<ICondition> defaultConditions
+	) {
 		this.output = output;
 		this.registries = registries;
 		this.registeredRecipes = registeredRecipes;
 		this.futures = futures;
 		this.recipePathProvider = recipePathProvider;
 		this.advancementPathProvider = advancementPathProvider;
+		this.soulDataPathProvider = soulDataPathProvider;
 		this.defaultConditions = defaultConditions;
 	}
 
@@ -110,17 +137,25 @@ public class CompatRecipeOutput implements RecipeOutput {
 		futures.add(DataProvider.saveStable(output, json, recipePathProvider.json(id)));
 	}
 
+	public void acceptSoulData(ResourceLocation id, JsonObject json) {
+		if (soulDataPathProvider == null) {
+			throw new IllegalStateException("soulDataPathProvider is not configured on SpecialRecipeOutput");
+		}
+		futures.add(DataProvider.saveStable(output, json, soulDataPathProvider.json(id)));
+	}
+
 	@Override
-	public CompatRecipeOutput withConditions(ICondition... conditions) {
+	public SpecialRecipeOutput withConditions(ICondition... conditions) {
 		List<ICondition> combined = new ArrayList<>(this.defaultConditions);
 		Collections.addAll(combined, conditions);
-		return new CompatRecipeOutput(
+		return new SpecialRecipeOutput(
 				output,
 				registries,
 				registeredRecipes,
 				futures,
 				recipePathProvider,
 				advancementPathProvider,
+				soulDataPathProvider,
 				combined
 		);
 	}
@@ -137,11 +172,11 @@ public class CompatRecipeOutput implements RecipeOutput {
 		return combined.toArray(ICondition[]::new);
 	}
 
-	public static CompatRecipeOutput from(RecipeOutput recipeOutput) {
-		if (recipeOutput instanceof CompatRecipeOutput compatOutput) {
+	public static SpecialRecipeOutput from(RecipeOutput recipeOutput) {
+		if (recipeOutput instanceof SpecialRecipeOutput compatOutput) {
 			return compatOutput;
 		}
-		throw new IllegalArgumentException("Expected recipeOutput to be an instance of CompatRecipeOutput, but got: " + recipeOutput.getClass().getName());
+		throw new IllegalArgumentException("Expected recipeOutput to be an instance of SpecialRecipeOutput, but got: " + recipeOutput.getClass().getName());
 	}
 }
 //?}

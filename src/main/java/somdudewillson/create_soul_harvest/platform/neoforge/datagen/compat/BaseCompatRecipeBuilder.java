@@ -7,6 +7,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
+import somdudewillson.create_soul_harvest.platform.neoforge.datagen.SpecialRecipeOutput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public abstract class BaseCompatRecipeBuilder<T extends BaseCompatRecipeBuilder<
 	}
 
 	public void save(RecipeOutput recipeOutput, ResourceLocation id) {
-		CompatRecipeOutput compatOutput = CompatRecipeOutput.from(recipeOutput);
+		SpecialRecipeOutput compatOutput = SpecialRecipeOutput.from(recipeOutput);
 		JsonObject json = serializeRecipe();
 
 		List<ICondition> allConditions = new ArrayList<>();

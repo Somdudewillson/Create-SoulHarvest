@@ -8,7 +8,6 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.CompatRecipeOutput;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,10 +17,12 @@ import java.util.concurrent.CompletableFuture;
 
 public class NeoforgeRecipeProvider extends RecipeProvider {
 
+	private final PackOutput packOutput;
 	private final CompletableFuture<HolderLookup.Provider> lookupProvider;
 
 	public NeoforgeRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
 		super(packOutput, registries);
+		this.packOutput = packOutput;
 		this.lookupProvider = registries;
 	}
 
@@ -29,15 +30,17 @@ public class NeoforgeRecipeProvider extends RecipeProvider {
 	protected CompletableFuture<?> run(final CachedOutput output, final HolderLookup.Provider lookup) {
 		Set<ResourceLocation> registeredRecipes = new HashSet<>();
 		List<CompletableFuture<?>> futures = new ArrayList<>();
-		CompatRecipeOutput compatRecipeOutput = new CompatRecipeOutput(
+		PackOutput.PathProvider soulDataPathProvider = this.packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "soul_harvest/souls");
+		SpecialRecipeOutput specialRecipeOutput = new SpecialRecipeOutput(
 				output,
 				lookup,
 				registeredRecipes,
 				futures,
 				this.recipePathProvider,
-				this.advancementPathProvider
+				this.advancementPathProvider,
+				soulDataPathProvider
 		);
-		this.buildRecipes(compatRecipeOutput);
+		this.buildRecipes(specialRecipeOutput);
 		return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
 	}
 
