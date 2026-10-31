@@ -10,7 +10,8 @@
   },
   "mixins": [
     "BlockHelperMixin",
-    "BiomeManagerMixin"
+    "BiomeManagerMixin",
+    "BaseSpawnerMixin"
   ],
   "client": [
     "client.SequencedAssemblyCategoryMixin",
