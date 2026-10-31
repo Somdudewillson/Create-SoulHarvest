@@ -2,7 +2,6 @@ package somdudewillson.create_soul_harvest.registry;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -29,6 +28,7 @@ public final class ModTags {
 		public static final TagKey<Block> BIOCIDE_MEDIUM_CONSUME = modTag("biocide_medium_consume");
 		public static final TagKey<Block> BIOCIDE_HIGH_CONSUME = modTag("biocide_high_consume");
 
+		public static final TagKey<Block> SOUL_BUD_BLOCKS = modTag("soul_bud_blocks");
 		public static final TagKey<Block> SOUL_BUD_GROWTH_BLOCKS = modTag("soul_bud_growth_blocks");
 		public static final TagKey<Block> FAN_PROCESSING_CATALYSTS_SOUL_INFUSION = modTag("fan_processing_catalysts/soul_infusion");
 
@@ -42,10 +42,25 @@ public final class ModTags {
 
 		public static final TagKey<Block> PLANETOID_STONE_VARIANTS = modTag("planetoid_stone_variants");
 
-		public static final TagKey<Block> SMALL_PLANTS_THAT_FREEZE = modTag("small_plants_that_freeze");
+		public static final TagKey<Block> C_SMALL_PLANTS_THAT_FREEZE = commonTag("small_plants_that_freeze");
+		public static final TagKey<Block> FORGE_SMALL_PLANTS_THAT_FREEZE = forgeTag("small_plants_that_freeze");
+		public static final TagKey<Block> C_INHIBITS_SPAWNERS = commonTag("inhibits_spawners");
+		public static final TagKey<Block> FORGE_INHIBITS_SPAWNERS = forgeTag("inhibits_spawners");
+		
+		private static TagKey<Block> tag(String namespace, String path) {
+			return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(namespace, path));
+		}
 
 		private static TagKey<Block> modTag(String path) {
 			return TagKey.create(Registries.BLOCK, SoulHarvestMod.id(path));
+		}
+
+		private static TagKey<Block> commonTag(String path) {
+			return tag("c", path);
+		}
+
+		private static TagKey<Block> forgeTag(String path) {
+			return tag("forge", path);
 		}
 	}
 

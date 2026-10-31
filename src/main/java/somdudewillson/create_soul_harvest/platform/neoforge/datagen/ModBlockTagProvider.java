@@ -34,6 +34,19 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 
 		tag(ModTags.Blocks.FAN_PROCESSING_CATALYSTS_SOUL_INFUSION)
 				.add(ModBlocks.SOUL_CLUSTER.get());
+
+		tag(ModTags.Blocks.SOUL_BUD_BLOCKS)
+				.add(ModBlocks.SOUL_BUD_SMALL.get())
+				.add(ModBlocks.SOUL_BUD_MEDIUM.get())
+				.add(ModBlocks.SOUL_BUD_LARGE.get())
+				.add(ModBlocks.SOUL_CLUSTER.get());
+		
+		tag(ModTags.Blocks.C_INHIBITS_SPAWNERS)
+				.replace(false)
+				.addTag(ModTags.Blocks.FORGE_INHIBITS_SPAWNERS);
+		tag(ModTags.Blocks.FORGE_INHIBITS_SPAWNERS)
+				.replace(false)
+				.addTag(ModTags.Blocks.SOUL_BUD_BLOCKS);
 		
 		// Create tags
 		tag(AllBlockTags.NON_BREAKABLE.tag).add(
@@ -115,7 +128,11 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				.addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "sandstone"));
 		
 		// Absolute Ice tags
-		tag(ModTags.Blocks.SMALL_PLANTS_THAT_FREEZE)
+		tag(ModTags.Blocks.C_SMALL_PLANTS_THAT_FREEZE)
+				.replace(false)
+				.addTag(ModTags.Blocks.FORGE_SMALL_PLANTS_THAT_FREEZE);
+		tag(ModTags.Blocks.FORGE_SMALL_PLANTS_THAT_FREEZE)
+				.replace(false)
 				.add(Blocks.BAMBOO)
 				.add(Blocks.DEAD_BUSH)
 				.add(Blocks.FERN, Blocks.LARGE_FERN)

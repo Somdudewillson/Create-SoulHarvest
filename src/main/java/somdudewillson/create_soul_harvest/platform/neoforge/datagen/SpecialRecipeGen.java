@@ -80,7 +80,7 @@ public final class SpecialRecipeGen {
 		recipeOutput.accept(
 				SoulHarvestMod.id("absolute_ice_conversion/break_small_plants"),
 				new AbsoluteIceRecipe(
-						BlockCondition.of(ModTags.Blocks.SMALL_PLANTS_THAT_FREEZE),
+						BlockCondition.of(ModTags.Blocks.C_SMALL_PLANTS_THAT_FREEZE),
 						Optional.empty(),
 						ConversionResult.destroy(),
 						Optional.empty(),
