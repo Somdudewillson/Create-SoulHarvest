@@ -26,7 +26,7 @@ public class BiocideGasBottleItem extends Item {
 		if (level.getBlockState(targetPos).isAir()) {
 			if (!level.isClientSide()) {
 				BlockState gasState = ModBlocks.BIOCIDE_GAS.get().defaultBlockState()
-						.setValue(BiocideGasBlock.AGE, 15);
+						.setValue(BiocideGasBlock.DENSITY, 15);
 				level.setBlockAndUpdate(targetPos, gasState);
 			}
 

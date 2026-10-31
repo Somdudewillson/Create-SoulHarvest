@@ -26,7 +26,7 @@ public class PipeCollisionEvents {
 		boolean isSlurryFirst = event.getFirstFluid().isSame(ModFluids.WITHER_SLURRY.get()) && event.getSecondFluid().isSame(Fluids.LAVA);
 
 		if (isLavaFirst || isSlurryFirst) {
-			BlockState gasState = ModBlocks.BIOCIDE_GAS.get().defaultBlockState().setValue(BiocideGasBlock.AGE, 15);
+			BlockState gasState = ModBlocks.BIOCIDE_GAS.get().defaultBlockState().setValue(BiocideGasBlock.DENSITY, 15);
 			event.setState(gasState);
 
 			AABB box = AABB.ofSize(event.getPos().getCenter(), 16, 16, 16);

@@ -69,12 +69,12 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		ModelFile gas2Active = models().cubeAll("biocide_gas_2_active", modLoc("block/biocide_gas_active"));
 
 		VariantBlockStateBuilder biocideGas = getVariantBuilder(ModBlocks.BIOCIDE_GAS.get());
-		for (int age = 0; age <= 15; age++) {
-			ModelFile normal = age <= 2 ? gas0 : (age <= 10 ? gas1 : gas2);
-			ModelFile active = age <= 2 ? gas0Active : (age <= 10 ? gas1Active : gas2Active);
-			biocideGas.partialState().with(BiocideGasBlock.AGE, age).with(BiocideGasBlock.TRIGGERED, true)
+		for (int density = 0; density <= 15; density++) {
+			ModelFile normal = density <= 2 ? gas0 : (density <= 10 ? gas1 : gas2);
+			ModelFile active = density <= 2 ? gas0Active : (density <= 10 ? gas1Active : gas2Active);
+			biocideGas.partialState().with(BiocideGasBlock.DENSITY, density).with(BiocideGasBlock.TRIGGERED, true)
 					.modelForState().modelFile(normal).addModel();
-			biocideGas.partialState().with(BiocideGasBlock.AGE, age).with(BiocideGasBlock.TRIGGERED, false)
+			biocideGas.partialState().with(BiocideGasBlock.DENSITY, density).with(BiocideGasBlock.TRIGGERED, false)
 					.modelForState().modelFile(active).addModel();
 		}
 

@@ -30,13 +30,13 @@ import static somdudewillson.create_soul_harvest.registry.ModTags.Blocks.*;
 
 public class BiocideGasBlock extends Block {
 
-	public static final IntegerProperty AGE = BlockStateProperties.AGE_15;
+	public static final IntegerProperty DENSITY = IntegerProperty.create("density", 0, 15);
 	public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
 
 	public BiocideGasBlock(Properties properties) {
 		super(properties);
 		this.registerDefaultState(this.stateDefinition.any()
-				.setValue(AGE, 15)
+				.setValue(DENSITY, 15)
 				.setValue(TRIGGERED, Boolean.FALSE));
 	}
 
@@ -98,7 +98,7 @@ public class BiocideGasBlock extends Block {
 
 	@Override
 	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-		int density = state.getValue(AGE);
+		int density = state.getValue(DENSITY);
 		if (random.nextFloat() < 0.3f) {
 			density--;
 		}
@@ -125,7 +125,7 @@ public class BiocideGasBlock extends Block {
 
 				if (spreadState.is(this)) {
 					spreadingToExisting = true;
-					if (spreadState.getValue(AGE) >= spreadDensity) {
+					if (spreadState.getValue(DENSITY) >= spreadDensity) {
 						continue;
 					}
 				} else if (spreadState.is(BIOCIDE_HIGH_CONSUME)) {
@@ -140,7 +140,7 @@ public class BiocideGasBlock extends Block {
 
 				if (spreadDensity < 0) continue;
 
-				BlockState newGas = this.defaultBlockState().setValue(AGE, Math.min(spreadDensity, 15));
+				BlockState newGas = this.defaultBlockState().setValue(DENSITY, Math.min(spreadDensity, 15));
 				level.setBlockAndUpdate(spreadPos, newGas);
 
 				if (!spreadingToExisting) {
@@ -151,7 +151,7 @@ public class BiocideGasBlock extends Block {
 
 		if (density >= 0) {
 			BlockState nextState = this.defaultBlockState()
-					.setValue(AGE, Math.min(density, 15))
+					.setValue(DENSITY, Math.min(density, 15))
 					.setValue(TRIGGERED, Boolean.TRUE);
 			level.setBlockAndUpdate(pos, nextState);
 			level.scheduleTick(pos, this, 10);
@@ -161,17 +161,7 @@ public class BiocideGasBlock extends Block {
 	}
 
 	@Override
-	public boolean isRandomlyTicking(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-		level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-	}
-
-	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(AGE, TRIGGERED);
+		builder.add(DENSITY, TRIGGERED);
 	}
 }
