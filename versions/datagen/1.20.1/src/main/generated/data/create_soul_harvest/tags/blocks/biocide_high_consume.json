@@ -1,15 +1,5 @@
 {
   "values": [
-    "minecraft:tall_grass",
-    "minecraft:fern",
-    "#minecraft:flowers",
-    {
-      "id": "minecraft:short_grass",
-      "required": false
-    },
-    {
-      "id": "minecraft:grass",
-      "required": false
-    }
+    "#minecraft:logs_that_burn"
   ]
 }

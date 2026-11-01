@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
@@ -79,7 +78,10 @@ public class BiocideGasBlock extends TransparentBlock {
 	@Override
 	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
 		super.neighborChanged(state, level, pos, block, fromPos, isMoving);
-		if (!level.isClientSide() && state.getValue(SETTLED)) {
+		BlockState newState = level.getBlockState(pos);
+		if (!level.isClientSide() && state.getValue(SETTLED) && (
+					newState.isAir() || ( newState.is(this) && !newState.getValue(SETTLED) )
+				)) {
 			level.setBlock(pos, state.setValue(SETTLED, false), Block.UPDATE_CLIENTS);
 		}
 	}
@@ -206,7 +208,7 @@ public class BiocideGasBlock extends TransparentBlock {
 
 		// Dissipation: low-density gas blocks adjacent to air slowly 'dissipating', scaled by air exposure
 		if (density <= 2 && airExposure > 0.0f) {
-			float dissipationChance = Math.min(1.0f, airExposure * 0.34f);
+			float dissipationChance = Math.min(1.0f, airExposure * 0.012f);
 			if (random.nextFloat() < dissipationChance) {
 				density--;
 				hadActivity = true;
@@ -254,7 +256,7 @@ public class BiocideGasBlock extends TransparentBlock {
 		BlockPos belowPos = pos.below();
 		BlockState belowState = cachedStates.get(belowPos);
 		if (belowState != null && (belowState.is(this) || belowState.isAir())) {
-			if ((density - getDensity(cachedStates, belowPos) + 2) / 2 > 0) {
+			if ((density - getDensity(cachedStates, belowPos) + 1) / 2 > 0) {
 				return false;
 			}
 		}
@@ -274,7 +276,7 @@ public class BiocideGasBlock extends TransparentBlock {
 		BlockPos abovePos = pos.above();
 		BlockState aboveState = cachedStates.get(abovePos);
 		if (aboveState != null && (aboveState.is(this) || aboveState.isAir())) {
-			if ((density - getDensity(cachedStates, abovePos) - 2) / 2 > 0) {
+			if ((density - getDensity(cachedStates, abovePos) - 1) / 2 > 0) {
 				return false;
 			}
 		}
@@ -294,7 +296,7 @@ public class BiocideGasBlock extends TransparentBlock {
 		
 		// Down
 		int belowDensity = getDensity(cachedStates, pos.below());
-		int belowSpreadAmount = (density - belowDensity + 2) / 2;
+		int belowSpreadAmount = (density - belowDensity + 1) / 2;
 		int amtSpread = trySpreadDensity(cachedStates, pendingBlockUpdates, newlyCreatedGas, upgradedGasPositions, pos, pos.below(), Math.min(MAX_SPREAD_RATE-spreadAmount, belowSpreadAmount), false);
 		spreadAmount += amtSpread;
 		density -= amtSpread;
@@ -309,7 +311,7 @@ public class BiocideGasBlock extends TransparentBlock {
 		
 		// Up
 		int aboveDensity = getDensity(cachedStates, pos.above());
-		int aboveSpreadAmount = (density - aboveDensity - 2) / 2;
+		int aboveSpreadAmount = (density - aboveDensity - 1) / 2;
 		amtSpread = trySpreadDensity(cachedStates, pendingBlockUpdates, newlyCreatedGas, upgradedGasPositions, pos, pos.above(), Math.min(MAX_SPREAD_RATE-spreadAmount, aboveSpreadAmount), false);
 		spreadAmount += amtSpread;
 		density -= amtSpread;

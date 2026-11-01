@@ -1,6 +1,10 @@
 {
   "values": [
     "#minecraft:leaves",
-    "#minecraft:crops"
+    "#minecraft:crops",
+    "minecraft:sweet_berry_bush",
+    "minecraft:sugar_cane",
+    "minecraft:bamboo",
+    "minecraft:moss_block"
   ]
 }

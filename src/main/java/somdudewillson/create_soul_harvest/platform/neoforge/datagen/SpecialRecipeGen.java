@@ -117,10 +117,10 @@ public final class SpecialRecipeGen {
 				new BiocideConversionRecipe(
 						BlockCondition.of(ModTags.Blocks.BIOCIDE_HIGH_CONSUME),
 						Optional.empty(),
-						Optional.of(1),
+						Optional.of(4),
 						IntRange.ZERO,
 						true,
-						IntRange.of(4, 9),
+						IntRange.of(6, 14),
 						Optional.empty()
 				),
 				null
@@ -134,7 +134,7 @@ public final class SpecialRecipeGen {
 						Optional.of(1),
 						IntRange.ZERO,
 						true,
-						IntRange.of(2, 6),
+						IntRange.of(3, 9),
 						Optional.empty()
 				),
 				null
@@ -148,7 +148,7 @@ public final class SpecialRecipeGen {
 						Optional.of(1),
 						IntRange.ZERO,
 						true,
-						IntRange.of(0, 4),
+						IntRange.of(1, 5),
 						Optional.empty()
 				),
 				null

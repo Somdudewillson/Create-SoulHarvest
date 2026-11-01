@@ -1,3 +1,18 @@
 {
-  "values": []
+  "values": [
+    "minecraft:tall_grass",
+    "minecraft:fern",
+    "minecraft:lily_pad",
+    "minecraft:moss_carpet",
+    "#minecraft:flowers",
+    "#minecraft:saplings",
+    {
+      "id": "minecraft:short_grass",
+      "required": false
+    },
+    {
+      "id": "minecraft:grass",
+      "required": false
+    }
+  ]
 }

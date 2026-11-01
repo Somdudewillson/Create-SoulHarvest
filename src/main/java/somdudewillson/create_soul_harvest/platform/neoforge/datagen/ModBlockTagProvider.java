@@ -70,17 +70,25 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				Blocks.ROOTED_DIRT
 		);
 
-		tag(ModTags.Blocks.BIOCIDE_LOW_CONSUME);
+		tag(ModTags.Blocks.BIOCIDE_LOW_CONSUME)
+				.add(Blocks.TALL_GRASS, Blocks.FERN)
+				.add(Blocks.LILY_PAD)
+				.add(Blocks.MOSS_CARPET)
+				.addTag(BlockTags.FLOWERS)
+				.addTag(BlockTags.SAPLINGS)
+				.addOptional(ResourceLocation.withDefaultNamespace("short_grass"))
+				.addOptional(ResourceLocation.withDefaultNamespace("grass"));
 
 		tag(ModTags.Blocks.BIOCIDE_MEDIUM_CONSUME)
 				.addTag(BlockTags.LEAVES)
-				.addTag(BlockTags.CROPS);
+				.addTag(BlockTags.CROPS)
+				.add(Blocks.SWEET_BERRY_BUSH)
+				.add(Blocks.SUGAR_CANE)
+				.add(Blocks.BAMBOO)
+				.add(Blocks.MOSS_BLOCK);
 
 		tag(ModTags.Blocks.BIOCIDE_HIGH_CONSUME)
-				.add(Blocks.TALL_GRASS, Blocks.FERN)
-				.addTag(BlockTags.FLOWERS)
-				.addOptional(ResourceLocation.withDefaultNamespace("short_grass"))
-				.addOptional(ResourceLocation.withDefaultNamespace("grass"));
+				.addTag(BlockTags.LOGS_THAT_BURN);
 
 		// Spell interaction tags
 		tag(ModTags.Blocks.CONSIDER_REPLACEABLE)
