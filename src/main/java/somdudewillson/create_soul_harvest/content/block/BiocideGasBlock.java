@@ -1,12 +1,16 @@
 package somdudewillson.create_soul_harvest.content.block;
 
+import java.util.List;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.crafting.RecipeType;
 //? >= 1.21 {
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.item.crafting.RecipeHolder;
 //?}
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -24,9 +28,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import somdudewillson.create_soul_harvest.content.recipe.BiocideConversionRecipe;
 import somdudewillson.create_soul_harvest.registry.ModItems;
-
-import static somdudewillson.create_soul_harvest.registry.ModTags.Blocks.*;
+import somdudewillson.create_soul_harvest.registry.ModRecipeTypes;
 
 public class BiocideGasBlock extends Block {
 
@@ -96,6 +100,17 @@ public class BiocideGasBlock extends Block {
 	}
 	*///?}
 
+	private List<BiocideConversionRecipe> getRecipes(Level level) {
+		//? >= 1.21 {
+		RecipeType<BiocideConversionRecipe> type = ModRecipeTypes.BIOCIDE_CONVERSION.getType();
+		return level.getRecipeManager().getAllRecipesFor(type)
+				.stream().map(RecipeHolder::value).toList();
+		//?} else {
+		/*RecipeType<BiocideConversionRecipe> type = ModRecipeTypes.BIOCIDE_CONVERSION.getType();
+		return level.getRecipeManager().getAllRecipesFor(type);
+		*///?}
+	}
+
 	@Override
 	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
 		int density = state.getValue(DENSITY);
@@ -103,12 +118,22 @@ public class BiocideGasBlock extends Block {
 			density--;
 		}
 
-		// Convert ground below to dirt
-		BlockPos belowPos = pos.below();
-		BlockState belowState = level.getBlockState(belowPos);
-		if (belowState.is(BIOCIDE_CONVERT_TO_DIRT)) {
-			level.setBlockAndUpdate(belowPos, Blocks.DIRT.defaultBlockState());
-			density += Math.round(random.nextFloat() * 2.2f);
+		List<BiocideConversionRecipe> recipes = getRecipes(level);
+
+		// Check non-gas block conversions (e.g., ground to dirt)
+		for (Direction dir : Direction.values()) {
+			BlockPos targetPos = pos.relative(dir);
+			BlockState targetState = level.getBlockState(targetPos);
+			if (targetState.is(this) || targetState.isAir()) continue;
+
+			for (BiocideConversionRecipe recipe : recipes) {
+				if (!recipe.createsGasBlock() && recipe.matches(dir, density, targetState)) {
+					recipe.apply(level, targetPos);
+					int densityChange = recipe.rollDensityChange(random);
+					density = Math.min(15, Math.max(0, density + densityChange));
+					break;
+				}
+			}
 		}
 
 		boolean canSpread = !state.getValue(TRIGGERED);
@@ -128,14 +153,23 @@ public class BiocideGasBlock extends Block {
 					if (spreadState.getValue(DENSITY) >= spreadDensity) {
 						continue;
 					}
-				} else if (spreadState.is(BIOCIDE_HIGH_CONSUME)) {
-					spreadDensity = Math.max(spreadDensity, random.nextInt(6) + 4);
-				} else if (spreadState.is(BIOCIDE_MEDIUM_CONSUME)) {
-					spreadDensity = Math.max(spreadDensity, random.nextInt(5) + 2);
-				} else if (spreadState.is(BIOCIDE_LOW_CONSUME)) {
-					spreadDensity = Math.max(spreadDensity, random.nextInt(5));
-				} else if (!spreadState.isAir()) {
-					continue;
+				} else {
+					BiocideConversionRecipe matchedRecipe = null;
+					for (BiocideConversionRecipe recipe : recipes) {
+						if (recipe.createsGasBlock() && recipe.matches(dir, density, spreadState)) {
+							matchedRecipe = recipe;
+							break;
+						}
+					}
+
+					if (matchedRecipe != null) {
+						int baseDensity = matchedRecipe.rollBaseGasDensity(random);
+						spreadDensity = Math.max(spreadDensity, baseDensity);
+						int densityChange = matchedRecipe.rollDensityChange(random);
+						density = Math.min(15, Math.max(0, density + densityChange));
+					} else if (!spreadState.isAir()) {
+						continue;
+					}
 				}
 
 				if (spreadDensity < 0) continue;

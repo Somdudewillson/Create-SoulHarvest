@@ -1,0 +1,12 @@
+{
+  "type": "create_soul_harvest:biocide_conversion",
+  "base_gas_density": {
+    "max": 6,
+    "min": 2
+  },
+  "creates_gas_block": true,
+  "min_gas": 1,
+  "target": {
+    "block_tag": "create_soul_harvest:biocide_medium_consume"
+  }
+}

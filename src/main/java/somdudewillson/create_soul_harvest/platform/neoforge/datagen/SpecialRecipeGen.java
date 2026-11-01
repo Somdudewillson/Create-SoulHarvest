@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -15,8 +16,10 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.recipe.AbsoluteIceRecipe;
-import somdudewillson.create_soul_harvest.content.recipe.AbsoluteIceRecipe.BlockCondition;
-import somdudewillson.create_soul_harvest.content.recipe.AbsoluteIceRecipe.ConversionResult;
+import somdudewillson.create_soul_harvest.content.recipe.BiocideConversionRecipe;
+import somdudewillson.create_soul_harvest.content.recipe.BlockCondition;
+import somdudewillson.create_soul_harvest.content.recipe.ConversionResult;
+import somdudewillson.create_soul_harvest.content.recipe.IntRange;
 import somdudewillson.create_soul_harvest.content.recipe.MidasFluidBoostRecipe;
 import somdudewillson.create_soul_harvest.content.soul.DropRestriction;
 import somdudewillson.create_soul_harvest.content.soul.SoulDropEntry;
@@ -31,6 +34,7 @@ public final class SpecialRecipeGen {
 	public static void register(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
 		registerMidasFluidBoostRecipes(recipeOutput);
 		registerAbsoluteIceRecipes(recipeOutput);
+		registerBiocideRecipes(recipeOutput);
 		registerPartialSoulData(recipeOutput);
 	}
 
@@ -87,6 +91,64 @@ public final class SpecialRecipeGen {
 						Optional.empty(),
 						Optional.empty(),
 						Optional.empty(),
+						Optional.empty()
+				),
+				null
+		);
+	}
+
+	public static void registerBiocideRecipes(RecipeOutput recipeOutput) {
+		recipeOutput.accept(
+				SoulHarvestMod.id("biocide_conversion/convert_to_dirt"),
+				new BiocideConversionRecipe(
+						BlockCondition.of(ModTags.Blocks.BIOCIDE_CONVERT_TO_DIRT),
+						Optional.of(ConversionResult.setBlock(Blocks.DIRT)),
+						Optional.of(1),
+						IntRange.of(0, 2),
+						false,
+						IntRange.ZERO,
+						Optional.of(List.of(Direction.DOWN))
+				),
+				null
+		);
+
+		recipeOutput.accept(
+				SoulHarvestMod.id("biocide_conversion/consume_high"),
+				new BiocideConversionRecipe(
+						BlockCondition.of(ModTags.Blocks.BIOCIDE_HIGH_CONSUME),
+						Optional.empty(),
+						Optional.of(1),
+						IntRange.ZERO,
+						true,
+						IntRange.of(4, 9),
+						Optional.empty()
+				),
+				null
+		);
+
+		recipeOutput.accept(
+				SoulHarvestMod.id("biocide_conversion/consume_medium"),
+				new BiocideConversionRecipe(
+						BlockCondition.of(ModTags.Blocks.BIOCIDE_MEDIUM_CONSUME),
+						Optional.empty(),
+						Optional.of(1),
+						IntRange.ZERO,
+						true,
+						IntRange.of(2, 6),
+						Optional.empty()
+				),
+				null
+		);
+
+		recipeOutput.accept(
+				SoulHarvestMod.id("biocide_conversion/consume_low"),
+				new BiocideConversionRecipe(
+						BlockCondition.of(ModTags.Blocks.BIOCIDE_LOW_CONSUME),
+						Optional.empty(),
+						Optional.of(1),
+						IntRange.ZERO,
+						true,
+						IntRange.of(0, 4),
 						Optional.empty()
 				),
 				null

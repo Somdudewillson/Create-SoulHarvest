@@ -247,7 +247,7 @@ abstract class BackportForgeRecipesTask : DefaultTask() {
 				return converted
 			}
 
-			if (rtype == "create_soul_harvest:absolute_ice_conversion") {
+			if (rtype == "create_soul_harvest:absolute_ice_conversion" || rtype == "create_soul_harvest:biocide_conversion") {
 				fun convertBlockCondition(cond: Any?): Any? {
 					val m = cond as? Map<String, Any?> ?: return cond
 					val res = mutableMapOf<String, Any?>()

@@ -1,0 +1,15 @@
+{
+    "type": "create_soul_harvest:biocide_conversion",
+    "density_change": {
+        "max": 2,
+        "min": 0
+    },
+    "directions": "down",
+    "min_gas": 1,
+    "result": {
+        "block": "minecraft:dirt"
+    },
+    "target": {
+        "block_tag": "create_soul_harvest:biocide_convert_to_dirt"
+    }
+}
