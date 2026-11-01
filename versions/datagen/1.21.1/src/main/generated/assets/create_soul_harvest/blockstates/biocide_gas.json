@@ -1,99 +1,99 @@
 {
   "variants": {
-    "density=0,triggered=false": {
+    "density=0,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_0_active"
     },
-    "density=0,triggered=true": {
+    "density=0,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_0"
     },
-    "density=1,triggered=false": {
+    "density=1,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_0_active"
     },
-    "density=1,triggered=true": {
+    "density=1,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_0"
     },
-    "density=10,triggered=false": {
+    "density=10,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_1_active"
     },
-    "density=10,triggered=true": {
+    "density=10,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_1"
     },
-    "density=11,triggered=false": {
+    "density=11,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_2_active"
     },
-    "density=11,triggered=true": {
+    "density=11,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_2"
     },
-    "density=12,triggered=false": {
+    "density=12,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_2_active"
     },
-    "density=12,triggered=true": {
+    "density=12,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_2"
     },
-    "density=13,triggered=false": {
+    "density=13,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_2_active"
     },
-    "density=13,triggered=true": {
+    "density=13,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_2"
     },
-    "density=14,triggered=false": {
+    "density=14,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_2_active"
     },
-    "density=14,triggered=true": {
+    "density=14,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_2"
     },
-    "density=15,triggered=false": {
+    "density=15,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_2_active"
     },
-    "density=15,triggered=true": {
+    "density=15,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_2"
     },
-    "density=2,triggered=false": {
+    "density=2,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_0_active"
     },
-    "density=2,triggered=true": {
+    "density=2,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_0"
     },
-    "density=3,triggered=false": {
+    "density=3,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_1_active"
     },
-    "density=3,triggered=true": {
+    "density=3,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_1"
     },
-    "density=4,triggered=false": {
+    "density=4,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_1_active"
     },
-    "density=4,triggered=true": {
+    "density=4,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_1"
     },
-    "density=5,triggered=false": {
+    "density=5,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_1_active"
     },
-    "density=5,triggered=true": {
+    "density=5,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_1"
     },
-    "density=6,triggered=false": {
+    "density=6,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_1_active"
     },
-    "density=6,triggered=true": {
+    "density=6,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_1"
     },
-    "density=7,triggered=false": {
+    "density=7,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_1_active"
     },
-    "density=7,triggered=true": {
+    "density=7,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_1"
     },
-    "density=8,triggered=false": {
+    "density=8,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_1_active"
     },
-    "density=8,triggered=true": {
+    "density=8,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_1"
     },
-    "density=9,triggered=false": {
+    "density=9,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_1_active"
     },
-    "density=9,triggered=true": {
+    "density=9,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_1"
     }
   }

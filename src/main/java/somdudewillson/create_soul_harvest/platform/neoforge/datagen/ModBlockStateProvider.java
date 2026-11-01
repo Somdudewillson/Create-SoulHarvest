@@ -60,7 +60,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 					.modelForState().modelFile(model).addModel();
 		}
 
-		// Biocide gas (cube_all models + age 0..15 & triggered true/false)
+		// Biocide gas (cube_all models + density 0..15 & settled true/false)
 		ModelFile gas0 = models().cubeAll("biocide_gas_0", modLoc("block/biocide_gas_0")).renderType("translucent");
 		ModelFile gas0Active = models().cubeAll("biocide_gas_0_active", modLoc("block/biocide_gas_0_active")).renderType("translucent");
 		ModelFile gas1 = models().cubeAll("biocide_gas_1", modLoc("block/biocide_gas_1")).renderType("translucent");
@@ -72,9 +72,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		for (int density = 0; density <= 15; density++) {
 			ModelFile normal = density <= 2 ? gas0 : (density <= 10 ? gas1 : gas2);
 			ModelFile active = density <= 2 ? gas0Active : (density <= 10 ? gas1Active : gas2Active);
-			biocideGas.partialState().with(BiocideGasBlock.DENSITY, density).with(BiocideGasBlock.TRIGGERED, true)
+			biocideGas.partialState().with(BiocideGasBlock.DENSITY, density).with(BiocideGasBlock.SETTLED, true)
 					.modelForState().modelFile(normal).addModel();
-			biocideGas.partialState().with(BiocideGasBlock.DENSITY, density).with(BiocideGasBlock.TRIGGERED, false)
+			biocideGas.partialState().with(BiocideGasBlock.DENSITY, density).with(BiocideGasBlock.SETTLED, false)
 					.modelForState().modelFile(active).addModel();
 		}
 

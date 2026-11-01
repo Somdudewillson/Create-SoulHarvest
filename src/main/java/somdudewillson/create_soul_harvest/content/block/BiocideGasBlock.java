@@ -1,5 +1,6 @@
 package somdudewillson.create_soul_harvest.content.block;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,14 +41,15 @@ import somdudewillson.create_soul_harvest.registry.ModRecipeTypes;
 
 public class BiocideGasBlock extends TransparentBlock {
 
-	public static final IntegerProperty DENSITY = IntegerProperty.create("density", 0, 15);
-	public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
+	public static final int MAX_DENSITY = 15;
+	public static final IntegerProperty DENSITY = IntegerProperty.create("density", 0, MAX_DENSITY);
+	public static final BooleanProperty SETTLED = BooleanProperty.create("settled");
 
 	public BiocideGasBlock(Properties properties) {
 		super(properties);
 		this.registerDefaultState(this.stateDefinition.any()
 				.setValue(DENSITY, 15)
-				.setValue(TRIGGERED, Boolean.FALSE));
+				.setValue(SETTLED, Boolean.FALSE));
 	}
 
 	@Override
@@ -67,7 +69,18 @@ public class BiocideGasBlock extends TransparentBlock {
 	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onPlace(state, level, pos, oldState, isMoving);
 		if (!level.isClientSide()) {
-			level.scheduleTick(pos, this, 10);
+			level.scheduleTick(pos, this, 10 + level.random.nextInt(10));
+		}
+	}
+
+	//? forge {
+	/*@SuppressWarnings("deprecation")
+	*///?}
+	@Override
+	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+		super.neighborChanged(state, level, pos, block, fromPos, isMoving);
+		if (!level.isClientSide() && state.getValue(SETTLED)) {
+			level.setBlock(pos, state.setValue(SETTLED, false), Block.UPDATE_CLIENTS);
 		}
 	}
 
@@ -127,18 +140,21 @@ public class BiocideGasBlock extends TransparentBlock {
 	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
 		int density = state.getValue(DENSITY);
 
-		Map<BlockPos, BlockState> cachedStates = new HashMap<>(6);
+		Map<BlockPos, BlockState> cachedStates = new HashMap<>(7);
 		Map<BlockPos, BlockState> pendingBlockUpdates = new HashMap<>();
 		Map<BlockPos, BiocideConversionRecipe> pendingConversions = new HashMap<>();
 		Set<BlockPos> newlyCreatedGas = new HashSet<>();
+		Set<BlockPos> upgradedGasPositions = new HashSet<>();
 
 		// -- Build blockstate cache
+		cachedStates.put(pos, state);
 		for (Direction dir : Direction.values()) {
 			BlockPos targetPos = pos.relative(dir);
 			cachedStates.put(targetPos, level.getBlockState(targetPos));
 		}
 
 		List<BiocideConversionRecipe> recipes = getRecipes(level);
+		boolean hadActivity = false;
 
 		// -- Handle all conversion recipes, updating the cache with any conversions
 		for (Direction dir : Direction.values()) {
@@ -148,13 +164,16 @@ public class BiocideGasBlock extends TransparentBlock {
 
 			for (BiocideConversionRecipe recipe : recipes) {
 				if (recipe.matches(dir, density, targetState)) {
+					hadActivity = true;
 					int densityChange = recipe.rollDensityChange(random);
 					density = Math.min(15, Math.max(0, density + densityChange));
+					cachedStates.put(pos, state.setValue(DENSITY, density));
 
 					if (recipe.createsGasBlock()) {
 						int baseDensity = recipe.rollBaseGasDensity(random);
 						BlockState newGas = this.defaultBlockState()
-								.setValue(DENSITY, Math.min(15, Math.max(0, baseDensity)));
+								.setValue(DENSITY, Math.min(15, Math.max(0, baseDensity)))
+								.setValue(SETTLED, Boolean.FALSE);
 						cachedStates.put(targetPos, newGas);
 						pendingBlockUpdates.put(targetPos, newGas);
 						newlyCreatedGas.add(targetPos);
@@ -169,6 +188,14 @@ public class BiocideGasBlock extends TransparentBlock {
 		}
 
 		// -- Spread logic operating on the cache
+		if (density > 0) {
+			int densityBeforeSpread = density;
+			density = doSpread(pos, density, cachedStates, pendingBlockUpdates, newlyCreatedGas, upgradedGasPositions, random);
+			if (density != densityBeforeSpread) {
+				hadActivity = true;
+			}
+		}
+		
 		float airExposure = 0.0f;
 		for (Direction dir : Direction.values()) {
 			BlockPos neighborPos = pos.relative(dir);
@@ -177,40 +204,12 @@ public class BiocideGasBlock extends TransparentBlock {
 			}
 		}
 
-		boolean canSpread = !state.getValue(TRIGGERED);
-
-		if (canSpread && density > 0) {
-			for (Direction dir : Direction.values()) {
-				BlockPos spreadPos = pos.relative(dir);
-				int spreadLoss = (dir == Direction.UP) ? 3 : (dir == Direction.DOWN) ? 1 : 2;
-				int spreadDensity = Math.min(density, 15) - spreadLoss;
-
-				BlockState spreadState = cachedStates.get(spreadPos);
-
-				if (spreadState.is(this)) {
-					if (spreadDensity > spreadState.getValue(DENSITY)) {
-						BlockState upgradedGas = this.defaultBlockState()
-								.setValue(DENSITY, Math.min(15, spreadDensity));
-						cachedStates.put(spreadPos, upgradedGas);
-						pendingBlockUpdates.put(spreadPos, upgradedGas);
-					}
-				} else if (spreadState.isAir()) {
-					if (spreadDensity > 0) {
-						BlockState newGas = this.defaultBlockState()
-								.setValue(DENSITY, Math.min(15, spreadDensity));
-						cachedStates.put(spreadPos, newGas);
-						pendingBlockUpdates.put(spreadPos, newGas);
-						newlyCreatedGas.add(spreadPos);
-					}
-				}
-			}
-		}
-
 		// Dissipation: low-density gas blocks adjacent to air slowly 'dissipating', scaled by air exposure
 		if (density <= 2 && airExposure > 0.0f) {
-			float dissipationChance = Math.min(1.0f, airExposure * 0.16f);
+			float dissipationChance = Math.min(1.0f, airExposure * 0.34f);
 			if (random.nextFloat() < dissipationChance) {
 				density--;
+				hadActivity = true;
 			}
 		}
 
@@ -230,19 +229,264 @@ public class BiocideGasBlock extends TransparentBlock {
 			level.scheduleTick(gasPos, this, 10 + random.nextInt(10));
 		}
 
+		for (BlockPos gasPos : upgradedGasPositions) {
+			level.scheduleTick(gasPos, this, 10);
+		}
+
+		boolean isSettled = !hadActivity && isEquilibrated(pos, density, cachedStates);
+
 		if (density >= 0) {
 			BlockState nextState = this.defaultBlockState()
 					.setValue(DENSITY, Math.min(density, 15))
-					.setValue(TRIGGERED, Boolean.TRUE);
+					.setValue(SETTLED, isSettled);
 			level.setBlockAndUpdate(pos, nextState);
-			level.scheduleTick(pos, this, 10);
+			int nextTickDelay = isSettled ? 30 : 10;
+			level.scheduleTick(pos, this, nextTickDelay);
 		} else {
 			level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 		}
 	}
 
+	private boolean isEquilibrated(BlockPos pos, int density, Map<BlockPos, BlockState> cachedStates) {
+		if (density <= 0) return true;
+
+		// Down
+		BlockPos belowPos = pos.below();
+		BlockState belowState = cachedStates.get(belowPos);
+		if (belowState != null && (belowState.is(this) || belowState.isAir())) {
+			if ((density - getDensity(cachedStates, belowPos) + 2) / 2 > 0) {
+				return false;
+			}
+		}
+
+		// Horizontal
+		for (Direction dir : Direction.Plane.HORIZONTAL) {
+			BlockPos nPos = pos.relative(dir);
+			BlockState nState = cachedStates.get(nPos);
+			if (nState != null && (nState.is(this) || nState.isAir())) {
+				if (density - getDensity(cachedStates, nPos) >= 2) {
+					return false;
+				}
+			}
+		}
+
+		// Up
+		BlockPos abovePos = pos.above();
+		BlockState aboveState = cachedStates.get(abovePos);
+		if (aboveState != null && (aboveState.is(this) || aboveState.isAir())) {
+			if ((density - getDensity(cachedStates, abovePos) - 2) / 2 > 0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private static final int MAX_SPREAD_RATE = 8;
+	private int doSpread(BlockPos pos, int density, 
+			Map<BlockPos, BlockState> cachedStates,
+			Map<BlockPos, BlockState> pendingBlockUpdates, 
+			Set<BlockPos> newlyCreatedGas,
+			Set<BlockPos> upgradedGasPositions,
+			RandomSource random) {
+		if (density <= 0) return density;
+		int spreadAmount = 0;
+		
+		// Down
+		int belowDensity = getDensity(cachedStates, pos.below());
+		int belowSpreadAmount = (density - belowDensity + 2) / 2;
+		int amtSpread = trySpreadDensity(cachedStates, pendingBlockUpdates, newlyCreatedGas, upgradedGasPositions, pos, pos.below(), Math.min(MAX_SPREAD_RATE-spreadAmount, belowSpreadAmount), false);
+		spreadAmount += amtSpread;
+		density -= amtSpread;
+		
+		if (density <= 0 || spreadAmount >= MAX_SPREAD_RATE) return density;
+		
+		// Sides
+		amtSpread = doSpreadHorizontal(pos, density, MAX_SPREAD_RATE - spreadAmount, cachedStates, pendingBlockUpdates, newlyCreatedGas, upgradedGasPositions, random);
+		spreadAmount += amtSpread;
+		density -= amtSpread;
+		if (density <= 0 || spreadAmount >= MAX_SPREAD_RATE) return density;
+		
+		// Up
+		int aboveDensity = getDensity(cachedStates, pos.above());
+		int aboveSpreadAmount = (density - aboveDensity - 2) / 2;
+		amtSpread = trySpreadDensity(cachedStates, pendingBlockUpdates, newlyCreatedGas, upgradedGasPositions, pos, pos.above(), Math.min(MAX_SPREAD_RATE-spreadAmount, aboveSpreadAmount), false);
+		spreadAmount += amtSpread;
+		density -= amtSpread;
+
+		return density;
+	}
+	
+	/**
+	 * Returns spread budget used
+	 */
+	private int doSpreadHorizontal(BlockPos pos, int density, int spreadBudget, 
+			Map<BlockPos, BlockState> cachedStates,
+			Map<BlockPos, BlockState> pendingBlockUpdates, 
+			Set<BlockPos> newlyCreatedGas,
+			Set<BlockPos> upgradedGasPositions,
+			RandomSource random) {		
+		if (spreadBudget <= 0 || density <= 0) return 0;
+
+		List<BlockPos> validNeighbors = new ArrayList<>(4);
+		for (Direction dir : Direction.Plane.HORIZONTAL) {
+			BlockPos targetPos = pos.relative(dir);
+			BlockState targetState = cachedStates.get(targetPos);
+			if (targetState != null && (targetState.is(this) || targetState.isAir())) {
+				int targetDensity = getDensity(cachedStates, targetPos);
+				if (targetDensity < density) {
+					validNeighbors.add(targetPos);
+				}
+			}
+		}
+		if (validNeighbors.isEmpty()) return 0;
+
+		int numNeighbors = validNeighbors.size();
+		int[] currentDensities = new int[numNeighbors];
+		int[] transferAmounts = new int[numNeighbors];
+
+		for (int i = 0; i < numNeighbors; i++) {
+			currentDensities[i] = getDensity(cachedStates, validNeighbors.get(i));
+		}
+
+		int currentCenterDensity = density;
+		int remainingBudget = spreadBudget;
+
+		while (remainingBudget > 0) {
+			int minDensity = Integer.MAX_VALUE;
+			for (int d : currentDensities) {
+				if (d < minDensity) {
+					minDensity = d;
+				}
+			}
+
+			// Must be at least 2 higher than the minimum neighbor to transfer without inversion
+			if (currentCenterDensity - minDensity < 2) {
+				break;
+			}
+
+			List<Integer> tiedIndices = new ArrayList<>(numNeighbors);
+			for (int i = 0; i < numNeighbors; i++) {
+				if (currentDensities[i] == minDensity) {
+					tiedIndices.add(i);
+				}
+			}
+
+			if (tiedIndices.size() > 1 && random != null) {
+				for (int i = tiedIndices.size() - 1; i > 0; i--) {
+					int j = random.nextInt(i + 1);
+					int temp = tiedIndices.get(i);
+					tiedIndices.set(i, tiedIndices.get(j));
+					tiedIndices.set(j, temp);
+				}
+			}
+
+			boolean transferredAny = false;
+			for (int idx : tiedIndices) {
+				if (remainingBudget <= 0 || currentCenterDensity - currentDensities[idx] < 2) {
+					break;
+				}
+				currentDensities[idx]++;
+				transferAmounts[idx]++;
+				currentCenterDensity--;
+				remainingBudget--;
+				transferredAny = true;
+			}
+
+			if (!transferredAny) {
+				break;
+			}
+		}
+
+		int totalSpread = 0;
+		for (int i = 0; i < numNeighbors; i++) {
+			int amt = transferAmounts[i];
+			if (amt > 0) {
+				totalSpread += trySpreadDensity(
+						cachedStates, 
+						pendingBlockUpdates, 
+						newlyCreatedGas, 
+						upgradedGasPositions, 
+						pos, 
+						validNeighbors.get(i), 
+						amt, 
+						false);
+			}
+		}
+
+		return totalSpread;
+	}
+	
+	private int getDensity(Map<BlockPos, BlockState> cachedStates, BlockPos pos) {
+		BlockState testState = cachedStates.get(pos);
+		if (testState != null && testState.is(this)) {
+			return testState.getValue(DENSITY);
+		}
+		return 0;
+	}
+	
+	/**
+	 * Returns actual amount moved.
+	 */
+	private int trySpreadDensity(Map<BlockPos, BlockState> cachedStates, Map<BlockPos, BlockState> pendingBlockUpdates, 
+			Set<BlockPos> newlyCreatedGas, Set<BlockPos> upgradedGasPositions, 
+			BlockPos sourcePos, BlockPos targetPos, int maxDensity, boolean simulate) {
+		if (maxDensity <= 0) return 0;
+		
+		BlockState sourceState = cachedStates.get(sourcePos);
+		BlockState targetState = cachedStates.get(targetPos);
+		if (sourceState == null || targetState == null) return 0;
+
+		int sourceDensity = sourceState.getValue(DENSITY);
+		maxDensity = Math.min(maxDensity, sourceDensity);
+		if (maxDensity <= 0) return 0;
+		
+		if (targetState.is(this)) {
+			int targetStateDensity = targetState.getValue(DENSITY);
+			int actualDensityMoved = Math.min(maxDensity, MAX_DENSITY - targetStateDensity);
+			if (actualDensityMoved <= 0) return 0;
+			
+			if (!simulate) {
+				BlockState upgradedGas = targetState
+						.setValue(DENSITY, targetStateDensity + actualDensityMoved)
+						.setValue(SETTLED, Boolean.FALSE);
+				cachedStates.put(targetPos, upgradedGas);
+				pendingBlockUpdates.put(targetPos, upgradedGas);
+				upgradedGasPositions.add(targetPos);
+				
+				BlockState reducedGas = sourceState
+						.setValue(DENSITY, Math.max(0, sourceDensity - actualDensityMoved));
+				cachedStates.put(sourcePos, reducedGas);
+			}
+			
+			return actualDensityMoved;
+		}
+		
+		if (targetState.isAir()) {
+			int actualDensityMoved = Math.min(maxDensity, MAX_DENSITY);
+			if (actualDensityMoved <= 0) return 0;
+
+			if (!simulate) {
+				BlockState newGas = this.defaultBlockState()
+						.setValue(DENSITY, actualDensityMoved)
+						.setValue(SETTLED, Boolean.FALSE);
+				cachedStates.put(targetPos, newGas);
+				pendingBlockUpdates.put(targetPos, newGas);
+				newlyCreatedGas.add(targetPos);
+				
+				BlockState reducedGas = sourceState
+						.setValue(DENSITY, Math.max(0, sourceDensity - actualDensityMoved));
+				cachedStates.put(sourcePos, reducedGas);
+			}
+			
+			return actualDensityMoved;
+		}
+		
+		return 0;
+	}
+
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(DENSITY, TRIGGERED);
+		builder.add(DENSITY, SETTLED);
 	}
 }
