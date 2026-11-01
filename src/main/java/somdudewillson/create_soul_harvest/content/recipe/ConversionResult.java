@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 //? >= 1.21 {
@@ -32,6 +33,9 @@ import net.minecraft.world.level.block.state.properties.Property;
 public interface ConversionResult {
 	void apply(Level level, BlockPos pos);
 	void toNetwork(FriendlyByteBuf buf);
+	default BlockState getResultingState() {
+		return Blocks.AIR.defaultBlockState();
+	}
 
 	static ConversionResult setBlock(BlockState state) {
 		return new SetBlockResult(state);
@@ -65,6 +69,11 @@ public interface ConversionResult {
 		}
 
 		@Override
+		public BlockState getResultingState() {
+			return state;
+		}
+
+		@Override
 		public void toNetwork(FriendlyByteBuf buf) {
 			buf.writeByte(0);
 			buf.writeVarInt(Block.getId(state));
@@ -75,6 +84,11 @@ public interface ConversionResult {
 		@Override
 		public void apply(Level level, BlockPos pos) {
 			level.destroyBlock(pos, dropItems);
+		}
+
+		@Override
+		public BlockState getResultingState() {
+			return Blocks.AIR.defaultBlockState();
 		}
 
 		@Override

@@ -85,7 +85,14 @@ public class ModBlocks {
 					.noLootTable()));
 
 	public static final DeferredHolder<Block, BiocideGasBlock> BIOCIDE_GAS = BLOCKS.register("biocide_gas",
-			() -> new BiocideGasBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).strength(0.0f).noCollission().noOcclusion().noLootTable()));
+			() -> new BiocideGasBlock(BlockBehaviour.Properties.of()
+					.mapColor(MapColor.COLOR_GREEN)
+					.strength(0.0f)
+					.noCollission()
+					.noOcclusion()
+					.isSuffocating((state, level, pos) -> false)
+					.isViewBlocking((state, level, pos) -> false)
+					.noLootTable()));
 
 	public static final DeferredHolder<Block, DenseHypotheticalBlock> DENSE_HYPOTHETICAL = BLOCKS.register("dense_hypothetical",
 			() -> new DenseHypotheticalBlock(BlockBehaviour.Properties.of()

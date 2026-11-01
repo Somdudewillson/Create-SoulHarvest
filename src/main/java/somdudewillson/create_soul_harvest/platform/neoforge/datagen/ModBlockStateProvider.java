@@ -61,12 +61,12 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		}
 
 		// Biocide gas (cube_all models + age 0..15 & triggered true/false)
-		ModelFile gas0 = models().cubeAll("biocide_gas_0", modLoc("block/biocide_gas_0"));
-		ModelFile gas0Active = models().cubeAll("biocide_gas_0_active", modLoc("block/biocide_gas_0_active"));
-		ModelFile gas1 = models().cubeAll("biocide_gas_1", modLoc("block/biocide_gas_1"));
-		ModelFile gas1Active = models().cubeAll("biocide_gas_1_active", modLoc("block/biocide_gas_1_active"));
-		ModelFile gas2 = models().cubeAll("biocide_gas_2", modLoc("block/biocide_gas"));
-		ModelFile gas2Active = models().cubeAll("biocide_gas_2_active", modLoc("block/biocide_gas_active"));
+		ModelFile gas0 = models().cubeAll("biocide_gas_0", modLoc("block/biocide_gas_0")).renderType("translucent");
+		ModelFile gas0Active = models().cubeAll("biocide_gas_0_active", modLoc("block/biocide_gas_0_active")).renderType("translucent");
+		ModelFile gas1 = models().cubeAll("biocide_gas_1", modLoc("block/biocide_gas_1")).renderType("translucent");
+		ModelFile gas1Active = models().cubeAll("biocide_gas_1_active", modLoc("block/biocide_gas_1_active")).renderType("translucent");
+		ModelFile gas2 = models().cubeAll("biocide_gas_2", modLoc("block/biocide_gas")).renderType("translucent");
+		ModelFile gas2Active = models().cubeAll("biocide_gas_2_active", modLoc("block/biocide_gas_active")).renderType("translucent");
 
 		VariantBlockStateBuilder biocideGas = getVariantBuilder(ModBlocks.BIOCIDE_GAS.get());
 		for (int density = 0; density <= 15; density++) {

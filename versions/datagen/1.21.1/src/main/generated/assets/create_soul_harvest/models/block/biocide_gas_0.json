@@ -1,5 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
+  "render_type": "minecraft:translucent",
   "textures": {
     "all": "create_soul_harvest:block/biocide_gas_0"
   }

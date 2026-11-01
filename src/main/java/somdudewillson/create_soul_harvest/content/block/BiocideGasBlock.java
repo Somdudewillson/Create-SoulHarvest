@@ -1,6 +1,10 @@
 package somdudewillson.create_soul_harvest.content.block;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,6 +23,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -29,10 +34,11 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import somdudewillson.create_soul_harvest.content.recipe.BiocideConversionRecipe;
+import somdudewillson.create_soul_harvest.content.recipe.ConversionResult;
 import somdudewillson.create_soul_harvest.registry.ModItems;
 import somdudewillson.create_soul_harvest.registry.ModRecipeTypes;
 
-public class BiocideGasBlock extends Block {
+public class BiocideGasBlock extends TransparentBlock {
 
 	public static final IntegerProperty DENSITY = IntegerProperty.create("density", 0, 15);
 	public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
@@ -111,76 +117,117 @@ public class BiocideGasBlock extends Block {
 		*///?}
 	}
 
+	private BlockState getConvertedState(BiocideConversionRecipe recipe, BlockState fallback) {
+		return recipe.getResult()
+				.map(ConversionResult::getResultingState)
+				.orElse(fallback);
+	}
+
 	@Override
 	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
 		int density = state.getValue(DENSITY);
-		if (random.nextFloat() < 0.3f) {
-			density--;
+
+		Map<BlockPos, BlockState> cachedStates = new HashMap<>(6);
+		Map<BlockPos, BlockState> pendingBlockUpdates = new HashMap<>();
+		Map<BlockPos, BiocideConversionRecipe> pendingConversions = new HashMap<>();
+		Set<BlockPos> newlyCreatedGas = new HashSet<>();
+
+		// -- Build blockstate cache
+		for (Direction dir : Direction.values()) {
+			BlockPos targetPos = pos.relative(dir);
+			cachedStates.put(targetPos, level.getBlockState(targetPos));
 		}
 
 		List<BiocideConversionRecipe> recipes = getRecipes(level);
 
-		// Check non-gas block conversions (e.g., ground to dirt)
+		// -- Handle all conversion recipes, updating the cache with any conversions
 		for (Direction dir : Direction.values()) {
 			BlockPos targetPos = pos.relative(dir);
-			BlockState targetState = level.getBlockState(targetPos);
-			if (targetState.is(this) || targetState.isAir()) continue;
+			BlockState targetState = cachedStates.get(targetPos);
+			if (targetState.is(this)) continue;
 
 			for (BiocideConversionRecipe recipe : recipes) {
-				if (!recipe.createsGasBlock() && recipe.matches(dir, density, targetState)) {
-					recipe.apply(level, targetPos);
+				if (recipe.matches(dir, density, targetState)) {
 					int densityChange = recipe.rollDensityChange(random);
 					density = Math.min(15, Math.max(0, density + densityChange));
+
+					if (recipe.createsGasBlock()) {
+						int baseDensity = recipe.rollBaseGasDensity(random);
+						BlockState newGas = this.defaultBlockState()
+								.setValue(DENSITY, Math.min(15, Math.max(0, baseDensity)));
+						cachedStates.put(targetPos, newGas);
+						pendingBlockUpdates.put(targetPos, newGas);
+						newlyCreatedGas.add(targetPos);
+					} else {
+						BlockState convertedState = getConvertedState(recipe, targetState);
+						cachedStates.put(targetPos, convertedState);
+						pendingConversions.put(targetPos, recipe);
+					}
 					break;
 				}
 			}
 		}
 
+		// -- Spread logic operating on the cache
+		float airExposure = 0.0f;
+		for (Direction dir : Direction.values()) {
+			BlockPos neighborPos = pos.relative(dir);
+			if (cachedStates.get(neighborPos).isAir()) {
+				airExposure += (dir == Direction.UP) ? 0.5f : 1.0f;
+			}
+		}
+
 		boolean canSpread = !state.getValue(TRIGGERED);
 
-		// Spread to surrounding positions
 		if (canSpread && density > 0) {
 			for (Direction dir : Direction.values()) {
 				BlockPos spreadPos = pos.relative(dir);
 				int spreadLoss = (dir == Direction.UP) ? 3 : (dir == Direction.DOWN) ? 1 : 2;
 				int spreadDensity = Math.min(density, 15) - spreadLoss;
 
-				BlockState spreadState = level.getBlockState(spreadPos);
-				boolean spreadingToExisting = false;
+				BlockState spreadState = cachedStates.get(spreadPos);
 
 				if (spreadState.is(this)) {
-					spreadingToExisting = true;
-					if (spreadState.getValue(DENSITY) >= spreadDensity) {
-						continue;
+					if (spreadDensity > spreadState.getValue(DENSITY)) {
+						BlockState upgradedGas = this.defaultBlockState()
+								.setValue(DENSITY, Math.min(15, spreadDensity));
+						cachedStates.put(spreadPos, upgradedGas);
+						pendingBlockUpdates.put(spreadPos, upgradedGas);
 					}
-				} else {
-					BiocideConversionRecipe matchedRecipe = null;
-					for (BiocideConversionRecipe recipe : recipes) {
-						if (recipe.createsGasBlock() && recipe.matches(dir, density, spreadState)) {
-							matchedRecipe = recipe;
-							break;
-						}
+				} else if (spreadState.isAir()) {
+					if (spreadDensity > 0) {
+						BlockState newGas = this.defaultBlockState()
+								.setValue(DENSITY, Math.min(15, spreadDensity));
+						cachedStates.put(spreadPos, newGas);
+						pendingBlockUpdates.put(spreadPos, newGas);
+						newlyCreatedGas.add(spreadPos);
 					}
-
-					if (matchedRecipe != null) {
-						int baseDensity = matchedRecipe.rollBaseGasDensity(random);
-						spreadDensity = Math.max(spreadDensity, baseDensity);
-						int densityChange = matchedRecipe.rollDensityChange(random);
-						density = Math.min(15, Math.max(0, density + densityChange));
-					} else if (!spreadState.isAir()) {
-						continue;
-					}
-				}
-
-				if (spreadDensity < 0) continue;
-
-				BlockState newGas = this.defaultBlockState().setValue(DENSITY, Math.min(spreadDensity, 15));
-				level.setBlockAndUpdate(spreadPos, newGas);
-
-				if (!spreadingToExisting) {
-					level.scheduleTick(spreadPos, this, 10 + random.nextInt(10));
 				}
 			}
+		}
+
+		// Dissipation: low-density gas blocks adjacent to air slowly 'dissipating', scaled by air exposure
+		if (density <= 2 && airExposure > 0.0f) {
+			float dissipationChance = Math.min(1.0f, airExposure * 0.16f);
+			if (random.nextFloat() < dissipationChance) {
+				density--;
+			}
+		}
+
+		// -- Send any blockstate changes
+		for (Map.Entry<BlockPos, BiocideConversionRecipe> entry : pendingConversions.entrySet()) {
+			BlockPos targetPos = entry.getKey();
+			if (!pendingBlockUpdates.containsKey(targetPos)) {
+				entry.getValue().apply(level, targetPos);
+			}
+		}
+
+		for (Map.Entry<BlockPos, BlockState> entry : pendingBlockUpdates.entrySet()) {
+			level.setBlockAndUpdate(entry.getKey(), entry.getValue());
+		}
+
+		for (BlockPos gasPos : newlyCreatedGas) {
+			level.scheduleTick(gasPos, this, 10 + random.nextInt(10));
 		}
 
 		if (density >= 0) {
