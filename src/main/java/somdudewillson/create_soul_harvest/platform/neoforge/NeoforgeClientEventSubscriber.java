@@ -9,12 +9,14 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import somdudewillson.create_soul_harvest.client.overlay.BiocideGasOverlay;
 import somdudewillson.create_soul_harvest.client.particle.InfuseSoulFireParticle;
 import somdudewillson.create_soul_harvest.client.particle.StormCloudParticle;
 import somdudewillson.create_soul_harvest.client.particle.VerdantFlashParticle;
@@ -25,6 +27,7 @@ import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import somdudewillson.create_soul_harvest.registry.ModCreativeTabs;
 import somdudewillson.create_soul_harvest.registry.ModEntityTypes;
 
@@ -56,6 +59,14 @@ public class NeoforgeClientEventSubscriber {
 		event.registerSpriteSet(ModParticleTypes.INFUSE_SOUL_FIRE.get(), InfuseSoulFireParticle.Provider::new);
 		event.registerSpriteSet(ModParticleTypes.STORM_CLOUD.get(), StormCloudParticle.Provider::new);
 		event.registerSpriteSet(ModParticleTypes.VERDANT_FLASH.get(), VerdantFlashParticle.Provider::new);
+	}
+
+	@SubscribeEvent
+	public static void registerGuiLayers(RegisterGuiLayersEvent event) {
+		event.registerAbove(
+				VanillaGuiLayers.CAMERA_OVERLAYS,
+				BiocideGasOverlay.OVERLAY_TEXTURE,
+				(guiGraphics, deltaTracker) -> BiocideGasOverlay.render(guiGraphics));
 	}
 
 	@EventBusSubscriber(modid = SoulHarvestMod.MOD_ID, value = Dist.CLIENT)

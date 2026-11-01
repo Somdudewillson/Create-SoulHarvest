@@ -87,7 +87,7 @@ public class ModBlocks {
 	public static final DeferredHolder<Block, BiocideGasBlock> BIOCIDE_GAS = BLOCKS.register("biocide_gas",
 			() -> new BiocideGasBlock(BlockBehaviour.Properties.of()
 					.mapColor(MapColor.COLOR_GREEN)
-					.strength(0.0f)
+					.strength(-1.0f, 3600000.0f)
 					.noCollission()
 					.noOcclusion()
 					.isSuffocating((state, level, pos) -> false)

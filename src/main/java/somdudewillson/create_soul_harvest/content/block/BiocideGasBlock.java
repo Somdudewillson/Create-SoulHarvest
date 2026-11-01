@@ -19,7 +19,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 //?}
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -33,21 +32,22 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import somdudewillson.create_soul_harvest.content.item.BiocideGasBottleItem;
 import somdudewillson.create_soul_harvest.content.recipe.BiocideConversionRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.ConversionResult;
-import somdudewillson.create_soul_harvest.registry.ModItems;
 import somdudewillson.create_soul_harvest.registry.ModRecipeTypes;
 
 public class BiocideGasBlock extends TransparentBlock {
 
-	public static final int MAX_DENSITY = 15;
-	public static final IntegerProperty DENSITY = IntegerProperty.create("density", 0, MAX_DENSITY);
+	public static final int MIN_DENSITY = 1;
+	public static final int MAX_DENSITY = 16;
+	public static final IntegerProperty DENSITY = IntegerProperty.create("density", MIN_DENSITY, MAX_DENSITY);
 	public static final BooleanProperty SETTLED = BooleanProperty.create("settled");
 
 	public BiocideGasBlock(Properties properties) {
 		super(properties);
 		this.registerDefaultState(this.stateDefinition.any()
-				.setValue(DENSITY, 15)
+				.setValue(DENSITY, MAX_DENSITY)
 				.setValue(SETTLED, Boolean.FALSE));
 	}
 
@@ -89,16 +89,8 @@ public class BiocideGasBlock extends TransparentBlock {
 	//? >= 1.21 {
 	@Override
 	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-		if (stack.is(Items.GLASS_BOTTLE)) {
-			if (!player.isCreative()) {
-				stack.shrink(1);
-			}
-			level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-			ItemStack bottle = new ItemStack(ModItems.BIOCIDE_GAS_BOTTLE.get());
-			if (!player.addItem(bottle)) {
-				player.drop(bottle, false);
-			}
-			return ItemInteractionResult.SUCCESS;
+		if (BiocideGasBottleItem.onInteractWithGasBlock(stack, state, level, pos, player, hand)) {
+			return ItemInteractionResult.sidedSuccess(level.isClientSide());
 		}
 		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
@@ -106,16 +98,8 @@ public class BiocideGasBlock extends TransparentBlock {
 	/*@Override
 	public net.minecraft.world.InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		ItemStack stack = player.getItemInHand(hand);
-		if (stack.is(Items.GLASS_BOTTLE)) {
-			if (!player.isCreative()) {
-				stack.shrink(1);
-			}
-			level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-			ItemStack bottle = new ItemStack(ModItems.BIOCIDE_GAS_BOTTLE.get());
-			if (!player.addItem(bottle)) {
-				player.drop(bottle, false);
-			}
-			return net.minecraft.world.InteractionResult.SUCCESS;
+		if (BiocideGasBottleItem.onInteractWithGasBlock(stack, state, level, pos, player, hand)) {
+			return net.minecraft.world.InteractionResult.sidedSuccess(level.isClientSide());
 		}
 		return net.minecraft.world.InteractionResult.PASS;
 	}
@@ -168,13 +152,17 @@ public class BiocideGasBlock extends TransparentBlock {
 				if (recipe.matches(dir, density, targetState)) {
 					hadActivity = true;
 					int densityChange = recipe.rollDensityChange(random);
-					density = Math.min(15, Math.max(0, density + densityChange));
-					cachedStates.put(pos, state.setValue(DENSITY, density));
+					density = Math.min(MAX_DENSITY, Math.max(0, density + densityChange));
+					if (density >= MIN_DENSITY) {
+						cachedStates.put(pos, state.setValue(DENSITY, density));
+					} else {
+						cachedStates.put(pos, Blocks.AIR.defaultBlockState());
+					}
 
 					if (recipe.createsGasBlock()) {
 						int baseDensity = recipe.rollBaseGasDensity(random);
 						BlockState newGas = this.defaultBlockState()
-								.setValue(DENSITY, Math.min(15, Math.max(0, baseDensity)))
+								.setValue(DENSITY, Math.min(MAX_DENSITY, Math.max(MIN_DENSITY, baseDensity)))
 								.setValue(SETTLED, Boolean.FALSE);
 						cachedStates.put(targetPos, newGas);
 						pendingBlockUpdates.put(targetPos, newGas);
@@ -190,7 +178,7 @@ public class BiocideGasBlock extends TransparentBlock {
 		}
 
 		// -- Spread logic operating on the cache
-		if (density > 0) {
+		if (density >= MIN_DENSITY) {
 			int densityBeforeSpread = density;
 			density = doSpread(pos, density, cachedStates, pendingBlockUpdates, newlyCreatedGas, upgradedGasPositions, random);
 			if (density != densityBeforeSpread) {
@@ -237,9 +225,9 @@ public class BiocideGasBlock extends TransparentBlock {
 
 		boolean isSettled = !hadActivity && isEquilibrated(pos, density, cachedStates);
 
-		if (density >= 0) {
+		if (density >= MIN_DENSITY) {
 			BlockState nextState = this.defaultBlockState()
-					.setValue(DENSITY, Math.min(density, 15))
+					.setValue(DENSITY, Math.min(density, MAX_DENSITY))
 					.setValue(SETTLED, isSettled);
 			level.setBlockAndUpdate(pos, nextState);
 			int nextTickDelay = isSettled ? 30 : 10;
@@ -250,7 +238,7 @@ public class BiocideGasBlock extends TransparentBlock {
 	}
 
 	private boolean isEquilibrated(BlockPos pos, int density, Map<BlockPos, BlockState> cachedStates) {
-		if (density <= 0) return true;
+		if (density < MIN_DENSITY) return true;
 
 		// Down
 		BlockPos belowPos = pos.below();
@@ -291,7 +279,7 @@ public class BiocideGasBlock extends TransparentBlock {
 			Set<BlockPos> newlyCreatedGas,
 			Set<BlockPos> upgradedGasPositions,
 			RandomSource random) {
-		if (density <= 0) return density;
+		if (density < MIN_DENSITY) return density;
 		int spreadAmount = 0;
 		
 		// Down
@@ -301,13 +289,13 @@ public class BiocideGasBlock extends TransparentBlock {
 		spreadAmount += amtSpread;
 		density -= amtSpread;
 		
-		if (density <= 0 || spreadAmount >= MAX_SPREAD_RATE) return density;
+		if (density < MIN_DENSITY || spreadAmount >= MAX_SPREAD_RATE) return density;
 		
 		// Sides
 		amtSpread = doSpreadHorizontal(pos, density, MAX_SPREAD_RATE - spreadAmount, cachedStates, pendingBlockUpdates, newlyCreatedGas, upgradedGasPositions, random);
 		spreadAmount += amtSpread;
 		density -= amtSpread;
-		if (density <= 0 || spreadAmount >= MAX_SPREAD_RATE) return density;
+		if (density < MIN_DENSITY || spreadAmount >= MAX_SPREAD_RATE) return density;
 		
 		// Up
 		int aboveDensity = getDensity(cachedStates, pos.above());
@@ -328,7 +316,7 @@ public class BiocideGasBlock extends TransparentBlock {
 			Set<BlockPos> newlyCreatedGas,
 			Set<BlockPos> upgradedGasPositions,
 			RandomSource random) {		
-		if (spreadBudget <= 0 || density <= 0) return 0;
+		if (spreadBudget <= 0 || density < MIN_DENSITY) return 0;
 
 		List<BlockPos> validNeighbors = new ArrayList<>(4);
 		for (Direction dir : Direction.Plane.HORIZONTAL) {
@@ -456,9 +444,14 @@ public class BiocideGasBlock extends TransparentBlock {
 				pendingBlockUpdates.put(targetPos, upgradedGas);
 				upgradedGasPositions.add(targetPos);
 				
-				BlockState reducedGas = sourceState
-						.setValue(DENSITY, Math.max(0, sourceDensity - actualDensityMoved));
-				cachedStates.put(sourcePos, reducedGas);
+				int remainingSource = sourceDensity - actualDensityMoved;
+				if (remainingSource >= MIN_DENSITY) {
+					BlockState reducedGas = sourceState.setValue(DENSITY, remainingSource);
+					cachedStates.put(sourcePos, reducedGas);
+				} else {
+					cachedStates.put(sourcePos, Blocks.AIR.defaultBlockState());
+					pendingBlockUpdates.put(sourcePos, Blocks.AIR.defaultBlockState());
+				}
 			}
 			
 			return actualDensityMoved;
@@ -466,7 +459,7 @@ public class BiocideGasBlock extends TransparentBlock {
 		
 		if (targetState.isAir()) {
 			int actualDensityMoved = Math.min(maxDensity, MAX_DENSITY);
-			if (actualDensityMoved <= 0) return 0;
+			if (actualDensityMoved < MIN_DENSITY) return 0;
 
 			if (!simulate) {
 				BlockState newGas = this.defaultBlockState()
@@ -476,9 +469,14 @@ public class BiocideGasBlock extends TransparentBlock {
 				pendingBlockUpdates.put(targetPos, newGas);
 				newlyCreatedGas.add(targetPos);
 				
-				BlockState reducedGas = sourceState
-						.setValue(DENSITY, Math.max(0, sourceDensity - actualDensityMoved));
-				cachedStates.put(sourcePos, reducedGas);
+				int remainingSource = sourceDensity - actualDensityMoved;
+				if (remainingSource >= MIN_DENSITY) {
+					BlockState reducedGas = sourceState.setValue(DENSITY, remainingSource);
+					cachedStates.put(sourcePos, reducedGas);
+				} else {
+					cachedStates.put(sourcePos, Blocks.AIR.defaultBlockState());
+					pendingBlockUpdates.put(sourcePos, Blocks.AIR.defaultBlockState());
+				}
 			}
 			
 			return actualDensityMoved;

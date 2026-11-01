@@ -1,11 +1,5 @@
 {
   "variants": {
-    "density=0,settled=false": {
-      "model": "create_soul_harvest:block/biocide_gas_0_active"
-    },
-    "density=0,settled=true": {
-      "model": "create_soul_harvest:block/biocide_gas_0"
-    },
     "density=1,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_0_active"
     },
@@ -48,6 +42,12 @@
     "density=15,settled=true": {
       "model": "create_soul_harvest:block/biocide_gas_2"
     },
+    "density=16,settled=false": {
+      "model": "create_soul_harvest:block/biocide_gas_2_active"
+    },
+    "density=16,settled=true": {
+      "model": "create_soul_harvest:block/biocide_gas_2"
+    },
     "density=2,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_0_active"
     },
@@ -55,10 +55,10 @@
       "model": "create_soul_harvest:block/biocide_gas_0"
     },
     "density=3,settled=false": {
-      "model": "create_soul_harvest:block/biocide_gas_1_active"
+      "model": "create_soul_harvest:block/biocide_gas_0_active"
     },
     "density=3,settled=true": {
-      "model": "create_soul_harvest:block/biocide_gas_1"
+      "model": "create_soul_harvest:block/biocide_gas_0"
     },
     "density=4,settled=false": {
       "model": "create_soul_harvest:block/biocide_gas_1_active"

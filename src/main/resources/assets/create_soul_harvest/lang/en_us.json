@@ -52,6 +52,7 @@
   "item.create_soul_harvest.loot_token_blank": "Loot Token Blank",
   "item.create_soul_harvest.loot_token": "Loot Token",
   "item.create_soul_harvest.biocide_gas_bottle": "Biocide Gas Bottle",
+  "tooltip.create_soul_harvest.biocide_bottle_amount": "Biocide: %s / %s",
   "item.create_soul_harvest.contagion_charge": "Contagion Charge",
   
   "entity.create_soul_harvest.contagion_charge": "Contagion Charge",
