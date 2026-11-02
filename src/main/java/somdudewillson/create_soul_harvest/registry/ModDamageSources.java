@@ -4,6 +4,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -30,5 +31,13 @@ public final class ModDamageSources {
 
 	public static DamageSource biocide(Level level, @Nullable Entity source) {
 		return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(BIOCIDE), source);
+	}
+
+	public static DamageSource wither(Level level) {
+		return wither(level, null);
+	}
+
+	public static DamageSource wither(Level level, @Nullable Entity source) {
+		return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.WITHER), source);
 	}
 }

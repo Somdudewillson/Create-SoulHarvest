@@ -19,6 +19,7 @@ import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 import somdudewillson.create_soul_harvest.content.item.SoulBookItem;
 import somdudewillson.create_soul_harvest.content.soul.SoulData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
+import somdudewillson.create_soul_harvest.registry.ModTags;
 import somdudewillson.create_soul_harvest.util.AdvancementHelper;
 
 public class SoulHarvestDeathEvents {
@@ -54,8 +55,13 @@ public class SoulHarvestDeathEvents {
 		if (heldSoul != null && !heldSoul.equals(entityKey)) {
 			return;
 		}
+		
+		int soulYield = soulData.progressPerKill();
+		if (player.getItemInHand(InteractionHand.MAIN_HAND).is(ModTags.Items.ENHANCES_SOUL_YIELD)) {
+			soulYield = Math.round(soulYield * 1.5f);
+		}
 
-		int newPortion = Math.min(100, soulPortion + soulData.progressPerKill());
+		int newPortion = Math.min(100, soulPortion + soulYield);
 		SoulBookItem.setSoulData(offhand, entityKey, newPortion);
 		player.setItemInHand(InteractionHand.OFF_HAND, offhand);
 

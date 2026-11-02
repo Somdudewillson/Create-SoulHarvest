@@ -145,6 +145,8 @@ public class ModItems {
 			.simpleItem()
 			.inCreativeTab(ModCreativeTabs::addToMainTab)
 			.build();
+	public static final DeferredHolder<Item, NecroniumScytheItem> NECRONIUM_SCYTHE = registerWithTab("necronium_scythe",
+			() -> new NecroniumScytheItem(new Item.Properties().fireResistant().rarity(Rarity.UNCOMMON)));
 
 	// Soul Harvest items
 	public static final DeferredHolder<Item, Item> SOUL_DEPOSIT_SEED = ITEM_BUILDER_FACTORY.registerItem("soul_deposit_seed", SoulDepositSeedItem::new)

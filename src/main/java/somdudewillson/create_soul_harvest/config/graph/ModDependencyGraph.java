@@ -156,11 +156,20 @@ public class ModDependencyGraph {
 		
 		GRAPH.node(ModItems.NECRONIUM_WASTE.getId())
 				.groups("necronium");
+		
+		GRAPH.node(ModItems.NECRONIUM_CHARM.getId())
+				.requires(ModItems.NECRONIUM_PLATE.getId())
+				.requires(ModItems.MAGIC_GOLD_CHUNK.getId())
+				.groups("necronium", "equipment");
+		
+		GRAPH.node(ModItems.NECRONIUM_SCYTHE.getId())
+				.requires(ModItems.NECRONIUM_PLATE.getId())
+				.requires(ModItems.SPELL_ROD_WOOD.getId())
+				.groups("necronium", "equipment");
 
 		// Spells group
 		GRAPH.node(ModItems.SPELL_ROD_WOOD.getId())
-				.requires(ModItems.MAGIC_GOLD_STRING.getId())
-				.groups("spells", "spells_t1");
+				.requires(ModItems.MAGIC_GOLD_STRING.getId());
 		GRAPH.node(ModItems.SPELL_ROD_NECRONIUM.getId())
 				.requiresAll(ModItems.MAGIC_GOLD_STRING.getId(), ModItems.NECRONIUM_ROD.getId())
 				.groups("spells", "spells_t2");

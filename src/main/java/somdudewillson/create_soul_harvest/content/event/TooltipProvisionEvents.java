@@ -45,6 +45,7 @@ public class TooltipProvisionEvents {
 		registerStandardTooltip(ModItems.NECRONIUM_CHARM);
 		registerStandardTooltip(ModItems.NECRONIUM_WASTE);
 		registerStandardTooltip(ModItems.NECRONIUM_WASTE_BOTTLE);
+		registerStandardTooltip(ModItems.NECRONIUM_SCYTHE);
 		registerStandardTooltip(ModItems.SOUL_DEPOSIT_SEED);
 		registerStandardTooltipBlock(ModBlocks.MIDAS_CORE);
 		registerStandardTooltipBlock(ModBlocks.ABSOLUTE_ICE);

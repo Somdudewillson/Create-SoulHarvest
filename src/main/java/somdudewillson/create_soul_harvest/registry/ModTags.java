@@ -79,6 +79,7 @@ public final class ModTags {
 
 		public static final TagKey<Item> BIOCIDE_GAS_PROTECTION = modTag("biocide_gas_protection");
 		public static final TagKey<Item> COMPOSTABLES = modTag("compostables");
+		public static final TagKey<Item> ENHANCES_SOUL_YIELD = modTag("enhances_soul_yield");
 		
 		public static final TagKey<Item> LOOT_TOKEN_ONLY = modTag("loot_token_only");
 		public static final TagKey<Item> GRIND_DROP_FORBIDDEN = modTag("grind_drop_forbidden");

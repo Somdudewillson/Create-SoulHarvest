@@ -113,6 +113,10 @@ public class ModItemTagProvider extends ItemTagsProvider {
 				.addOptional(ResourceLocation.fromNamespaceAndPath("create", "copper_diving_helmet"))
 				.addOptional(ResourceLocation.fromNamespaceAndPath("create", "netherite_diving_helmet"));
 		
+		// Soul Yield Enhancers
+		tag(ModTags.Items.ENHANCES_SOUL_YIELD)
+				.add(ModItems.NECRONIUM_SCYTHE.get());
+		
 		// Mob drop tags
 		tag(ModTags.Items.GRIND_DROP_FORBIDDEN);
 		
@@ -212,7 +216,17 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		
 		// Enchantment tags
 		tag(ItemTags.DURABILITY_ENCHANTABLE)
-			.add(ModItems.NECRONIUM_CHARM.get());
+			.add(ModItems.NECRONIUM_CHARM.get())
+			.add(ModItems.NECRONIUM_SCYTHE.get());
+		
+		tag(ItemTags.SWORD_ENCHANTABLE)
+			.add(ModItems.NECRONIUM_SCYTHE.get());
+		
+		tag(ItemTags.SHARP_WEAPON_ENCHANTABLE)
+			.add(ModItems.NECRONIUM_SCYTHE.get());
+		
+		tag(ItemTags.WEAPON_ENCHANTABLE)
+			.add(ModItems.NECRONIUM_SCYTHE.get());
 	}
 
 	@Override

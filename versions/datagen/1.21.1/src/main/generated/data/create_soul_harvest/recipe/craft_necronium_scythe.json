@@ -1,0 +1,33 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "create_soul_harvest:item_reachable",
+      "item": "create_soul_harvest:necronium_scythe"
+    }
+  ],
+  "type": "create:mechanical_crafting",
+  "accept_mirrored": false,
+  "category": "misc",
+  "key": {
+    "+": {
+      "item": "create_soul_harvest:soul_mechanism"
+    },
+    "=": {
+      "item": "create_soul_harvest:necronium_plate"
+    },
+    "|": {
+      "item": "create_soul_harvest:spell_rod_wood"
+    }
+  },
+  "pattern": [
+    " ===+",
+    "=   |",
+    "    |",
+    "    |"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_soul_harvest:necronium_scythe"
+  },
+  "show_notification": false
+}

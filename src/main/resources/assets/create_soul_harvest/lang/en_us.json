@@ -64,6 +64,8 @@
   "item.create_soul_harvest.necronium_waste": "Necronium Waste",
   "item.create_soul_harvest.necronium_waste_bottle": "Necronium Waste Bottle",
   "item.create_soul_harvest.necronium_charm": "Necronium Charm",
+  "item.create_soul_harvest.necronium_scythe": "Necronium Scythe",
+  "tooltip.create_soul_harvest.necronium_scythe.wither_damage": " +2 Wither Damage",
   
   "item.create_soul_harvest.polyclay": "Polyclay",
   "item.create_soul_harvest.polyclay_attuned_incomplete": "Semituned Polyclay",
@@ -297,6 +299,12 @@
   "item.create_soul_harvest.necronium_charm.tooltip.behaviour1": "Wielder will be cured at the cost of _Durability_",
   "item.create_soul_harvest.necronium_charm.tooltip.condition2": "While wearing Backtank",
   "item.create_soul_harvest.necronium_charm.tooltip.behaviour2": "_No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
+  
+  "item.create_soul_harvest.necronium_scythe.tooltip.summary": "A lethal scythe forged from _Necronium_. Reaps souls with enhanced efficiency and inflicts _Wither_ damage.",
+  "item.create_soul_harvest.necronium_scythe.tooltip.condition1": "When attacking",
+  "item.create_soul_harvest.necronium_scythe.tooltip.behaviour1": "Strikes with a sweeping attack dealing _7_ damage plus _2_ _Wither_ damage.",
+  "item.create_soul_harvest.necronium_scythe.tooltip.condition2": "When harvesting souls",
+  "item.create_soul_harvest.necronium_scythe.tooltip.behaviour2": "Increases _soul_ _yield_ captured into soul books by _50%%_.",
   
 
   "create_soul_harvest.gui.goggles.midas_core": "Midas Core:",

@@ -172,7 +172,7 @@ public final class CreateRecipeGen {
 		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.NECRONIUM_CHARM.get(), 1)
 				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_CHARM.getId()))
 				.key('=', ModItems.NECRONIUM_PLATE.get())
-				.key('C', ModItems.MAGIC_GOLD.get())
+				.key('C', ModItems.MAGIC_GOLD_CHUNK.get())
 				.key('S', ModItems.ENCHANTED_INLAID_LAPIS.get())
 				.key('|', AllBlocks.FLUID_PIPE)
 				.key('+', AllItems.PRECISION_MECHANISM)
@@ -182,6 +182,19 @@ public final class CreateRecipeGen {
 				.patternLine(" CCC ")
 				.disallowMirrored()
 				.build(recipeOutput, SoulHarvestMod.id("craft_necronium_charm"));
+
+		// Necronium Scythe
+		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.NECRONIUM_SCYTHE.get(), 1)
+				.withCondition(new ItemReachableCondition(ModItems.NECRONIUM_SCYTHE.getId()))
+				.key('=', ModItems.NECRONIUM_PLATE.get())
+				.key('|', ModItems.SPELL_ROD_WOOD.get())
+				.key('+', ModItems.SOUL_MECHANISM.get())
+				.patternLine(" ===+")
+				.patternLine("=   |")
+				.patternLine("    |")
+				.patternLine("    |")
+				.disallowMirrored()
+				.build(recipeOutput, SoulHarvestMod.id("craft_necronium_scythe"));
 	}
 
 	public static void registerCompactingRecipes(RecipeOutput recipeOutput) {
