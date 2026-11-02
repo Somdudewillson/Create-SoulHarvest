@@ -128,6 +128,9 @@
   "effect.create_soul_harvest.contagion": "Contagion",
   "death.attack.create_soul_harvest.contagion": "%1$s succumbed to contagion",
   "death.attack.create_soul_harvest.contagion.player": "%1$s succumbed to contagion while fighting %2$s",
+  "effect.create_soul_harvest.biocide": "Biocide",
+  "death.attack.create_soul_harvest.biocide": "%1$s succumbed to biocide",
+  "death.attack.create_soul_harvest.biocide.player": "%1$s succumbed to biocide while trying to escape %2$s",
   "effect.create_soul_harvest.agile_falling": "Agile Falling",
   "effect.create_soul_harvest.stoneskin": "Stoneskin",
   "effect.create_soul_harvest.vaccination": "Vaccination",
@@ -163,6 +166,7 @@
   "tag.entity_type.create_soul_harvest.requires_high_kills": "Requires High Kills",
   "tag.entity_type.create_soul_harvest.soul_can_be_captured": "Capturable Soul Mobs",
   "tag.entity_type.create_soul_harvest.contagion_immune": "Contagion Immune Entities",
+  "tag.entity_type.create_soul_harvest.biocide_immune": "Biocide Immune Entities",
 
   "tag.create_soul_harvest.glyph_pages": "Glyph Pages",
   "tag.create_soul_harvest.glyph_scrolls": "Glyph Scrolls",
@@ -188,6 +192,7 @@
   "tag.create_soul_harvest.requires_high_kills": "Requires High Kills",
   "tag.create_soul_harvest.soul_can_be_captured": "Capturable Soul Mobs",
   "tag.create_soul_harvest.contagion_immune": "Contagion Immune Entities",
+  "tag.create_soul_harvest.biocide_immune": "Biocide Immune Entities",
   
   
   "create_soul_harvest.ponder.soul_cluster_growth.header": "Growing Soul Crystals",

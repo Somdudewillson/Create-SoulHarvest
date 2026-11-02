@@ -13,9 +13,14 @@ public class NeoforgeEventSubscriber {
 
 	@SubscribeEvent
 	public static void onEffectApplicable(MobEffectEvent.Applicable event) {
-		if (event.getEffectInstance() != null
-				&& event.getEffectInstance().getEffect().value() == ModMobEffects.CONTAGION.value()
+		if (event.getEffectInstance() == null) {
+			return;
+		}
+		if (event.getEffectInstance().getEffect().value() == ModMobEffects.CONTAGION.value()
 				&& event.getEntity().getType().is(ModTags.EntityTypes.CONTAGION_IMMUNE)) {
+			event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+		} else if (event.getEffectInstance().getEffect().value() == ModMobEffects.BIOCIDE.value()
+				&& event.getEntity().getType().is(ModTags.EntityTypes.BIOCIDE_IMMUNE)) {
 			event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
 		}
 	}

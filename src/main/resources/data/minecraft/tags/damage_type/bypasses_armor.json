@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "create_soul_harvest:contagion"
+    "create_soul_harvest:contagion",
+    "create_soul_harvest:biocide"
   ]
 }

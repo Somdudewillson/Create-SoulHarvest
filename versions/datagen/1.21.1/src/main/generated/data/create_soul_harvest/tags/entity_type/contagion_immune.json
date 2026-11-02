@@ -19,6 +19,27 @@
     {
       "id": "friendsandfoes:tuff_golem",
       "required": false
+    },
+    "minecraft:iron_golem",
+    "minecraft:snow_golem",
+    "minecraft:blaze",
+    "minecraft:guardian",
+    "minecraft:elder_guardian",
+    "minecraft:wither",
+    "minecraft:ender_dragon",
+    "#minecraft:skeletons",
+    "#minecraft:zombies",
+    {
+      "id": "friendsandfoes:wildfire",
+      "required": false
+    },
+    {
+      "id": "friendsandfoes:copper_golem",
+      "required": false
+    },
+    {
+      "id": "friendsandfoes:tuff_golem",
+      "required": false
     }
   ]
 }

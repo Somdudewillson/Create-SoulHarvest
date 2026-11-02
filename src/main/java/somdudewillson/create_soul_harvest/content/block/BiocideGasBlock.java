@@ -12,6 +12,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.crafting.RecipeType;
 //? >= 1.21 {
 import net.minecraft.world.ItemInteractionResult;
@@ -32,10 +36,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import com.simibubi.create.content.equipment.armor.BacktankUtil;
 import somdudewillson.create_soul_harvest.content.item.BiocideGasBottleItem;
 import somdudewillson.create_soul_harvest.content.recipe.BiocideConversionRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.ConversionResult;
+import somdudewillson.create_soul_harvest.registry.ModMobEffects;
 import somdudewillson.create_soul_harvest.registry.ModRecipeTypes;
+import somdudewillson.create_soul_harvest.registry.ModTags;
 
 public class BiocideGasBlock extends TransparentBlock {
 
@@ -44,6 +51,14 @@ public class BiocideGasBlock extends TransparentBlock {
 	public static final int VERTICAL_FLOW_THRESHOLD = 8;
 	public static final IntegerProperty DENSITY = IntegerProperty.create("density", MIN_DENSITY, MAX_DENSITY);
 	public static final BooleanProperty SETTLED = BooleanProperty.create("settled");
+
+	public static final int MAX_EFFECT_AMPLIFIER = 2; // Level III
+	public static final int DENSITY_PER_LEVEL = Math.max(1, MAX_DENSITY / (MAX_EFFECT_AMPLIFIER + 1));
+	public static final int EFFECT_DURATION = 100; // 5 seconds (100 ticks)
+	public static final int REFRESH_THRESHOLD = 60; // 3 seconds
+	private static final EquipmentSlot[] ARMOR_SLOTS = {
+			EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET
+	};
 
 	public BiocideGasBlock(Properties properties) {
 		super(properties);
@@ -60,6 +75,94 @@ public class BiocideGasBlock extends TransparentBlock {
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		return Shapes.block();
+	}
+
+	public static boolean isProtected(LivingEntity entity) {
+		for (ItemStack armor : entity.getArmorSlots()) {
+			if (!armor.isEmpty() && armor.is(ModTags.Items.BIOCIDE_GAS_PROTECTION)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static void applyProtectionWear(LivingEntity entity) {
+		List<ItemStack> backtanks = BacktankUtil.getAllWithAir(entity);
+		if (!backtanks.isEmpty()) {
+			BacktankUtil.consumeAir(entity, backtanks.get(0), 1);
+			return;
+		}
+
+		for (EquipmentSlot slot : ARMOR_SLOTS) {
+			ItemStack stack = entity.getItemBySlot(slot);
+			if (!stack.isEmpty() && stack.is(ModTags.Items.BIOCIDE_GAS_PROTECTION)) {
+				//? >= 1.21 {
+				stack.hurtAndBreak(1, entity, slot);
+				//?} else {
+				/*stack.hurtAndBreak(1, entity, living -> living.broadcastBreakEvent(slot));
+				*///?}
+				break;
+			}
+		}
+	}
+
+	//? >= 1.21 {
+	@Override
+	protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+	//?} else {
+	/*@SuppressWarnings("deprecation")
+	@Override
+	public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+	*///?}
+		if (level.isClientSide()) return;
+		if (entity.tickCount % 20 != 0) return;
+		if (!(entity instanceof LivingEntity living))return;
+
+		if (living.isSpectator()) return;
+		if (living instanceof Player player && player.isCreative()) return;
+		if (living.getType().is(ModTags.EntityTypes.BIOCIDE_IMMUNE)) return;
+
+		if (isProtected(living)) {
+			applyProtectionWear(living);
+			return;
+		}
+
+		int density = state.getValue(DENSITY);
+		int targetAmplifier = Math.min(MAX_EFFECT_AMPLIFIER, (density - 1) / DENSITY_PER_LEVEL);
+
+		MobEffectInstance existing = living.getEffect(
+				//? >= 1.21 {
+				ModMobEffects.BIOCIDE
+				//?} else {
+				/*ModMobEffects.BIOCIDE.get()
+				*///?}
+		);
+
+		if (existing == null) {
+			living.addEffect(new MobEffectInstance(
+					//? >= 1.21 {
+					ModMobEffects.BIOCIDE
+					//?} else {
+					/*ModMobEffects.BIOCIDE.get()
+					*///?}
+					, EFFECT_DURATION, targetAmplifier));
+		} else if (existing.getAmplifier() < targetAmplifier) {
+			living.addEffect(new MobEffectInstance(
+					//? >= 1.21 {
+					ModMobEffects.BIOCIDE
+					//?} else {
+					/*ModMobEffects.BIOCIDE.get()
+					*///?}
+					, EFFECT_DURATION, targetAmplifier));
+		} else if (existing.getDuration() <= REFRESH_THRESHOLD) {
+			living.addEffect(new MobEffectInstance(
+					//? >= 1.21 {
+					ModMobEffects.BIOCIDE
+					//?} else {
+					/*ModMobEffects.BIOCIDE.get()
+					*///?}
+					, EFFECT_DURATION, existing.getAmplifier()));
+		}
 	}
 
 	//? forge {

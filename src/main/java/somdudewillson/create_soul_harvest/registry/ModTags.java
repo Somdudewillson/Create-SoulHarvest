@@ -166,6 +166,7 @@ public final class ModTags {
 		public static final TagKey<EntityType<?>> SOUL_CAPTURE_FORBIDDEN = modTag("soul_capture_forbidden");
 		public static final TagKey<EntityType<?>> SOUL_SAMPLING_FORBIDDEN = modTag("soul_sampling_forbidden");
 		public static final TagKey<EntityType<?>> CONTAGION_IMMUNE = modTag("contagion_immune");
+		public static final TagKey<EntityType<?>> BIOCIDE_IMMUNE = modTag("biocide_immune");
 
 		private static TagKey<EntityType<?>> modTag(String path) {
 			return TagKey.create(Registries.ENTITY_TYPE, SoulHarvestMod.id(path));

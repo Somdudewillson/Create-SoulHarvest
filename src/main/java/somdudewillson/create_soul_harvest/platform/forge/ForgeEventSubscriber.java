@@ -14,9 +14,14 @@ public class ForgeEventSubscriber {
 
 	@SubscribeEvent
 	public static void onEffectApplicable(MobEffectEvent.Applicable event) {
-		if (event.getEffectInstance() != null
-				&& event.getEffectInstance().getEffect() == ModMobEffects.CONTAGION.get()
+		if (event.getEffectInstance() == null) {
+			return;
+		}
+		if (event.getEffectInstance().getEffect() == ModMobEffects.CONTAGION.get()
 				&& event.getEntity().getType().is(ModTags.EntityTypes.CONTAGION_IMMUNE)) {
+			event.setResult(Event.Result.DENY);
+		} else if (event.getEffectInstance().getEffect() == ModMobEffects.BIOCIDE.get()
+				&& event.getEntity().getType().is(ModTags.EntityTypes.BIOCIDE_IMMUNE)) {
 			event.setResult(Event.Result.DENY);
 		}
 	}

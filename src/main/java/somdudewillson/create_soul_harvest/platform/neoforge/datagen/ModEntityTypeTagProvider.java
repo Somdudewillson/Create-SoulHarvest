@@ -260,6 +260,22 @@ public class ModEntityTypeTagProvider extends EntityTypeTagsProvider {
 		.addOptional(ResourceLocation.fromNamespaceAndPath("friendsandfoes", "wildfire"))
 		.addOptional(ResourceLocation.fromNamespaceAndPath("friendsandfoes", "copper_golem"))
 		.addOptional(ResourceLocation.fromNamespaceAndPath("friendsandfoes", "tuff_golem"));
+
+		// Biocide immune entities
+		tag(ModTags.EntityTypes.CONTAGION_IMMUNE).add(
+				EntityType.IRON_GOLEM,
+				EntityType.SNOW_GOLEM,
+				EntityType.BLAZE,
+				EntityType.GUARDIAN,
+				EntityType.ELDER_GUARDIAN,
+				EntityType.WITHER,
+				EntityType.ENDER_DRAGON
+		)
+		.addTag(EntityTypeTags.SKELETONS)
+		.addTag(EntityTypeTags.ZOMBIES)
+		.addOptional(ResourceLocation.fromNamespaceAndPath("friendsandfoes", "wildfire"))
+		.addOptional(ResourceLocation.fromNamespaceAndPath("friendsandfoes", "copper_golem"))
+		.addOptional(ResourceLocation.fromNamespaceAndPath("friendsandfoes", "tuff_golem"));
 	}
 
 	@Override

@@ -14,6 +14,7 @@ public final class ModDamageSources {
 	private ModDamageSources() {}
 
 	public static final ResourceKey<DamageType> CONTAGION = ResourceKey.create(Registries.DAMAGE_TYPE, SoulHarvestMod.id("contagion"));
+	public static final ResourceKey<DamageType> BIOCIDE = ResourceKey.create(Registries.DAMAGE_TYPE, SoulHarvestMod.id("biocide"));
 
 	public static DamageSource contagion(Level level) {
 		return contagion(level, null);
@@ -21,5 +22,13 @@ public final class ModDamageSources {
 
 	public static DamageSource contagion(Level level, @Nullable Entity source) {
 		return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(CONTAGION), source);
+	}
+
+	public static DamageSource biocide(Level level) {
+		return biocide(level, null);
+	}
+
+	public static DamageSource biocide(Level level, @Nullable Entity source) {
+		return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(BIOCIDE), source);
 	}
 }
