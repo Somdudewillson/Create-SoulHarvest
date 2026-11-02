@@ -41,6 +41,7 @@ public class BiocideGasBlock extends TransparentBlock {
 
 	public static final int MIN_DENSITY = 1;
 	public static final int MAX_DENSITY = 16;
+	public static final int VERTICAL_FLOW_THRESHOLD = 8;
 	public static final IntegerProperty DENSITY = IntegerProperty.create("density", MIN_DENSITY, MAX_DENSITY);
 	public static final BooleanProperty SETTLED = BooleanProperty.create("settled");
 
@@ -244,8 +245,13 @@ public class BiocideGasBlock extends TransparentBlock {
 		BlockPos belowPos = pos.below();
 		BlockState belowState = cachedStates.get(belowPos);
 		if (belowState != null && (belowState.is(this) || belowState.isAir())) {
-			if ((density - getDensity(cachedStates, belowPos) + 1) / 2 > 0) {
-				return false;
+			int belowDensity = getDensity(cachedStates, belowPos);
+			if (belowDensity < MAX_DENSITY) {
+				int splitAmount = (density - belowDensity + 1) / 2;
+				int thresholdAmount = VERTICAL_FLOW_THRESHOLD - belowDensity;
+				if (Math.max(splitAmount, thresholdAmount) > 0) {
+					return false;
+				}
 			}
 		}
 
@@ -264,8 +270,11 @@ public class BiocideGasBlock extends TransparentBlock {
 		BlockPos abovePos = pos.above();
 		BlockState aboveState = cachedStates.get(abovePos);
 		if (aboveState != null && (aboveState.is(this) || aboveState.isAir())) {
-			if ((density - getDensity(cachedStates, abovePos) - 1) / 2 > 0) {
-				return false;
+			int aboveDensity = getDensity(cachedStates, abovePos);
+			if (aboveDensity < MAX_DENSITY && density > VERTICAL_FLOW_THRESHOLD) {
+				if ((density - aboveDensity - 1) / 2 > 0) {
+					return false;
+				}
 			}
 		}
 
@@ -284,8 +293,11 @@ public class BiocideGasBlock extends TransparentBlock {
 		
 		// Down
 		int belowDensity = getDensity(cachedStates, pos.below());
-		int belowSpreadAmount = (density - belowDensity + 1) / 2;
-		int amtSpread = trySpreadDensity(cachedStates, pendingBlockUpdates, newlyCreatedGas, upgradedGasPositions, pos, pos.below(), Math.min(MAX_SPREAD_RATE-spreadAmount, belowSpreadAmount), false);
+		int splitAmount = (density - belowDensity + 1) / 2;
+		int thresholdAmount = VERTICAL_FLOW_THRESHOLD - belowDensity;
+		int targetSpread = Math.max(splitAmount, thresholdAmount);
+		int belowSpreadAmount = Math.max(0, Math.min(density, targetSpread));
+		int amtSpread = trySpreadDensity(cachedStates, pendingBlockUpdates, newlyCreatedGas, upgradedGasPositions, pos, pos.below(), Math.min(MAX_SPREAD_RATE - spreadAmount, belowSpreadAmount), false);
 		spreadAmount += amtSpread;
 		density -= amtSpread;
 		
@@ -298,11 +310,15 @@ public class BiocideGasBlock extends TransparentBlock {
 		if (density < MIN_DENSITY || spreadAmount >= MAX_SPREAD_RATE) return density;
 		
 		// Up
-		int aboveDensity = getDensity(cachedStates, pos.above());
-		int aboveSpreadAmount = (density - aboveDensity - 1) / 2;
-		amtSpread = trySpreadDensity(cachedStates, pendingBlockUpdates, newlyCreatedGas, upgradedGasPositions, pos, pos.above(), Math.min(MAX_SPREAD_RATE-spreadAmount, aboveSpreadAmount), false);
-		spreadAmount += amtSpread;
-		density -= amtSpread;
+		if (density > VERTICAL_FLOW_THRESHOLD) {
+			int aboveDensity = getDensity(cachedStates, pos.above());
+			int desiredSpread = (density - aboveDensity - 1) / 2;
+			int maxAllowed = density - VERTICAL_FLOW_THRESHOLD;
+			int aboveSpreadAmount = Math.max(0, Math.min(desiredSpread, maxAllowed));
+			amtSpread = trySpreadDensity(cachedStates, pendingBlockUpdates, newlyCreatedGas, upgradedGasPositions, pos, pos.above(), Math.min(MAX_SPREAD_RATE - spreadAmount, aboveSpreadAmount), false);
+			spreadAmount += amtSpread;
+			density -= amtSpread;
+		}
 
 		return density;
 	}
