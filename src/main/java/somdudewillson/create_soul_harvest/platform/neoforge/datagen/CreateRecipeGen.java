@@ -193,6 +193,8 @@ public final class CreateRecipeGen {
 				.patternLine("=   |")
 				.patternLine("    |")
 				.patternLine("    |")
+				.patternLine("    |")
+				.patternLine("    |")
 				.disallowMirrored()
 				.build(recipeOutput, SoulHarvestMod.id("craft_necronium_scythe"));
 	}
