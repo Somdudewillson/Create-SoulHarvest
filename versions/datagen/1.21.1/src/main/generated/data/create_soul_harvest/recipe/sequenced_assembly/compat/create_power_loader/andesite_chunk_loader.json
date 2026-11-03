@@ -1,0 +1,76 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create_power_loader"
+    }
+  ],
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "create_power_loader:empty_andesite_chunk_loader"
+  },
+  "results": [
+    {
+      "id": "create_power_loader:andesite_chunk_loader"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_power_loader:empty_andesite_chunk_loader"
+        },
+        {
+          "type": "create_soul_harvest:attuned_polyclay",
+          "min_tier": 1,
+          "soul_tag": "create_power_loader:chunk_loader_capturable"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_power_loader:empty_andesite_chunk_loader"
+        }
+      ]
+    },
+    {
+      "type": "create:filling",
+      "ingredients": [
+        {
+          "item": "create_power_loader:empty_andesite_chunk_loader"
+        },
+        {
+          "type": "neoforge:single",
+          "amount": 200,
+          "fluid": "create_soul_harvest:liquid_soul_crystal"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_power_loader:empty_andesite_chunk_loader"
+        }
+      ]
+    },
+    {
+      "type": "create:filling",
+      "ingredients": [
+        {
+          "item": "create_power_loader:empty_andesite_chunk_loader"
+        },
+        {
+          "type": "neoforge:single",
+          "amount": 1000,
+          "fluid": "minecraft:lava"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_power_loader:empty_andesite_chunk_loader"
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "create_power_loader:empty_andesite_chunk_loader"
+  }
+}

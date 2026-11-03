@@ -1,0 +1,68 @@
+{
+    "type": "create:sequenced_assembly",
+    "ingredient": {
+        "item": "create:empty_blaze_burner"
+    },
+    "results": [
+        {
+            "item": "create:blaze_burner"
+        }
+    ],
+    "sequence": [
+        {
+            "type": "create:deploying",
+            "ingredients": [
+                {
+                    "item": "create:empty_blaze_burner"
+                },
+                {
+                    "type": "create_soul_harvest:attuned_polyclay",
+                    "min_tier": 1,
+                    "soul_tag": "create:blaze_burner_capturable"
+                }
+            ],
+            "results": [
+                {
+                    "item": "create:empty_blaze_burner"
+                }
+            ]
+        },
+        {
+            "type": "create:filling",
+            "ingredients": [
+                {
+                    "item": "create:empty_blaze_burner"
+                },
+                {
+                    "amount": 250,
+                    "fluid": "create_soul_harvest:liquid_soul_crystal"
+                }
+            ],
+            "results": [
+                {
+                    "item": "create:empty_blaze_burner"
+                }
+            ]
+        },
+        {
+            "type": "create:filling",
+            "ingredients": [
+                {
+                    "item": "create:empty_blaze_burner"
+                },
+                {
+                    "amount": 1000,
+                    "fluid": "minecraft:lava"
+                }
+            ],
+            "results": [
+                {
+                    "item": "create:empty_blaze_burner"
+                }
+            ]
+        }
+    ],
+    "transitionalItem": {
+        "item": "create:empty_blaze_burner"
+    }
+}

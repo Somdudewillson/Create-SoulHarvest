@@ -4,6 +4,7 @@ package somdudewillson.create_soul_harvest.platform.neoforge.datagen;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeBuilder;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
@@ -54,6 +55,7 @@ import somdudewillson.create_soul_harvest.content.recipe.SelectiveSplashingRecip
 import somdudewillson.create_soul_harvest.content.recipe.SoulInfusionRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.UniformSequencedAssemblyRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.condition.ItemReachableCondition;
+import somdudewillson.create_soul_harvest.content.recipe.ingredient.AttunedPolyclayIngredient;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 import somdudewillson.create_soul_harvest.registry.ModFluids;
 import somdudewillson.create_soul_harvest.registry.ModItems;
@@ -455,6 +457,17 @@ public final class CreateRecipeGen {
 				.loops(3)
 				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ModItems.MAGIC_GOLD_STRING.get()))
 				.addOutput(ModItems.SPELL_ROD_NECRONIUM.get(), 1f)
+				.build(recipeOutput);
+
+		// Blaze Burner from Attuned Polyclay
+		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("create_sequenced_blaze_burner"))
+				.require(AllItems.EMPTY_BLAZE_BURNER.get())
+				.transitionTo(AllItems.EMPTY_BLAZE_BURNER.get())
+				.loops(1)
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(AttunedPolyclayIngredient.of(AllTags.AllEntityTags.BLAZE_BURNER_CAPTURABLE.tag, 1)))
+				.addStep(FillingRecipe::new, rb -> rb.require(ModFluids.LIQUID_SOUL_CRYSTAL.get(), 250))
+				.addStep(FillingRecipe::new, rb -> rb.require(Fluids.LAVA, 1000))
+				.addOutput(AllBlocks.BLAZE_BURNER.get(), 1.0f)
 				.build(recipeOutput);
 	}
 	

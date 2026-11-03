@@ -5,10 +5,13 @@ package somdudewillson.create_soul_harvest.platform.neoforge.datagen;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.simibubi.create.content.fluids.transfer.FillingRecipe;
+import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe.Builder;
+import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -18,6 +21,9 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -25,12 +31,17 @@ import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
+
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.recipe.MidasFluidBoostRecipe;
 import somdudewillson.create_soul_harvest.content.recipe.condition.FluidExistsCondition;
 import somdudewillson.create_soul_harvest.content.recipe.condition.ItemReachableCondition;
 import somdudewillson.create_soul_harvest.content.recipe.condition.MinecraftVersionCondition;
+import somdudewillson.create_soul_harvest.content.recipe.ingredient.AttunedPolyclayIngredient;
 import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOAlloySmeltingRecipeBuilder;
 import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOSagMillingRecipeBuilder;
 import somdudewillson.create_soul_harvest.platform.neoforge.datagen.compat.enderio.EnderIOSagMillingRecipeBuilder.SagBonusType;
@@ -110,6 +121,7 @@ public final class CompatRecipeGen {
 		generateEnderIOSagMillingRecipes(recipeOutput, registries);
 		generateEnderIOAlloySmeltingRecipes(recipeOutput, registries);
 		generateMekanismRecipes(recipeOutput, registries);
+		generateCreatePowerLoaderRecipes(recipeOutput, registries);
 	}
 
 	private static void generatePolyclayCompatRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
@@ -407,6 +419,38 @@ public final class CompatRecipeGen {
 				.output("mekanism:nuclear_waste", 200)
 				.perTickUsage(true)
 				.save(recipeOutput, SoulHarvestMod.id("compat/mekanism/dissolution/nuclear_waste_from_necronium"));
+	}
+
+	private static void generateCreatePowerLoaderRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
+		TagKey<EntityType<?>> ghastTag = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("create_power_loader", "chunk_loader_capturable"));
+		RecipeOutput conditionedOutput = recipeOutput.withConditions(new ModLoadedCondition("create_power_loader"));
+
+		Item emptyAndesite = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create_power_loader", "empty_andesite_chunk_loader"));
+		Item andesiteLoader = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create_power_loader", "andesite_chunk_loader"));
+		Item emptyBrass = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create_power_loader", "empty_brass_chunk_loader"));
+		Item brassLoader = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create_power_loader", "brass_chunk_loader"));
+
+		// Andesite Chunk Loader
+		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("compat/create_power_loader/andesite_chunk_loader"))
+				.require(emptyAndesite)
+				.transitionTo(emptyAndesite)
+				.loops(1)
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(AttunedPolyclayIngredient.of(ghastTag, 1)))
+				.addStep(FillingRecipe::new, rb -> rb.require(ModFluids.LIQUID_SOUL_CRYSTAL.get(), 200))
+				.addStep(FillingRecipe::new, rb -> rb.require(Fluids.LAVA, 1000))
+				.addOutput(andesiteLoader, 1.0f)
+				.build(conditionedOutput);
+
+		// Brass Chunk Loader
+		new SequencedAssemblyRecipeBuilder(SoulHarvestMod.id("compat/create_power_loader/brass_chunk_loader"))
+				.require(emptyBrass)
+				.transitionTo(emptyBrass)
+				.loops(1)
+				.addStep(DeployerApplicationRecipe::new, rb -> rb.require(AttunedPolyclayIngredient.of(ghastTag, 2)))
+				.addStep(FillingRecipe::new, rb -> rb.require(ModFluids.LIQUID_SOUL_CRYSTAL.get(), 400))
+				.addStep(FillingRecipe::new, rb -> rb.require(Fluids.LAVA, 1000))
+				.addOutput(brassLoader, 1.0f)
+				.build(conditionedOutput);
 	}
 }
 //?}
