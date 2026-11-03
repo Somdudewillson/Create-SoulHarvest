@@ -4,7 +4,6 @@ import net.minecraft.resources.ResourceLocation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
-import somdudewillson.create_soul_harvest.config.graph.ItemDependency;
 import somdudewillson.create_soul_harvest.config.graph.ItemDependencyGraph;
 
 import java.util.HashMap;

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -33,7 +31,9 @@ import somdudewillson.create_soul_harvest.registry.ModItems;
 //? >= 1.21 {
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
-//?}
+//?} else {
+/*import org.jetbrains.annotations.Nullable;
+*///?}
 
 public class BiocideGasBottleItem extends Item {
 

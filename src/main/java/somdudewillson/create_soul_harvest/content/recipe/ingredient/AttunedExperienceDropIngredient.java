@@ -6,8 +6,18 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import lombok.Getter;
 
+import org.jetbrains.annotations.Nullable;
+import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
+import somdudewillson.create_soul_harvest.content.item.ExperienceDropAttunedItem;
+import somdudewillson.create_soul_harvest.registry.ModIngredients;
+import somdudewillson.create_soul_harvest.registry.ModItems;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
+
 //? >= 1.21 {
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
@@ -26,17 +36,6 @@ import net.minecraftforge.common.crafting.AbstractIngredient;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 *///?}
-
-import org.jetbrains.annotations.Nullable;
-import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
-import somdudewillson.create_soul_harvest.content.item.ExperienceDropAttunedItem;
-import somdudewillson.create_soul_harvest.registry.ModIngredients;
-import somdudewillson.create_soul_harvest.registry.ModItems;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Stream;
 
 @Getter
 //? >= 1.21 {

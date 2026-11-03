@@ -132,6 +132,7 @@ public final class ModTags {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public static final class Fluids {
 		private Fluids() {}
 

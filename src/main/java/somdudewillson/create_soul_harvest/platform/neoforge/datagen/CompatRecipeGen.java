@@ -50,6 +50,7 @@ import somdudewillson.create_soul_harvest.registry.ModFluids;
 import somdudewillson.create_soul_harvest.registry.ModItems;
 import somdudewillson.create_soul_harvest.registry.ModTags;
 
+@SuppressWarnings("unused")
 public final class CompatRecipeGen {
 	private CompatRecipeGen() {	}
 

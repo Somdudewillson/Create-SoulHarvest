@@ -89,7 +89,7 @@ public class LootTokenCategory implements IRecipeCategory<LootTokenJeiRecipe> {
 
 			builder.addSlot(RecipeIngredientRole.OUTPUT, x, y)
 					.addItemStack(drop.stack())
-					.addTooltipCallback((recipeSlotView, tooltip) -> {
+					.addRichTooltipCallback((recipeSlotView, tooltip) -> {
 						if (drop.min() != drop.max()) {
 							tooltip.add(Component.translatable("create_soul_harvest.jei.loot_token.count_range", drop.min(), drop.max())
 									.withStyle(ChatFormatting.GRAY));

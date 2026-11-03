@@ -93,6 +93,7 @@ public class SpecialRecipeOutput implements RecipeOutput {
 		return registries;
 	}
 
+	@SuppressWarnings("removal")
 	@Override
 	public Advancement.Builder advancement() {
 		return Advancement.Builder.recipeAdvancement().parent(RecipeBuilder.ROOT_RECIPE_ADVANCEMENT);

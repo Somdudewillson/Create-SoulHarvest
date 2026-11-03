@@ -1,48 +1,39 @@
 package somdudewillson.create_soul_harvest.content.recipe;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.material.Fluid;
 import somdudewillson.create_soul_harvest.registry.ModRecipeTypes;
 
 //? >= 1.21 {
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.RecipeInput;
-
-public class AbsoluteIceRecipe implements Recipe<RecipeInput> {
 //?} else {
-/*import com.google.gson.JsonElement;
+/*import net.minecraft.resources.ResourceLocation;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
+*///?}
 
-public class AbsoluteIceRecipe implements Recipe<Container> {
+//? >= 1.21 {
+public class AbsoluteIceRecipe implements Recipe<RecipeInput> {
+//?} else {
+/*public class AbsoluteIceRecipe implements Recipe<Container> {
 	private ResourceLocation id;
 
 	@Override

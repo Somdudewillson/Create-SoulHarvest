@@ -7,7 +7,6 @@ import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -26,17 +25,20 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.RecipeInput;
-
-public class BiocideConversionRecipe implements Recipe<RecipeInput> {
 //?} else {
-/*import com.google.gson.JsonArray;
+/*import net.minecraft.resources.ResourceLocation;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
+*///?}
 
-public class BiocideConversionRecipe implements Recipe<Container> {
+//? >= 1.21 {
+public class BiocideConversionRecipe implements Recipe<RecipeInput> {
+//?} else {
+/*public class BiocideConversionRecipe implements Recipe<Container> {
 	private ResourceLocation id;
 
 	@Override
