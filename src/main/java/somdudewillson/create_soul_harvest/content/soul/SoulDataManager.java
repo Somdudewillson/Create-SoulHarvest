@@ -179,8 +179,8 @@ public class SoulDataManager {
 
 		return switch (tier) {
 			case 1 -> 10;
-			case 2 -> 100;
-			case 3 -> 4;
+			case 2 -> 4;
+			case 3 -> 100;
 			default -> 10;
 		};
 	}

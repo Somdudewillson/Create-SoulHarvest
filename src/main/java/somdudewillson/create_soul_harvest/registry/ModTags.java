@@ -161,12 +161,15 @@ public final class ModTags {
 		public static final TagKey<EntityType<?>> T1_MOB = modTag("t1_mob");
 		public static final TagKey<EntityType<?>> T2_MOB = modTag("t2_mob");
 		public static final TagKey<EntityType<?>> T3_MOB = modTag("t3_mob");
+		
 		public static final TagKey<EntityType<?>> REQUIRES_LOW = modTag("requires_low_kills");
 		public static final TagKey<EntityType<?>> REQUIRES_MEDIUM = modTag("requires_medium_kills");
 		public static final TagKey<EntityType<?>> REQUIRES_HIGH = modTag("requires_high_kills");
+		
 		public static final TagKey<EntityType<?>> SOUL_CAN_BE_CAPTURED = modTag("soul_can_be_captured");
 		public static final TagKey<EntityType<?>> SOUL_CAPTURE_FORBIDDEN = modTag("soul_capture_forbidden");
 		public static final TagKey<EntityType<?>> SOUL_SAMPLING_FORBIDDEN = modTag("soul_sampling_forbidden");
+		
 		public static final TagKey<EntityType<?>> CONTAGION_IMMUNE = modTag("contagion_immune");
 		public static final TagKey<EntityType<?>> BIOCIDE_IMMUNE = modTag("biocide_immune");
 
