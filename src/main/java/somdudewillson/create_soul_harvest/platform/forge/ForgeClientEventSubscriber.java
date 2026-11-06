@@ -16,6 +16,7 @@ import somdudewillson.create_soul_harvest.client.overlay.BiocideGasOverlay;
 import somdudewillson.create_soul_harvest.client.particle.InfuseSoulFireParticle;
 import somdudewillson.create_soul_harvest.client.particle.StormCloudParticle;
 import somdudewillson.create_soul_harvest.client.particle.VerdantFlashParticle;
+import somdudewillson.create_soul_harvest.client.texture.dynamic.CompositeItemBakedModel;
 import somdudewillson.create_soul_harvest.client.texture.palette.ClientPatternDumpCommand;
 import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextureManager;
 import somdudewillson.create_soul_harvest.compat.jei.SoulHarvestJeiHelper;
@@ -27,7 +28,6 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import somdudewillson.create_soul_harvest.client.texture.palette.CompositeItemBakedModel;
 import somdudewillson.create_soul_harvest.registry.ModCreativeTabs;
 import somdudewillson.create_soul_harvest.registry.ModEntityTypes;
 

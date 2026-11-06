@@ -1,4 +1,4 @@
-package somdudewillson.create_soul_harvest.client.texture.palette;
+package somdudewillson.create_soul_harvest.client.texture.dynamic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -17,6 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternRenderTypes;
+import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextureManager;
 import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 
 import java.util.*;

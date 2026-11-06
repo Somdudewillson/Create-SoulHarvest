@@ -3,6 +3,8 @@ package somdudewillson.create_soul_harvest.client.texture.palette;
 import net.minecraft.resources.ResourceLocation;
 import org.junit.jupiter.api.Test;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.client.texture.dynamic.CompositeItemBakedModel;
+import somdudewillson.create_soul_harvest.client.texture.dynamic.PolyclayCompositeHandler;
 
 import static org.junit.jupiter.api.Assertions.*;
 

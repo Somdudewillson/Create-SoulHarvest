@@ -2,6 +2,8 @@ package somdudewillson.create_soul_harvest.client.texture.palette;
 
 import org.junit.jupiter.api.Test;
 
+import somdudewillson.create_soul_harvest.client.texture.dynamic.AttunedSoulBookCompositor;
+
 import java.awt.image.BufferedImage;
 
 import static org.junit.jupiter.api.Assertions.*;

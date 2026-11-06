@@ -1,4 +1,4 @@
-package somdudewillson.create_soul_harvest.client.texture.palette;
+package somdudewillson.create_soul_harvest.client.texture.dynamic;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
@@ -9,6 +9,8 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextureGenerator;
+import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextureGenerator.GenerationResult;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -17,58 +19,60 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Encapsulates spritesheet slicing, 3D quad geometry, and dynamic composite textures
- * for a specific polyclay item type.
+ * Encapsulates dynamic texture compositing and 3D quads for an attuned soul book tier.
  */
-public class PolyclayCompositeHandler implements ItemCompositeHandler {
+public class SoulBookCompositeHandler implements ItemCompositeHandler {
 
 	public record PreparedAssets(
-			BufferedImage sprite0,
-			BufferedImage sprite1,
-			BufferedImage sprite2,
-			List<BakedQuad> quads,
-			ResourceLocation defaultTextureLocation
+			BufferedImage baseImage,
+			List<BakedQuad> quads
 	) {}
 
 	private final String itemPath;
-	private final ResourceLocation spritesheetLocation;
+	private final ResourceLocation baseTextureLocation;
 
 	private volatile boolean loaded = false;
 	private volatile PreparedAssets assets;
 	private final Map<ResourceLocation, ResourceLocation> entityTextureLocations = new ConcurrentHashMap<>();
 	private final Map<ResourceLocation, DynamicTexture> entityDynamicTextures = new ConcurrentHashMap<>();
-	private volatile DynamicTexture defaultDynamicTexture;
 
-	public PolyclayCompositeHandler(String itemPath) {
+	public SoulBookCompositeHandler(String itemPath) {
 		this.itemPath = itemPath;
-		this.spritesheetLocation = SoulHarvestMod.id("textures/item/" + itemPath + ".png");
+		this.baseTextureLocation = SoulHarvestMod.id("textures/item/" + itemPath + ".png");
 	}
 
+	@Override
 	public String getItemPath() {
 		return itemPath;
 	}
 
-	public ResourceLocation getSpritesheetLocation() {
-		return spritesheetLocation;
+	public ResourceLocation getBaseTextureLocation() {
+		return baseTextureLocation;
 	}
 
+	@Override
 	public boolean isActive() {
 		return assets != null;
 	}
 
+	@Override
 	public boolean isLoaded() {
 		return loaded;
 	}
 
 	@Override
 	public boolean hasDefaultDynamicTexture() {
-		return true;
+		return false;
 	}
 
+	@Override
 	public void ensureLoaded(ResourceManager resourceManager, Minecraft mc) {
 		if (!this.loaded) {
 			synchronized (this) {
@@ -79,11 +83,13 @@ public class PolyclayCompositeHandler implements ItemCompositeHandler {
 		}
 	}
 
+	@Override
 	public List<BakedQuad> getQuads() {
 		PreparedAssets current = assets;
 		return current != null ? current.quads() : Collections.emptyList();
 	}
 
+	@Override
 	public ResourceLocation getTextureLocation(@Nullable ResourceLocation entityId) {
 		if (entityId != null) {
 			ResourceLocation loc = entityTextureLocations.get(entityId);
@@ -91,91 +97,43 @@ public class PolyclayCompositeHandler implements ItemCompositeHandler {
 				return loc;
 			}
 		}
-		PreparedAssets current = assets;
-		if (current != null && current.defaultTextureLocation() != null) {
-			return current.defaultTextureLocation();
-		}
-		return spritesheetLocation;
+		return baseTextureLocation;
 	}
 
-	/**
-	 * Reloads the spritesheet from the resource manager. If the texture is a 3-part horizontal spritesheet
-	 * (width >= 48, height >= 16), slices the sprites, precomputes 3D quads from Sprite 0,
-	 * and registers the default composite texture.
-	 */
+	@Override
 	public void reload(ResourceManager resourceManager, Minecraft mc) {
 		this.loaded = true;
-		Optional<Resource> res = resourceManager.getResource(spritesheetLocation);
+		Optional<Resource> res = resourceManager.getResource(baseTextureLocation);
 		if (res.isEmpty()) {
 			clearAssets();
 			return;
 		}
 
-		BufferedImage sheet;
+		BufferedImage base;
 		try (InputStream is = res.get().open()) {
-			sheet = ImageIO.read(is);
+			base = ImageIO.read(is);
 		} catch (Exception e) {
-			SoulHarvestMod.LOGGER.error("Failed to read spritesheet for {}: {}", itemPath, spritesheetLocation, e);
+			SoulHarvestMod.LOGGER.error("Failed to read base texture for {}: {}", itemPath, baseTextureLocation, e);
 			clearAssets();
 			return;
 		}
 
-		if (sheet == null || sheet.getWidth() < AttunedPolyclayCompositor.SHEET_WIDTH || sheet.getHeight() < AttunedPolyclayCompositor.SHEET_HEIGHT) {
-			// Not a 3-part spritesheet (e.g. still a standard 16x16 texture). Remain inactive.
+		if (base == null) {
 			clearAssets();
 			return;
 		}
 
 		try {
-			AttunedPolyclayCompositor.Slices slices = AttunedPolyclayCompositor.sliceSpritesheet(sheet);
-			List<BakedQuad> quads = DynamicItemQuadBuilder.buildQuads(slices.sprite0(), null);
-
-			BufferedImage defaultComp = AttunedPolyclayCompositor.compose(
-					slices.sprite0(),
-					null,
-					slices.sprite1(),
-					slices.sprite2()
-			);
-
-			ResourceLocation defaultLoc = uploadDefaultTexture(defaultComp, mc);
-			this.assets = new PreparedAssets(slices.sprite0(), slices.sprite1(), slices.sprite2(), quads, defaultLoc);
-			SoulHarvestMod.LOGGER.info("Initialized composite polyclay handler for '{}' with 3-part spritesheet.", itemPath);
+			List<BakedQuad> quads = DynamicItemQuadBuilder.buildQuads(base, null);
+			this.assets = new PreparedAssets(base, quads);
+			SoulHarvestMod.LOGGER.info("Initialized composite soul book handler for '{}'.", itemPath);
 		} catch (Exception e) {
-			SoulHarvestMod.LOGGER.error("Failed to prepare composite assets for {}", itemPath, e);
+			SoulHarvestMod.LOGGER.error("Failed to prepare composite assets for soul book {}", itemPath, e);
 			clearAssets();
 		}
 	}
 
-	private ResourceLocation uploadDefaultTexture(BufferedImage img, Minecraft mc) {
-		ResourceLocation regId = SoulHarvestMod.id(itemPath + "_default");
-		Runnable task = () -> {
-			try {
-				DynamicTexture dynamicTexture = createDynamicTexture(img);
-				if (mc != null && mc.getTextureManager() != null) {
-					mc.getTextureManager().register(regId, dynamicTexture);
-				}
-				if (defaultDynamicTexture != null) {
-					defaultDynamicTexture.close();
-				}
-				defaultDynamicTexture = dynamicTexture;
-			} catch (Throwable t) {
-				SoulHarvestMod.LOGGER.error("Failed uploading default dynamic texture for {}", itemPath, t);
-			}
-		};
-
-		if (mc != null) {
-			if (mc.isSameThread()) {
-				task.run();
-			} else {
-				mc.execute(task);
-			}
-		}
-		return regId;
-	}
-
-	/**
-	 * Composites the item's spritesheet with an entity's mob pattern texture and registers the DynamicTexture.
-	 */
+	@Override
 	public void uploadCompositeForEntity(ResourceLocation entityId, BufferedImage mobPatternImage, Minecraft mc) {
 		PreparedAssets current = assets;
 		if (current == null) {
@@ -183,14 +141,9 @@ public class PolyclayCompositeHandler implements ItemCompositeHandler {
 		}
 
 		try {
-			BufferedImage composite = AttunedPolyclayCompositor.compose(
-					current.sprite0(),
-					mobPatternImage,
-					current.sprite1(),
-					current.sprite2()
-			);
-
+			BufferedImage composite = AttunedSoulBookCompositor.compose(current.baseImage(), mobPatternImage);
 			DynamicTexture dynamicTexture = createDynamicTexture(composite);
+
 			ResourceLocation regId = SoulHarvestMod.id(itemPath + "_" + entityId.getNamespace() + "_" + entityId.getPath());
 			if (mc != null && mc.getTextureManager() != null) {
 				mc.getTextureManager().register(regId, dynamicTexture);
@@ -202,13 +155,11 @@ public class PolyclayCompositeHandler implements ItemCompositeHandler {
 			}
 			entityTextureLocations.put(entityId, regId);
 		} catch (Throwable t) {
-			SoulHarvestMod.LOGGER.error("Failed uploading composite texture for {} ({})", itemPath, entityId, t);
+			SoulHarvestMod.LOGGER.error("Failed uploading composite texture for soul book {} ({})", itemPath, entityId, t);
 		}
 	}
 
-	/**
-	 * Exports the default composite and all generated mob composites for this polyclay to disk.
-	 */
+	@Override
 	public void dumpToDisk(Path outputDir, Map<ResourceLocation, MobPatternTextureGenerator.GenerationResult> results) throws Exception {
 		PreparedAssets current = assets;
 		if (current == null) {
@@ -218,29 +169,19 @@ public class PolyclayCompositeHandler implements ItemCompositeHandler {
 		Path itemDir = outputDir.resolve(itemPath);
 		Files.createDirectories(itemDir);
 
-		BufferedImage defaultComp = AttunedPolyclayCompositor.compose(
-				current.sprite0(),
-				null,
-				current.sprite1(),
-				current.sprite2()
-		);
-		ImageIO.write(defaultComp, "PNG", itemDir.resolve("_default.png").toFile());
+		ImageIO.write(current.baseImage(), "PNG", itemDir.resolve("_default.png").toFile());
 
 		for (Map.Entry<ResourceLocation, MobPatternTextureGenerator.GenerationResult> entry : results.entrySet()) {
 			ResourceLocation entityId = entry.getKey();
 			BufferedImage patternImg = entry.getValue().image();
 
-			BufferedImage comp = AttunedPolyclayCompositor.compose(
-					current.sprite0(),
-					patternImg,
-					current.sprite1(),
-					current.sprite2()
-			);
+			BufferedImage comp = AttunedSoulBookCompositor.compose(current.baseImage(), patternImg);
 			String fileName = entityId.getNamespace() + "_" + entityId.getPath().replace('/', '_') + ".png";
 			ImageIO.write(comp, "PNG", itemDir.resolve(fileName).toFile());
 		}
 	}
 
+	@Override
 	public void clear() {
 		this.loaded = false;
 		clearAssets();
@@ -255,12 +196,6 @@ public class PolyclayCompositeHandler implements ItemCompositeHandler {
 		}
 		entityDynamicTextures.clear();
 		entityTextureLocations.clear();
-		if (defaultDynamicTexture != null) {
-			try {
-				defaultDynamicTexture.close();
-			} catch (Throwable ignored) {}
-			defaultDynamicTexture = null;
-		}
 	}
 
 	private static DynamicTexture createDynamicTexture(BufferedImage img) throws Exception {

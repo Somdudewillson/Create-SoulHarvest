@@ -1,4 +1,4 @@
-package somdudewillson.create_soul_harvest.client.texture.palette;
+package somdudewillson.create_soul_harvest.client.texture.dynamic;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

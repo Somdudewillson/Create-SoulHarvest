@@ -1,9 +1,12 @@
-package somdudewillson.create_soul_harvest.client.texture.palette;
+package somdudewillson.create_soul_harvest.client.texture.dynamic;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextureGenerator;
+import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextureGenerator.GenerationResult;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.image.BufferedImage;

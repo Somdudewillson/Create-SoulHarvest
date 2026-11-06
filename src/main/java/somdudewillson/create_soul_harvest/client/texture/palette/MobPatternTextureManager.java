@@ -17,6 +17,9 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.client.texture.dynamic.ItemCompositeHandler;
+import somdudewillson.create_soul_harvest.client.texture.dynamic.PolyclayCompositeHandler;
+import somdudewillson.create_soul_harvest.client.texture.dynamic.SoulBookCompositeHandler;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

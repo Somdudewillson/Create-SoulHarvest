@@ -1,4 +1,4 @@
-package somdudewillson.create_soul_harvest.client.texture.palette;
+package somdudewillson.create_soul_harvest.client.texture.dynamic;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -128,7 +128,7 @@ public class AttunedPolyclayCompositor {
 
 	/**
 	 * Photoshop / W3C standard Overlay blend function:
-	 * f(B, S) = 2 * B * S if B <= 0.5, else 1 - 2 * (1 - B) * (1 - S).
+	 * {@code f(B, S) = 2 * B * S} if {@code B <= 0.5}, else {@code 1 - 2 * (1 - B) * (1 - S)}.
 	 */
 	public static float overlay(float b, float s) {
 		if (b <= 0.5f) {
@@ -140,7 +140,7 @@ public class AttunedPolyclayCompositor {
 
 	/**
 	 * Photoshop / W3C standard Vivid Light blend function:
-	 * Combines Color Burn for S <= 0.5 and Color Dodge for S > 0.5.
+	 * Combines Color Burn for {@code S <= 0.5} and Color Dodge for {@code S > 0.5}.
 	 */
 	public static float vividLight(float b, float s) {
 		if (s <= 0.5f) {

@@ -1,4 +1,4 @@
-package somdudewillson.create_soul_harvest.client.texture.palette;
+package somdudewillson.create_soul_harvest.client.texture.dynamic;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Handles software compositing of attuned soul book textures with mob pattern textures.</br>
- *</br>
- * Procedure:</br>
- * 1. Find the most frequent color in the base book texture (which is the leather book cover).</br>
- * 2. Rotate the mob pattern texture 45 degrees clockwise around its center.</br>
- * 3. Calculate distance from the most frequent color to construct a continuous mask:</br>
- *    - Exact match: 100% mob pattern (weight = {@code DEFAULT_MAX_WEIGHT})</br>
- *    - Cutoff maximum distance: 50% mob pattern (weight = {@code DEFAULT_MIN_WEIGHT})</br>
+ * Handles software compositing of attuned soul book textures with mob pattern textures.<br/>
+ *<br/>
+ * Procedure:<br/>
+ * 1. Find the most frequent color in the base book texture (which is the leather book cover).<br/>
+ * 2. Rotate the mob pattern texture 45 degrees clockwise around its center.<br/>
+ * 3. Calculate distance from the most frequent color to construct a continuous mask:<br/>
+ *    - Exact match: 100% mob pattern (weight = {@code DEFAULT_MAX_WEIGHT})<br/>
+ *    - Cutoff maximum distance: 50% mob pattern (weight = {@code DEFAULT_MIN_WEIGHT})<br/>
  *    - Beyond cutoff: 0% mob pattern
  */
 public class AttunedSoulBookCompositor {
@@ -84,7 +84,7 @@ public class AttunedSoulBookCompositor {
 	}
 
 	/**
-	 * Computes continuous mask weights for each pixel in baseImage.</br>
+	 * Computes continuous mask weights for each pixel in baseImage.<br/>
 	 * Weight is maxWeight at distance 0, linearly scaling down to minWeight
 	 * at maxDistance, and 0.0 beyond maxDistance.
 	 */
