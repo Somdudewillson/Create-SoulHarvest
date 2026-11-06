@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.capability.ISoulGlintHolder;
 import somdudewillson.create_soul_harvest.content.recipe.grinding.MobGrindingDynamicData;
 import somdudewillson.create_soul_harvest.util.AdvancementHelper;
 import somdudewillson.create_soul_harvest.util.SimplePalettizedTooltipModifier;
@@ -50,6 +51,8 @@ public class LootTokenItem extends Item {
 
 	public static final String TAG_LOOT_TABLE = SoulHarvestMod.id("loot_table").toString();
 	public static final String TAG_LOCALIZATION_KEY = SoulHarvestMod.id("localization_key").toString();
+	public static final String TAG_GLINT_TYPE = SoulHarvestMod.id("glint_type").toString();
+	public static final String PREFIX_SOUL = "soul/";
 
 	public static final LootContextParamSet LOOT_TOKEN_PARAM_SET = new LootContextParamSet.Builder()
 			.required(LootContextParams.THIS_ENTITY)
@@ -143,6 +146,56 @@ public class LootTokenItem extends Item {
 		*///?}
 	}
 
+	@Nullable
+	public static String getGlintType(ItemStack stack) {
+		//? >= 1.21 {
+		CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
+		if (customData != null) {
+			String key = customData.copyTag().getString(TAG_GLINT_TYPE);
+			return key.isEmpty() ? null : key;
+		}
+		return null;
+		//?} else {
+		/*CompoundTag tag = stack.getTag();
+		if (tag != null) {
+			String key = tag.getString(TAG_GLINT_TYPE);
+			return key.isEmpty() ? null : key;
+		}
+		return null;
+		*///?}
+	}
+
+	public static void setGlintType(ItemStack stack, @Nullable String glintType) {
+		//? >= 1.21 {
+		CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+		if (glintType == null || glintType.isEmpty()) {
+			tag.remove(TAG_GLINT_TYPE);
+		} else {
+			tag.putString(TAG_GLINT_TYPE, glintType);
+		}
+		CustomData.set(DataComponents.CUSTOM_DATA, stack, tag);
+		//?} else {
+		/*CompoundTag tag = stack.getOrCreateTag();
+		if (glintType == null || glintType.isEmpty()) {
+			tag.remove(TAG_GLINT_TYPE);
+		} else {
+			tag.putString(TAG_GLINT_TYPE, glintType);
+		}
+		*///?}
+	}
+
+	public static void setSoulGlint(ItemStack stack, ResourceLocation entityId) {
+		setGlintType(stack, PREFIX_SOUL + entityId.toString());
+	}
+
+	public static ItemStack createWithLootTable(Item item, ResourceLocation lootTable, @Nullable String customKey, @Nullable String glintType) {
+		ItemStack stack = createWithLootTable(item, lootTable, customKey);
+		if (glintType != null) {
+			setGlintType(stack, glintType);
+		}
+		return stack;
+	}
+
 	public static ItemStack createWithLootTable(Item item, ResourceLocation lootTable, @Nullable String customKey) {
 		ItemStack stack = new ItemStack(item);
 		setLootTable(stack, lootTable);
@@ -180,8 +233,25 @@ public class LootTokenItem extends Item {
 		return MobGrindingDynamicData.getDynamicLootTable(lootTableId, server.registryAccess());
 	}
 
+	@Nullable
+	public static ResourceLocation getSoulGlintEntityId(ItemStack stack) {
+		String glintType = getGlintType(stack);
+		if (glintType != null && glintType.startsWith(PREFIX_SOUL)) {
+			String entityStr = glintType.substring(PREFIX_SOUL.length());
+			return ResourceLocation.tryParse(entityStr);
+		}
+		return null;
+	}
+
+	public static boolean hasValidCustomGlint(ItemStack stack) {
+		return ISoulGlintHolder.hasValidSoulGlint(stack);
+	}
+
 	@Override
 	public boolean isFoil(ItemStack stack) {
+		if (hasValidCustomGlint(stack)) {
+			return false;
+		}
 		return true;
 	}
 

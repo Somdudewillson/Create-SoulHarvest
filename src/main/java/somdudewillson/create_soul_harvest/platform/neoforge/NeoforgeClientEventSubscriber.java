@@ -31,8 +31,10 @@ import somdudewillson.create_soul_harvest.registry.ModParticleTypes;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternBakedModel;
 import somdudewillson.create_soul_harvest.registry.ModCreativeTabs;
 import somdudewillson.create_soul_harvest.registry.ModEntityTypes;
 
@@ -77,6 +79,11 @@ public class NeoforgeClientEventSubscriber {
 	@SubscribeEvent
 	public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
 		event.registerReloadListener(MobPatternTextureManager.INSTANCE);
+	}
+
+	@SubscribeEvent
+	public static void onModifyBakingResult(ModelEvent.ModifyBakingResult event) {
+		MobPatternBakedModel.wrapTargetModels(event.getModels());
 	}
 
 	@EventBusSubscriber(modid = SoulHarvestMod.MOD_ID, value = Dist.CLIENT)

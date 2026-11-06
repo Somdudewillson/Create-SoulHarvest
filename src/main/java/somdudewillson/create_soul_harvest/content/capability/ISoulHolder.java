@@ -8,7 +8,7 @@ import somdudewillson.create_soul_harvest.registry.ModCapabilities;
 
 import java.util.Optional;
 
-public interface ISoulHolder {
+public interface ISoulHolder extends ISoulGlintHolder {
 
 	ResourceLocation getHeldSoul();
 
@@ -17,6 +17,21 @@ public interface ISoulHolder {
 	int getSoulPortion();
 
 	void setSoulPortion(int portion);
+
+	@Override
+	default boolean hasSoulGlint() {
+		return getHeldSoul() != null && getSoulPortion() > 0;
+	}
+
+	@Override
+	default ResourceLocation getSoulGlintEntityId() {
+		return getHeldSoul();
+	}
+
+	@Override
+	default float getSoulGlintIntensity() {
+		return getSoulPortion() >= 100 ? 1.0f : 0.5f;
+	}
 
 	default boolean isEnhanced() {
 		return false;

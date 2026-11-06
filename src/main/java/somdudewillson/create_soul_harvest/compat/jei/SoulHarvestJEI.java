@@ -174,7 +174,7 @@ public class SoulHarvestJEI implements IModPlugin {
 					.map(EntityType::getDescriptionId)
 					.orElse("entity." + entityId.getNamespace() + "." + entityId.getPath());
 
-			ItemStack tokenStack = LootTokenItem.createWithLootTable(ModItems.LOOT_TOKEN.get(), lootTableId, mobLocKey);
+			ItemStack tokenStack = LootTokenItem.createWithLootTable(ModItems.LOOT_TOKEN.get(), lootTableId, mobLocKey, LootTokenItem.PREFIX_SOUL + entityId.toString());
 			Component displayName = LootTokenItem.getLootTableDisplayName(tokenStack);
 
 			float totalWeight = (float) dropEntries.stream().mapToInt(SoulDropEntry::weight).sum();

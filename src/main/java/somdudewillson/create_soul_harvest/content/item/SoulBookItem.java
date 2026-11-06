@@ -27,6 +27,7 @@ import java.util.Optional;
 
 import com.simibubi.create.foundation.item.TooltipHelper;
 
+import somdudewillson.create_soul_harvest.content.capability.ISoulGlintHolder;
 import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 import somdudewillson.create_soul_harvest.util.SimplePalettizedTooltipModifier;
 
@@ -58,7 +59,7 @@ public class SoulBookItem extends Item {
 
 	@Override
 	public boolean isFoil(ItemStack stack) {
-		return ISoulHolder.getSoulPortion(stack) >= 100 || super.isFoil(stack);
+		return !ISoulGlintHolder.hasValidSoulGlint(stack);
 	}
 	
 	public static class SoulBookTooltipModifier extends SimplePalettizedTooltipModifier {

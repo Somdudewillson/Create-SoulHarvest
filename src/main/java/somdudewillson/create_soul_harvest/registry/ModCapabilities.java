@@ -1,7 +1,9 @@
 package somdudewillson.create_soul_harvest.registry;
 
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.capability.ISoulGlintHolder;
 import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
+import somdudewillson.create_soul_harvest.content.capability.ItemStackLootTokenGlintHolder;
 import somdudewillson.create_soul_harvest.content.capability.ItemStackSoulHolder;
 
 //? neoforge {
@@ -34,6 +36,9 @@ public class ModCapabilities {
 	public static final ItemCapability<ISoulHolder, Void> SOUL_HOLDER =
 			ItemCapability.createVoid(SoulHarvestMod.id("soul_holder"), ISoulHolder.class);
 
+	public static final ItemCapability<ISoulGlintHolder, Void> SOUL_GLINT_HOLDER =
+			ItemCapability.createVoid(SoulHarvestMod.id("soul_glint_holder"), ISoulGlintHolder.class);
+
 	public static void register(IEventBus modBus) {
 		modBus.addListener(ModCapabilities::onRegisterCapabilities);
 	}
@@ -49,6 +54,20 @@ public class ModCapabilities {
 				ModItems.SOUL_BOOK_SUPERIOR.get()
 		);
 
+		event.registerItem(SOUL_GLINT_HOLDER, (stack, ctx) -> new ItemStackSoulHolder(stack),
+				ModItems.POLYCLAY_ATTUNED.get(),
+				ModItems.POLYCLAY_ANDESITE_ATTUNED.get(),
+				ModItems.POLYCLAY_BRASS_ATTUNED.get(),
+				ModItems.EXPERIENCE_EFFIGY_ATTUNED.get(),
+				ModItems.SOUL_BOOK_SIMPLE.get(),
+				ModItems.SOUL_BOOK_STANDARD.get(),
+				ModItems.SOUL_BOOK_SUPERIOR.get()
+		);
+
+		event.registerItem(SOUL_GLINT_HOLDER, (stack, ctx) -> new ItemStackLootTokenGlintHolder(stack),
+				ModItems.LOOT_TOKEN.get()
+		);
+
 		event.registerBlockEntity(
 				Capabilities.FluidHandler.BLOCK,
 				ModBlockEntities.MIDAS_CORE_BE.get(),
@@ -57,6 +76,9 @@ public class ModCapabilities {
 	}
 	//?} forge {
 	/*public static final Capability<ISoulHolder> SOUL_HOLDER =
+			CapabilityManager.get(new CapabilityToken<>() {});
+
+	public static final Capability<ISoulGlintHolder> SOUL_GLINT_HOLDER =
 			CapabilityManager.get(new CapabilityToken<>() {});
 
 	public static final Capability<AbsoluteIceChunkData> ABSOLUTE_ICE_CHUNK_DATA =
@@ -101,10 +123,26 @@ public class ModCapabilities {
 					|| stack.getItem() == ModItems.SOUL_BOOK_SUPERIOR.get()) {
 				ISoulHolder holder = new ItemStackSoulHolder(stack);
 				LazyOptional<ISoulHolder> opt = LazyOptional.of(() -> holder);
+				LazyOptional<ISoulGlintHolder> glintOpt = LazyOptional.of(() -> holder);
 				event.addCapability(SoulHarvestMod.id("soul_holder"), new ICapabilityProvider() {
 					@Override
 					public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-						return cap == SOUL_HOLDER ? opt.cast() : LazyOptional.empty();
+						if (cap == SOUL_HOLDER) {
+							return opt.cast();
+						}
+						if (cap == SOUL_GLINT_HOLDER) {
+							return glintOpt.cast();
+						}
+						return LazyOptional.empty();
+					}
+				});
+			} else if (stack.getItem() == ModItems.LOOT_TOKEN.get()) {
+				ISoulGlintHolder glintHolder = new ItemStackLootTokenGlintHolder(stack);
+				LazyOptional<ISoulGlintHolder> glintOpt = LazyOptional.of(() -> glintHolder);
+				event.addCapability(SoulHarvestMod.id("soul_glint_holder"), new ICapabilityProvider() {
+					@Override
+					public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
+						return cap == SOUL_GLINT_HOLDER ? glintOpt.cast() : LazyOptional.empty();
 					}
 				});
 			}
