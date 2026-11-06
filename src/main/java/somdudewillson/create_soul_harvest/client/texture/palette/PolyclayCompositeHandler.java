@@ -37,6 +37,7 @@ public class PolyclayCompositeHandler {
 	private final String itemPath;
 	private final ResourceLocation spritesheetLocation;
 
+	private volatile boolean loaded = false;
 	private volatile PreparedAssets assets;
 	private final Map<ResourceLocation, ResourceLocation> entityTextureLocations = new ConcurrentHashMap<>();
 	private final Map<ResourceLocation, DynamicTexture> entityDynamicTextures = new ConcurrentHashMap<>();
@@ -59,10 +60,14 @@ public class PolyclayCompositeHandler {
 		return assets != null;
 	}
 
+	public boolean isLoaded() {
+		return loaded;
+	}
+
 	public void ensureLoaded(ResourceManager resourceManager, Minecraft mc) {
-		if (this.assets == null) {
+		if (!this.loaded) {
 			synchronized (this) {
-				if (this.assets == null) {
+				if (!this.loaded) {
 					reload(resourceManager, mc);
 				}
 			}
@@ -94,9 +99,10 @@ public class PolyclayCompositeHandler {
 	 * and registers the default composite texture.
 	 */
 	public void reload(ResourceManager resourceManager, Minecraft mc) {
+		this.loaded = true;
 		Optional<Resource> res = resourceManager.getResource(spritesheetLocation);
 		if (res.isEmpty()) {
-			clear();
+			clearAssets();
 			return;
 		}
 
@@ -105,13 +111,13 @@ public class PolyclayCompositeHandler {
 			sheet = ImageIO.read(is);
 		} catch (Exception e) {
 			SoulHarvestMod.LOGGER.error("Failed to read spritesheet for {}: {}", itemPath, spritesheetLocation, e);
-			clear();
+			clearAssets();
 			return;
 		}
 
 		if (sheet == null || sheet.getWidth() < AttunedPolyclayCompositor.SHEET_WIDTH || sheet.getHeight() < AttunedPolyclayCompositor.SHEET_HEIGHT) {
 			// Not a 3-part spritesheet (e.g. still a standard 16x16 texture). Remain inactive.
-			clear();
+			clearAssets();
 			return;
 		}
 
@@ -131,7 +137,7 @@ public class PolyclayCompositeHandler {
 			SoulHarvestMod.LOGGER.info("Initialized composite polyclay handler for '{}' with 3-part spritesheet.", itemPath);
 		} catch (Exception e) {
 			SoulHarvestMod.LOGGER.error("Failed to prepare composite assets for {}", itemPath, e);
-			clear();
+			clearAssets();
 		}
 	}
 
@@ -231,6 +237,11 @@ public class PolyclayCompositeHandler {
 	}
 
 	public void clear() {
+		this.loaded = false;
+		clearAssets();
+	}
+
+	private void clearAssets() {
 		assets = null;
 		for (DynamicTexture tex : entityDynamicTextures.values()) {
 			try {

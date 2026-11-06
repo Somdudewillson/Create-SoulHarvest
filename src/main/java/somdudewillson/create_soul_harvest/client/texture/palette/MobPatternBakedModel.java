@@ -1,6 +1,8 @@
 package somdudewillson.create_soul_harvest.client.texture.palette;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -105,8 +107,8 @@ public class MobPatternBakedModel extends BakedModelWrapper<BakedModel> {
 
 				PolyclayCompositeHandler handler = MobPatternTextureManager.getPolyclayHandler(itemPath);
 				if (handler != null) {
-					if (!handler.isActive()) {
-						net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
+					if (!handler.isLoaded()) {
+						Minecraft mc = Minecraft.getInstance();
 						if (mc != null && mc.getResourceManager() != null) {
 							handler.ensureLoaded(mc.getResourceManager(), mc);
 						}

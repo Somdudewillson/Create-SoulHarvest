@@ -12,6 +12,7 @@ public class PolyclayCompositeHandlerTest {
 	public void testHandlerInitialState() {
 		PolyclayCompositeHandler handler = new PolyclayCompositeHandler("polyclay_attuned");
 		assertEquals("polyclay_attuned", handler.getItemPath());
+		assertFalse(handler.isLoaded());
 		assertFalse(handler.isActive());
 		assertTrue(handler.getQuads().isEmpty());
 		assertEquals("create_soul_harvest:textures/item/polyclay_attuned.png", handler.getSpritesheetLocation().toString());
