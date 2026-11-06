@@ -28,6 +28,7 @@ import somdudewillson.create_soul_harvest.config.SoulHarvestConfig;
 import somdudewillson.create_soul_harvest.content.item.ExperienceDropItem;
 import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayItem;
+import somdudewillson.create_soul_harvest.content.recipe.RecipeSoulTracker;
 import somdudewillson.create_soul_harvest.content.soul.SoulData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
 import somdudewillson.create_soul_harvest.content.soul.SoulDropEntry;
@@ -77,6 +78,13 @@ public class MobGrindingDynamicData {
 		lastPackDataVersion = -1;
 		lastRecipeDataVersion = -1;
 		lastLootTableDataVersion = -1;
+	}
+
+	public static final String GENERATED_RECIPE_MARKER = "_dyn_";
+
+	public static boolean isGeneratedProcessingRecipe(@Nullable ResourceLocation id) {
+		if (id == null) return false;
+		return id.getNamespace().equals(SoulHarvestMod.MOD_ID) && id.getPath().contains(GENERATED_RECIPE_MARKER);
 	}
 
 	public static void updateLootTables(@Nullable MinecraftServer server) {
@@ -244,37 +252,40 @@ public class MobGrindingDynamicData {
 					continue;
 				}
 
-				if (!soulData.hasDrops(nullableRegistryAccess, true)) {
+				boolean hasDrops = soulData.hasDrops(nullableRegistryAccess, true);
+				boolean usedInRecipes = RecipeSoulTracker.isSoulUsedInRecipes(entityId);
+				if (!hasDrops && !usedInRecipes) {
 					continue;
 				}
-				
 
 				String recipeSuffix = polyclayId.getPath() + "_" + entityId.getNamespace() + "_" + entityId.getPath();
 				String washSuffix = attunedId.getPath() + "_" + entityId.getNamespace() + "_" + entityId.getPath();
 
-				// Attuned processing
-				float multiplier = PolyclayItem.getDropMultiplier(polyclayTier, mobTier);
-				JsonObject splashing = makeSplashingRecipe(attunedItem, entityId, soulData, multiplier, false, nullableRegistryAccess);
-				if (splashing != null) {
-					recipes.put(SoulHarvestMod.id("splashing/wash_" + washSuffix), splashing);
-				}
-
-				if (soulData.hasEnhancedSpecificDrops(nullableRegistryAccess)) {
-					JsonObject enhancedSplashing = makeSplashingRecipe(attunedItem, entityId, soulData, multiplier, true, nullableRegistryAccess);
-					if (enhancedSplashing != null) {
-						recipes.put(SoulHarvestMod.id("splashing/wash_enhanced_" + washSuffix), enhancedSplashing);
-						recipes.put(SoulHarvestMod.id("deploying/enhance_" + washSuffix),
-								makeDeployEnhanceRecipe(attunedItem, entityId));
+				// Attuned processing (only if the mob has drops)
+				if (hasDrops) {
+					float multiplier = PolyclayItem.getDropMultiplier(polyclayTier, mobTier);
+					JsonObject splashing = makeSplashingRecipe(attunedItem, entityId, soulData, multiplier, false, nullableRegistryAccess);
+					if (splashing != null) {
+						recipes.put(SoulHarvestMod.id("splashing/wash_" + GENERATED_RECIPE_MARKER + washSuffix), splashing);
 					}
-				}
-				
-				JsonObject grinding = makeGrindingRecipe(entityId, soulData, nullableRegistryAccess);
-				if (grinding != null) {
-					recipes.put(SoulHarvestMod.id("splashing/grind_" + washSuffix), grinding);
+
+					if (soulData.hasEnhancedSpecificDrops(nullableRegistryAccess)) {
+						JsonObject enhancedSplashing = makeSplashingRecipe(attunedItem, entityId, soulData, multiplier, true, nullableRegistryAccess);
+						if (enhancedSplashing != null) {
+							recipes.put(SoulHarvestMod.id("splashing/wash_enhanced_" + GENERATED_RECIPE_MARKER + washSuffix), enhancedSplashing);
+							recipes.put(SoulHarvestMod.id("deploying/enhance_" + GENERATED_RECIPE_MARKER + washSuffix),
+									makeDeployEnhanceRecipe(attunedItem, entityId));
+						}
+					}
+					
+					JsonObject grinding = makeGrindingRecipe(entityId, soulData, nullableRegistryAccess);
+					if (grinding != null) {
+						recipes.put(SoulHarvestMod.id("splashing/grind_" + GENERATED_RECIPE_MARKER + washSuffix), grinding);
+					}
 				}
 
 				// Attuning
-				recipes.put(SoulHarvestMod.id("sequenced_assembly/attune_" + recipeSuffix),
+				recipes.put(SoulHarvestMod.id("sequenced_assembly/attune_" + GENERATED_RECIPE_MARKER + recipeSuffix),
 						makeSequencedAssemblyRecipe(polyclay, transItem, attunedItem, entityId, mobTier));
 			}
 		}
@@ -314,11 +325,11 @@ public class MobGrindingDynamicData {
 				// Haunting extraction recipe
 				JsonObject haunting = makeHauntingRecipe(attunedItem, entityId, soulData, multiplier, exponent);
 				if (haunting != null) {
-					recipes.put(SoulHarvestMod.id("haunting/haunt_" + hauntSuffix), haunting);
+					recipes.put(SoulHarvestMod.id("haunting/haunt_" + GENERATED_RECIPE_MARKER + hauntSuffix), haunting);
 				}
 
 				// Sequenced Assembly attunement recipe
-				recipes.put(SoulHarvestMod.id("sequenced_assembly/attune_" + recipeSuffix),
+				recipes.put(SoulHarvestMod.id("sequenced_assembly/attune_" + GENERATED_RECIPE_MARKER + recipeSuffix),
 						makeExperienceDropSequencedAssemblyRecipe(expDropItem, transItem, attunedItem, entityId, mobTier));
 			}
 		}
@@ -332,7 +343,7 @@ public class MobGrindingDynamicData {
 			}
 			int mobTier = soulData.tier();
 			JsonObject lootTokenRecipe = makeLootTokenSequencedAssemblyRecipe(entityId, mobTier);
-			recipes.put(SoulHarvestMod.id("sequenced_assembly/loot_token_" + entityId.getNamespace() + "_" + entityId.getPath()), lootTokenRecipe);
+			recipes.put(SoulHarvestMod.id("sequenced_assembly/loot_token_" + GENERATED_RECIPE_MARKER + entityId.getNamespace() + "_" + entityId.getPath()), lootTokenRecipe);
 		}
 
 		return recipes;
@@ -342,6 +353,8 @@ public class MobGrindingDynamicData {
 		if (server == null || !SoulDataManager.hasSoulData()) {
 			return;
 		}
+
+		RecipeSoulTracker.scan(server.getRecipeManager());
 
 		int currentVersion = SoulDataManager.getDataVersion();
 		if (lastRecipeDataVersion == currentVersion) {

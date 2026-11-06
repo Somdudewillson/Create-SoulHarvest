@@ -28,6 +28,7 @@ import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayItem;
 import somdudewillson.create_soul_harvest.content.item.SoulBookItem;
+import somdudewillson.create_soul_harvest.content.recipe.RecipeSoulTracker;
 import somdudewillson.create_soul_harvest.content.soul.SoulData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
 
@@ -62,7 +63,7 @@ public class ModCreativeTabs {
 		List<Map.Entry<ResourceLocation, SoulData>> sortedEntries = dataMap.entrySet()
 				.stream()
 				.filter(e -> e.getValue() != null)
-				.filter(e -> e.getValue().xp() > 0 || e.getValue().hasDrops(registries, true))
+				.filter(e -> e.getValue().xp() > 0 || e.getValue().hasDrops(registries, true) || RecipeSoulTracker.isSoulUsedInRecipes(e.getKey()))
 				.collect(Collectors.toCollection(ArrayList::new));
 
 		sortedEntries.sort((e1, e2) -> {
@@ -99,7 +100,7 @@ public class ModCreativeTabs {
 
 		List<Map.Entry<ResourceLocation, SoulData>> sortedEntries = dataMap.entrySet()
 				.stream()
-				.filter(e -> e.getValue() != null && e.getValue().hasDrops(registries, true))
+				.filter(e -> e.getValue() != null && (e.getValue().hasDrops(registries, true) || RecipeSoulTracker.isSoulUsedInRecipes(e.getKey())))
 				.collect(Collectors.toCollection(ArrayList::new));
 
 		sortedEntries.sort((e1, e2) -> {
@@ -139,10 +140,10 @@ public class ModCreativeTabs {
 			
 			if (!polyclays.containsKey(mobTier)) continue;
 			Item attunedItem = polyclays.get(mobTier).getAttunedItem();
-			if (soulData != null && soulData.hasDrops(registries, false)) {
+			if (soulData != null && (soulData.hasDrops(registries, false) || RecipeSoulTracker.isSoulUsedInRecipes(entityId))) {
 				list.add(PolyclayAttunedItem.createAttunedPolyclay(attunedItem, entityId, false));
 			}
-			if (soulData != null && soulData.hasEnhancedSpecificDrops(registries)) {
+			if (soulData != null && (soulData.hasEnhancedSpecificDrops(registries) || RecipeSoulTracker.requiresEnhanced(entityId))) {
 				list.add(PolyclayAttunedItem.createAttunedPolyclay(attunedItem, entityId, true));
 			}
 		}

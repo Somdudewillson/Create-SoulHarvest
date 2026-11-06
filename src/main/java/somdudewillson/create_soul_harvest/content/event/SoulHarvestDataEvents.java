@@ -4,6 +4,7 @@ import net.minecraft.server.MinecraftServer;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.compat.jei.SoulHarvestJeiHelper;
 import somdudewillson.create_soul_harvest.content.command.SoulHarvestCommands;
+import somdudewillson.create_soul_harvest.content.recipe.RecipeSoulTracker;
 import somdudewillson.create_soul_harvest.content.recipe.grinding.MobGrindingDynamicData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataLoader;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
@@ -39,6 +40,7 @@ public class SoulHarvestDataEvents {
 	public static void onTagsUpdated(TagsUpdatedEvent event) {
 		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 		if (server != null) {
+			RecipeSoulTracker.scan(server.getRecipeManager());
 			boolean changed = SoulDataManager.recalculate(server);
 			if (changed) {
 				MobGrindingDynamicData.updateRecipeManager(server);
@@ -50,6 +52,7 @@ public class SoulHarvestDataEvents {
 
 	@SubscribeEvent
 	public static void onServerStarted(ServerStartedEvent event) {
+		RecipeSoulTracker.scan(event.getServer().getRecipeManager());
 		boolean changed = SoulDataManager.recalculate(event.getServer());
 		if (changed) {
 			MobGrindingDynamicData.updateRecipeManager(event.getServer());
@@ -93,6 +96,7 @@ public class SoulHarvestDataEvents {
 	public static void onServerStopped(ServerStoppedEvent event) {
 		SoulDataManager.clear();
 		MobGrindingDynamicData.clear();
+		RecipeSoulTracker.clear();
 	}
 
 	@SubscribeEvent

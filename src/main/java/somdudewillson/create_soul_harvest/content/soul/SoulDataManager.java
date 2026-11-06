@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootParams;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.event.SoulHarvestDataEvents;
+import somdudewillson.create_soul_harvest.content.recipe.RecipeSoulTracker;
 import somdudewillson.create_soul_harvest.content.recipe.grinding.MobGrindingDynamicData;
 import somdudewillson.create_soul_harvest.content.soul.sampling.DropSamplingPass;
 import somdudewillson.create_soul_harvest.content.soul.sampling.PlayerKillDropSamplingPass;
@@ -272,8 +273,12 @@ public class SoulDataManager {
 			}
 		}
 
-		if (!queuedForSampling && soulData.xp() <= 0 && !soulData.hasLootTokenDrops(registryAccess) && !soulData.hasDrops(registryAccess, true)) {
-			return null;
+		if (!queuedForSampling 
+				&& soulData.xp() <= 0 
+				&& !soulData.hasLootTokenDrops(registryAccess) 
+				&& !soulData.hasDrops(registryAccess, true)
+				&& !RecipeSoulTracker.isSoulUsedInRecipes(entityId)) {
+				return null;
 		}
 
 		return soulData;

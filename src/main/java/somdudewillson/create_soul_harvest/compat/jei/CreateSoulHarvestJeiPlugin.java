@@ -21,6 +21,7 @@ import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 import somdudewillson.create_soul_harvest.content.item.ExperienceDropAttunedItem;
 import somdudewillson.create_soul_harvest.content.item.LootTokenItem;
 import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
+import somdudewillson.create_soul_harvest.content.recipe.RecipeSoulTracker;
 import somdudewillson.create_soul_harvest.registry.ModCreativeTabs;
 import somdudewillson.create_soul_harvest.registry.ModItems;
 
@@ -155,6 +156,9 @@ public class CreateSoulHarvestJeiPlugin implements IModPlugin {
 				HolderLookup.Provider registries = Minecraft.getInstance().level != null
 						? Minecraft.getInstance().level.registryAccess()
 						: null;
+				if (Minecraft.getInstance().getConnection() != null) {
+					RecipeSoulTracker.scan(Minecraft.getInstance().getConnection().getRecipeManager());
+				}
 				IIngredientManager ingredientManager = jeiRuntime.getIngredientManager();
 				List<ItemStack> soulBooks = ModCreativeTabs.generateAllCompletedSoulBooks(registries);
 				if (!soulBooks.isEmpty()) {

@@ -27,6 +27,7 @@ import somdudewillson.create_soul_harvest.client.texture.dynamic.CompositeItemBa
 import somdudewillson.create_soul_harvest.client.texture.palette.ClientPatternDumpCommand;
 import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextureManager;
 import somdudewillson.create_soul_harvest.compat.jei.SoulHarvestJeiHelper;
+import somdudewillson.create_soul_harvest.content.recipe.RecipeSoulTracker;
 import somdudewillson.create_soul_harvest.registry.ModParticleTypes;
 
 import net.minecraft.client.renderer.entity.NoopRenderer;
@@ -90,6 +91,7 @@ public class NeoforgeClientEventSubscriber {
 	public static class ClientGameEvents {
 		@SubscribeEvent
 		public static void onRecipesUpdated(RecipesUpdatedEvent event) {
+			RecipeSoulTracker.scan(event.getRecipeManager());
 			SoulHarvestJeiHelper.updateHiddenIngredients();
 			ModCreativeTabs.refreshCreativeTabs();
 		}

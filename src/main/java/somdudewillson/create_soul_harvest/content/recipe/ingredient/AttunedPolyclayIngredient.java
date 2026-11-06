@@ -15,6 +15,8 @@ import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
+import somdudewillson.create_soul_harvest.content.soul.SoulData;
+import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
 import somdudewillson.create_soul_harvest.registry.ModIngredients;
 
 import java.util.ArrayList;
@@ -162,6 +164,10 @@ public class AttunedPolyclayIngredient implements ICustomIngredient {
 		this(soul, null, null);
 	}
 
+	public static AttunedPolyclayIngredient of(ResourceLocation soul) {
+		return new AttunedPolyclayIngredient(soul, null, 0, null, null);
+	}
+
 	public static AttunedPolyclayIngredient of(EntityType<? extends LivingEntity> entityType) {
 		return new AttunedPolyclayIngredient(EntityType.getKey(entityType), null, 0, null, null);
 	}
@@ -295,6 +301,11 @@ public class AttunedPolyclayIngredient implements ICustomIngredient {
 			}
 			List<ItemStack> list = new ArrayList<>();
 			for (ResourceLocation soulId : soulIds) {
+				SoulData data = SoulDataManager.get(soulId);
+				int mobTier = data != null ? data.tier() : 0;
+				if (mobTier > 0 && item instanceof PolyclayAttunedItem polyclay && mobTier > polyclay.getTier() + 1) {
+					continue;
+				}
 				list.add(PolyclayAttunedItem.createAttunedPolyclay(item, soulId, isEnh));
 			}
 			return list;
@@ -304,6 +315,11 @@ public class AttunedPolyclayIngredient implements ICustomIngredient {
 		for (Item registered : BuiltInRegistries.ITEM) {
 			if (registered instanceof PolyclayAttunedItem polyclay && polyclay.getTier() >= minTier) {
 				for (ResourceLocation soulId : soulIds) {
+					SoulData data = SoulDataManager.get(soulId);
+					int mobTier = data != null ? data.tier() : 0;
+					if (mobTier > 0 && mobTier > polyclay.getTier() + 1) {
+						continue;
+					}
 					list.add(PolyclayAttunedItem.createAttunedPolyclay(registered, soulId, isEnh));
 				}
 			}
