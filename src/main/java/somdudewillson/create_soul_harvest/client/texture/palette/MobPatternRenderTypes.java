@@ -73,7 +73,7 @@ public class MobPatternRenderTypes extends RenderType {
 				.setTexturingState(new RenderStateShard.TexturingStateShard("mob_pattern_pulse", () -> {
 					long millis = Util.getMillis();
 					double cycle = (millis % 2500L) / 2500.0 * (Math.PI * 2.0);
-					float pulse = (float) (0.50 + 0.15 * Math.sin(cycle));
+					float pulse = (float) (0.50 + 0.10 * Math.sin(cycle));
 					float alpha = pulse * intensity;
 					RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
 				}, () -> {
