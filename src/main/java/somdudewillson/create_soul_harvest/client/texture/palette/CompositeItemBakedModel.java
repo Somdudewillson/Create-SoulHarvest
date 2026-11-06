@@ -31,11 +31,11 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 /**
  * Custom baked model for soul items with custom spritesheet compositing.
  */
-public class MobPatternBakedModel extends BakedModelWrapper<BakedModel> {
+public class CompositeItemBakedModel extends BakedModelWrapper<BakedModel> {
 
 	private final String itemPath;
 
-	public MobPatternBakedModel(BakedModel originalModel, String itemPath) {
+	public CompositeItemBakedModel(BakedModel originalModel, String itemPath) {
 		super(originalModel);
 		this.itemPath = itemPath;
 	}
@@ -51,11 +51,13 @@ public class MobPatternBakedModel extends BakedModelWrapper<BakedModel> {
 
 	@Override
 	public List<RenderType> getRenderTypes(ItemStack itemStack, boolean fabulous) {
-		PolyclayCompositeHandler handler = MobPatternTextureManager.getPolyclayHandler(itemPath);
+		ItemCompositeHandler handler = MobPatternTextureManager.getCompositeHandler(itemPath);
 		if (handler != null && handler.isActive()) {
 			ResourceLocation heldSoul = ISoulHolder.getHeldSoul(itemStack);
-			ResourceLocation textureLoc = handler.getTextureLocation(heldSoul);
-			return List.of(MobPatternRenderTypes.getCompositeItemRenderType(textureLoc));
+			if (heldSoul != null || handler.hasDefaultDynamicTexture()) {
+				ResourceLocation textureLoc = handler.getTextureLocation(heldSoul);
+				return List.of(MobPatternRenderTypes.getCompositeItemRenderType(textureLoc));
+			}
 		}
 		return originalModel.getRenderTypes(itemStack, fabulous);
 	}
@@ -65,8 +67,8 @@ public class MobPatternBakedModel extends BakedModelWrapper<BakedModel> {
 		if (side != null) {
 			return List.of();
 		}
-		PolyclayCompositeHandler handler = MobPatternTextureManager.getPolyclayHandler(itemPath);
-		if (handler != null && handler.isActive()) {
+		ItemCompositeHandler handler = MobPatternTextureManager.getCompositeHandler(itemPath);
+		if (handler != null && handler.isActive() && handler.hasDefaultDynamicTexture()) {
 			List<BakedQuad> quads = handler.getQuads();
 			if (!quads.isEmpty()) {
 				return quads;
@@ -93,7 +95,7 @@ public class MobPatternBakedModel extends BakedModelWrapper<BakedModel> {
 		if (transformed == originalModel) {
 			return this;
 		}
-		return new MobPatternBakedModel(transformed, itemPath);
+		return new CompositeItemBakedModel(transformed, itemPath);
 	}
 
 	@Override
@@ -105,7 +107,7 @@ public class MobPatternBakedModel extends BakedModelWrapper<BakedModel> {
 				BakedModel baseResolved = originalOverrides.resolve(originalModel, stack, level, entity, seed);
 				BakedModel targetBase = (baseResolved != null) ? baseResolved : originalModel;
 
-				PolyclayCompositeHandler handler = MobPatternTextureManager.getPolyclayHandler(itemPath);
+				ItemCompositeHandler handler = MobPatternTextureManager.getCompositeHandler(itemPath);
 				if (handler != null) {
 					if (!handler.isLoaded()) {
 						Minecraft mc = Minecraft.getInstance();
@@ -115,9 +117,11 @@ public class MobPatternBakedModel extends BakedModelWrapper<BakedModel> {
 					}
 					if (handler.isActive()) {
 						ResourceLocation heldSoul = ISoulHolder.getHeldSoul(stack);
-						ResourceLocation textureLoc = handler.getTextureLocation(heldSoul);
-						List<BakedQuad> quads = handler.getQuads();
-						return new AttunedPolyclayResolvedModel(targetBase, textureLoc, quads);
+						if (heldSoul != null || handler.hasDefaultDynamicTexture()) {
+							ResourceLocation textureLoc = handler.getTextureLocation(heldSoul);
+							List<BakedQuad> quads = handler.getQuads();
+							return new CompositeItemResolvedModel(targetBase, textureLoc, quads);
+						}
 					}
 				}
 				return targetBase;
@@ -134,7 +138,7 @@ public class MobPatternBakedModel extends BakedModelWrapper<BakedModel> {
 		if (path.startsWith("item/")) {
 			path = path.substring(5);
 		}
-		return MobPatternTextureManager.isRegisteredPolyclay(path) ? path : null;
+		return MobPatternTextureManager.isRegisteredComposite(path) ? path : null;
 	}
 
 	public static boolean isTargetItem(ResourceLocation loc) {
@@ -147,7 +151,7 @@ public class MobPatternBakedModel extends BakedModelWrapper<BakedModel> {
 			ResourceLocation loc = entry.getKey().id();
 			String path = getTargetItemPath(loc);
 			if (path != null) {
-				entry.setValue(new MobPatternBakedModel(entry.getValue(), path));
+				entry.setValue(new CompositeItemBakedModel(entry.getValue(), path));
 			}
 		}
 	}
@@ -157,23 +161,23 @@ public class MobPatternBakedModel extends BakedModelWrapper<BakedModel> {
 			ResourceLocation loc = entry.getKey();
 			String path = getTargetItemPath(loc);
 			if (path != null) {
-				entry.setValue(new MobPatternBakedModel(entry.getValue(), path));
+				entry.setValue(new CompositeItemBakedModel(entry.getValue(), path));
 			}
 		}
 	}
 	*///?}
 
-	public static class AttunedPolyclayResolvedModel extends BakedModelWrapper<BakedModel> {
+	public static class CompositeItemResolvedModel extends BakedModelWrapper<BakedModel> {
 		private final ResourceLocation textureLoc;
 		private final List<BakedQuad> quads;
 
-		public AttunedPolyclayResolvedModel(BakedModel originalModel, ResourceLocation textureLoc, List<BakedQuad> quads) {
+		public CompositeItemResolvedModel(BakedModel originalModel, ResourceLocation textureLoc, List<BakedQuad> quads) {
 			super(originalModel);
 			this.textureLoc = textureLoc;
 			this.quads = quads;
 		}
 
-		public AttunedPolyclayResolvedModel(BakedModel originalModel, ResourceLocation textureLoc) {
+		public CompositeItemResolvedModel(BakedModel originalModel, ResourceLocation textureLoc) {
 			this(originalModel, textureLoc, Collections.emptyList());
 		}
 
@@ -213,7 +217,7 @@ public class MobPatternBakedModel extends BakedModelWrapper<BakedModel> {
 			if (transformed == originalModel) {
 				return this;
 			}
-			return new AttunedPolyclayResolvedModel(transformed, textureLoc, quads);
+			return new CompositeItemResolvedModel(transformed, textureLoc, quads);
 		}
 	}
 }

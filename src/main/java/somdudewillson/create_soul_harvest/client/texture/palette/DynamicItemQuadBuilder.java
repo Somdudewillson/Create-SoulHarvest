@@ -13,7 +13,7 @@ import java.util.List;
  * Builds 3D extruded BakedQuads from the 16x16 silhouette of Sprite 0 (the base attuned polyclay).
  * The quads use normalized UV coordinates [0.0..1.0] matching the 16x16 composited DynamicTexture.
  */
-public class AttunedPolyclayQuadBuilder {
+public class DynamicItemQuadBuilder {
 
 	private static final float Z_FRONT = 8.5f / 16.0f;
 	private static final float Z_BACK = 7.5f / 16.0f;

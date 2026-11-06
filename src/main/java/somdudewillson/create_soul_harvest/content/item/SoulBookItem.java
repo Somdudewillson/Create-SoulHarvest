@@ -58,6 +58,9 @@ public class SoulBookItem extends Item {
 
 	@Override
 	public boolean isFoil(ItemStack stack) {
+		if (ISoulHolder.getSoulPortion(stack) >= 100) {
+			return true;
+		}
 		return super.isFoil(stack);
 	}
 	

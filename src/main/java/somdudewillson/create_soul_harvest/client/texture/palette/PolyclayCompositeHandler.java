@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Encapsulates spritesheet slicing, 3D quad geometry, and dynamic composite textures
  * for a specific polyclay item type.
  */
-public class PolyclayCompositeHandler {
+public class PolyclayCompositeHandler implements ItemCompositeHandler {
 
 	public record PreparedAssets(
 			BufferedImage sprite0,
@@ -62,6 +62,11 @@ public class PolyclayCompositeHandler {
 
 	public boolean isLoaded() {
 		return loaded;
+	}
+
+	@Override
+	public boolean hasDefaultDynamicTexture() {
+		return true;
 	}
 
 	public void ensureLoaded(ResourceManager resourceManager, Minecraft mc) {
@@ -123,7 +128,7 @@ public class PolyclayCompositeHandler {
 
 		try {
 			AttunedPolyclayCompositor.Slices slices = AttunedPolyclayCompositor.sliceSpritesheet(sheet);
-			List<BakedQuad> quads = AttunedPolyclayQuadBuilder.buildQuads(slices.sprite0(), null);
+			List<BakedQuad> quads = DynamicItemQuadBuilder.buildQuads(slices.sprite0(), null);
 
 			BufferedImage defaultComp = AttunedPolyclayCompositor.compose(
 					slices.sprite0(),

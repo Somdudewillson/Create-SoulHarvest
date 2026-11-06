@@ -60,46 +60,77 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 	private final Map<ResourceLocation, ResourceLocation> dynamicTextureLocations = new ConcurrentHashMap<>();
 	private final Map<ResourceLocation, DynamicTexture> dynamicTextures = new ConcurrentHashMap<>();
 
-	// Registry of polyclay item composite handlers
-	private final Map<String, PolyclayCompositeHandler> polyclayHandlers = new ConcurrentHashMap<>();
+	// Registry of item composite handlers
+	private final Map<String, ItemCompositeHandler> compositeHandlers = new ConcurrentHashMap<>();
 
 	private volatile boolean needsGeneration = false;
 
 	private MobPatternTextureManager() {
 		// Register known polyclay items
-		this.polyclayHandlers.put("polyclay_attuned", new PolyclayCompositeHandler("polyclay_attuned"));
-		this.polyclayHandlers.put("polyclay_andesite_attuned", new PolyclayCompositeHandler("polyclay_andesite_attuned"));
-		this.polyclayHandlers.put("polyclay_brass_attuned", new PolyclayCompositeHandler("polyclay_brass_attuned"));
+		this.compositeHandlers.put("polyclay_attuned", new PolyclayCompositeHandler("polyclay_attuned"));
+		this.compositeHandlers.put("polyclay_andesite_attuned", new PolyclayCompositeHandler("polyclay_andesite_attuned"));
+		this.compositeHandlers.put("polyclay_brass_attuned", new PolyclayCompositeHandler("polyclay_brass_attuned"));
+
+		// Register known soul books
+		this.compositeHandlers.put("soul_book_simple", new SoulBookCompositeHandler("soul_book_simple"));
+		this.compositeHandlers.put("soul_book_standard", new SoulBookCompositeHandler("soul_book_standard"));
+		this.compositeHandlers.put("soul_book_superior", new SoulBookCompositeHandler("soul_book_superior"));
 	}
 
 	public static void registerPolyclay(String itemPath) {
-		INSTANCE.polyclayHandlers.putIfAbsent(itemPath, new PolyclayCompositeHandler(itemPath));
+		INSTANCE.compositeHandlers.putIfAbsent(itemPath, new PolyclayCompositeHandler(itemPath));
+	}
+
+	public static void registerSoulBook(String itemPath) {
+		INSTANCE.compositeHandlers.putIfAbsent(itemPath, new SoulBookCompositeHandler(itemPath));
+	}
+
+	public static boolean isRegisteredComposite(String itemPath) {
+		return INSTANCE.compositeHandlers.containsKey(itemPath);
 	}
 
 	public static boolean isRegisteredPolyclay(String itemPath) {
-		return INSTANCE.polyclayHandlers.containsKey(itemPath);
+		ItemCompositeHandler handler = INSTANCE.compositeHandlers.get(itemPath);
+		return handler instanceof PolyclayCompositeHandler;
 	}
 
-	public static boolean hasActivePolyclayHandler(String itemPath) {
-		PolyclayCompositeHandler handler = INSTANCE.polyclayHandlers.get(itemPath);
+	public static boolean isRegisteredSoulBook(String itemPath) {
+		ItemCompositeHandler handler = INSTANCE.compositeHandlers.get(itemPath);
+		return handler instanceof SoulBookCompositeHandler;
+	}
+
+	public static boolean hasActiveCompositeHandler(String itemPath) {
+		ItemCompositeHandler handler = INSTANCE.compositeHandlers.get(itemPath);
 		return handler != null && handler.isActive();
 	}
 
 	@Nullable
-	public static PolyclayCompositeHandler getPolyclayHandler(String itemPath) {
-		return INSTANCE.polyclayHandlers.get(itemPath);
+	public static ItemCompositeHandler getCompositeHandler(String itemPath) {
+		return INSTANCE.compositeHandlers.get(itemPath);
 	}
 
-	public static ResourceLocation getPolyclayTextureLocation(String itemPath, @Nullable ResourceLocation entityId) {
-		PolyclayCompositeHandler handler = INSTANCE.polyclayHandlers.get(itemPath);
+	@Nullable
+	public static PolyclayCompositeHandler getPolyclayHandler(String itemPath) {
+		ItemCompositeHandler handler = INSTANCE.compositeHandlers.get(itemPath);
+		return handler instanceof PolyclayCompositeHandler polyclay ? polyclay : null;
+	}
+
+	@Nullable
+	public static SoulBookCompositeHandler getSoulBookHandler(String itemPath) {
+		ItemCompositeHandler handler = INSTANCE.compositeHandlers.get(itemPath);
+		return handler instanceof SoulBookCompositeHandler book ? book : null;
+	}
+
+	public static ResourceLocation getCompositeTextureLocation(String itemPath, @Nullable ResourceLocation entityId) {
+		ItemCompositeHandler handler = INSTANCE.compositeHandlers.get(itemPath);
 		if (handler != null) {
 			return handler.getTextureLocation(entityId);
 		}
 		return SoulHarvestMod.id("textures/item/" + itemPath + ".png");
 	}
 
-	public static List<BakedQuad> getPolyclayQuads(String itemPath) {
-		PolyclayCompositeHandler handler = INSTANCE.polyclayHandlers.get(itemPath);
+	public static List<BakedQuad> getCompositeQuads(String itemPath) {
+		ItemCompositeHandler handler = INSTANCE.compositeHandlers.get(itemPath);
 		return handler != null ? handler.getQuads() : Collections.emptyList();
 	}
 
@@ -125,9 +156,9 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 
 		SoulHarvestMod.LOGGER.info("Loaded {} mob pattern masks from resource packs.", patternMasks.size());
 
-		// Reload all registered polyclay composite handlers
+		// Reload all registered composite handlers
 		Minecraft mc = Minecraft.getInstance();
-		for (PolyclayCompositeHandler handler : polyclayHandlers.values()) {
+		for (ItemCompositeHandler handler : compositeHandlers.values()) {
 			handler.reload(resourceManager, mc);
 		}
 
@@ -353,8 +384,8 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 				}
 				INSTANCE.dynamicTextureLocations.put(entityId, registeredLocation != null ? registeredLocation : regId);
 
-				// Delegate composite uploading to all active polyclay handlers
-				for (PolyclayCompositeHandler handler : INSTANCE.polyclayHandlers.values()) {
+				// Delegate composite uploading to all active composite handlers
+				for (ItemCompositeHandler handler : INSTANCE.compositeHandlers.values()) {
 					if (handler.isActive()) {
 						handler.uploadCompositeForEntity(entityId, img, mc);
 					}
@@ -363,18 +394,18 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 				SoulHarvestMod.LOGGER.error("Failed uploading dynamic texture for {}", entityId, t);
 			}
 		}
-		SoulHarvestMod.LOGGER.info("Registered {} mob pattern dynamic textures and updated polyclay composites.", results.size());
+		SoulHarvestMod.LOGGER.info("Registered {} mob pattern dynamic textures and updated dynamic composites.", results.size());
 	}
 
 	/**
-	 * Dumps pattern textures and polyclay composites to the specified output directory.
+	 * Dumps pattern textures and composite items to the specified output directory.
 	 */
 	public static int dumpTexturesToDisk(Path outputDir, ResourceLocation targetEntityId) throws Exception {
 		Files.createDirectories(outputDir);
 		List<ExportItem> items = new ArrayList<>();
 
-		// Dump each active polyclay composite item to its own subfolder
-		for (PolyclayCompositeHandler handler : INSTANCE.polyclayHandlers.values()) {
+		// Dump each active composite item to its own subfolder
+		for (ItemCompositeHandler handler : INSTANCE.compositeHandlers.values()) {
 			if (handler.isActive()) {
 				handler.dumpToDisk(outputDir, INSTANCE.generationResults);
 			}

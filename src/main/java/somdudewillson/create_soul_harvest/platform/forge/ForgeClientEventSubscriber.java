@@ -27,7 +27,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternBakedModel;
+import somdudewillson.create_soul_harvest.client.texture.palette.CompositeItemBakedModel;
 import somdudewillson.create_soul_harvest.registry.ModCreativeTabs;
 import somdudewillson.create_soul_harvest.registry.ModEntityTypes;
 
@@ -68,7 +68,7 @@ public class ForgeClientEventSubscriber {
 
 	@SubscribeEvent
 	public static void onModifyBakingResult(ModelEvent.ModifyBakingResult event) {
-		MobPatternBakedModel.wrapTargetModels(event.getModels());
+		CompositeItemBakedModel.wrapTargetModels(event.getModels());
 	}
 
 	@Mod.EventBusSubscriber(modid = SoulHarvestMod.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
