@@ -47,7 +47,8 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 			String fileName,
 			MobPalette palette,
 			List<PaletteColor> arrangedCommon,
-			Map<PaletteColor, MobPatternTextureGenerator.AppliedPattern> rarePatterns
+			List<PaletteColor> arrangedRare,
+			MobPatternTextureGenerator.AppliedPattern appliedPattern
 	) {}
 
 	private final Map<ResourceLocation, BufferedImage> patternMasks = new ConcurrentHashMap<>();
@@ -197,10 +198,9 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 			}
 
 			if (!isLiving) continue;
-			
-			Entity entity = null;
+
 			try {
-				entity = entityType.create(mc.level);
+				Entity entity = entityType.create(mc.level);
 				if (entity == null) continue;
 
 				if (!(entity instanceof LivingEntity) && targetEntityId == null) {
@@ -225,8 +225,6 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 				targets.add(new EntityTextureTarget(entityId, textureLocation, extraTextures));
 			} catch (Throwable t) {
 				SoulHarvestMod.LOGGER.debug("Could not resolve texture for entity type {}", entityId, t);
-			} finally {
-				if (entity != null) entity.discard();
 			}
 		}
 
@@ -341,7 +339,8 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 					fileName,
 					palette,
 					genResult.arrangedCommon(),
-					genResult.appliedPatterns()
+					genResult.arrangedRare(),
+					genResult.appliedPattern()
 			));
 		}
 
@@ -396,19 +395,26 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 				writer.println("      </div>");
 
 				// Rare colors
-				writer.println("      <div class=\"section-label\">Rare Colors & Patterns</div>");
-				if (item.palette().rareColors().isEmpty()) {
+				writer.println("      <div class=\"section-label\">Rare Colors & Pattern</div>");
+				if (item.arrangedRare().isEmpty()) {
 					writer.println("      <span style=\"color: #72767d; font-size: 12px; width: 100%;\">None (all colors common)</span>");
 				} else {
 					writer.println("      <div style=\"width: 100%;\">");
-					for (Map.Entry<PaletteColor, MobPatternTextureGenerator.AppliedPattern> entry : item.rarePatterns().entrySet()) {
-						PaletteColor c = entry.getKey();
-						double pct = ((double) c.getCount() / item.palette().totalPixels()) * 100.0;
-						MobPatternTextureGenerator.AppliedPattern ap = entry.getValue();
+					if (item.appliedPattern() != null) {
+						MobPatternTextureGenerator.AppliedPattern ap = item.appliedPattern();
 						String flipInfo = (ap.flipX() && ap.flipY()) ? " (flip XY)" : (ap.flipX() ? " (flip X)" : (ap.flipY() ? " (flip Y)" : ""));
-						writer.printf("        <div style=\"display: flex; align-items: center; margin-bottom: 4px;\"><div class=\"swatch\" style=\"background: %s; width: 18px; height: 18px; margin-right: 6px;\" title=\"%s (%.1f%%)\"></div><span class=\"badge\">%s%s</span><span style=\"font-size: 12px; color: #8e9297;\">%s (%.1f%%)</span></div>%n",
-								c.toHex(), c.toHex(), pct, ap.maskName(), flipInfo, c.toHex(), pct);
+						writer.printf("        <div style=\"margin-bottom: 6px;\"><span class=\"badge\" style=\"background: #5865f2;\">Pattern: %s%s</span></div>%n",
+								ap.maskName(), flipInfo);
 					}
+					writer.println("        <div class=\"swatches\">");
+					for (int i = 0; i < item.arrangedRare().size(); i++) {
+						PaletteColor c = item.arrangedRare().get(i);
+						double pct = ((double) c.getCount() / item.palette().totalPixels()) * 100.0;
+						String label = (i == 0) ? "Top" : ((i == item.arrangedRare().size() - 1) ? "Bottom" : "Mid");
+						writer.printf("          <div class=\"swatch\" style=\"background: %s;\" title=\"%s: %s (%.1f%%, mergedFrom=%d)\"></div>%n",
+								c.toHex(), label, c.toHex(), pct, c.getMergedFrom());
+					}
+					writer.println("        </div>");
 					writer.println("      </div>");
 				}
 

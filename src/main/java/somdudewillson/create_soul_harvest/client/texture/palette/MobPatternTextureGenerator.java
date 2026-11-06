@@ -4,9 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class MobPatternTextureGenerator {
@@ -19,7 +17,8 @@ public class MobPatternTextureGenerator {
 	public record GenerationResult(
 			BufferedImage image,
 			List<PaletteColor> arrangedCommon,
-			Map<PaletteColor, AppliedPattern> appliedPatterns
+			List<PaletteColor> arrangedRare,
+			AppliedPattern appliedPattern
 	) {}
 
 	/**
@@ -57,7 +56,7 @@ public class MobPatternTextureGenerator {
 	 * @param palette      The extracted mob palette
 	 * @param seed         RNG seed
 	 * @param patternMasks List of named pattern mask images
-	 * @return A GenerationResult containing the final image and applied patterns
+	 * @return A GenerationResult containing the final image
 	 */
 	public GenerationResult generateTextureWithDetails(MobPalette palette, long seed, List<NamedMask> patternMasks) {
 		BufferedImage image = new BufferedImage(TEXTURE_SIZE, TEXTURE_SIZE, BufferedImage.TYPE_INT_ARGB);
@@ -65,65 +64,75 @@ public class MobPatternTextureGenerator {
 		List<PaletteColor> arrangedCommon = arrangeCommonColors(palette.commonColors());
 		renderCommonGradient(image, arrangedCommon, seed);
 
-		Map<PaletteColor, AppliedPattern> applied = new LinkedHashMap<>();
 		List<PaletteColor> rareColors = palette.rareColors();
-		if (patternMasks != null && !patternMasks.isEmpty()) {
-			for (int i = 0; i < rareColors.size(); i++) {
-				PaletteColor rareColor = rareColors.get(i);
-				Random rng = new Random(seed + (i * 31L));
+		List<PaletteColor> arrangedRare = Collections.emptyList();
+		AppliedPattern appliedPattern = null;
 
-				NamedMask mask = patternMasks.get(rng.nextInt(patternMasks.size()));
-				boolean flipX = rng.nextBoolean();
-				boolean flipY = rng.nextBoolean();
+		if (!rareColors.isEmpty() && patternMasks != null && !patternMasks.isEmpty()) {
+			arrangedRare = arrangeCommonColors(rareColors);
+			BufferedImage rareGradient = new BufferedImage(TEXTURE_SIZE, TEXTURE_SIZE, BufferedImage.TYPE_INT_ARGB);
+			long rareSeed = seed + 31L;
+			renderCommonGradient(rareGradient, arrangedRare, rareSeed);
 
-				applyPatternMask(image, rareColor, mask.image(), flipX, flipY);
-				applied.put(rareColor, new AppliedPattern(mask.name(), flipX, flipY));
-			}
+			Random rng = new Random(rareSeed);
+			NamedMask mask = patternMasks.get(rng.nextInt(patternMasks.size()));
+			boolean flipX = rng.nextBoolean();
+			boolean flipY = rng.nextBoolean();
+
+			applyPatternMask(image, rareGradient, mask.image(), flipX, flipY);
+			appliedPattern = new AppliedPattern(mask.name(), flipX, flipY);
 		}
 
-		return new GenerationResult(image, arrangedCommon, Collections.unmodifiableMap(applied));
+		return new GenerationResult(image, arrangedCommon, Collections.unmodifiableList(arrangedRare), appliedPattern);
 	}
 
 	/**
-	 * Overlays a pattern mask onto the image with the specified color,
-	 * applying optional horizontal and vertical flips.
+	 * Overlays an overlay image onto the target image using a pattern mask,
+	 * applying optional horizontal and vertical flips to the mask.
 	 */
-	public static void applyPatternMask(BufferedImage image, PaletteColor rareColor, BufferedImage mask, boolean flipX, boolean flipY) {
+	public static void applyPatternMask(BufferedImage targetImage, BufferedImage overlayImage, BufferedImage mask, boolean flipX, boolean flipY) {
 		int maskW = mask.getWidth();
 		int maskH = mask.getHeight();
-		int targetW = image.getWidth();
-		int targetH = image.getHeight();
-		int rareRgb = rareColor.toArgbInt();
-		int rareR = rareColor.getR();
-		int rareG = rareColor.getG();
-		int rareB = rareColor.getB();
+		int targetW = targetImage.getWidth();
+		int targetH = targetImage.getHeight();
+		int overlayW = overlayImage.getWidth();
+		int overlayH = overlayImage.getHeight();
 
 		for (int y = 0; y < targetH; y++) {
 			int maskY = (y * maskH) / targetH;
 			if (flipY) {
 				maskY = maskH - 1 - maskY;
 			}
+			int overlayY = (y * overlayH) / targetH;
+
 			for (int x = 0; x < targetW; x++) {
 				int maskX = (x * maskW) / targetW;
 				if (flipX) {
 					maskX = maskW - 1 - maskX;
 				}
+				int overlayX = (x * overlayW) / targetW;
+
 				int maskPixel = mask.getRGB(maskX, maskY);
 				int alpha = (maskPixel >>> 24) & 0xFF;
 				if (alpha == 255) {
-					image.setRGB(x, y, rareRgb);
+					targetImage.setRGB(x, y, overlayImage.getRGB(overlayX, overlayY));
 				} else if (alpha > 0) {
-					int basePixel = image.getRGB(x, y);
+					int overlayPixel = overlayImage.getRGB(overlayX, overlayY);
+					int overlayR = (overlayPixel >> 16) & 0xFF;
+					int overlayG = (overlayPixel >> 8) & 0xFF;
+					int overlayB = overlayPixel & 0xFF;
+
+					int basePixel = targetImage.getRGB(x, y);
 					int baseR = (basePixel >> 16) & 0xFF;
 					int baseG = (basePixel >> 8) & 0xFF;
 					int baseB = basePixel & 0xFF;
 
 					float a = alpha / 255.0f;
-					int outR = Math.round(rareR * a + baseR * (1.0f - a));
-					int outG = Math.round(rareG * a + baseG * (1.0f - a));
-					int outB = Math.round(rareB * a + baseB * (1.0f - a));
+					int outR = Math.round(overlayR * a + baseR * (1.0f - a));
+					int outG = Math.round(overlayG * a + baseG * (1.0f - a));
+					int outB = Math.round(overlayB * a + baseB * (1.0f - a));
 					int outArgb = 0xFF000000 | (outR << 16) | (outG << 8) | outB;
-					image.setRGB(x, y, outArgb);
+					targetImage.setRGB(x, y, outArgb);
 				}
 			}
 		}

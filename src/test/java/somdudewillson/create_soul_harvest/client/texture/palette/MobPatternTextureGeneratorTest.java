@@ -149,36 +149,56 @@ public class MobPatternTextureGeneratorTest {
 	}
 
 	@Test
-	public void testMaskOverlayAndFlipping() {
-		BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-		// Fill base image with black
+	public void testSinglePatternMaskForMultipleRareColorsGradient() {
+		PaletteColor gray = new PaletteColor(50, 50, 50, 80);
+		PaletteColor rareYellow = new PaletteColor(255, 255, 0, 5); // least frequent rare -> top
+		PaletteColor rarePurple = new PaletteColor(128, 0, 128, 15); // most frequent rare -> bottom
+
+		MobPalette palette = new MobPalette(
+				List.of(gray, rareYellow, rarePurple),
+				List.of(gray),
+				List.of(rareYellow, rarePurple),
+				100
+		);
+
+		// Symmetrical vertical line mask across all rows at column 8 (immune to vertical/horizontal flip displacement)
+		BufferedImage mask = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 		for (int y = 0; y < 16; y++) {
-			for (int x = 0; x < 16; x++) {
-				image.setRGB(x, y, 0xFF000000);
-			}
+			mask.setRGB(7, y, 0xFFFFFFFF);
+			mask.setRGB(8, y, 0xFFFFFFFF);
 		}
 
-		BufferedImage mask = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-		// Single pixel at (2, 3)
-		mask.setRGB(2, 3, 0xFFFFFFFF);
+		MobPatternTextureGenerator generator = new MobPatternTextureGenerator();
+		MobPatternTextureGenerator.GenerationResult result = generator.generateTextureWithDetails(
+				palette,
+				1234L,
+				List.of(new MobPatternTextureGenerator.NamedMask("center_stripe", mask))
+		);
 
-		PaletteColor gold = new PaletteColor(255, 215, 0, 5);
+		BufferedImage img = result.image();
+		assertNotNull(result.appliedPattern());
+		assertEquals("center_stripe", result.appliedPattern().maskName());
+		assertEquals(2, result.arrangedRare().size());
 
-		// No flip -> pixel at (2, 3)
-		MobPatternTextureGenerator.applyPatternMask(image, gold, mask, false, false);
-		assertEquals(gold.toArgbInt(), image.getRGB(2, 3));
-		assertEquals(0xFF000000, image.getRGB(13, 3));
+		// In column 7 & 8:
+		// Top rows (0..7) should be rareYellow (since mergedFrom sum is 0, hard edge in rare gradient)
+		// Bottom rows (8..15) should be rarePurple
+		int yellowRgb = rareYellow.toArgbInt();
+		int purpleRgb = rarePurple.toArgbInt();
+		int grayRgb = gray.toArgbInt();
 
-		// Flip X -> pixel at (13, 3)
-		MobPatternTextureGenerator.applyPatternMask(image, gold, mask, true, false);
-		assertEquals(gold.toArgbInt(), image.getRGB(13, 3));
+		for (int y = 0; y < 8; y++) {
+			assertEquals(yellowRgb, img.getRGB(7, y), "Top of rare gradient should be rareYellow");
+			assertEquals(yellowRgb, img.getRGB(8, y), "Top of rare gradient should be rareYellow");
+		}
+		for (int y = 8; y < 16; y++) {
+			assertEquals(purpleRgb, img.getRGB(7, y), "Bottom of rare gradient should be rarePurple");
+			assertEquals(purpleRgb, img.getRGB(8, y), "Bottom of rare gradient should be rarePurple");
+		}
 
-		// Flip Y -> pixel at (2, 12)
-		MobPatternTextureGenerator.applyPatternMask(image, gold, mask, false, true);
-		assertEquals(gold.toArgbInt(), image.getRGB(2, 12));
-
-		// Flip X and Y -> pixel at (13, 12)
-		MobPatternTextureGenerator.applyPatternMask(image, gold, mask, true, true);
-		assertEquals(gold.toArgbInt(), image.getRGB(13, 12));
+		// Non-masked pixels (e.g. column 0) must remain common gray
+		for (int y = 0; y < 16; y++) {
+			assertEquals(grayRgb, img.getRGB(0, y), "Non-masked pixel should remain common gray");
+		}
 	}
 }
