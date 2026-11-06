@@ -1,6 +1,6 @@
 {
   "fallback": true,
-  "xp": 0,
+  "xp": 4,
   "pools": [
     {
       "name": "main",

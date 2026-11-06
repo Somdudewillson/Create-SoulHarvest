@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootParams;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
@@ -43,6 +44,7 @@ import com.google.common.collect.Sets;
 import static somdudewillson.create_soul_harvest.registry.ModTags.EntityTypes.*;
 
 public class SoulDataManager {
+	private static final int[] SLIME_SAMPLE_SIZES = {1, 2, 3, 4};
 	private static final SoulDropCache DROP_CACHE = new SoulDropCache();
 	private static final List<DropSamplingPass> SAMPLING_PASSES = new ArrayList<>(List.of(
 			new StandardDropSamplingPass(),
@@ -409,18 +411,37 @@ public class SoulDataManager {
 			*///?}
 
 			Entity entity = entityType.create(level);
+			if (entity == null) {
+				return new SoulDropCache.CachedSoulData(0, Collections.emptyList());
+			}
+
+			boolean isSlime = entity instanceof Slime;
 
 			int xp = 0;
 			try {
-				//? >= 1.21 {
-				if (entity instanceof net.minecraft.world.entity.LivingEntity living) {
-					xp = living.getExperienceReward(level, null);
+				if (isSlime) {
+					Slime slime = (Slime) entity;
+					for (int size : SLIME_SAMPLE_SIZES) {
+						slime.setSize(size, true);
+						int sizeXp = 0;
+						//? >= 1.21 {
+						sizeXp = slime.getExperienceReward(level, null);
+						//?} else {
+						/*sizeXp = slime.getExperienceReward();
+						*///?}
+						xp = Math.max(xp, sizeXp);
+					}
+				} else {
+					//? >= 1.21 {
+					if (entity instanceof net.minecraft.world.entity.LivingEntity living) {
+						xp = living.getExperienceReward(level, null);
+					}
+					//?} else {
+					/*if (entity instanceof net.minecraft.world.entity.Mob mob) {
+						xp = mob.getExperienceReward();
+					}
+					*///?}
 				}
-				//?} else {
-				/*if (entity instanceof net.minecraft.world.entity.Mob mob) {
-					xp = mob.getExperienceReward();
-				}
-				*///?}
 			} catch (Exception e) {
 				SoulHarvestMod.LOGGER.debug("Failed to calculate experience reward for {}: {}",
 						BuiltInRegistries.ENTITY_TYPE.getKey(entityType), e.getMessage());
@@ -428,9 +449,7 @@ public class SoulDataManager {
 			xp = Math.max(0, xp);
 
 			if (lootTable == null || lootTable == net.minecraft.world.level.storage.loot.LootTable.EMPTY) {
-				if (entity != null) {
-					entity.discard();
-				}
+				entity.discard();
 				return new SoulDropCache.CachedSoulData(xp, Collections.emptyList());
 			}
 
@@ -438,16 +457,36 @@ public class SoulDataManager {
 
 			for (DropSamplingPass pass : SAMPLING_PASSES) {
 				try {
-					LootParams params = pass.createLootParams(level, entity);
 					Map<ResourceLocation, DropStats> passStats = new HashMap<>();
 					int totalRolls = pass.rolls();
 
-					for (int i = 0; i < totalRolls; i++) {
-						List<ItemStack> drops = lootTable.getRandomItems(params);
-						for (ItemStack stack : drops) {
-							if (stack.isEmpty()) continue;
-							ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-							passStats.computeIfAbsent(itemId, k -> new DropStats()).record(stack.getCount());
+					if (isSlime) {
+						Slime slime = (Slime) entity;
+						for (int size : SLIME_SAMPLE_SIZES) {
+							slime.setSize(size, true);
+							LootParams params = pass.createLootParams(level, entity);
+							Map<ResourceLocation, DropStats> sizeStats = new HashMap<>();
+
+							for (int i = 0; i < totalRolls; i++) {
+								List<ItemStack> drops = lootTable.getRandomItems(params);
+								for (ItemStack stack : drops) {
+									if (stack.isEmpty()) continue;
+									ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+									sizeStats.computeIfAbsent(itemId, k -> new DropStats()).record(stack.getCount());
+								}
+							}
+
+							mergeDropStats(passStats, sizeStats);
+						}
+					} else {
+						LootParams params = pass.createLootParams(level, entity);
+						for (int i = 0; i < totalRolls; i++) {
+							List<ItemStack> drops = lootTable.getRandomItems(params);
+							for (ItemStack stack : drops) {
+								if (stack.isEmpty()) continue;
+								ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+								passStats.computeIfAbsent(itemId, k -> new DropStats()).record(stack.getCount());
+							}
 						}
 					}
 
@@ -470,9 +509,7 @@ public class SoulDataManager {
 				}
 			}
 
-			if (entity != null) {
-				entity.discard();
-			}
+			entity.discard();
 
 			List<SoulDropEntry> entries = new ArrayList<>(resolvedEntries.values());
 			List<SoulDropPool> pools = entries.isEmpty()
@@ -549,10 +586,32 @@ public class SoulDataManager {
 		return new ScanProgress(remaining, total, DROP_CACHE.size(), resolvedData.size());
 	}
 
-	private static class DropStats {
+	static void mergeDropStats(Map<ResourceLocation, DropStats> target, Map<ResourceLocation, DropStats> incoming) {
+		for (Map.Entry<ResourceLocation, DropStats> entry : incoming.entrySet()) {
+			target.compute(entry.getKey(), (key, existing) -> {
+				if (existing == null) {
+					return new DropStats(entry.getValue().occurrences, entry.getValue().minCount, entry.getValue().maxCount);
+				}
+				existing.occurrences = Math.max(existing.occurrences, entry.getValue().occurrences);
+				existing.minCount = Math.min(existing.minCount, entry.getValue().minCount);
+				existing.maxCount = Math.max(existing.maxCount, entry.getValue().maxCount);
+				return existing;
+			});
+		}
+	}
+
+	static class DropStats {
 		int occurrences = 0;
 		int minCount = Integer.MAX_VALUE;
 		int maxCount = 0;
+
+		DropStats() {}
+
+		DropStats(int occurrences, int minCount, int maxCount) {
+			this.occurrences = occurrences;
+			this.minCount = minCount;
+			this.maxCount = maxCount;
+		}
 
 		void record(int count) {
 			occurrences++;
