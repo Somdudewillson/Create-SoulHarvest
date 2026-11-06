@@ -77,7 +77,7 @@ public class AttunedPolyclayCompositor {
 						float r1 = ((argb1 >> 16) & 0xFF) / 255.0f;
 						float g1 = ((argb1 >> 8) & 0xFF) / 255.0f;
 						float b1 = (argb1 & 0xFF) / 255.0f;
-						float lum1 = (r1 + g1 + b1) / 3.0f;
+						float lum1 = 0.2126f*r1 + 0.7152f*g1 + 0.0722f*b1;
 						float maskWeight = (a1 / 255.0f) * lum1;
 
 						if (maskWeight > 0.0f) {
