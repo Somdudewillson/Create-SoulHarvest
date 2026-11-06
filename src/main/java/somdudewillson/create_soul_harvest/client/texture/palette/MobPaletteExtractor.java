@@ -31,21 +31,44 @@ public class MobPaletteExtractor {
 	public Optional<MobPalette> tryExtractPalette(List<BufferedImage> images) {
 		Map<Integer, Integer> rawCounts = new HashMap<>();
 
+		Map<Integer, Integer> imgRawCounts = new HashMap<>();
+		Map<Integer, Integer> edgeColorCounts = new HashMap<>();
 		for (BufferedImage img : images) {
 			if (img == null) continue;
 			int width = img.getWidth();
 			int height = img.getHeight();
 
+			imgRawCounts.clear();
+			edgeColorCounts.clear();
+			int alphaAmt = 0;
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
 					int argb = img.getRGB(x, y);
 					int alpha = (argb >> 24) & 0xFF;
 					
-					if (alpha < 128) continue;
+					if (alpha < 128) {
+						alphaAmt++;
+						continue;
+					}
 
 					int rgb = argb & 0x00FFFFFF;
+
 					rawCounts.merge(rgb, 1, Integer::sum);
+					imgRawCounts.merge(rgb, 1, Integer::sum);
+					if (x == 0 || y == 0 || x == width-1 || y == height-1) {
+						edgeColorCounts.merge(rgb, 1, Integer::sum);
+					}
 				}
+			}
+			
+			if (alphaAmt/((float) width * height) < 0.05) {
+				edgeColorCounts.entrySet()
+					.stream()
+					.reduce((a,b)->a.getValue()<b.getValue() ? b : a)
+					.map(Map.Entry::getKey)
+					.ifPresent(c->{
+						rawCounts.computeIfPresent(c, (k,v) -> v-imgRawCounts.get(c)>0 ? v-imgRawCounts.get(c) : null);
+					});
 			}
 		}
 
