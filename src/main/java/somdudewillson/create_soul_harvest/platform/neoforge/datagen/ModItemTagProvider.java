@@ -200,6 +200,27 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		tag(ModTags.Items.C_MAGIC_NECRONIUM_RODS)
 				.replace(false)
 				.addTag(ModTags.Items.FORGE_MAGIC_NECRONIUM_RODS);
+
+		tag(ModTags.Items.C_DYES_YELLOW)
+				.replace(false)
+				.addTag(ModTags.Items.FORGE_DYES_YELLOW);
+		tag(ModTags.Items.FORGE_DYES_YELLOW)
+				.replace(false)
+				.add(Items.YELLOW_DYE);
+
+		tag(ModTags.Items.C_DYES_LIME)
+				.replace(false)
+				.addTag(ModTags.Items.FORGE_DYES_LIME);
+		tag(ModTags.Items.FORGE_DYES_LIME)
+				.replace(false)
+				.add(Items.LIME_DYE);
+
+		tag(ModTags.Items.C_DYES_PURPLE)
+				.replace(false)
+				.addTag(ModTags.Items.FORGE_DYES_PURPLE);
+		tag(ModTags.Items.FORGE_DYES_PURPLE)
+				.replace(false)
+				.add(Items.PURPLE_DYE);
 		
 		tag(ModTags.Items.SCUTES)
 				.addOptional(ResourceLocation.withDefaultNamespace("turtle_scute"))

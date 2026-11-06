@@ -7,6 +7,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import lombok.Getter;
@@ -161,8 +162,8 @@ public class AttunedPolyclayIngredient implements ICustomIngredient {
 		this(soul, null, null);
 	}
 
-	public static AttunedPolyclayIngredient of(ResourceLocation soul) {
-		return new AttunedPolyclayIngredient(soul, null, 0, null, null);
+	public static AttunedPolyclayIngredient of(EntityType<? extends LivingEntity> entityType) {
+		return new AttunedPolyclayIngredient(EntityType.getKey(entityType), null, 0, null, null);
 	}
 
 	public static AttunedPolyclayIngredient of(TagKey<EntityType<?>> soulTag, int minTier) {

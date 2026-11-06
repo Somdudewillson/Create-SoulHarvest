@@ -28,6 +28,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -374,6 +375,34 @@ public final class CreateRecipeGen {
 				.require(ModFluids.SILICA_SOLUTION.get(), 24)
 				.requiresHeat(HeatCondition.HEATED)
 				.output(ModFluids.LIQUID_SOUL_CRYSTAL.get(), 12)
+				.build(recipeOutput);
+		
+		// Froglights from Polyclay
+		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_polyclay_ochre_froglight"))
+				.require(AttunedPolyclayIngredient.of(EntityType.FROG))
+				.require(AttunedPolyclayIngredient.of(EntityType.MAGMA_CUBE))
+				.require(ModTags.Items.C_DYES_YELLOW)
+				.requiresHeat(HeatCondition.HEATED)
+				.output(Items.OCHRE_FROGLIGHT, 4)
+				.output(0.5f, Items.OCHRE_FROGLIGHT, 4)
+				.build(recipeOutput);
+		
+		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_polyclay_pearlescent_froglight"))
+				.require(AttunedPolyclayIngredient.of(EntityType.FROG))
+				.require(AttunedPolyclayIngredient.of(EntityType.MAGMA_CUBE))
+				.require(ModTags.Items.C_DYES_PURPLE)
+				.requiresHeat(HeatCondition.HEATED)
+				.output(Items.PEARLESCENT_FROGLIGHT, 4)
+				.output(0.5f, Items.PEARLESCENT_FROGLIGHT, 4)
+				.build(recipeOutput);
+		
+		new StandardProcessingRecipe.Builder<>(MixingRecipe::new, SoulHarvestMod.id("create_mix_polyclay_verdant_froglight"))
+				.require(AttunedPolyclayIngredient.of(EntityType.FROG))
+				.require(AttunedPolyclayIngredient.of(EntityType.MAGMA_CUBE))
+				.require(ModTags.Items.C_DYES_LIME)
+				.requiresHeat(HeatCondition.HEATED)
+				.output(Items.VERDANT_FROGLIGHT, 4)
+				.output(0.5f, Items.VERDANT_FROGLIGHT, 4)
 				.build(recipeOutput);
 	}
 

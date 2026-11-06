@@ -104,6 +104,15 @@ public final class ModTags {
 		public static final TagKey<Item> C_INGOTS_BRASS = commonTag("ingots/brass");
 		public static final TagKey<Item> FORGE_INGOTS_BRASS = forgeTag("ingots/brass");
 		
+		public static final TagKey<Item> C_DYES_YELLOW = commonTag("dyes/yellow");
+		public static final TagKey<Item> FORGE_DYES_YELLOW = forgeTag("dyes/yellow");
+		
+		public static final TagKey<Item> C_DYES_LIME = commonTag("dyes/lime");
+		public static final TagKey<Item> FORGE_DYES_LIME = forgeTag("dyes/lime");
+		
+		public static final TagKey<Item> C_DYES_PURPLE = commonTag("dyes/purple");
+		public static final TagKey<Item> FORGE_DYES_PURPLE = forgeTag("dyes/purple");
+		
 		public static final TagKey<Item> CURIO_CHARM = curioTag("charm");
 		public static final TagKey<Item> CURIO_BELT = curioTag("belt");
 

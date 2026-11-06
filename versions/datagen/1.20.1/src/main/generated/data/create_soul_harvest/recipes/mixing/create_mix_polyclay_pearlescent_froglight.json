@@ -1,0 +1,28 @@
+{
+    "type": "create:mixing",
+    "heatRequirement": "heated",
+    "ingredients": [
+        {
+            "type": "create_soul_harvest:attuned_polyclay",
+            "soul": "minecraft:frog"
+        },
+        {
+            "type": "create_soul_harvest:attuned_polyclay",
+            "soul": "minecraft:magma_cube"
+        },
+        {
+            "tag": "c:dyes/purple"
+        }
+    ],
+    "results": [
+        {
+            "item": "minecraft:pearlescent_froglight",
+            "count": 4
+        },
+        {
+            "item": "minecraft:pearlescent_froglight",
+            "count": 4,
+            "chance": 0.5
+        }
+    ]
+}
