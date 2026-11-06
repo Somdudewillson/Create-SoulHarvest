@@ -8,6 +8,9 @@ import net.createmod.catnip.config.ui.BaseConfigScreen;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
@@ -20,6 +23,8 @@ import somdudewillson.create_soul_harvest.client.overlay.BiocideGasOverlay;
 import somdudewillson.create_soul_harvest.client.particle.InfuseSoulFireParticle;
 import somdudewillson.create_soul_harvest.client.particle.StormCloudParticle;
 import somdudewillson.create_soul_harvest.client.particle.VerdantFlashParticle;
+import somdudewillson.create_soul_harvest.client.texture.palette.ClientPatternDumpCommand;
+import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextureManager;
 import somdudewillson.create_soul_harvest.compat.jei.SoulHarvestJeiHelper;
 import somdudewillson.create_soul_harvest.registry.ModParticleTypes;
 
@@ -69,12 +74,29 @@ public class NeoforgeClientEventSubscriber {
 				(guiGraphics, deltaTracker) -> BiocideGasOverlay.render(guiGraphics));
 	}
 
+	@SubscribeEvent
+	public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
+		event.registerReloadListener(MobPatternTextureManager.INSTANCE);
+	}
+
 	@EventBusSubscriber(modid = SoulHarvestMod.MOD_ID, value = Dist.CLIENT)
 	public static class ClientGameEvents {
 		@SubscribeEvent
 		public static void onRecipesUpdated(RecipesUpdatedEvent event) {
 			SoulHarvestJeiHelper.updateHiddenIngredients();
 			ModCreativeTabs.refreshCreativeTabs();
+		}
+
+		@SubscribeEvent
+		public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
+			if (SoulHarvestMod.xplat().isDevelopmentEnvironment()) {
+				ClientPatternDumpCommand.register(event.getDispatcher());
+			}
+		}
+
+		@SubscribeEvent
+		public static void onClientLoggingIn(ClientPlayerNetworkEvent.LoggingIn event) {
+			MobPatternTextureManager.checkOnWorldJoin();
 		}
 	}
 }

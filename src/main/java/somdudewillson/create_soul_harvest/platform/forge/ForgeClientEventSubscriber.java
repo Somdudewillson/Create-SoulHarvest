@@ -4,6 +4,9 @@ package somdudewillson.create_soul_harvest.platform.forge;
 
 /*import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.client.event.RegisterClientCommandsEvent;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -13,6 +16,8 @@ import somdudewillson.create_soul_harvest.client.overlay.BiocideGasOverlay;
 import somdudewillson.create_soul_harvest.client.particle.InfuseSoulFireParticle;
 import somdudewillson.create_soul_harvest.client.particle.StormCloudParticle;
 import somdudewillson.create_soul_harvest.client.particle.VerdantFlashParticle;
+import somdudewillson.create_soul_harvest.client.texture.palette.ClientPatternDumpCommand;
+import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextureManager;
 import somdudewillson.create_soul_harvest.compat.jei.SoulHarvestJeiHelper;
 import somdudewillson.create_soul_harvest.registry.ModParticleTypes;
 
@@ -54,12 +59,29 @@ public class ForgeClientEventSubscriber {
 				(gui, guiGraphics, partialTick, width, height) -> BiocideGasOverlay.render(guiGraphics));
 	}
 
+	@SubscribeEvent
+	public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
+		event.registerReloadListener(MobPatternTextureManager.INSTANCE);
+	}
+
 	@Mod.EventBusSubscriber(modid = SoulHarvestMod.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 	public static class ClientGameEvents {
 		@SubscribeEvent
 		public static void onRecipesUpdated(RecipesUpdatedEvent event) {
 			SoulHarvestJeiHelper.updateHiddenIngredients();
 			ModCreativeTabs.refreshCreativeTabs();
+		}
+
+		@SubscribeEvent
+		public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
+			if (SoulHarvestMod.xplat().isDevelopmentEnvironment()) {
+				ClientPatternDumpCommand.register(event.getDispatcher());
+			}
+		}
+
+		@SubscribeEvent
+		public static void onClientLoggingIn(ClientPlayerNetworkEvent.LoggingIn event) {
+			MobPatternTextureManager.checkOnWorldJoin();
 		}
 	}
 }
