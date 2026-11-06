@@ -1100,7 +1100,6 @@ public class MobGrindingDynamicData {
 		JsonObject customTag = new JsonObject();
 		customTag.addProperty(LootTokenItem.TAG_LOOT_TABLE, lootTableId.toString());
 		customTag.addProperty(LootTokenItem.TAG_LOCALIZATION_KEY, mobLocKey);
-		customTag.addProperty(LootTokenItem.TAG_GLINT_TYPE, LootTokenItem.PREFIX_SOUL + entityId.toString());
 
 		// 1.21 NeoForge components
 		JsonObject components = new JsonObject();

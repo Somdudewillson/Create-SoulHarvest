@@ -2,6 +2,7 @@ package somdudewillson.create_soul_harvest.client.texture.palette;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
+import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 
 import javax.imageio.ImageIO;
@@ -29,8 +31,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Manages procedural representative pattern textures for mobs.
- * Textures are generated on resource reload (when level is active) or world join.
+ * Manages procedural representative pattern textures for mobs and custom composited
+ * soul items.
  */
 public class MobPatternTextureManager implements ResourceManagerReloadListener {
 
@@ -58,9 +60,48 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 	private final Map<ResourceLocation, ResourceLocation> dynamicTextureLocations = new ConcurrentHashMap<>();
 	private final Map<ResourceLocation, DynamicTexture> dynamicTextures = new ConcurrentHashMap<>();
 
+	// Registry of polyclay item composite handlers
+	private final Map<String, PolyclayCompositeHandler> polyclayHandlers = new ConcurrentHashMap<>();
+
 	private volatile boolean needsGeneration = false;
 
-	private MobPatternTextureManager() {}
+	private MobPatternTextureManager() {
+		// Register known polyclay items
+		this.polyclayHandlers.put("polyclay_attuned", new PolyclayCompositeHandler("polyclay_attuned"));
+		this.polyclayHandlers.put("polyclay_andesite_attuned", new PolyclayCompositeHandler("polyclay_andesite_attuned"));
+		this.polyclayHandlers.put("polyclay_brass_attuned", new PolyclayCompositeHandler("polyclay_brass_attuned"));
+	}
+
+	public static void registerPolyclay(String itemPath) {
+		INSTANCE.polyclayHandlers.putIfAbsent(itemPath, new PolyclayCompositeHandler(itemPath));
+	}
+
+	public static boolean isRegisteredPolyclay(String itemPath) {
+		return INSTANCE.polyclayHandlers.containsKey(itemPath);
+	}
+
+	public static boolean hasActivePolyclayHandler(String itemPath) {
+		PolyclayCompositeHandler handler = INSTANCE.polyclayHandlers.get(itemPath);
+		return handler != null && handler.isActive();
+	}
+
+	@Nullable
+	public static PolyclayCompositeHandler getPolyclayHandler(String itemPath) {
+		return INSTANCE.polyclayHandlers.get(itemPath);
+	}
+
+	public static ResourceLocation getPolyclayTextureLocation(String itemPath, @Nullable ResourceLocation entityId) {
+		PolyclayCompositeHandler handler = INSTANCE.polyclayHandlers.get(itemPath);
+		if (handler != null) {
+			return handler.getTextureLocation(entityId);
+		}
+		return SoulHarvestMod.id("textures/item/" + itemPath + ".png");
+	}
+
+	public static List<BakedQuad> getPolyclayQuads(String itemPath) {
+		PolyclayCompositeHandler handler = INSTANCE.polyclayHandlers.get(itemPath);
+		return handler != null ? handler.getQuads() : Collections.emptyList();
+	}
 
 	@Override
 	public void onResourceManagerReload(ResourceManager resourceManager) {
@@ -84,7 +125,12 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 
 		SoulHarvestMod.LOGGER.info("Loaded {} mob pattern masks from resource packs.", patternMasks.size());
 
+		// Reload all registered polyclay composite handlers
 		Minecraft mc = Minecraft.getInstance();
+		for (PolyclayCompositeHandler handler : polyclayHandlers.values()) {
+			handler.reload(resourceManager, mc);
+		}
+
 		if (mc != null && mc.level != null) {
 			generateTexturesAsync(null, null);
 		} else {
@@ -306,19 +352,33 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 					old.close();
 				}
 				INSTANCE.dynamicTextureLocations.put(entityId, registeredLocation != null ? registeredLocation : regId);
+
+				// Delegate composite uploading to all active polyclay handlers
+				for (PolyclayCompositeHandler handler : INSTANCE.polyclayHandlers.values()) {
+					if (handler.isActive()) {
+						handler.uploadCompositeForEntity(entityId, img, mc);
+					}
+				}
 			} catch (Throwable t) {
 				SoulHarvestMod.LOGGER.error("Failed uploading dynamic texture for {}", entityId, t);
 			}
 		}
-		SoulHarvestMod.LOGGER.info("Registered {} mob pattern dynamic textures.", results.size());
+		SoulHarvestMod.LOGGER.info("Registered {} mob pattern dynamic textures and updated polyclay composites.", results.size());
 	}
 
 	/**
-	 * Dumps pattern textures to the specified output directory and creates an HTML catalog.
+	 * Dumps pattern textures and polyclay composites to the specified output directory.
 	 */
 	public static int dumpTexturesToDisk(Path outputDir, ResourceLocation targetEntityId) throws Exception {
 		Files.createDirectories(outputDir);
 		List<ExportItem> items = new ArrayList<>();
+
+		// Dump each active polyclay composite item to its own subfolder
+		for (PolyclayCompositeHandler handler : INSTANCE.polyclayHandlers.values()) {
+			if (handler.isActive()) {
+				handler.dumpToDisk(outputDir, INSTANCE.generationResults);
+			}
+		}
 
 		for (Map.Entry<ResourceLocation, MobPatternTextureGenerator.GenerationResult> entry : INSTANCE.generationResults.entrySet()) {
 			ResourceLocation entityId = entry.getKey();

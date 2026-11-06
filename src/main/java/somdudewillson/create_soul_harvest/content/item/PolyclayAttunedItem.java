@@ -14,7 +14,6 @@ import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 //?} forge {
 /*import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 *///?}
-import somdudewillson.create_soul_harvest.content.capability.ISoulGlintHolder;
 import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 import somdudewillson.create_soul_harvest.content.soul.SoulData;
 import somdudewillson.create_soul_harvest.content.soul.SoulDataManager;
@@ -64,7 +63,7 @@ public class PolyclayAttunedItem extends Item {
 
 	@Override
 	public boolean isFoil(ItemStack stack) {
-		return !ISoulGlintHolder.hasValidSoulGlint(stack);
+		return super.isFoil(stack);
 	}
 	
 	public static class PolyclayAttunedTooltipModifier extends SimplePalettizedTooltipModifier {

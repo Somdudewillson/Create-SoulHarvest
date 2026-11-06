@@ -177,7 +177,7 @@ public class ModCreativeTabs {
 					.map(EntityType::getDescriptionId)
 					.orElse("entity." + entityId.getNamespace() + "." + entityId.getPath());
 
-			list.add(LootTokenItem.createWithLootTable(ModItems.LOOT_TOKEN.get(), lootTableId, mobLocKey, LootTokenItem.PREFIX_SOUL + entityId.toString()));
+			list.add(LootTokenItem.createWithLootTable(ModItems.LOOT_TOKEN.get(), lootTableId, mobLocKey));
 		}
 		return list;
 	}
