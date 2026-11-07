@@ -37,11 +37,11 @@ public class RunicSpells {
 	public static final Supplier<GlyphSpell> FORTITUDE = ()->new FortitudeSpell(false);
 	public static final Supplier<GlyphSpell> FORTITUDE_ENHANCED = ()->new FortitudeSpell(true);
 	//? >= 1.21 {
-	public static final Supplier<GlyphSpell> UPDRAFT = () -> new UpdraftSpell(7.0, ()->new MobEffectInstance(MobEffects.SLOW_FALLING, 20*25, 0));
-	public static final Supplier<GlyphSpell> UPDRAFT_ENHANCED = () -> new UpdraftSpell(7.0, ()->new MobEffectInstance(ModMobEffects.AGILE_FALLING, 20*35, 0));
+	public static final Supplier<GlyphSpell> UPDRAFT = () -> new UpdraftSpell(false, 7.0, ()->new MobEffectInstance(MobEffects.SLOW_FALLING, 20*25, 0));
+	public static final Supplier<GlyphSpell> UPDRAFT_ENHANCED = () -> new UpdraftSpell(true, 7.0, ()->new MobEffectInstance(ModMobEffects.AGILE_FALLING, 20*45, 0));
 	//?} else {
-	/*public static final Supplier<GlyphSpell> UPDRAFT = () -> new UpdraftSpell(7.0, ()->new MobEffectInstance(MobEffects.SLOW_FALLING, 20*25, 0));
-	public static final Supplier<GlyphSpell> UPDRAFT_ENHANCED = () -> new UpdraftSpell(7.0, ()->new MobEffectInstance(ModMobEffects.AGILE_FALLING.get(), 20*35, 0));
+	/*public static final Supplier<GlyphSpell> UPDRAFT = () -> new UpdraftSpell(false, 7.0, ()->new MobEffectInstance(MobEffects.SLOW_FALLING, 20*25, 0));
+	public static final Supplier<GlyphSpell> UPDRAFT_ENHANCED = () -> new UpdraftSpell(true, 7.0, ()->new MobEffectInstance(ModMobEffects.AGILE_FALLING.get(), 20*45, 0));
 	*///?}
 	public static final Supplier<GlyphSpell> INSTANT_WALL = register("instant_wall", InstantWallSpell::new);
 	public static final Supplier<GlyphSpell> INSTANT_SHELTER = register("instant_shelter", InstantShelterSpell::new);

@@ -16,6 +16,7 @@ import somdudewillson.create_soul_harvest.content.spell.GlyphSpell;
 @RequiredArgsConstructor
 public class UpdraftSpell implements GlyphSpell {
 
+	private final boolean accelerateGliding;
 	private final double launchHeight;
 	private final Supplier<MobEffectInstance> effect;
 
@@ -23,20 +24,36 @@ public class UpdraftSpell implements GlyphSpell {
 	public boolean cast(Level level, LivingEntity caster) {
 		AABB area = AABB.ofSize(caster.position(), 5, 3, 5);
 		
-		for (LivingEntity nearby : level.getEntitiesOfClass(LivingEntity.class, area)) {
+		if (accelerateGliding && caster.isFallFlying()) {
 			if (level instanceof ServerLevel serverLevel) {
 				//? >= 1.21 {
-				serverLevel.sendParticles(ParticleTypes.GUST_EMITTER_SMALL, nearby.getX(), nearby.getY(), nearby.getZ(), 1, 0, 0, 0, 0);
+				serverLevel.sendParticles(ParticleTypes.GUST_EMITTER_SMALL, caster.getX(), caster.getY(), caster.getZ(), 1, 0, 0, 0, 0);
 				//?} else {
-				/*serverLevel.sendParticles(ParticleTypes.CLOUD, nearby.getX(), nearby.getY(), nearby.getZ(), 5, 0.2, 0.2, 0.2, 0.05);
+				/*serverLevel.sendParticles(ParticleTypes.CLOUD, caster.getX(), caster.getY(), caster.getZ(), 5, 0.2, 0.2, 0.2, 0.05);
 				*///?}
 			}
-			nearby.setDeltaMovement(new Vec3(0, launchHeight, 0));
-			nearby.hurtMarked = true;
 
-			if (nearby instanceof OwnableEntity ownable && caster.getUUID().equals(ownable.getOwnerUUID())) {
-				nearby.addEffect(effect.get());
+			caster.setDeltaMovement(caster.getDeltaMovement().add(caster.getLookAngle().scale(launchHeight / 3.)));
+			caster.hurtMarked = true;
+						
+		} else {
+		
+			for (LivingEntity nearby : level.getEntitiesOfClass(LivingEntity.class, area)) {
+				if (level instanceof ServerLevel serverLevel) {
+					//? >= 1.21 {
+					serverLevel.sendParticles(ParticleTypes.GUST_EMITTER_SMALL, nearby.getX(), nearby.getY(), nearby.getZ(), 1, 0, 0, 0, 0);
+					//?} else {
+					/*serverLevel.sendParticles(ParticleTypes.CLOUD, nearby.getX(), nearby.getY(), nearby.getZ(), 5, 0.2, 0.2, 0.2, 0.05);
+					*///?}
+				}
+				nearby.setDeltaMovement(nearby.getDeltaMovement().add(new Vec3(0, launchHeight, 0)));
+				nearby.hurtMarked = true;
+	
+				if (nearby instanceof OwnableEntity ownable && caster.getUUID().equals(ownable.getOwnerUUID())) {
+					nearby.addEffect(effect.get());
+				}
 			}
+		
 		}
 		
 		if (!level.isClientSide()) {

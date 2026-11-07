@@ -49,6 +49,37 @@ public class AgileFallingMobEffect extends MobEffect {
 		if (entity.onGround() || entity.isInWater() || entity.isInLava() || entity.isPassenger()) {
 			return;
 		}
+		
+		if (entity.isFallFlying()) {// Provide continuous boost while elytra gliding
+			Vec3 motion = entity.getDeltaMovement();
+			double speed = motion.length();
+			if (speed < 3) {
+				Vec3 forward = entity.getLookAngle();
+				double speedMult = 1 - (speed/3.);
+				motion = motion.add(forward.scale(speedMult * 0.015));
+				entity.setDeltaMovement(motion);
+			}
+			
+			
+			// Visual breeze particles occasionally on server
+			if (entity.tickCount % 5 == 0 && entity.level() instanceof ServerLevel serverLevel) {
+				//? >= 1.21 {
+				serverLevel.sendParticles(
+						ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 0.48f, 0.89f, 0.91f),
+						entity.getX(), entity.getY() + 0.2, entity.getZ(),
+						2, 0.2, 0.1, 0.2, 0.02
+				);
+				//?} else {
+				/*serverLevel.sendParticles(
+						new DustParticleOptions(new org.joml.Vector3f(0.48f, 0.89f, 0.91f), 1.0f),
+						entity.getX(), entity.getY() + 0.2, entity.getZ(),
+						2, 0.2, 0.1, 0.2, 0.02
+				);
+				*///?}
+			}
+			
+			return;
+		}
 
 		// Prevent fall damage while falling with agile falling
 		entity.resetFallDistance();
