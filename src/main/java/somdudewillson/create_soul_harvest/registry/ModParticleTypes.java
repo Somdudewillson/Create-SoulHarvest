@@ -13,11 +13,9 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 //?} forge {
-/*import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
-import net.neoforged.neoforge.registries.DeferredHolder;
+/*import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import com.mojang.serialization.Codec;
 *///?}
 
@@ -37,17 +35,7 @@ public class ModParticleTypes {
 			PARTICLE_TYPES.register("verdant_flash", () -> new SimpleParticleType(false));
 
 	public static final DeferredHolder<ParticleType<?>, ParticleType<CapturedSoulParticleOption>> CAPTURED_SOUL =
-			PARTICLE_TYPES.register("captured_soul", () -> new ParticleType<CapturedSoulParticleOption>(false) {
-				@Override
-				public MapCodec<CapturedSoulParticleOption> codec() {
-					return CapturedSoulParticleOption.CODEC;
-				}
-
-				@Override
-				public StreamCodec<? super RegistryFriendlyByteBuf, CapturedSoulParticleOption> streamCodec() {
-					return CapturedSoulParticleOption.STREAM_CODEC;
-				}
-			});
+			PARTICLE_TYPES.register("captured_soul", CapturedSoulParticleType::new);
 	//?} forge {
 	/*public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES =
 			DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, SoulHarvestMod.MOD_ID);
@@ -62,11 +50,33 @@ public class ModParticleTypes {
 			PARTICLE_TYPES.register("verdant_flash", () -> new SimpleParticleType(false));
 
 	public static final RegistryObject<ParticleType<CapturedSoulParticleOption>> CAPTURED_SOUL =
-			PARTICLE_TYPES.register("captured_soul", () -> new ParticleType<CapturedSoulParticleOption>(false, CapturedSoulParticleOption.DESERIALIZER) {
-				@Override
-				public Codec<CapturedSoulParticleOption> codec() {
-					return CapturedSoulParticleOption.CODEC;
-				}
-			});
+			PARTICLE_TYPES.register("captured_soul", CapturedSoulParticleType::new);
 	*///?}
+
+	public static class CapturedSoulParticleType extends ParticleType<CapturedSoulParticleOption> {
+		//? neoforge {
+		public CapturedSoulParticleType() {
+			super(false);
+		}
+
+		@Override
+		public MapCodec<CapturedSoulParticleOption> codec() {
+			return CapturedSoulParticleOption.CODEC;
+		}
+
+		@Override
+		public StreamCodec<? super RegistryFriendlyByteBuf, CapturedSoulParticleOption> streamCodec() {
+			return CapturedSoulParticleOption.STREAM_CODEC;
+		}
+		//?} forge {
+		/*public CapturedSoulParticleType() {
+			super(false, CapturedSoulParticleOption.DESERIALIZER);
+		}
+
+		@Override
+		public Codec<CapturedSoulParticleOption> codec() {
+			return CapturedSoulParticleOption.CODEC;
+		}
+		*///?}
+	}
 }
