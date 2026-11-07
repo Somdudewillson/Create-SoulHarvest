@@ -88,13 +88,13 @@ public class SoulHarvestDeathEvents {
 				0.2
 		);
 		//? neoforge {
-		serverLevel.playSound(null, mobX, mobY, mobZ, SoundEvents.SOUL_ESCAPE.value(), SoundSource.PLAYERS, 0.4F, 1.4F);
+		serverLevel.playSound(null, mobX, mobY, mobZ, SoundEvents.SOUL_ESCAPE.value(), SoundSource.PLAYERS, 60F, 1.4F);
 		//?} forge {
-		/*serverLevel.playSound(null, mobX, mobY, mobZ, SoundEvents.SOUL_ESCAPE, SoundSource.PLAYERS, 0.4F, 1.4F);
+		/*serverLevel.playSound(null, mobX, mobY, mobZ, SoundEvents.SOUL_ESCAPE, SoundSource.PLAYERS, 60F, 1.4F);
 		*///?}
 
 		if (newPortion >= 100) {
-			serverLevel.playSound(player, player.blockPosition(), SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
+			serverLevel.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BELL_BLOCK, SoundSource.PLAYERS, 1.5F, 1.0F);
 			
 			AdvancementHelper.grantAdvancement(player, "captured_soul");
 			if (soulData.tier() == 1) {
