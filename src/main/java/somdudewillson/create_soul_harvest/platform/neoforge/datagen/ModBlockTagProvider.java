@@ -4,6 +4,7 @@ package somdudewillson.create_soul_harvest.platform.neoforge.datagen;
 
 import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.AllBlocks;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -148,6 +149,42 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				.addOptional(ResourceLocation.withDefaultNamespace("short_grass"))
 				.addOptional(ResourceLocation.withDefaultNamespace("grass"))
 				.addTag(BlockTags.FLOWERS);
+		
+		// Planetoid tags
+		tag(ModTags.Blocks.PLANETOID_STONE_VARIANTS)
+				.add(Blocks.GRANITE)
+				.add(Blocks.ANDESITE)
+				.add(Blocks.DIORITE);
+		
+		tag(ModTags.Blocks.PLANETOID_STONE_ORES_COMMON)
+				.add(Blocks.COAL_ORE)
+				.add(Blocks.COPPER_ORE)
+				.add(Blocks.IRON_ORE)
+				.add(AllBlocks.ZINC_ORE.get());
+		
+		tag(ModTags.Blocks.PLANETOID_STONE_ORES_UNCOMMON)
+				.add(Blocks.GOLD_ORE)
+				.add(Blocks.REDSTONE_ORE)
+				.add(Blocks.LAPIS_ORE);
+		
+		tag(ModTags.Blocks.PLANETOID_STONE_ORES_RARE)
+				.add(Blocks.DIAMOND_ORE)
+				.add(Blocks.EMERALD_ORE);
+		
+		tag(ModTags.Blocks.PLANETOID_DEEPSLATE_ORES_COMMON)
+				.add(Blocks.DEEPSLATE_COAL_ORE)
+				.add(Blocks.DEEPSLATE_COPPER_ORE)
+				.add(Blocks.DEEPSLATE_IRON_ORE)
+				.add(AllBlocks.DEEPSLATE_ZINC_ORE.get());
+
+		tag(ModTags.Blocks.PLANETOID_DEEPSLATE_ORES_UNCOMMON)
+				.add(Blocks.DEEPSLATE_GOLD_ORE)
+				.add(Blocks.DEEPSLATE_REDSTONE_ORE)
+				.add(Blocks.DEEPSLATE_LAPIS_ORE);
+		
+		tag(ModTags.Blocks.PLANETOID_DEEPSLATE_ORES_RARE)
+				.add(Blocks.DEEPSLATE_DIAMOND_ORE)
+				.add(Blocks.DEEPSLATE_EMERALD_ORE);
 
 		// Mineable tags
 		tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
