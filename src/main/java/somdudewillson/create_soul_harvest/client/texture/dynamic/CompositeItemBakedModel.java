@@ -16,7 +16,6 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternRenderTypes;
 import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 
@@ -130,27 +129,11 @@ public class CompositeItemBakedModel extends BakedModelWrapper<BakedModel> {
 		};
 	}
 
-	@Nullable
-	public static String getTargetItemPath(ResourceLocation loc) {
-		if (loc == null || !loc.getNamespace().equals(SoulHarvestMod.MOD_ID)) {
-			return null;
-		}
-		String path = loc.getPath();
-		if (path.startsWith("item/")) {
-			path = path.substring(5);
-		}
-		return ItemCompositeRegistry.isRegisteredComposite(path) ? path : null;
-	}
-
-	public static boolean isTargetItem(ResourceLocation loc) {
-		return getTargetItemPath(loc) != null;
-	}
-
 	//? >= 1.21 {
 	public static void wrapTargetModels(Map<ModelResourceLocation, BakedModel> models) {
 		for (Map.Entry<ModelResourceLocation, BakedModel> entry : models.entrySet()) {
 			ResourceLocation loc = entry.getKey().id();
-			String path = getTargetItemPath(loc);
+			String path = ItemCompositeRegistry.getTargetItemPath(loc);
 			if (path != null) {
 				entry.setValue(new CompositeItemBakedModel(entry.getValue(), path));
 			}
@@ -160,7 +143,7 @@ public class CompositeItemBakedModel extends BakedModelWrapper<BakedModel> {
 	/*public static void wrapTargetModels(Map<ResourceLocation, BakedModel> models) {
 		for (Map.Entry<ResourceLocation, BakedModel> entry : models.entrySet()) {
 			ResourceLocation loc = entry.getKey();
-			String path = getTargetItemPath(loc);
+			String path = ItemCompositeRegistry.getTargetItemPath(loc);
 			if (path != null) {
 				entry.setValue(new CompositeItemBakedModel(entry.getValue(), path));
 			}

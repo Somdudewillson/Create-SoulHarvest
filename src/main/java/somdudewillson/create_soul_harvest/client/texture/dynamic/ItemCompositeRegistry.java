@@ -1,6 +1,8 @@
 package somdudewillson.create_soul_harvest.client.texture.dynamic;
 
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
+import somdudewillson.create_soul_harvest.SoulHarvestMod;
 
 import java.util.Collection;
 import java.util.Map;
@@ -72,5 +74,21 @@ public class ItemCompositeRegistry {
 
 	public static Collection<ItemCompositeHandler> getHandlers() {
 		return COMPOSITE_HANDLERS.values();
+	}
+
+	@Nullable
+	public static String getTargetItemPath(@Nullable ResourceLocation loc) {
+		if (loc == null || !loc.getNamespace().equals(SoulHarvestMod.MOD_ID)) {
+			return null;
+		}
+		String path = loc.getPath();
+		if (path.startsWith("item/")) {
+			path = path.substring(5);
+		}
+		return isRegisteredComposite(path) ? path : null;
+	}
+
+	public static boolean isTargetItem(@Nullable ResourceLocation loc) {
+		return getTargetItemPath(loc) != null;
 	}
 }

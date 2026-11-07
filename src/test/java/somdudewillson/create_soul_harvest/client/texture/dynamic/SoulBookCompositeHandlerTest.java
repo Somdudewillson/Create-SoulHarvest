@@ -35,12 +35,12 @@ public class SoulBookCompositeHandlerTest {
 	@Test
 	public void testTargetItemPathMatchesRegisteredSoulBookEvenWhenInactive() {
 		// Verify model wrapper matches soul books
-		assertEquals("soul_book_simple", CompositeItemBakedModel.getTargetItemPath(SoulHarvestMod.id("soul_book_simple")));
-		assertEquals("soul_book_simple", CompositeItemBakedModel.getTargetItemPath(SoulHarvestMod.id("item/soul_book_simple")));
-		assertEquals("soul_book_standard", CompositeItemBakedModel.getTargetItemPath(SoulHarvestMod.id("soul_book_standard")));
-		assertEquals("soul_book_superior", CompositeItemBakedModel.getTargetItemPath(SoulHarvestMod.id("soul_book_superior")));
+		assertEquals("soul_book_simple", ItemCompositeRegistry.getTargetItemPath(SoulHarvestMod.id("soul_book_simple")));
+		assertEquals("soul_book_simple", ItemCompositeRegistry.getTargetItemPath(SoulHarvestMod.id("item/soul_book_simple")));
+		assertEquals("soul_book_standard", ItemCompositeRegistry.getTargetItemPath(SoulHarvestMod.id("soul_book_standard")));
+		assertEquals("soul_book_superior", ItemCompositeRegistry.getTargetItemPath(SoulHarvestMod.id("soul_book_superior")));
 
 		// Non-registered items must return null
-		assertNull(CompositeItemBakedModel.getTargetItemPath(SoulHarvestMod.id("unknown_soul_book")));
+		assertNull(ItemCompositeRegistry.getTargetItemPath(SoulHarvestMod.id("unknown_soul_book")));
 	}
 }

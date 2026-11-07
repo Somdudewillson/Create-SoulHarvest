@@ -35,12 +35,12 @@ public class PolyclayCompositeHandlerTest {
 		assertTrue(ItemCompositeRegistry.isRegisteredPolyclay("polyclay_brass_attuned"));
 
 		// Prior to resource reload, handler is inactive, but getTargetItemPath MUST still return path for model wrapping
-		assertEquals("polyclay_attuned", CompositeItemBakedModel.getTargetItemPath(SoulHarvestMod.id("polyclay_attuned")));
-		assertEquals("polyclay_attuned", CompositeItemBakedModel.getTargetItemPath(SoulHarvestMod.id("item/polyclay_attuned")));
-		assertEquals("polyclay_brass_attuned", CompositeItemBakedModel.getTargetItemPath(SoulHarvestMod.id("polyclay_brass_attuned")));
+		assertEquals("polyclay_attuned", ItemCompositeRegistry.getTargetItemPath(SoulHarvestMod.id("polyclay_attuned")));
+		assertEquals("polyclay_attuned", ItemCompositeRegistry.getTargetItemPath(SoulHarvestMod.id("item/polyclay_attuned")));
+		assertEquals("polyclay_brass_attuned", ItemCompositeRegistry.getTargetItemPath(SoulHarvestMod.id("polyclay_brass_attuned")));
 
 		// Non-registered or other namespace items must return null
-		assertNull(CompositeItemBakedModel.getTargetItemPath(ResourceLocation.tryParse("minecraft:diamond")));
-		assertNull(CompositeItemBakedModel.getTargetItemPath(SoulHarvestMod.id("unknown_item")));
+		assertNull(ItemCompositeRegistry.getTargetItemPath(ResourceLocation.tryParse("minecraft:diamond")));
+		assertNull(ItemCompositeRegistry.getTargetItemPath(SoulHarvestMod.id("unknown_item")));
 	}
 }
