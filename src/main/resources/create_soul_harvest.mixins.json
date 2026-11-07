@@ -15,6 +15,7 @@
   ],
   "client": [
     "client.SequencedAssemblyCategoryMixin",
-    "client.ProcessingViaFanCategoryMixin"
+    "client.ProcessingViaFanCategoryMixin",
+    "client.ItemRendererMixin"
   ]
 }

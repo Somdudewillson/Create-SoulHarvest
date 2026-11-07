@@ -1,6 +1,9 @@
 package somdudewillson.create_soul_harvest.client.texture.dynamic;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 
@@ -90,5 +93,19 @@ public class ItemCompositeRegistry {
 
 	public static boolean isTargetItem(@Nullable ResourceLocation loc) {
 		return getTargetItemPath(loc) != null;
+	}
+
+	public static boolean isTargetItem(@Nullable Item item) {
+		if (item == null) {
+			return false;
+		}
+		return isTargetItem(BuiltInRegistries.ITEM.getKey(item));
+	}
+
+	public static boolean isTargetItem(@Nullable ItemStack stack) {
+		if (stack == null || stack.isEmpty()) {
+			return false;
+		}
+		return isTargetItem(stack.getItem());
 	}
 }

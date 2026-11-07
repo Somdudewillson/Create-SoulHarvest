@@ -4,26 +4,11 @@ import net.createmod.catnip.lang.FontHelper;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-//? neoforge {
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-//?} forge {
-/*import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-*///?}
 
-import java.awt.Color;
 import java.util.ArrayList;
-
-//? >= 1.21 {
-
-//?} else {
-/*import net.minecraft.world.level.Level;
-import net.minecraft.nbt.CompoundTag;
-*///?}
-
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +16,14 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 
 import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 import somdudewillson.create_soul_harvest.util.SimplePalettizedTooltipModifier;
+
+//? >= 1.21 {
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+//?} else {
+/*import net.minecraft.world.level.Level;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+*///?}
 
 public class SoulBookItem extends Item {
 
