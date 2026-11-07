@@ -8,6 +8,8 @@ import somdudewillson.create_soul_harvest.registry.ModCapabilities;
 
 import java.util.Optional;
 
+import org.jetbrains.annotations.Nullable;
+
 public interface ISoulHolder {
 
 	ResourceLocation getHeldSoul();
@@ -63,6 +65,7 @@ public interface ISoulHolder {
 		return Optional.of(new ItemStackSoulHolder(stack));
 	}
 
+	@Nullable
 	public static ResourceLocation getHeldSoul(ItemStack stack) {
 		return ISoulHolder.get(stack)
 				.map(ISoulHolder::getHeldSoul)

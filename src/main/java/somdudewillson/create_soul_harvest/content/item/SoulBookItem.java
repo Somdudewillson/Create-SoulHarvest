@@ -4,6 +4,7 @@ import net.createmod.catnip.lang.FontHelper;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -13,6 +14,7 @@ import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 /*import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 *///?}
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 //? >= 1.21 {
@@ -63,6 +65,18 @@ public class SoulBookItem extends Item {
 		}
 		return super.isFoil(stack);
 	}
+
+    public boolean isBarVisible(ItemStack stack) {
+        return ISoulHolder.getSoulPortion(stack) > 0 || ISoulHolder.getHeldSoul(stack) != null;
+    }
+
+    public int getBarWidth(ItemStack stack) {
+        return Math.round(13.0F - (100-ISoulHolder.getSoulPortion(stack)) * 13f / 100f);
+    }
+
+    public int getBarColor(ItemStack stack) {
+        return 0xBE1EE8;
+    }
 	
 	public static class SoulBookTooltipModifier extends SimplePalettizedTooltipModifier {
 		protected final Item item;
