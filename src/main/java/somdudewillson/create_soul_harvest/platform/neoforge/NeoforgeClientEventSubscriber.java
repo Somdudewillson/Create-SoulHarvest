@@ -20,6 +20,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import somdudewillson.create_soul_harvest.client.overlay.BiocideGasOverlay;
+import somdudewillson.create_soul_harvest.client.particle.CapturedSoulParticle;
 import somdudewillson.create_soul_harvest.client.particle.InfuseSoulFireParticle;
 import somdudewillson.create_soul_harvest.client.particle.StormCloudParticle;
 import somdudewillson.create_soul_harvest.client.particle.VerdantFlashParticle;
@@ -67,6 +68,7 @@ public class NeoforgeClientEventSubscriber {
 		event.registerSpriteSet(ModParticleTypes.INFUSE_SOUL_FIRE.get(), InfuseSoulFireParticle.Provider::new);
 		event.registerSpriteSet(ModParticleTypes.STORM_CLOUD.get(), StormCloudParticle.Provider::new);
 		event.registerSpriteSet(ModParticleTypes.VERDANT_FLASH.get(), VerdantFlashParticle.Provider::new);
+		event.registerSpriteSet(ModParticleTypes.CAPTURED_SOUL.get(), CapturedSoulParticle.Provider::new);
 	}
 
 	@SubscribeEvent

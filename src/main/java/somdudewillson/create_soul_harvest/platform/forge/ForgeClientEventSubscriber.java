@@ -13,6 +13,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import somdudewillson.create_soul_harvest.client.overlay.BiocideGasOverlay;
+import somdudewillson.create_soul_harvest.client.particle.CapturedSoulParticle;
 import somdudewillson.create_soul_harvest.client.particle.InfuseSoulFireParticle;
 import somdudewillson.create_soul_harvest.client.particle.StormCloudParticle;
 import somdudewillson.create_soul_harvest.client.particle.VerdantFlashParticle;
@@ -52,6 +53,7 @@ public class ForgeClientEventSubscriber {
 		event.registerSpriteSet(ModParticleTypes.INFUSE_SOUL_FIRE.get(), InfuseSoulFireParticle.Provider::new);
 		event.registerSpriteSet(ModParticleTypes.STORM_CLOUD.get(), StormCloudParticle.Provider::new);
 		event.registerSpriteSet(ModParticleTypes.VERDANT_FLASH.get(), VerdantFlashParticle.Provider::new);
+		event.registerSpriteSet(ModParticleTypes.CAPTURED_SOUL.get(), CapturedSoulParticle.Provider::new);
 	}
 
 	@SubscribeEvent
