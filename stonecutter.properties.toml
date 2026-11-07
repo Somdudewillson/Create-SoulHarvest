@@ -1,25 +1,25 @@
 mod.id = "create_soul_harvest"
 mod.name = "Create: Soul Harvest"
 mod.group = "com.github.somdudewillson"
-mod.version = "0.6.0"
+mod.version = "0.7.0"
 mod.channel_tag = ""
 mod.description = "Entity-less mob grinding for Create"
 mod.authors = ["Somdudewillson"]
 mod.contributors = []
 mod.inception_year = "2026"
-mod.license.name = "MIT"
-mod.license.url = "https://opensource.org/licenses/MIT"
+mod.license.name = "LGPL-3.0"
+mod.license.url = "https://opensource.org/license/lgpl-3-0"
 mod.license.dist = "repo"
-mod.sources_url = "https://github.com/rotgruengelb/stonecutter-mod-template"
-mod.homepage_url = "https://github.com/rotgruengelb/stonecutter-mod-template"
-mod.issues_url = "https://github.com/rotgruengelb/stonecutter-mod-template/issues"
+mod.sources_url = "https://github.com/Somdudewillson/Create-SoulHarvest"
+mod.homepage_url = "https://github.com/Somdudewillson/Create-SoulHarvest"
+mod.issues_url = "https://github.com/Somdudewillson/Create-SoulHarvest/issues"
 mod.discord_url = ""
 mod.environment = "client_and_server"
 
 [[mod.pom.developers]]
 id = "somdudewillson"
 name = "Somdudewillson"
-url = "https://github.com/ghost"
+url = "https://www.curseforge.com/members/somdudewillson/projects"
 
 [forge]
 
