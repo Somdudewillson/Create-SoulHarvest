@@ -18,6 +18,9 @@ public class SugarcaneSurfacePlant implements SurfacePlant {
 		if (!groundState.is(BlockTags.SAND)) {
 			return false;
 		}
+		if (!groundState.getFluidState().isEmpty()) {
+			return false;
+		}
 
 		BlockPos plantPos = groundPos.above();
 		if (!SurfacePlant.isReplaceable(level, plantPos)) {

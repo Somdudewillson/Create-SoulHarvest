@@ -4,6 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import somdudewillson.create_soul_harvest.registry.ModTags;
 
 public interface SurfacePlant {
@@ -32,5 +34,18 @@ public interface SurfacePlant {
 	static boolean isReplaceable(ServerLevel level, BlockPos pos) {
 		BlockState state = level.getBlockState(pos);
 		return state.isAir() || state.canBeReplaced() || state.is(ModTags.Blocks.CONSIDER_REPLACEABLE);
+	}
+	
+	static int getDepthUnderwater(ServerLevel level, BlockPos pos, int limit) {
+		int depth = 0;
+		do {
+			FluidState state = level.getBlockState(pos.above(depth)).getFluidState();
+			if (!state.is(Fluids.WATER)) {
+				return depth;
+			}
+			depth++;
+		} while (depth <= limit);
+		
+		return depth;
 	}
 }

@@ -23,6 +23,9 @@ public class SurfacePlantRegistry {
 			DEFAULT_INSTANCE.register(new CactusSurfacePlant(), 75);
 			DEFAULT_INSTANCE.register(new BiomeTreeSurfacePlant(), 80);
 			DEFAULT_INSTANCE.register(new RandomTreeSurfacePlant(), 15);
+			DEFAULT_INSTANCE.register(new KelpSurfacePlant(), 20);
+			DEFAULT_INSTANCE.register(new SeaPickleSurfacePlant(), 10);
+			DEFAULT_INSTANCE.register(new SeagrassSurfacePlant(), 100);
 		}
 		return DEFAULT_INSTANCE;
 	}

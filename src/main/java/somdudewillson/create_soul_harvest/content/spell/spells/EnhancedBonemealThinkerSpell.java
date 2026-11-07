@@ -283,8 +283,8 @@ public class EnhancedBonemealThinkerSpell extends SimplePersistentGlyphSpell {
 				continue;
 			}
 
-			// First solid terrain surface or fluid surface
-			if (state.blocksMotion() || !state.getFluidState().isEmpty() || state.isSolid()) {
+			// First solid terrain surface
+			if (state.blocksMotion() || state.isSolid()) {
 				return y + 1.0;
 			}
 		}

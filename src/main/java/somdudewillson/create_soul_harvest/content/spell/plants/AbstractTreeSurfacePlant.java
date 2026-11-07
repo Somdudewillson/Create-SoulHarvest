@@ -19,6 +19,9 @@ public abstract class AbstractTreeSurfacePlant implements SurfacePlant {
 		if (!groundState.is(BlockTags.DIRT)) {
 			return false;
 		}
+		if (!groundState.getFluidState().isEmpty()) {
+			return false;
+		}
 
 		BlockPos plantPos = groundPos.above();
 		if (!SurfacePlant.isReplaceable(level, plantPos)) {

@@ -20,6 +20,9 @@ public class CactusSurfacePlant implements SurfacePlant {
 		if (!groundState.is(BlockTags.SAND)) {
 			return false;
 		}
+		if (!groundState.getFluidState().isEmpty()) {
+			return false;
+		}
 
 		Holder<Biome> biome = level.getBiome(groundPos);
 		boolean isDesertOrArid = biome.is(Biomes.DESERT)
