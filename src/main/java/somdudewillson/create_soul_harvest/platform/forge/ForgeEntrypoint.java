@@ -52,6 +52,8 @@ public class ForgeEntrypoint {
 		ModParticleTypes.PARTICLE_TYPES.register(modBus);
 		ModEntityTypes.ENTITY_TYPES.register(modBus);
 
+		modBus.addListener(ForgeEntrypoint::onCommonSetup);
+
 		MulchPackFinder.register(modBus);
 		MobGrindingPackFinder.register(modBus);
 
@@ -61,6 +63,10 @@ public class ForgeEntrypoint {
 		MekanismCompat.register(modBus);
 
 		SoulHarvestGameEvents.register(MinecraftForge.EVENT_BUS);
+	}
+
+	public static void onCommonSetup(net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent event) {
+		event.enqueueWork(ModFluids::registerFluidInteractions);
 	}
 }
 *///?}

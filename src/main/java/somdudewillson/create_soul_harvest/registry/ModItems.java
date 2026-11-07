@@ -52,6 +52,9 @@ public class ModItems {
 	public static final DeferredHolder<Item, BucketItem> LIQUID_SOUL_CRYSTAL_BUCKET = registerWithTab("liquid_soul_crystal_bucket",
 			() -> new BucketItem(ModFluids.LIQUID_SOUL_CRYSTAL.get(),
 					new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+	public static final DeferredHolder<Item, BucketItem> WITHER_SLURRY_BUCKET = registerWithTab("wither_slurry_bucket",
+			() -> new BucketItem(ModFluids.WITHER_SLURRY.get(),
+					new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
 	// Fuels and organics
 	public static final DeferredHolder<Item, Item> ORGANIC_MULCH = ITEM_BUILDER_FACTORY.registerSimpleItem("organic_mulch")

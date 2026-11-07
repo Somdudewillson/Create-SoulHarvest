@@ -3,13 +3,18 @@ package somdudewillson.create_soul_harvest.registry;
 import com.simibubi.create.content.fluids.VirtualFluid;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
+import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.block.WitherSlurryBlock;
 
 import java.util.function.Consumer;
 
@@ -74,11 +79,16 @@ public class ModFluids {
 			FLUIDS.register("flowing_bioslurry", () -> VirtualFluid.createFlowing(bioslurryProps()));
 
 	public static final DeferredHolder<FluidType, SimpleTexturedFluidType> WITHER_SLURRY_TYPE =
-			FLUID_TYPES.register("wither_slurry", () -> new SimpleTexturedFluidType(FluidType.Properties.create(), 0xFF37251B));
-	public static final DeferredHolder<Fluid, VirtualFluid> WITHER_SLURRY =
-			FLUIDS.register("wither_slurry", () -> VirtualFluid.createSource(witherSlurryProps()));
-	public static final DeferredHolder<Fluid, VirtualFluid> WITHER_SLURRY_FLOWING =
-			FLUIDS.register("flowing_wither_slurry", () -> VirtualFluid.createFlowing(witherSlurryProps()));
+			FLUID_TYPES.register("wither_slurry", () -> new SimpleTexturedFluidType(FluidType.Properties.create()
+					.descriptionId("fluid_type.create_soul_harvest.wither_slurry")
+					.density(1500)
+					.viscosity(1500),
+					SoulHarvestMod.id("block/wither_slurry_still"),
+					SoulHarvestMod.id("block/wither_slurry_flow")));
+	public static final DeferredHolder<Fluid, BaseFlowingFluid.Source> WITHER_SLURRY =
+			FLUIDS.register("wither_slurry", () -> new BaseFlowingFluid.Source(witherSlurryProps()));
+	public static final DeferredHolder<Fluid, BaseFlowingFluid.Flowing> WITHER_SLURRY_FLOWING =
+			FLUIDS.register("flowing_wither_slurry", () -> new BaseFlowingFluid.Flowing(witherSlurryProps()));
 
 	public static final DeferredHolder<FluidType, SimpleTexturedFluidType> SILICA_SOLUTION_TYPE =
 			FLUID_TYPES.register("silica_solution", () -> new SimpleTexturedFluidType(FluidType.Properties.create(), 0xFFDBD7CA));
@@ -106,7 +116,13 @@ public class ModFluids {
 	}
 
 	private static BaseFlowingFluid.Properties witherSlurryProps() {
-		return new BaseFlowingFluid.Properties(WITHER_SLURRY_TYPE, WITHER_SLURRY, WITHER_SLURRY_FLOWING);
+		return new BaseFlowingFluid.Properties(WITHER_SLURRY_TYPE, WITHER_SLURRY, WITHER_SLURRY_FLOWING)
+				.slopeFindDistance(3)
+				.levelDecreasePerBlock(1)
+				.tickRate(10)
+				.explosionResistance(100f)
+				.block(ModBlocks.WITHER_SLURRY)
+				.bucket(ModItems.WITHER_SLURRY_BUCKET);
 	}
 
 	private static BaseFlowingFluid.Properties silicaProps() {
@@ -121,5 +137,30 @@ public class ModFluids {
 				.explosionResistance(100f)
 				.block(ModBlocks.LIQUID_SOUL_CRYSTAL)
 				.bucket(ModItems.LIQUID_SOUL_CRYSTAL_BUCKET);
+	}
+
+	public static void registerFluidInteractions() {
+		FluidInteractionRegistry.addInteraction(
+				WITHER_SLURRY_TYPE.get(),
+				new FluidInteractionRegistry.InteractionInformation(
+						(level, currentPos, relativePos, currentState) -> level.getFluidState(relativePos).is(FluidTags.LAVA),
+						(level, currentPos, relativePos, currentState) -> {
+							if (level instanceof ServerLevel serverLevel) {
+								WitherSlurryBlock.triggerBiocideConversion(serverLevel, currentPos);
+							}
+						}
+				)
+		);
+		FluidInteractionRegistry.addInteraction(
+				NeoForgeMod.LAVA_TYPE.value(),
+				new FluidInteractionRegistry.InteractionInformation(
+						(level, currentPos, relativePos, currentState) -> level.getFluidState(relativePos).getFluidType() == WITHER_SLURRY_TYPE.get(),
+						(level, currentPos, relativePos, currentState) -> {
+							if (level instanceof ServerLevel serverLevel) {
+								WitherSlurryBlock.triggerBiocideConversion(serverLevel, relativePos);
+							}
+						}
+				)
+		);
 	}
 }

@@ -39,6 +39,8 @@ public class NeoforgeEntrypoint {
 		ModParticleTypes.PARTICLE_TYPES.register(modBus);
 		ModEntityTypes.ENTITY_TYPES.register(modBus);
 
+		modBus.addListener(NeoforgeEntrypoint::onCommonSetup);
+
 		MulchPackFinder.register(modBus);
 		MobGrindingPackFinder.register(modBus);
 
@@ -49,6 +51,10 @@ public class NeoforgeEntrypoint {
 		MekanismCompat.register(modBus);
 
 		SoulHarvestGameEvents.register(NeoForge.EVENT_BUS);
+	}
+
+	public static void onCommonSetup(net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event) {
+		event.enqueueWork(ModFluids::registerFluidInteractions);
 	}
 }
 //?}

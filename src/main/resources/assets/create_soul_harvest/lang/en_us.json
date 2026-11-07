@@ -16,8 +16,10 @@
   "block.create_soul_harvest.biocide_gas": "Biocide Gas",
   "block.create_soul_harvest.dense_hypothetical": "Dense Hypothetical Block",
   "block.create_soul_harvest.liquid_soul_crystal": "Liquid Soul Crystal",
+  "block.create_soul_harvest.wither_slurry": "Wither Slurry",
 
   "item.create_soul_harvest.liquid_soul_crystal_bucket": "Liquid Soul Crystal Bucket",
+  "item.create_soul_harvest.wither_slurry_bucket": "Wither Slurry Bucket",
 
   "item.create_soul_harvest.soul_bud_small": "Small Soul Crystal Bud",
   "item.create_soul_harvest.soul_bud_medium": "Medium Soul Crystal Bud",

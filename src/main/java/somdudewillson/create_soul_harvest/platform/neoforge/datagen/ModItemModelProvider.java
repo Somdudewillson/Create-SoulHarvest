@@ -22,6 +22,8 @@ public class ModItemModelProvider extends ItemModelProvider {
 				.texture("layer0", modLoc("item/polished_inlaid_lapis"));
 		withExistingParent("liquid_soul_crystal_bucket", "item/generated")
 				.texture("layer0", modLoc("item/liquid_soul_crystal_bucket"));
+		withExistingParent("wither_slurry_bucket", "item/generated")
+				.texture("layer0", modLoc("item/wither_slurry_bucket"));
 		withExistingParent("necronium_scythe", "item/handheld")
 				.texture("layer0", modLoc("item/necronium_scythe"));
 

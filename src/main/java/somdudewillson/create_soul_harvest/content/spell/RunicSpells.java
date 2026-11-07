@@ -23,6 +23,7 @@ import somdudewillson.create_soul_harvest.content.spell.spells.LightningSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.SparkSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.TerrainFlattenSpell;
 import somdudewillson.create_soul_harvest.content.spell.spells.UpdraftSpell;
+import somdudewillson.create_soul_harvest.content.spell.spells.WitherToBiocideThinkerSpell;
 import somdudewillson.create_soul_harvest.registry.ModMobEffects;
 
 public class RunicSpells {
@@ -48,6 +49,7 @@ public class RunicSpells {
 	public static final Supplier<GlyphSpell> TERRAIN_FLATTEN_SMALL = register("terrain_flatten_small", (id)->new TerrainFlattenSpell(id, 8));
 	public static final Supplier<GlyphSpell> TERRAIN_FLATTEN_LARGE = register("terrain_flatten_large", (id)->new TerrainFlattenSpell(id, 16));
 	public static final Supplier<GlyphSpell> PLANETOID = register("planetoid", PlanetoidSpell::new);
+	public static final Supplier<GlyphSpell> WITHER_TO_BIOCIDE = register(WitherToBiocideThinkerSpell.ID, WitherToBiocideThinkerSpell::new);
 	
 	private static <T extends PersistentGlyphSpell> Supplier<GlyphSpell> register(ResourceLocation registryName, Function<ResourceLocation, T> thinkerFactory, Supplier<GlyphSpell> castableSpellSupplier) {
 		SpellThinkerEntity.registerEffect(registryName, () -> thinkerFactory.apply(registryName));

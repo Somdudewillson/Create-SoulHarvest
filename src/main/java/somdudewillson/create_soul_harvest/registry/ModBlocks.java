@@ -116,4 +116,16 @@ public class ModBlocks {
 							.liquid()
 							.sound(SoundType.EMPTY)
 							.lightLevel(s -> 10)));
+
+	public static final DeferredHolder<Block, WitherSlurryBlock> WITHER_SLURRY = BLOCKS.register("wither_slurry",
+			() -> new WitherSlurryBlock(ModFluids.WITHER_SLURRY.get(),
+					BlockBehaviour.Properties.of()
+							.mapColor(MapColor.COLOR_BLACK)
+							.replaceable()
+							.noCollission()
+							.strength(100.0f)
+							.pushReaction(PushReaction.DESTROY)
+							.noLootTable()
+							.liquid()
+							.sound(SoundType.EMPTY)));
 }

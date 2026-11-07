@@ -96,6 +96,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		// Liquid Soul Crystal (particle texture)
 		simpleBlock(ModBlocks.LIQUID_SOUL_CRYSTAL.get(),
 				models().getBuilder("liquid_soul_crystal").texture("particle", modLoc("block/liquid_soul_crystal_still")));
+
+		// Wither Slurry (particle texture)
+		simpleBlock(ModBlocks.WITHER_SLURRY.get(),
+				models().getBuilder("wither_slurry").texture("particle", modLoc("block/wither_slurry_still")));
 	}
 }
 //?}
