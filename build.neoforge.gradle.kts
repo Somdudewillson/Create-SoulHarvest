@@ -75,7 +75,6 @@ neoForge {
 	mods {
 		register(prop("mod.id")) {
 			sourceSet(sourceSets["main"])
-			sourceSet(sourceSets["test"])
 		}
 	}
 	sourceSets["main"].resources.srcDir("${rootDir}/versions/datagen/${sc.current.version.split("-")[0]}/src/main/generated")

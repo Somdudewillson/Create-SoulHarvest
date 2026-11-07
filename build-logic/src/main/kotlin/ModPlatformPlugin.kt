@@ -127,6 +127,14 @@ abstract class ModPlatformPlugin @Inject constructor() : Plugin<Project> {
 	private fun Project.configureTesting() {
 		tasks.withType<Test>().configureEach {
 			useJUnitPlatform()
+			jvmArgs("-Djava.awt.headless=true")
+			testLogging {
+				events("passed", "skipped", "failed")
+				exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+				showExceptions = true
+				showCauses = true
+				showStackTraces = true
+			}
 		}
 	}
 

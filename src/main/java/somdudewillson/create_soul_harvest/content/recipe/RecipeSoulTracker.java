@@ -18,9 +18,9 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedRecipe;
 
+import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 import somdudewillson.create_soul_harvest.content.item.PolyclayAttunedItem;
-import somdudewillson.create_soul_harvest.content.recipe.grinding.MobGrindingDynamicData;
 import somdudewillson.create_soul_harvest.content.recipe.ingredient.AttunedPolyclayIngredient;
 
 //? >= 1.21 {
@@ -82,8 +82,11 @@ public class RecipeSoulTracker {
 	}
 	*///?}
 
+	public static final String GENERATED_RECIPE_MARKER = "_dyn_";
+
 	public static boolean isIgnoredRecipe(ResourceLocation id) {
-		return MobGrindingDynamicData.isGeneratedProcessingRecipe(id);
+		if (id == null) return false;
+		return id.getNamespace().equals(SoulHarvestMod.MOD_ID) && id.getPath().contains(GENERATED_RECIPE_MARKER);
 	}
 
 	public static void scanRecipe(ResourceLocation id, Recipe<?> recipe) {

@@ -18,6 +18,7 @@ import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.client.texture.dynamic.ItemCompositeHandler;
+import somdudewillson.create_soul_harvest.client.texture.dynamic.ItemCompositeRegistry;
 import somdudewillson.create_soul_harvest.client.texture.dynamic.PolyclayCompositeHandler;
 import somdudewillson.create_soul_harvest.client.texture.dynamic.SoulBookCompositeHandler;
 
@@ -63,79 +64,9 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 	private final Map<ResourceLocation, ResourceLocation> dynamicTextureLocations = new ConcurrentHashMap<>();
 	private final Map<ResourceLocation, DynamicTexture> dynamicTextures = new ConcurrentHashMap<>();
 
-	// Registry of item composite handlers
-	private final Map<String, ItemCompositeHandler> compositeHandlers = new ConcurrentHashMap<>();
-
 	private volatile boolean needsGeneration = false;
 
-	private MobPatternTextureManager() {
-		// Register known polyclay items
-		this.compositeHandlers.put("polyclay_attuned", new PolyclayCompositeHandler("polyclay_attuned"));
-		this.compositeHandlers.put("polyclay_andesite_attuned", new PolyclayCompositeHandler("polyclay_andesite_attuned"));
-		this.compositeHandlers.put("polyclay_brass_attuned", new PolyclayCompositeHandler("polyclay_brass_attuned"));
-
-		// Register known soul books
-		this.compositeHandlers.put("soul_book_simple", new SoulBookCompositeHandler("soul_book_simple"));
-		this.compositeHandlers.put("soul_book_standard", new SoulBookCompositeHandler("soul_book_standard"));
-		this.compositeHandlers.put("soul_book_superior", new SoulBookCompositeHandler("soul_book_superior"));
-	}
-
-	public static void registerPolyclay(String itemPath) {
-		INSTANCE.compositeHandlers.putIfAbsent(itemPath, new PolyclayCompositeHandler(itemPath));
-	}
-
-	public static void registerSoulBook(String itemPath) {
-		INSTANCE.compositeHandlers.putIfAbsent(itemPath, new SoulBookCompositeHandler(itemPath));
-	}
-
-	public static boolean isRegisteredComposite(String itemPath) {
-		return INSTANCE.compositeHandlers.containsKey(itemPath);
-	}
-
-	public static boolean isRegisteredPolyclay(String itemPath) {
-		ItemCompositeHandler handler = INSTANCE.compositeHandlers.get(itemPath);
-		return handler instanceof PolyclayCompositeHandler;
-	}
-
-	public static boolean isRegisteredSoulBook(String itemPath) {
-		ItemCompositeHandler handler = INSTANCE.compositeHandlers.get(itemPath);
-		return handler instanceof SoulBookCompositeHandler;
-	}
-
-	public static boolean hasActiveCompositeHandler(String itemPath) {
-		ItemCompositeHandler handler = INSTANCE.compositeHandlers.get(itemPath);
-		return handler != null && handler.isActive();
-	}
-
-	@Nullable
-	public static ItemCompositeHandler getCompositeHandler(String itemPath) {
-		return INSTANCE.compositeHandlers.get(itemPath);
-	}
-
-	@Nullable
-	public static PolyclayCompositeHandler getPolyclayHandler(String itemPath) {
-		ItemCompositeHandler handler = INSTANCE.compositeHandlers.get(itemPath);
-		return handler instanceof PolyclayCompositeHandler polyclay ? polyclay : null;
-	}
-
-	@Nullable
-	public static SoulBookCompositeHandler getSoulBookHandler(String itemPath) {
-		ItemCompositeHandler handler = INSTANCE.compositeHandlers.get(itemPath);
-		return handler instanceof SoulBookCompositeHandler book ? book : null;
-	}
-
-	public static ResourceLocation getCompositeTextureLocation(String itemPath, @Nullable ResourceLocation entityId) {
-		ItemCompositeHandler handler = INSTANCE.compositeHandlers.get(itemPath);
-		if (handler != null) {
-			return handler.getTextureLocation(entityId);
-		}
-		return SoulHarvestMod.id("textures/item/" + itemPath + ".png");
-	}
-
-	public static List<BakedQuad> getCompositeQuads(String itemPath) {
-		ItemCompositeHandler handler = INSTANCE.compositeHandlers.get(itemPath);
-		return handler != null ? handler.getQuads() : Collections.emptyList();
-	}
+	private MobPatternTextureManager() { }
 
 	@Override
 	public void onResourceManagerReload(ResourceManager resourceManager) {
@@ -161,7 +92,7 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 
 		// Reload all registered composite handlers
 		Minecraft mc = Minecraft.getInstance();
-		for (ItemCompositeHandler handler : compositeHandlers.values()) {
+		for (ItemCompositeHandler handler : ItemCompositeRegistry.getHandlers()) {
 			handler.reload(resourceManager, mc);
 		}
 
@@ -388,7 +319,7 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 				INSTANCE.dynamicTextureLocations.put(entityId, registeredLocation != null ? registeredLocation : regId);
 
 				// Delegate composite uploading to all active composite handlers
-				for (ItemCompositeHandler handler : INSTANCE.compositeHandlers.values()) {
+				for (ItemCompositeHandler handler : ItemCompositeRegistry.getHandlers()) {
 					if (handler.isActive()) {
 						handler.uploadCompositeForEntity(entityId, img, mc);
 					}
@@ -408,7 +339,7 @@ public class MobPatternTextureManager implements ResourceManagerReloadListener {
 		List<ExportItem> items = new ArrayList<>();
 
 		// Dump each active composite item to its own subfolder
-		for (ItemCompositeHandler handler : INSTANCE.compositeHandlers.values()) {
+		for (ItemCompositeHandler handler : ItemCompositeRegistry.getHandlers()) {
 			if (handler.isActive()) {
 				handler.dumpToDisk(outputDir, INSTANCE.generationResults);
 			}

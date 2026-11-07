@@ -18,7 +18,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternRenderTypes;
-import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextureManager;
 import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 
 import java.util.*;
@@ -53,7 +52,7 @@ public class CompositeItemBakedModel extends BakedModelWrapper<BakedModel> {
 
 	@Override
 	public List<RenderType> getRenderTypes(ItemStack itemStack, boolean fabulous) {
-		ItemCompositeHandler handler = MobPatternTextureManager.getCompositeHandler(itemPath);
+		ItemCompositeHandler handler = ItemCompositeRegistry.getCompositeHandler(itemPath);
 		if (handler != null && handler.isActive()) {
 			ResourceLocation heldSoul = ISoulHolder.getHeldSoul(itemStack);
 			if (heldSoul != null || handler.hasDefaultDynamicTexture()) {
@@ -69,7 +68,7 @@ public class CompositeItemBakedModel extends BakedModelWrapper<BakedModel> {
 		if (side != null) {
 			return List.of();
 		}
-		ItemCompositeHandler handler = MobPatternTextureManager.getCompositeHandler(itemPath);
+		ItemCompositeHandler handler = ItemCompositeRegistry.getCompositeHandler(itemPath);
 		if (handler != null && handler.isActive() && handler.hasDefaultDynamicTexture()) {
 			List<BakedQuad> quads = handler.getQuads();
 			if (!quads.isEmpty()) {
@@ -109,7 +108,7 @@ public class CompositeItemBakedModel extends BakedModelWrapper<BakedModel> {
 				BakedModel baseResolved = originalOverrides.resolve(originalModel, stack, level, entity, seed);
 				BakedModel targetBase = (baseResolved != null) ? baseResolved : originalModel;
 
-				ItemCompositeHandler handler = MobPatternTextureManager.getCompositeHandler(itemPath);
+				ItemCompositeHandler handler = ItemCompositeRegistry.getCompositeHandler(itemPath);
 				if (handler != null) {
 					if (!handler.isLoaded()) {
 						Minecraft mc = Minecraft.getInstance();
@@ -140,7 +139,7 @@ public class CompositeItemBakedModel extends BakedModelWrapper<BakedModel> {
 		if (path.startsWith("item/")) {
 			path = path.substring(5);
 		}
-		return MobPatternTextureManager.isRegisteredComposite(path) ? path : null;
+		return ItemCompositeRegistry.isRegisteredComposite(path) ? path : null;
 	}
 
 	public static boolean isTargetItem(ResourceLocation loc) {

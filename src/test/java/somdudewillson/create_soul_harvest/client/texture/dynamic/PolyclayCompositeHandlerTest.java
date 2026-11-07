@@ -1,10 +1,8 @@
-package somdudewillson.create_soul_harvest.client.texture.palette;
+package somdudewillson.create_soul_harvest.client.texture.dynamic;
 
 import net.minecraft.resources.ResourceLocation;
 import org.junit.jupiter.api.Test;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
-import somdudewillson.create_soul_harvest.client.texture.dynamic.CompositeItemBakedModel;
-import somdudewillson.create_soul_harvest.client.texture.dynamic.PolyclayCompositeHandler;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,9 +20,9 @@ public class PolyclayCompositeHandlerTest {
 
 	@Test
 	public void testHandlerRegistrationAndQuery() {
-		MobPatternTextureManager.registerPolyclay("polyclay_custom");
-		assertTrue(MobPatternTextureManager.isRegisteredPolyclay("polyclay_custom"));
-		PolyclayCompositeHandler handler = MobPatternTextureManager.getPolyclayHandler("polyclay_custom");
+		ItemCompositeRegistry.registerPolyclay("polyclay_custom");
+		assertTrue(ItemCompositeRegistry.isRegisteredPolyclay("polyclay_custom"));
+		PolyclayCompositeHandler handler = ItemCompositeRegistry.getPolyclayHandler("polyclay_custom");
 		assertNotNull(handler);
 		assertEquals("polyclay_custom", handler.getItemPath());
 	}
@@ -32,9 +30,9 @@ public class PolyclayCompositeHandlerTest {
 	@Test
 	public void testTargetItemPathMatchesRegisteredPolyclayEvenWhenInactive() {
 		// Verify known polyclays are registered
-		assertTrue(MobPatternTextureManager.isRegisteredPolyclay("polyclay_attuned"));
-		assertTrue(MobPatternTextureManager.isRegisteredPolyclay("polyclay_andesite_attuned"));
-		assertTrue(MobPatternTextureManager.isRegisteredPolyclay("polyclay_brass_attuned"));
+		assertTrue(ItemCompositeRegistry.isRegisteredPolyclay("polyclay_attuned"));
+		assertTrue(ItemCompositeRegistry.isRegisteredPolyclay("polyclay_andesite_attuned"));
+		assertTrue(ItemCompositeRegistry.isRegisteredPolyclay("polyclay_brass_attuned"));
 
 		// Prior to resource reload, handler is inactive, but getTargetItemPath MUST still return path for model wrapping
 		assertEquals("polyclay_attuned", CompositeItemBakedModel.getTargetItemPath(SoulHarvestMod.id("polyclay_attuned")));

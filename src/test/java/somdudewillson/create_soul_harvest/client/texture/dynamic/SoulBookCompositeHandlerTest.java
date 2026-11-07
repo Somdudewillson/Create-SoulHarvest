@@ -1,10 +1,8 @@
-package somdudewillson.create_soul_harvest.client.texture.palette;
+package somdudewillson.create_soul_harvest.client.texture.dynamic;
 
 import net.minecraft.resources.ResourceLocation;
 import org.junit.jupiter.api.Test;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
-import somdudewillson.create_soul_harvest.client.texture.dynamic.CompositeItemBakedModel;
-import somdudewillson.create_soul_harvest.client.texture.dynamic.SoulBookCompositeHandler;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,12 +22,12 @@ public class SoulBookCompositeHandlerTest {
 
 	@Test
 	public void testHandlerRegistrationAndQuery() {
-		assertTrue(MobPatternTextureManager.isRegisteredSoulBook("soul_book_simple"));
-		assertTrue(MobPatternTextureManager.isRegisteredSoulBook("soul_book_standard"));
-		assertTrue(MobPatternTextureManager.isRegisteredSoulBook("soul_book_superior"));
-		assertTrue(MobPatternTextureManager.isRegisteredComposite("soul_book_simple"));
+		assertTrue(ItemCompositeRegistry.isRegisteredSoulBook("soul_book_simple"));
+		assertTrue(ItemCompositeRegistry.isRegisteredSoulBook("soul_book_standard"));
+		assertTrue(ItemCompositeRegistry.isRegisteredSoulBook("soul_book_superior"));
+		assertTrue(ItemCompositeRegistry.isRegisteredComposite("soul_book_simple"));
 
-		SoulBookCompositeHandler handler = MobPatternTextureManager.getSoulBookHandler("soul_book_simple");
+		SoulBookCompositeHandler handler = ItemCompositeRegistry.getSoulBookHandler("soul_book_simple");
 		assertNotNull(handler);
 		assertEquals("soul_book_simple", handler.getItemPath());
 	}

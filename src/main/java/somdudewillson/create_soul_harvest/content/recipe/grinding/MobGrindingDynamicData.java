@@ -37,6 +37,8 @@ import somdudewillson.create_soul_harvest.registry.ModItems;
 import somdudewillson.create_soul_harvest.registry.ModTags;
 import somdudewillson.create_soul_harvest.content.soul.DropRestriction;
 
+import static somdudewillson.create_soul_harvest.content.recipe.RecipeSoulTracker.GENERATED_RECIPE_MARKER;
+
 //? >= 1.21 {
 import com.google.gson.JsonParseException;
 import com.mojang.serialization.JsonOps;
@@ -78,13 +80,6 @@ public class MobGrindingDynamicData {
 		lastPackDataVersion = -1;
 		lastRecipeDataVersion = -1;
 		lastLootTableDataVersion = -1;
-	}
-
-	public static final String GENERATED_RECIPE_MARKER = "_dyn_";
-
-	public static boolean isGeneratedProcessingRecipe(@Nullable ResourceLocation id) {
-		if (id == null) return false;
-		return id.getNamespace().equals(SoulHarvestMod.MOD_ID) && id.getPath().contains(GENERATED_RECIPE_MARKER);
 	}
 
 	public static void updateLootTables(@Nullable MinecraftServer server) {
