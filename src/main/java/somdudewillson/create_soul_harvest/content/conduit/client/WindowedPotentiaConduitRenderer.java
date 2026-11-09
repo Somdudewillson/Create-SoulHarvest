@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix4f;
 import somdudewillson.create_soul_harvest.client.texture.palette.MobPalette;
 import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextureManager;
+import somdudewillson.create_soul_harvest.content.conduit.PotentiaConduitBlock;
 import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlock;
 import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlockEntity;
 import somdudewillson.create_soul_harvest.content.potentia.IPotentiaTransporter;
@@ -51,7 +52,7 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 		ResourceLocation entityType = be.getCurrentEntityType();
 		MobPalette palette = null;
 		if (entityType != null) {
-			palette = MobPatternTextureManager.INSTANCE.getPalette(entityType);
+			palette = MobPatternTextureManager.getPalette(entityType);
 		}
 
 		int[] boltColors = getBoltColors(palette);
@@ -80,8 +81,8 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 		Level level = be.getLevel();
 		Direction negDir = getLocalNegWorldDir(axis);
 		Direction posDir = getLocalPosWorldDir(axis);
-		boolean isNegTransport = isTransportNeighbor(level, be.getBlockPos(), negDir);
-		boolean isPosTransport = isTransportNeighbor(level, be.getBlockPos(), posDir);
+		boolean isNegContinuous = isContinuousConduit(level, be.getBlockPos(), negDir, axis);
+		boolean isPosContinuous = isContinuousConduit(level, be.getBlockPos(), posDir, axis);
 
 		// Render 3 intertwined lightning bolts
 		for (int b = 0; b < 3; b++) {
@@ -92,7 +93,7 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 			int alphaInt = (int) (alpha * 240.0f);
 
 			float baseAngle = (float) (b * (2.0 * Math.PI / 3.0));
-			renderSingleBolt(builder, matrix, b, baseAngle, time, blockSeed, red, green, blue, alphaInt, isNegTransport, isPosTransport);
+			renderSingleBolt(builder, matrix, b, baseAngle, time, blockSeed, red, green, blue, alphaInt, isNegContinuous, isPosContinuous);
 		}
 
 		ms.popPose();
@@ -100,7 +101,7 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 
 	private void renderSingleBolt(VertexConsumer builder, Matrix4f matrix, int boltIndex, float baseAngle,
 								  float time, long blockSeed, int r, int g, int b, int a,
-								  boolean isNegTransport, boolean isPosTransport) {
+								  boolean isNegContinuous, boolean isPosContinuous) {
 		float[] xPoints = new float[SEGMENTS + 1];
 		float[] yPoints = new float[SEGMENTS + 1];
 		float[] zPoints = new float[SEGMENTS + 1];
@@ -111,9 +112,9 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 			float progress = (float) i / (float) SEGMENTS;
 			float z = -0.48f + progress * 0.96f;
 
-			// Taper endpoints: spread out if neighbor is another transport block, pinch to center if supplier/consumer or closed
-			float startTaper = isNegTransport ? 1.0f : (float) Math.sin(Math.min(1.0f, progress / 0.25f) * (Math.PI / 2));
-			float endTaper = isPosTransport ? 1.0f : (float) Math.sin(Math.min(1.0f, (1.0f - progress) / 0.25f) * (Math.PI / 2));
+			// Taper endpoints: spread out only if neighbor is another conduit on same axis; pinch to center for consumers and suppliers
+			float startTaper = isNegContinuous ? 1.0f : (float) Math.sin(Math.min(1.0f, progress / 0.5f) * (Math.PI / 2));
+			float endTaper = isPosContinuous ? 1.0f : (float) Math.sin(Math.min(1.0f, (1.0f - progress) / 0.5f) * (Math.PI / 2));
 			float taper = Math.min(startTaper, endTaper);
 
 			float angle = baseAngle + time * 2.5f + (float) Math.sin(progress * 7.0f + time * 3.0f) * 1.2f;
@@ -189,7 +190,7 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 		};
 	}
 
-	private static boolean isTransportNeighbor(Level level, BlockPos pos, Direction dir) {
+	private static boolean isContinuousConduit(Level level, BlockPos pos, Direction dir, Axis axis) {
 		if (level == null) return false;
 		BlockPos neighborPos = pos.relative(dir);
 		BlockState state = level.getBlockState(neighborPos);

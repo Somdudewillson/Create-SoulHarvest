@@ -14,8 +14,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
@@ -35,15 +37,37 @@ import java.util.Optional;
 
 public class PotentiaConduitBlock extends Block implements SimpleWaterloggedBlock, IPotentiaTransporter, IWrenchableWithBracket {
 
-	public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
-	public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
-	public static final BooleanProperty EAST = BlockStateProperties.EAST;
-	public static final BooleanProperty WEST = BlockStateProperties.WEST;
-	public static final BooleanProperty UP = BlockStateProperties.UP;
-	public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
+	public enum ConduitConnectionType implements StringRepresentable {
+		NONE("none"),
+		CONDUIT("conduit"),
+		RIM("rim");
+
+		private final String name;
+
+		ConduitConnectionType(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String getSerializedName() {
+			return name;
+		}
+
+		public boolean isConnected() {
+			return this != NONE;
+		}
+	}
+
+	public static final EnumProperty<ConduitConnectionType> NORTH = EnumProperty.create("north", ConduitConnectionType.class);
+	public static final EnumProperty<ConduitConnectionType> SOUTH = EnumProperty.create("south", ConduitConnectionType.class);
+	public static final EnumProperty<ConduitConnectionType> EAST = EnumProperty.create("east", ConduitConnectionType.class);
+	public static final EnumProperty<ConduitConnectionType> WEST = EnumProperty.create("west", ConduitConnectionType.class);
+	public static final EnumProperty<ConduitConnectionType> UP = EnumProperty.create("up", ConduitConnectionType.class);
+	public static final EnumProperty<ConduitConnectionType> DOWN = EnumProperty.create("down", ConduitConnectionType.class);
+	public static final BooleanProperty CASING = BooleanProperty.create("casing");
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-	public static final Map<Direction, BooleanProperty> PROPERTY_BY_DIRECTION = new EnumMap<>(Direction.class);
+	public static final Map<Direction, EnumProperty<ConduitConnectionType>> PROPERTY_BY_DIRECTION = new EnumMap<>(Direction.class);
 
 	private static final VoxelShape CORE_SHAPE = Block.box(4.0, 4.0, 4.0, 12.0, 12.0, 12.0);
 	private static final Map<Direction, VoxelShape> ARM_SHAPES = new EnumMap<>(Direction.class);
@@ -67,25 +91,26 @@ public class PotentiaConduitBlock extends Block implements SimpleWaterloggedBloc
 	public PotentiaConduitBlock(Properties properties) {
 		super(properties);
 		this.registerDefaultState(this.stateDefinition.any()
-				.setValue(NORTH, false)
-				.setValue(SOUTH, false)
-				.setValue(EAST, false)
-				.setValue(WEST, false)
-				.setValue(UP, false)
-				.setValue(DOWN, false)
+				.setValue(NORTH, ConduitConnectionType.NONE)
+				.setValue(SOUTH, ConduitConnectionType.NONE)
+				.setValue(EAST, ConduitConnectionType.NONE)
+				.setValue(WEST, ConduitConnectionType.NONE)
+				.setValue(UP, ConduitConnectionType.NONE)
+				.setValue(DOWN, ConduitConnectionType.NONE)
+				.setValue(CASING, false)
 				.setValue(WATERLOGGED, false));
 	}
 
 	@Override
 	public boolean canConnect(BlockState state, Direction side) {
-		return state.getValue(PROPERTY_BY_DIRECTION.get(side));
+		return state.getValue(PROPERTY_BY_DIRECTION.get(side)).isConnected();
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		VoxelShape shape = CORE_SHAPE;
 		for (Direction d : Direction.values()) {
-			if (state.getValue(PROPERTY_BY_DIRECTION.get(d))) {
+			if (state.getValue(PROPERTY_BY_DIRECTION.get(d)).isConnected()) {
 				shape = Shapes.or(shape, ARM_SHAPES.get(d));
 			}
 		}
@@ -114,12 +139,25 @@ public class PotentiaConduitBlock extends Block implements SimpleWaterloggedBloc
 		return updateBlockState(state, null, null, world, pos);
 	}
 
+	public static boolean shouldDrawCasing(BlockState state) {
+		for (Direction.Axis axis : Direction.Axis.values()) {
+			int count = 0;
+			for (Direction d : Direction.values()) {
+				if (d.getAxis() != axis && state.getValue(PROPERTY_BY_DIRECTION.get(d)).isConnected()) {
+					count++;
+				}
+			}
+			if (count > 2) return true;
+		}
+		return false;
+	}
+
 	public static BlockState updateBlockState(BlockState state, @Nullable Direction preferredDirection, @Nullable Direction ignore,
 											  LevelAccessor world, BlockPos pos) {
 		BlockState prevState = state;
 		int prevConnections = 0;
 		for (Direction d : Direction.values()) {
-			if (prevState.getValue(PROPERTY_BY_DIRECTION.get(d))) {
+			if (prevState.getValue(PROPERTY_BY_DIRECTION.get(d)).isConnected()) {
 				prevConnections++;
 			}
 		}
@@ -127,8 +165,21 @@ public class PotentiaConduitBlock extends Block implements SimpleWaterloggedBloc
 		// Update sides that are not ignored
 		for (Direction d : Direction.values()) {
 			if (d != ignore) {
-				boolean shouldConnect = canConnectTo(world, pos.relative(d), d.getOpposite());
-				state = state.setValue(PROPERTY_BY_DIRECTION.get(d), shouldConnect);
+				BlockPos targetPos = pos.relative(d);
+				BlockState targetState = world.getBlockState(targetPos);
+				ConduitConnectionType type = ConduitConnectionType.NONE;
+				if (targetState.getBlock() instanceof PotentiaConduitBlock) {
+					if (canConnectTo(world, targetPos, d.getOpposite())) {
+						type = ConduitConnectionType.CONDUIT;
+					}
+				} else if (targetState.getBlock() instanceof WindowedPotentiaConduitBlock) {
+					if (canConnectTo(world, targetPos, d.getOpposite())) {
+						type = ConduitConnectionType.RIM;
+					}
+				} else if (canConnectTo(world, targetPos, d.getOpposite())) {
+					type = ConduitConnectionType.RIM;
+				}
+				state = state.setValue(PROPERTY_BY_DIRECTION.get(d), type);
 			}
 		}
 
@@ -136,7 +187,7 @@ public class PotentiaConduitBlock extends Block implements SimpleWaterloggedBloc
 		Direction firstConnected = null;
 		int connectionCount = 0;
 		for (Direction d : Direction.values()) {
-			if (state.getValue(PROPERTY_BY_DIRECTION.get(d))) {
+			if (state.getValue(PROPERTY_BY_DIRECTION.get(d)).isConnected()) {
 				connectionCount++;
 				if (firstConnected == null) {
 					firstConnected = d;
@@ -146,27 +197,31 @@ public class PotentiaConduitBlock extends Block implements SimpleWaterloggedBloc
 
 		// If 2 or more real connections, keep all connected sides
 		if (connectionCount >= 2) {
-			return state;
+			return state.setValue(CASING, shouldDrawCasing(state));
 		}
 
-		// If exactly 1 connection, extend the opposite direction to make a straight pipe through
+		// If exactly 1 connection, extend the opposite direction as RIM to make a straight pipe through
 		if (connectionCount == 1) {
-			return state.setValue(PROPERTY_BY_DIRECTION.get(firstConnected.getOpposite()), true);
+			state = state.setValue(PROPERTY_BY_DIRECTION.get(firstConnected.getOpposite()), ConduitConnectionType.RIM);
+			return state.setValue(CASING, false);
 		}
 
 		// If 0 connections to neighbors:
 		// If it was already a straight 2-ended pipe, preserve that orientation
 		if (prevConnections == 2 && getStraightAxis(prevState) != null) {
-			return prevState;
+			return prevState.setValue(CASING, false);
 		}
 
 		// Otherwise, orient along preferredDirection
 		if (preferredDirection != null) {
-			return state.setValue(PROPERTY_BY_DIRECTION.get(preferredDirection), true)
-					.setValue(PROPERTY_BY_DIRECTION.get(preferredDirection.getOpposite()), true);
+			return state.setValue(PROPERTY_BY_DIRECTION.get(preferredDirection), ConduitConnectionType.RIM)
+					.setValue(PROPERTY_BY_DIRECTION.get(preferredDirection.getOpposite()), ConduitConnectionType.RIM)
+					.setValue(CASING, false);
 		}
 
-		return state.setValue(NORTH, true).setValue(SOUTH, true);
+		return state.setValue(NORTH, ConduitConnectionType.RIM)
+				.setValue(SOUTH, ConduitConnectionType.RIM)
+				.setValue(CASING, false);
 	}
 
 	@Override
@@ -219,6 +274,7 @@ public class PotentiaConduitBlock extends Block implements SimpleWaterloggedBloc
 			BlockState windowedState = ModBlocks.WINDOWED_POTENTIA_CONDUIT.get().defaultBlockState()
 					.setValue(WindowedPotentiaConduitBlock.AXIS, axis)
 					.setValue(WindowedPotentiaConduitBlock.WATERLOGGED, state.getValue(WATERLOGGED));
+			windowedState = WindowedPotentiaConduitBlock.updateBlockState(windowedState, world, pos);
 			world.setBlock(pos, windowedState, 3);
 			PotentiaNetwork.invalidate(pos);
 		}
@@ -227,9 +283,15 @@ public class PotentiaConduitBlock extends Block implements SimpleWaterloggedBloc
 
 	@Nullable
 	public static Direction.Axis getStraightAxis(BlockState state) {
-		boolean x = state.getValue(EAST) && state.getValue(WEST) && !state.getValue(UP) && !state.getValue(DOWN) && !state.getValue(NORTH) && !state.getValue(SOUTH);
-		boolean y = state.getValue(UP) && state.getValue(DOWN) && !state.getValue(EAST) && !state.getValue(WEST) && !state.getValue(NORTH) && !state.getValue(SOUTH);
-		boolean z = state.getValue(NORTH) && state.getValue(SOUTH) && !state.getValue(EAST) && !state.getValue(WEST) && !state.getValue(UP) && !state.getValue(DOWN);
+		boolean x = state.getValue(EAST).isConnected() && state.getValue(WEST).isConnected()
+				&& !state.getValue(UP).isConnected() && !state.getValue(DOWN).isConnected()
+				&& !state.getValue(NORTH).isConnected() && !state.getValue(SOUTH).isConnected();
+		boolean y = state.getValue(UP).isConnected() && state.getValue(DOWN).isConnected()
+				&& !state.getValue(EAST).isConnected() && !state.getValue(WEST).isConnected()
+				&& !state.getValue(NORTH).isConnected() && !state.getValue(SOUTH).isConnected();
+		boolean z = state.getValue(NORTH).isConnected() && state.getValue(SOUTH).isConnected()
+				&& !state.getValue(EAST).isConnected() && !state.getValue(WEST).isConnected()
+				&& !state.getValue(UP).isConnected() && !state.getValue(DOWN).isConnected();
 		if (x) return Direction.Axis.X;
 		if (y) return Direction.Axis.Y;
 		if (z) return Direction.Axis.Z;
@@ -268,6 +330,6 @@ public class PotentiaConduitBlock extends Block implements SimpleWaterloggedBloc
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(NORTH, SOUTH, EAST, WEST, UP, DOWN, WATERLOGGED);
+		builder.add(NORTH, SOUTH, EAST, WEST, UP, DOWN, CASING, WATERLOGGED);
 	}
 }

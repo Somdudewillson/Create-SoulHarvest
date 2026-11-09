@@ -37,6 +37,8 @@ import java.util.Optional;
 public class WindowedPotentiaConduitBlock extends RotatedPillarBlock implements IBE<WindowedPotentiaConduitBlockEntity>, SimpleWaterloggedBlock, IPotentiaTransporter, IWrenchableWithBracket {
 
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+	public static final BooleanProperty POS_RIM = BooleanProperty.create("pos_rim");
+	public static final BooleanProperty NEG_RIM = BooleanProperty.create("neg_rim");
 
 	private static final VoxelShape SHAPE_X = Block.box(0.0, 4.0, 4.0, 16.0, 12.0, 12.0);
 	private static final VoxelShape SHAPE_Y = Block.box(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
@@ -46,7 +48,9 @@ public class WindowedPotentiaConduitBlock extends RotatedPillarBlock implements 
 		super(properties);
 		this.registerDefaultState(this.stateDefinition.any()
 				.setValue(AXIS, Axis.Y)
-				.setValue(WATERLOGGED, false));
+				.setValue(WATERLOGGED, false)
+				.setValue(POS_RIM, true)
+				.setValue(NEG_RIM, true));
 	}
 
 	@Override
@@ -77,8 +81,8 @@ public class WindowedPotentiaConduitBlock extends RotatedPillarBlock implements 
 			Direction negDir = Direction.get(AxisDirection.NEGATIVE, axis);
 
 			BlockState regularState = ModBlocks.POTENTIA_CONDUIT.get().defaultBlockState()
-					.setValue(PotentiaConduitBlock.PROPERTY_BY_DIRECTION.get(posDir), true)
-					.setValue(PotentiaConduitBlock.PROPERTY_BY_DIRECTION.get(negDir), true)
+					.setValue(PotentiaConduitBlock.PROPERTY_BY_DIRECTION.get(posDir), PotentiaConduitBlock.ConduitConnectionType.RIM)
+					.setValue(PotentiaConduitBlock.PROPERTY_BY_DIRECTION.get(negDir), PotentiaConduitBlock.ConduitConnectionType.RIM)
 					.setValue(WATERLOGGED, state.getValue(WATERLOGGED));
 
 			regularState = PotentiaConduitBlock.updateBlockState(regularState, posDir, null, world, pos);
@@ -108,9 +112,36 @@ public class WindowedPotentiaConduitBlock extends RotatedPillarBlock implements 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
-		return this.defaultBlockState()
+		BlockState state = this.defaultBlockState()
 				.setValue(AXIS, context.getClickedFace().getAxis())
 				.setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
+		return updateBlockState(state, context.getLevel(), context.getClickedPos());
+	}
+
+	public static BlockState updateBlockState(BlockState state, LevelAccessor world, BlockPos pos) {
+		Axis axis = state.getValue(AXIS);
+		Direction posDir = Direction.get(AxisDirection.POSITIVE, axis);
+		Direction negDir = Direction.get(AxisDirection.NEGATIVE, axis);
+
+		boolean posRim = shouldHaveRim(world, pos, posDir);
+		boolean negRim = shouldHaveRim(world, pos, negDir);
+
+		return state.setValue(POS_RIM, posRim).setValue(NEG_RIM, negRim);
+	}
+
+	public static boolean shouldHaveRim(LevelAccessor world, BlockPos pos, Direction dir) {
+		BlockPos neighborPos = pos.relative(dir);
+		BlockState neighborState = world.getBlockState(neighborPos);
+
+		if (neighborState.getBlock() instanceof WindowedPotentiaConduitBlock) {
+			return neighborState.getValue(AXIS) != dir.getAxis();
+		}
+
+		if (neighborState.getBlock() instanceof PotentiaConduitBlock) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
@@ -122,7 +153,7 @@ public class WindowedPotentiaConduitBlock extends RotatedPillarBlock implements 
 		if (!world.isClientSide()) {
 			PotentiaNetwork.invalidate(pos);
 		}
-		return super.updateShape(state, direction, neighbourState, world, pos, neighbourPos);
+		return updateBlockState(state, world, pos);
 	}
 
 	@Override
@@ -149,7 +180,7 @@ public class WindowedPotentiaConduitBlock extends RotatedPillarBlock implements 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
-		builder.add(WATERLOGGED);
+		builder.add(WATERLOGGED, POS_RIM, NEG_RIM);
 	}
 
 	@Override

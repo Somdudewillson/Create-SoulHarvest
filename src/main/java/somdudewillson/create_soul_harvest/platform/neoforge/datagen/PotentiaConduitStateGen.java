@@ -6,13 +6,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.MultiPartBlockStateBuilder;
 import somdudewillson.create_soul_harvest.content.conduit.PotentiaConduitBlock;
+import somdudewillson.create_soul_harvest.content.conduit.PotentiaConduitBlock.ConduitConnectionType;
 import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlock;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 
@@ -63,7 +64,7 @@ public class PotentiaConduitStateGen {
 				int u = uv.u();
 				int v = uv.v();
 
-				BlockModelBuilder model = p.models().withExistingParent(modelName, parent).renderType("cutout_mipped");
+				BlockModelBuilder model = p.models().withExistingParent(modelName, parent);
 				var elem = model.element().from(4, 4, 4).to(12, 12, 12);
 
 				if (axis == Axis.X) {
@@ -100,6 +101,15 @@ public class PotentiaConduitStateGen {
 
 		MultiPartBlockStateBuilder multipart = p.getMultipartBuilder(ModBlocks.POTENTIA_CONDUIT.get());
 
+		// Casing for junctions (connections > 2)
+		ModelFile casingModel = p.models().getExistingFile(p.modLoc(basePath + "/casing"));
+		multipart.part()
+				.modelFile(casingModel)
+				.addModel()
+				.condition(PotentiaConduitBlock.CASING, true)
+				.end();
+
+		// 30 core slice models for non-cased runs and elbows
 		for (Axis axis : Axis.values()) {
 			putPart(coreModels, multipart, axis, LU, true, false, true, false);
 			putPart(coreModels, multipart, axis, RU, true, false, false, true);
@@ -113,7 +123,9 @@ public class PotentiaConduitStateGen {
 			putPart(coreModels, multipart, axis, R, false, false, false, true);
 		}
 
+		// Directional connection arms and rims
 		ModelFile connectionNorth = p.models().getExistingFile(p.modLoc(basePath + "/connection/north"));
+		ModelFile rimNorth = p.models().getExistingFile(p.modLoc(basePath + "/rim/north"));
 		for (Direction d : Direction.values()) {
 			int rotX = 0;
 			int rotY = 0;
@@ -126,62 +138,156 @@ public class PotentiaConduitStateGen {
 				default -> {} // NORTH is rotX = 0, rotY = 0
 			}
 
+			// Connection arm renders for both pipe-to-pipe and machine/rim connections
 			multipart.part()
 					.modelFile(connectionNorth)
 					.rotationX(rotX)
 					.rotationY(rotY)
 					.addModel()
-					.condition(PotentiaConduitBlock.PROPERTY_BY_DIRECTION.get(d), true)
+					.condition(PotentiaConduitBlock.PROPERTY_BY_DIRECTION.get(d),
+							ConduitConnectionType.CONDUIT,
+							ConduitConnectionType.RIM)
+					.end();
+
+			// Rim renders on open ends and machine/handler connections
+			multipart.part()
+					.modelFile(rimNorth)
+					.rotationX(rotX)
+					.rotationY(rotY)
+					.addModel()
+					.condition(PotentiaConduitBlock.PROPERTY_BY_DIRECTION.get(d),
+							ConduitConnectionType.RIM)
 					.end();
 		}
 
 		// Windowed Potentia Conduit blockstate
 		ModelFile windowModel = p.models().getExistingFile(p.modLoc(basePath + "/window"));
-		p.getVariantBuilder(ModBlocks.WINDOWED_POTENTIA_CONDUIT.get())
-				.forAllStatesExcept(state -> {
-					Axis axis = state.getValue(RotatedPillarBlock.AXIS);
-					return ConfiguredModel.builder()
-							.modelFile(windowModel)
-							.uvLock(false)
-							.rotationX(axis == Axis.Y ? 0 : 90)
-							.rotationY(axis == Axis.X ? 90 : 0)
-							.build();
-				}, WindowedPotentiaConduitBlock.WATERLOGGED);
+		MultiPartBlockStateBuilder windowMultipart = p.getMultipartBuilder(ModBlocks.WINDOWED_POTENTIA_CONDUIT.get());
+
+		// Window tube body
+		windowMultipart.part()
+				.modelFile(windowModel)
+				.addModel()
+				.condition(RotatedPillarBlock.AXIS, Axis.Y)
+				.end();
+		windowMultipart.part()
+				.modelFile(windowModel)
+				.rotationX(90)
+				.rotationY(90)
+				.addModel()
+				.condition(RotatedPillarBlock.AXIS, Axis.X)
+				.end();
+		windowMultipart.part()
+				.modelFile(windowModel)
+				.rotationX(90)
+				.rotationY(0)
+				.addModel()
+				.condition(RotatedPillarBlock.AXIS, Axis.Z)
+				.end();
+
+		// Rims on X axis (pos: East rotY=90, neg: West rotY=270)
+		windowMultipart.part()
+				.modelFile(rimNorth)
+				.rotationY(90)
+				.addModel()
+				.condition(RotatedPillarBlock.AXIS, Axis.X)
+				.condition(WindowedPotentiaConduitBlock.POS_RIM, true)
+				.end();
+		windowMultipart.part()
+				.modelFile(rimNorth)
+				.rotationY(270)
+				.addModel()
+				.condition(RotatedPillarBlock.AXIS, Axis.X)
+				.condition(WindowedPotentiaConduitBlock.NEG_RIM, true)
+				.end();
+
+		// Rims on Y axis (pos: Up rotX=270, neg: Down rotX=90)
+		windowMultipart.part()
+				.modelFile(rimNorth)
+				.rotationX(270)
+				.addModel()
+				.condition(RotatedPillarBlock.AXIS, Axis.Y)
+				.condition(WindowedPotentiaConduitBlock.POS_RIM, true)
+				.end();
+		windowMultipart.part()
+				.modelFile(rimNorth)
+				.rotationX(90)
+				.addModel()
+				.condition(RotatedPillarBlock.AXIS, Axis.Y)
+				.condition(WindowedPotentiaConduitBlock.NEG_RIM, true)
+				.end();
+
+		// Rims on Z axis (pos: South rotY=180, neg: North rotX=0, rotY=0)
+		windowMultipart.part()
+				.modelFile(rimNorth)
+				.rotationY(180)
+				.addModel()
+				.condition(RotatedPillarBlock.AXIS, Axis.Z)
+				.condition(WindowedPotentiaConduitBlock.POS_RIM, true)
+				.end();
+		windowMultipart.part()
+				.modelFile(rimNorth)
+				.addModel()
+				.condition(RotatedPillarBlock.AXIS, Axis.Z)
+				.condition(WindowedPotentiaConduitBlock.NEG_RIM, true)
+				.end();
 	}
 
 	private static void putPart(Map<OrientationKey, ModelFile> coreModels, MultiPartBlockStateBuilder builder,
 								Axis axis, String s, boolean up, boolean down, boolean left, boolean right) {
-		Map<Direction, BooleanProperty> propertyMap = PotentiaConduitBlock.PROPERTY_BY_DIRECTION;
+		Map<Direction, EnumProperty<ConduitConnectionType>> propertyMap = PotentiaConduitBlock.PROPERTY_BY_DIRECTION;
 
 		Direction upD = getUp(axis);
 		Direction downD = getDown(axis);
 		Direction leftD = getLeft(axis);
 		Direction rightD = getRight(axis);
 
-		builder.part()
+		var part = builder.part()
 				.modelFile(coreModels.get(new OrientationKey(s, axis)))
 				.addModel()
-				.condition(propertyMap.get(upD), up)
-				.condition(propertyMap.get(leftD), left)
-				.condition(propertyMap.get(rightD), right)
-				.condition(propertyMap.get(downD), down)
-				.end();
+				.condition(PotentiaConduitBlock.CASING, false);
+
+		if (up) {
+			part.condition(propertyMap.get(upD), ConduitConnectionType.CONDUIT, ConduitConnectionType.RIM);
+		} else {
+			part.condition(propertyMap.get(upD), ConduitConnectionType.NONE);
+		}
+
+		if (down) {
+			part.condition(propertyMap.get(downD), ConduitConnectionType.CONDUIT, ConduitConnectionType.RIM);
+		} else {
+			part.condition(propertyMap.get(downD), ConduitConnectionType.NONE);
+		}
+
+		if (left) {
+			part.condition(propertyMap.get(leftD), ConduitConnectionType.CONDUIT, ConduitConnectionType.RIM);
+		} else {
+			part.condition(propertyMap.get(leftD), ConduitConnectionType.NONE);
+		}
+
+		if (right) {
+			part.condition(propertyMap.get(rightD), ConduitConnectionType.CONDUIT, ConduitConnectionType.RIM);
+		} else {
+			part.condition(propertyMap.get(rightD), ConduitConnectionType.NONE);
+		}
+
+		part.end();
 	}
 
 	private static Direction getUp(Axis axis) {
-		return axis == Axis.Y ? Direction.NORTH : Direction.UP;
+		return axis == Axis.Y ? Direction.SOUTH : Direction.UP;
 	}
 
 	private static Direction getDown(Axis axis) {
-		return axis == Axis.Y ? Direction.SOUTH : Direction.DOWN;
+		return axis == Axis.Y ? Direction.NORTH : Direction.DOWN;
 	}
 
 	private static Direction getLeft(Axis axis) {
-		return axis == Axis.Z ? Direction.EAST : (axis == Axis.X ? Direction.SOUTH : Direction.EAST);
+		return axis == Axis.X ? Direction.SOUTH : Direction.EAST;
 	}
 
 	private static Direction getRight(Axis axis) {
-		return axis == Axis.Z ? Direction.WEST : (axis == Axis.X ? Direction.NORTH : Direction.WEST);
+		return axis == Axis.X ? Direction.NORTH : Direction.WEST;
 	}
 }
 //?}

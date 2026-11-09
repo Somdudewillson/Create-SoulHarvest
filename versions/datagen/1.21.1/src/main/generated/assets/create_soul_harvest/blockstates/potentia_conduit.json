@@ -2,13 +2,22 @@
   "multipart": [
     {
       "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/casing"
+      },
+      "when": {
+        "casing": "true"
+      }
+    },
+    {
+      "apply": {
         "model": "create_soul_harvest:block/potentia_conduit/lu_x"
       },
       "when": {
-        "down": "false",
-        "north": "false",
-        "south": "true",
-        "up": "true"
+        "casing": "false",
+        "down": "none",
+        "north": "none",
+        "south": "conduit|rim",
+        "up": "conduit|rim"
       }
     },
     {
@@ -16,10 +25,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/ru_x"
       },
       "when": {
-        "down": "false",
-        "north": "true",
-        "south": "false",
-        "up": "true"
+        "casing": "false",
+        "down": "none",
+        "north": "conduit|rim",
+        "south": "none",
+        "up": "conduit|rim"
       }
     },
     {
@@ -27,10 +37,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/ld_x"
       },
       "when": {
-        "down": "true",
-        "north": "false",
-        "south": "true",
-        "up": "false"
+        "casing": "false",
+        "down": "conduit|rim",
+        "north": "none",
+        "south": "conduit|rim",
+        "up": "none"
       }
     },
     {
@@ -38,10 +49,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/rd_x"
       },
       "when": {
-        "down": "true",
-        "north": "true",
-        "south": "false",
-        "up": "false"
+        "casing": "false",
+        "down": "conduit|rim",
+        "north": "conduit|rim",
+        "south": "none",
+        "up": "none"
       }
     },
     {
@@ -49,10 +61,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/ud_x"
       },
       "when": {
-        "down": "true",
-        "north": "false",
-        "south": "false",
-        "up": "true"
+        "casing": "false",
+        "down": "conduit|rim",
+        "north": "none",
+        "south": "none",
+        "up": "conduit|rim"
       }
     },
     {
@@ -60,10 +73,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/u_x"
       },
       "when": {
-        "down": "false",
-        "north": "false",
-        "south": "false",
-        "up": "true"
+        "casing": "false",
+        "down": "none",
+        "north": "none",
+        "south": "none",
+        "up": "conduit|rim"
       }
     },
     {
@@ -71,10 +85,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/d_x"
       },
       "when": {
-        "down": "true",
-        "north": "false",
-        "south": "false",
-        "up": "false"
+        "casing": "false",
+        "down": "conduit|rim",
+        "north": "none",
+        "south": "none",
+        "up": "none"
       }
     },
     {
@@ -82,10 +97,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/lr_x"
       },
       "when": {
-        "down": "false",
-        "north": "true",
-        "south": "true",
-        "up": "false"
+        "casing": "false",
+        "down": "none",
+        "north": "conduit|rim",
+        "south": "conduit|rim",
+        "up": "none"
       }
     },
     {
@@ -93,10 +109,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/l_x"
       },
       "when": {
-        "down": "false",
-        "north": "false",
-        "south": "true",
-        "up": "false"
+        "casing": "false",
+        "down": "none",
+        "north": "none",
+        "south": "conduit|rim",
+        "up": "none"
       }
     },
     {
@@ -104,10 +121,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/r_x"
       },
       "when": {
-        "down": "false",
-        "north": "true",
-        "south": "false",
-        "up": "false"
+        "casing": "false",
+        "down": "none",
+        "north": "conduit|rim",
+        "south": "none",
+        "up": "none"
       }
     },
     {
@@ -115,10 +133,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/lu_y"
       },
       "when": {
-        "east": "true",
-        "north": "true",
-        "south": "false",
-        "west": "false"
+        "casing": "false",
+        "east": "conduit|rim",
+        "north": "none",
+        "south": "conduit|rim",
+        "west": "none"
       }
     },
     {
@@ -126,10 +145,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/ru_y"
       },
       "when": {
-        "east": "false",
-        "north": "true",
-        "south": "false",
-        "west": "true"
+        "casing": "false",
+        "east": "none",
+        "north": "none",
+        "south": "conduit|rim",
+        "west": "conduit|rim"
       }
     },
     {
@@ -137,10 +157,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/ld_y"
       },
       "when": {
-        "east": "true",
-        "north": "false",
-        "south": "true",
-        "west": "false"
+        "casing": "false",
+        "east": "conduit|rim",
+        "north": "conduit|rim",
+        "south": "none",
+        "west": "none"
       }
     },
     {
@@ -148,10 +169,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/rd_y"
       },
       "when": {
-        "east": "false",
-        "north": "false",
-        "south": "true",
-        "west": "true"
+        "casing": "false",
+        "east": "none",
+        "north": "conduit|rim",
+        "south": "none",
+        "west": "conduit|rim"
       }
     },
     {
@@ -159,10 +181,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/ud_y"
       },
       "when": {
-        "east": "false",
-        "north": "true",
-        "south": "true",
-        "west": "false"
+        "casing": "false",
+        "east": "none",
+        "north": "conduit|rim",
+        "south": "conduit|rim",
+        "west": "none"
       }
     },
     {
@@ -170,10 +193,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/u_y"
       },
       "when": {
-        "east": "false",
-        "north": "true",
-        "south": "false",
-        "west": "false"
+        "casing": "false",
+        "east": "none",
+        "north": "none",
+        "south": "conduit|rim",
+        "west": "none"
       }
     },
     {
@@ -181,10 +205,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/d_y"
       },
       "when": {
-        "east": "false",
-        "north": "false",
-        "south": "true",
-        "west": "false"
+        "casing": "false",
+        "east": "none",
+        "north": "conduit|rim",
+        "south": "none",
+        "west": "none"
       }
     },
     {
@@ -192,10 +217,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/lr_y"
       },
       "when": {
-        "east": "true",
-        "north": "false",
-        "south": "false",
-        "west": "true"
+        "casing": "false",
+        "east": "conduit|rim",
+        "north": "none",
+        "south": "none",
+        "west": "conduit|rim"
       }
     },
     {
@@ -203,10 +229,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/l_y"
       },
       "when": {
-        "east": "true",
-        "north": "false",
-        "south": "false",
-        "west": "false"
+        "casing": "false",
+        "east": "conduit|rim",
+        "north": "none",
+        "south": "none",
+        "west": "none"
       }
     },
     {
@@ -214,10 +241,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/r_y"
       },
       "when": {
-        "east": "false",
-        "north": "false",
-        "south": "false",
-        "west": "true"
+        "casing": "false",
+        "east": "none",
+        "north": "none",
+        "south": "none",
+        "west": "conduit|rim"
       }
     },
     {
@@ -225,10 +253,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/lu_z"
       },
       "when": {
-        "down": "false",
-        "east": "true",
-        "up": "true",
-        "west": "false"
+        "casing": "false",
+        "down": "none",
+        "east": "conduit|rim",
+        "up": "conduit|rim",
+        "west": "none"
       }
     },
     {
@@ -236,10 +265,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/ru_z"
       },
       "when": {
-        "down": "false",
-        "east": "false",
-        "up": "true",
-        "west": "true"
+        "casing": "false",
+        "down": "none",
+        "east": "none",
+        "up": "conduit|rim",
+        "west": "conduit|rim"
       }
     },
     {
@@ -247,10 +277,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/ld_z"
       },
       "when": {
-        "down": "true",
-        "east": "true",
-        "up": "false",
-        "west": "false"
+        "casing": "false",
+        "down": "conduit|rim",
+        "east": "conduit|rim",
+        "up": "none",
+        "west": "none"
       }
     },
     {
@@ -258,10 +289,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/rd_z"
       },
       "when": {
-        "down": "true",
-        "east": "false",
-        "up": "false",
-        "west": "true"
+        "casing": "false",
+        "down": "conduit|rim",
+        "east": "none",
+        "up": "none",
+        "west": "conduit|rim"
       }
     },
     {
@@ -269,10 +301,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/ud_z"
       },
       "when": {
-        "down": "true",
-        "east": "false",
-        "up": "true",
-        "west": "false"
+        "casing": "false",
+        "down": "conduit|rim",
+        "east": "none",
+        "up": "conduit|rim",
+        "west": "none"
       }
     },
     {
@@ -280,10 +313,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/u_z"
       },
       "when": {
-        "down": "false",
-        "east": "false",
-        "up": "true",
-        "west": "false"
+        "casing": "false",
+        "down": "none",
+        "east": "none",
+        "up": "conduit|rim",
+        "west": "none"
       }
     },
     {
@@ -291,10 +325,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/d_z"
       },
       "when": {
-        "down": "true",
-        "east": "false",
-        "up": "false",
-        "west": "false"
+        "casing": "false",
+        "down": "conduit|rim",
+        "east": "none",
+        "up": "none",
+        "west": "none"
       }
     },
     {
@@ -302,10 +337,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/lr_z"
       },
       "when": {
-        "down": "false",
-        "east": "true",
-        "up": "false",
-        "west": "true"
+        "casing": "false",
+        "down": "none",
+        "east": "conduit|rim",
+        "up": "none",
+        "west": "conduit|rim"
       }
     },
     {
@@ -313,10 +349,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/l_z"
       },
       "when": {
-        "down": "false",
-        "east": "true",
-        "up": "false",
-        "west": "false"
+        "casing": "false",
+        "down": "none",
+        "east": "conduit|rim",
+        "up": "none",
+        "west": "none"
       }
     },
     {
@@ -324,10 +361,11 @@
         "model": "create_soul_harvest:block/potentia_conduit/r_z"
       },
       "when": {
-        "down": "false",
-        "east": "false",
-        "up": "false",
-        "west": "true"
+        "casing": "false",
+        "down": "none",
+        "east": "none",
+        "up": "none",
+        "west": "conduit|rim"
       }
     },
     {
@@ -336,7 +374,16 @@
         "x": 90
       },
       "when": {
-        "down": "true"
+        "down": "conduit|rim"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/rim/north",
+        "x": 90
+      },
+      "when": {
+        "down": "rim"
       }
     },
     {
@@ -345,7 +392,16 @@
         "x": 270
       },
       "when": {
-        "up": "true"
+        "up": "conduit|rim"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/rim/north",
+        "x": 270
+      },
+      "when": {
+        "up": "rim"
       }
     },
     {
@@ -353,7 +409,15 @@
         "model": "create_soul_harvest:block/potentia_conduit/connection/north"
       },
       "when": {
-        "north": "true"
+        "north": "conduit|rim"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/rim/north"
+      },
+      "when": {
+        "north": "rim"
       }
     },
     {
@@ -362,7 +426,16 @@
         "y": 180
       },
       "when": {
-        "south": "true"
+        "south": "conduit|rim"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/rim/north",
+        "y": 180
+      },
+      "when": {
+        "south": "rim"
       }
     },
     {
@@ -371,7 +444,16 @@
         "y": 270
       },
       "when": {
-        "west": "true"
+        "west": "conduit|rim"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/rim/north",
+        "y": 270
+      },
+      "when": {
+        "west": "rim"
       }
     },
     {
@@ -380,7 +462,16 @@
         "y": 90
       },
       "when": {
-        "east": "true"
+        "east": "conduit|rim"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/rim/north",
+        "y": 90
+      },
+      "when": {
+        "east": "rim"
       }
     }
   ]

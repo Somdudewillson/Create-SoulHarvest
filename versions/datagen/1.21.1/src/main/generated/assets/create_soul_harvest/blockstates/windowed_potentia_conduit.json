@@ -1,16 +1,90 @@
 {
-  "variants": {
-    "axis=x": {
-      "model": "create_soul_harvest:block/potentia_conduit/window",
-      "x": 90,
-      "y": 90
+  "multipart": [
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/window"
+      },
+      "when": {
+        "axis": "y"
+      }
     },
-    "axis=y": {
-      "model": "create_soul_harvest:block/potentia_conduit/window"
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/window",
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "axis": "x"
+      }
     },
-    "axis=z": {
-      "model": "create_soul_harvest:block/potentia_conduit/window",
-      "x": 90
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/window",
+        "x": 90
+      },
+      "when": {
+        "axis": "z"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/rim/north",
+        "y": 90
+      },
+      "when": {
+        "axis": "x",
+        "pos_rim": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/rim/north",
+        "y": 270
+      },
+      "when": {
+        "axis": "x",
+        "neg_rim": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/rim/north",
+        "x": 270
+      },
+      "when": {
+        "axis": "y",
+        "pos_rim": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/rim/north",
+        "x": 90
+      },
+      "when": {
+        "axis": "y",
+        "neg_rim": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/rim/north",
+        "y": 180
+      },
+      "when": {
+        "axis": "z",
+        "pos_rim": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/rim/north"
+      },
+      "when": {
+        "axis": "z",
+        "neg_rim": "true"
+      }
     }
-  }
+  ]
 }
