@@ -81,6 +81,7 @@ public class WindowedPotentiaConduitBlock extends RotatedPillarBlock implements 
 					.setValue(PotentiaConduitBlock.PROPERTY_BY_DIRECTION.get(negDir), true)
 					.setValue(WATERLOGGED, state.getValue(WATERLOGGED));
 
+			regularState = PotentiaConduitBlock.updateBlockState(regularState, posDir, null, world, pos);
 			world.setBlock(pos, regularState, 3);
 			PotentiaNetwork.invalidate(pos);
 		}

@@ -6,15 +6,18 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix4f;
 import somdudewillson.create_soul_harvest.client.texture.palette.MobPalette;
 import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextureManager;
 import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlock;
 import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlockEntity;
+import somdudewillson.create_soul_harvest.content.potentia.IPotentiaTransporter;
 
 public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<WindowedPotentiaConduitBlockEntity> {
 
@@ -74,6 +77,11 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 		VertexConsumer builder = buffer.getBuffer(RenderType.lightning());
 
 		long blockSeed = be.getBlockPos().asLong();
+		Level level = be.getLevel();
+		Direction negDir = getLocalNegWorldDir(axis);
+		Direction posDir = getLocalPosWorldDir(axis);
+		boolean isNegTransport = isTransportNeighbor(level, be.getBlockPos(), negDir);
+		boolean isPosTransport = isTransportNeighbor(level, be.getBlockPos(), posDir);
 
 		// Render 3 intertwined lightning bolts
 		for (int b = 0; b < 3; b++) {
@@ -84,14 +92,15 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 			int alphaInt = (int) (alpha * 240.0f);
 
 			float baseAngle = (float) (b * (2.0 * Math.PI / 3.0));
-			renderSingleBolt(builder, matrix, b, baseAngle, time, blockSeed, red, green, blue, alphaInt);
+			renderSingleBolt(builder, matrix, b, baseAngle, time, blockSeed, red, green, blue, alphaInt, isNegTransport, isPosTransport);
 		}
 
 		ms.popPose();
 	}
 
 	private void renderSingleBolt(VertexConsumer builder, Matrix4f matrix, int boltIndex, float baseAngle,
-								  float time, long blockSeed, int r, int g, int b, int a) {
+								  float time, long blockSeed, int r, int g, int b, int a,
+								  boolean isNegTransport, boolean isPosTransport) {
 		float[] xPoints = new float[SEGMENTS + 1];
 		float[] yPoints = new float[SEGMENTS + 1];
 		float[] zPoints = new float[SEGMENTS + 1];
@@ -102,8 +111,11 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 			float progress = (float) i / (float) SEGMENTS;
 			float z = -0.48f + progress * 0.96f;
 
-			// Taper endpoints so bolts originate and terminate within the connection center
-			float taper = (float) Math.sin(progress * Math.PI);
+			// Taper endpoints: spread out if neighbor is another transport block, pinch to center if supplier/consumer or closed
+			float startTaper = isNegTransport ? 1.0f : (float) Math.sin(Math.min(1.0f, progress / 0.25f) * (Math.PI / 2));
+			float endTaper = isPosTransport ? 1.0f : (float) Math.sin(Math.min(1.0f, (1.0f - progress) / 0.25f) * (Math.PI / 2));
+			float taper = Math.min(startTaper, endTaper);
+
 			float angle = baseAngle + time * 2.5f + (float) Math.sin(progress * 7.0f + time * 3.0f) * 1.2f;
 
 			long jitterSeed = blockSeed ^ (boltIndex * 31337L) ^ (i * 1013L) ^ quantizedTime;
@@ -115,7 +127,7 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 			zPoints[i] = z;
 		}
 
-		// Render segments as cross-quad ribbons
+		// Render segments as cross-quad ribbons (double-sided)
 		for (int i = 0; i < SEGMENTS; i++) {
 			float x1 = xPoints[i];
 			float y1 = yPoints[i];
@@ -148,10 +160,43 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 								float x3, float y3, float z3,
 								float x4, float y4, float z4,
 								int r, int g, int b, int a) {
+		// Front face
 		addVertex(builder, matrix, x1, y1, z1, r, g, b, a);
 		addVertex(builder, matrix, x2, y2, z2, r, g, b, a);
 		addVertex(builder, matrix, x3, y3, z3, r, g, b, a);
 		addVertex(builder, matrix, x4, y4, z4, r, g, b, a);
+
+		// Back face (reverse winding for double-sided visibility from all angles)
+		addVertex(builder, matrix, x4, y4, z4, r, g, b, a);
+		addVertex(builder, matrix, x3, y3, z3, r, g, b, a);
+		addVertex(builder, matrix, x2, y2, z2, r, g, b, a);
+		addVertex(builder, matrix, x1, y1, z1, r, g, b, a);
+	}
+
+	private static Direction getLocalNegWorldDir(Axis axis) {
+		return switch (axis) {
+			case X -> Direction.WEST;
+			case Y -> Direction.UP;
+			case Z -> Direction.NORTH;
+		};
+	}
+
+	private static Direction getLocalPosWorldDir(Axis axis) {
+		return switch (axis) {
+			case X -> Direction.EAST;
+			case Y -> Direction.DOWN;
+			case Z -> Direction.SOUTH;
+		};
+	}
+
+	private static boolean isTransportNeighbor(Level level, BlockPos pos, Direction dir) {
+		if (level == null) return false;
+		BlockPos neighborPos = pos.relative(dir);
+		BlockState state = level.getBlockState(neighborPos);
+		if (state.getBlock() instanceof IPotentiaTransporter transporter) {
+			return transporter.canConnect(state, dir.getOpposite());
+		}
+		return false;
 	}
 
 	private static void addVertex(VertexConsumer builder, Matrix4f matrix, float x, float y, float z, int r, int g, int b, int a) {

@@ -30,6 +30,14 @@ public class PotentiaNetwork {
 				CACHE.remove(p);
 			}
 		}
+		for (Direction d : Direction.values()) {
+			PotentiaNetwork neighborNet = CACHE.remove(pos.relative(d));
+			if (neighborNet != null) {
+				for (BlockPos p : neighborNet.conduitPositions) {
+					CACHE.remove(p);
+				}
+			}
+		}
 	}
 
 	public static void clearCache() {

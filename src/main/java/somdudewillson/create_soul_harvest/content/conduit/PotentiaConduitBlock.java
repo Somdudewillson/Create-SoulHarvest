@@ -96,12 +96,8 @@ public class PotentiaConduitBlock extends Block implements SimpleWaterloggedBloc
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Level level = context.getLevel();
 		BlockPos pos = context.getClickedPos();
-		BlockState state = this.defaultBlockState();
-
-		for (Direction d : Direction.values()) {
-			state = state.setValue(PROPERTY_BY_DIRECTION.get(d), canConnectTo(level, pos.relative(d), d.getOpposite()));
-		}
-
+		Direction preferred = context.getNearestLookingDirection().getOpposite();
+		BlockState state = updateBlockState(this.defaultBlockState(), preferred, null, level, pos);
 		boolean waterlogged = level.getFluidState(pos).getType() == Fluids.WATER;
 		return state.setValue(WATERLOGGED, waterlogged);
 	}
@@ -115,7 +111,62 @@ public class PotentiaConduitBlock extends Block implements SimpleWaterloggedBloc
 		if (!world.isClientSide()) {
 			PotentiaNetwork.invalidate(pos);
 		}
-		return state.setValue(PROPERTY_BY_DIRECTION.get(direction), canConnectTo(world, neighbourPos, direction.getOpposite()));
+		return updateBlockState(state, null, null, world, pos);
+	}
+
+	public static BlockState updateBlockState(BlockState state, @Nullable Direction preferredDirection, @Nullable Direction ignore,
+											  LevelAccessor world, BlockPos pos) {
+		BlockState prevState = state;
+		int prevConnections = 0;
+		for (Direction d : Direction.values()) {
+			if (prevState.getValue(PROPERTY_BY_DIRECTION.get(d))) {
+				prevConnections++;
+			}
+		}
+
+		// Update sides that are not ignored
+		for (Direction d : Direction.values()) {
+			if (d != ignore) {
+				boolean shouldConnect = canConnectTo(world, pos.relative(d), d.getOpposite());
+				state = state.setValue(PROPERTY_BY_DIRECTION.get(d), shouldConnect);
+			}
+		}
+
+		// Count connections to actual neighbors
+		Direction firstConnected = null;
+		int connectionCount = 0;
+		for (Direction d : Direction.values()) {
+			if (state.getValue(PROPERTY_BY_DIRECTION.get(d))) {
+				connectionCount++;
+				if (firstConnected == null) {
+					firstConnected = d;
+				}
+			}
+		}
+
+		// If 2 or more real connections, keep all connected sides
+		if (connectionCount >= 2) {
+			return state;
+		}
+
+		// If exactly 1 connection, extend the opposite direction to make a straight pipe through
+		if (connectionCount == 1) {
+			return state.setValue(PROPERTY_BY_DIRECTION.get(firstConnected.getOpposite()), true);
+		}
+
+		// If 0 connections to neighbors:
+		// If it was already a straight 2-ended pipe, preserve that orientation
+		if (prevConnections == 2 && getStraightAxis(prevState) != null) {
+			return prevState;
+		}
+
+		// Otherwise, orient along preferredDirection
+		if (preferredDirection != null) {
+			return state.setValue(PROPERTY_BY_DIRECTION.get(preferredDirection), true)
+					.setValue(PROPERTY_BY_DIRECTION.get(preferredDirection.getOpposite()), true);
+		}
+
+		return state.setValue(NORTH, true).setValue(SOUTH, true);
 	}
 
 	@Override
@@ -192,6 +243,12 @@ public class PotentiaConduitBlock extends Block implements SimpleWaterloggedBloc
 
 	public static boolean canConnectTo(LevelAccessor level, BlockPos targetPos, Direction sideOnTarget) {
 		BlockState targetState = level.getBlockState(targetPos);
+		if (targetState.isAir()) {
+			return false;
+		}
+		if (targetState.getBlock() instanceof PotentiaConduitBlock) {
+			return true;
+		}
 		if (targetState.getBlock() instanceof IPotentiaTransporter transporter) {
 			return transporter.canConnect(targetState, sideOnTarget);
 		}
