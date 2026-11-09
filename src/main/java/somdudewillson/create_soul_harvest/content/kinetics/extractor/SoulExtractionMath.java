@@ -2,7 +2,7 @@ package somdudewillson.create_soul_harvest.content.kinetics.extractor;
 
 public class SoulExtractionMath {
 
-	public static final float MIN_RPM = 16.0f;
+	public static final float DEFAULT_MIN_RPM = 30.0f;
 	public static final float MAX_RPM = 256.0f;
 	public static final float MAX_POINTS_PER_EXTRACTOR = 100.0f;
 	public static final float DIMINISHING_EXPONENT = 0.6f;
@@ -10,16 +10,23 @@ public class SoulExtractionMath {
 	public static final long DEFAULT_MAX_POTENTIA_PER_TICK = 100L;
 
 	/**
-	 * Calculates extraction points for a single extractor based on input RPM.
-	 * Returns 0 if |RPM| < MIN_RPM. Scales with diminishing returns up to MAX_RPM.
+	 * Calculates extraction points for a single extractor based on input RPM using default minimum RPM.
 	 */
 	public static float calculatePoints(float rpm) {
+		return calculatePoints(rpm, DEFAULT_MIN_RPM);
+	}
+
+	/**
+	 * Calculates extraction points for a single extractor based on input RPM and minimum required RPM.
+	 * Returns 0 if |RPM| < minRpm. Scales with diminishing returns up to MAX_RPM.
+	 */
+	public static float calculatePoints(float rpm, float minRpm) {
 		float absRpm = Math.abs(rpm);
-		if (absRpm < MIN_RPM) {
+		if (absRpm < minRpm) {
 			return 0.0f;
 		}
 		float clampedRpm = Math.min(absRpm, MAX_RPM);
-		float progress = (clampedRpm - MIN_RPM) / (MAX_RPM - MIN_RPM);
+		float progress = (clampedRpm - minRpm) / (MAX_RPM - minRpm);
 		return (float) (MAX_POINTS_PER_EXTRACTOR * Math.pow(progress, DIMINISHING_EXPONENT));
 	}
 

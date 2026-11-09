@@ -1,5 +1,6 @@
 package somdudewillson.create_soul_harvest.content.kinetics.extractor;
 
+import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -86,9 +87,20 @@ public class SoulExtractorBlockEntity extends KineticBlockEntity {
 		super(ModBlockEntities.SOUL_EXTRACTOR_BE.get(), pos, state);
 	}
 
+	public float getMinSpeed() {
+		try {
+			BlockState state = getBlockState();
+			if (state.getBlock() instanceof IRotate rotate) {
+				return rotate.getMinimumRequiredSpeedLevel().getSpeedValue();
+			}
+		} catch (Throwable ignored) {
+		}
+		return SoulExtractionMath.DEFAULT_MIN_RPM;
+	}
+
 	public float getCurrentExtractionPoints() {
 		if (level != null && level.isClientSide()) {
-			if (getSpeed() == 0 || isOverStressed()) {
+			if (getSpeed() == 0 || isOverStressed() || !isSpeedRequirementFulfilled()) {
 				return 0.0f;
 			}
 			BlockState state = getBlockState();
@@ -98,14 +110,14 @@ public class SoulExtractorBlockEntity extends KineticBlockEntity {
 					return 0.0f;
 				}
 			}
-			return SoulExtractionMath.calculatePoints(getSpeed());
+			return SoulExtractionMath.calculatePoints(getSpeed(), getMinSpeed());
 		}
 		return currentExtractionPoints;
 	}
 
 	public long getCurrentOutputRate() {
 		if (level != null && level.isClientSide()) {
-			if (getSpeed() == 0 || isOverStressed()) {
+			if (getSpeed() == 0 || isOverStressed() || !isSpeedRequirementFulfilled()) {
 				return 0L;
 			}
 		}
@@ -137,7 +149,7 @@ public class SoulExtractorBlockEntity extends KineticBlockEntity {
 	public void onSpeedChanged(float previousSpeed) {
 		super.onSpeedChanged(previousSpeed);
 		if (level != null && !level.isClientSide()) {
-			if (getSpeed() == 0) {
+			if (getSpeed() == 0 || !isSpeedRequirementFulfilled()) {
 				updateStatus(0.0f, 0L, this.isController);
 			}
 		}
@@ -211,10 +223,10 @@ public class SoulExtractorBlockEntity extends KineticBlockEntity {
 			List<Float> activePoints = new ArrayList<>();
 
 			for (SoulExtractorBlockEntity extractor : group) {
-				if (extractor.isOverStressed()) {
+				if (extractor.isOverStressed() || !extractor.isSpeedRequirementFulfilled()) {
 					continue;
 				}
-				float pts = SoulExtractionMath.calculatePoints(extractor.getSpeed());
+				float pts = SoulExtractionMath.calculatePoints(extractor.getSpeed(), extractor.getMinSpeed());
 				if (pts > 0.0f) {
 					activeExtractors.add(extractor);
 					activePoints.add(pts);
@@ -225,7 +237,9 @@ public class SoulExtractorBlockEntity extends KineticBlockEntity {
 			long totalExtracted = SoulExtractionMath.calculateTotalPotentia(totalPoints, SoulExtractionMath.DEFAULT_MAX_POTENTIA_PER_TICK);
 			for (SoulExtractorBlockEntity extractor : group) {
 				boolean isCtrl = extractor == this;
-				float pts = extractor.isOverStressed() ? 0.0f : SoulExtractionMath.calculatePoints(extractor.getSpeed());
+				float pts = (extractor.isOverStressed() || !extractor.isSpeedRequirementFulfilled())
+						? 0.0f
+						: SoulExtractionMath.calculatePoints(extractor.getSpeed(), extractor.getMinSpeed());
 				long share = 0L;
 				if (totalExtracted > 0 && totalPoints > 0.0f && pts > 0.0f) {
 					share = SoulExtractionMath.calculateShare(pts, totalPoints, totalExtracted);
@@ -273,6 +287,10 @@ public class SoulExtractorBlockEntity extends KineticBlockEntity {
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+
+		if (isOverStressed() || (!isSpeedRequirementFulfilled() && getSpeed() != 0)) {
+			return true;
+		}
 
 		PotentiaTooltipHelper.langBuilder().translate("gui.goggles.soul_extractor")
 				.forGoggles(tooltip);

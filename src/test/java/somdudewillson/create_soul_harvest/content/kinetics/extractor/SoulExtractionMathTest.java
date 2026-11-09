@@ -10,11 +10,11 @@ public class SoulExtractionMathTest {
 	public void testMinimumRpmThreshold() {
 		assertEquals(0.0f, SoulExtractionMath.calculatePoints(0.0f));
 		assertEquals(0.0f, SoulExtractionMath.calculatePoints(10.0f));
-		assertEquals(0.0f, SoulExtractionMath.calculatePoints(15.9f));
-		assertEquals(0.0f, SoulExtractionMath.calculatePoints(-15.9f));
+		assertEquals(0.0f, SoulExtractionMath.calculatePoints(29.9f));
+		assertEquals(0.0f, SoulExtractionMath.calculatePoints(-29.9f));
 
-		assertTrue(SoulExtractionMath.calculatePoints(16.0f) >= 0.0f);
-		assertTrue(SoulExtractionMath.calculatePoints(16.1f) > 0.0f);
+		assertTrue(SoulExtractionMath.calculatePoints(30.0f) >= 0.0f);
+		assertTrue(SoulExtractionMath.calculatePoints(30.1f) > 0.0f);
 	}
 
 	@Test
@@ -33,13 +33,13 @@ public class SoulExtractionMathTest {
 
 	@Test
 	public void testDiminishingReturnsCurve() {
-		// Halfway between 16 and 256 is 136 RPM
-		float midPoints = SoulExtractionMath.calculatePoints(136.0f);
+		// Halfway between 30 and 256 is 143 RPM
+		float midPoints = SoulExtractionMath.calculatePoints(143.0f);
 		// Linear halfway would be 50 points; concave diminishing returns (alpha = 0.6) yields > 50 points (approx 65.97)
 		assertTrue(midPoints > 60.0f, "Mid RPM should yield diminishing returns (>60 points), got: " + midPoints);
 
 		// Quarter RPM
-		float quarterPoints = SoulExtractionMath.calculatePoints(76.0f);
+		float quarterPoints = SoulExtractionMath.calculatePoints(86.5f);
 		assertTrue(quarterPoints > 35.0f, "Quarter RPM should yield > 35 points due to steep initial curve, got: " + quarterPoints);
 	}
 

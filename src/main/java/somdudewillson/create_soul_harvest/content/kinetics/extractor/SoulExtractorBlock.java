@@ -1,6 +1,7 @@
 package somdudewillson.create_soul_harvest.content.kinetics.extractor;
 
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
+import com.simibubi.create.content.kinetics.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.kinetics.simpleRelays.ICogWheel;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
@@ -38,6 +39,11 @@ public class SoulExtractorBlock extends DirectionalKineticBlock
 	@Override
 	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		return false;
+	}
+
+	@Override
+	public SpeedLevel getMinimumRequiredSpeedLevel() {
+		return SpeedLevel.MEDIUM;
 	}
 
 	@Override
