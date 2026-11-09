@@ -1,6 +1,7 @@
 package somdudewillson.create_soul_harvest.content.kinetics.extractor;
 
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -11,16 +12,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.content.conduit.network.PotentiaNetwork;
-import somdudewillson.create_soul_harvest.content.potentia.IPotentiaHandler;
-import somdudewillson.create_soul_harvest.content.potentia.IPotentiaTransporter;
-import somdudewillson.create_soul_harvest.content.potentia.PotentiaHelper;
-import somdudewillson.create_soul_harvest.content.potentia.PotentiaTank;
-import somdudewillson.create_soul_harvest.content.potentia.SoulPotentiaStack;
+import somdudewillson.create_soul_harvest.content.potentia.*;
 import somdudewillson.create_soul_harvest.registry.ModBlockEntities;
 import somdudewillson.create_soul_harvest.registry.ModTags;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SoulExtractorBlockEntity extends KineticBlockEntity {
 
@@ -179,12 +177,35 @@ public class SoulExtractorBlockEntity extends KineticBlockEntity {
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-		tooltip.add(Component.literal("§dSoul Extraction:"));
-		tooltip.add(Component.literal(" §7Extraction Points: §f" + String.format("%.1f", currentExtractionPoints)));
+
+		PotentiaTooltipHelper.langBuilder().translate("gui.goggles.soul_extractor")
+				.forGoggles(tooltip);
+
+		PotentiaTooltipHelper.langBuilder().translate("gui.goggles.extraction_points_heading")
+				.style(ChatFormatting.GRAY)
+				.forGoggles(tooltip);
+		PotentiaTooltipHelper.langBuilder().text(String.format(Locale.ROOT, "%.1f", currentExtractionPoints))
+				.style(ChatFormatting.WHITE)
+				.forGoggles(tooltip, 1);
+
+		PotentiaTooltipHelper.langBuilder().translate("gui.goggles.multiblock_status_heading")
+				.style(ChatFormatting.GRAY)
+				.forGoggles(tooltip);
 		if (isController) {
-			tooltip.add(Component.literal(" §7Multiblock Status: §aController"));
+			PotentiaTooltipHelper.langBuilder().translate("gui.goggles.multiblock_controller")
+					.style(ChatFormatting.GREEN)
+					.forGoggles(tooltip, 1);
+		} else if (currentExtractionPoints > 0.0f) {
+			PotentiaTooltipHelper.langBuilder().translate("gui.goggles.multiblock_member")
+					.style(ChatFormatting.AQUA)
+					.forGoggles(tooltip, 1);
+		} else {
+			PotentiaTooltipHelper.langBuilder().translate("gui.goggles.multiblock_inactive")
+					.style(ChatFormatting.DARK_GRAY)
+					.forGoggles(tooltip, 1);
 		}
-		tooltip.add(Component.literal(" §7Potentia Stored: §b" + tank.getPotentia().getAmount() + " / " + tank.getTankCapacity(0) + " mB"));
+
+		PotentiaTooltipHelper.appendTankTooltip(tooltip, tank);
 		return true;
 	}
 

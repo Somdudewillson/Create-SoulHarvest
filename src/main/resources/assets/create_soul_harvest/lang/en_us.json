@@ -318,6 +318,18 @@
   "create_soul_harvest.gui.goggles.boost_active": "(%s remaining)",
   "create_soul_harvest.gui.goggles.boost_inactive": "Inactive (1.0x)",
 
+  "create_soul_harvest.gui.goggles.soul_extractor": "Soul Extractor:",
+  "create_soul_harvest.gui.goggles.potentia_reservoir": "Potentia Reservoir:",
+  "create_soul_harvest.gui.goggles.extraction_points_heading": "Extraction Points:",
+  "create_soul_harvest.gui.goggles.multiblock_status_heading": "Multiblock Status:",
+  "create_soul_harvest.gui.goggles.multiblock_controller": "Controller (Active)",
+  "create_soul_harvest.gui.goggles.multiblock_member": "Member (Synchronized)",
+  "create_soul_harvest.gui.goggles.multiblock_inactive": "Inactive",
+  "create_soul_harvest.gui.goggles.potentia_contents_heading": "Potentia Stored:",
+  "create_soul_harvest.gui.goggles.potentia_empty": "Empty (0 / %s mB)",
+  "create_soul_harvest.gui.goggles.potentia_type_heading": "Type:",
+  "create_soul_harvest.gui.goggles.potentia_type_untyped": "Pure Soul Potentia",
+
   "create_soul_harvest.configuration.features": "Features",
   "create_soul_harvest.configuration.enableSpells": "All Spell Scrolls",
   "create_soul_harvest.configuration.enableEnhancedSpells": "Enhanced Spell Scrolls",

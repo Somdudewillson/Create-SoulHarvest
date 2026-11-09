@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.content.potentia.IPotentiaHandler;
 import somdudewillson.create_soul_harvest.content.potentia.PotentiaTank;
+import somdudewillson.create_soul_harvest.content.potentia.PotentiaTooltipHelper;
 import somdudewillson.create_soul_harvest.content.potentia.SoulPotentiaStack;
 import somdudewillson.create_soul_harvest.registry.ModBlockEntities;
 
@@ -46,15 +47,10 @@ public class PotentiaReservoirBlockEntity extends SmartBlockEntity implements IH
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		tooltip.add(Component.literal("§dPotentia Reservoir:"));
-		SoulPotentiaStack potentia = tank.getPotentia();
-		if (potentia.isEmpty()) {
-			tooltip.add(Component.literal(" §7Empty (0 / " + tank.getTankCapacity(0) + " mB)"));
-		} else {
-			String typeStr = potentia.isTyped() ? potentia.getEntityType().toString() : "Untyped";
-			tooltip.add(Component.literal(" §7Stored: §b" + potentia.getAmount() + " / " + tank.getTankCapacity(0) + " mB"));
-			tooltip.add(Component.literal(" §7Type: §e" + typeStr));
-		}
+		PotentiaTooltipHelper.langBuilder().translate("gui.goggles.potentia_reservoir")
+				.forGoggles(tooltip);
+
+		PotentiaTooltipHelper.appendTankTooltip(tooltip, tank);
 		return true;
 	}
 
