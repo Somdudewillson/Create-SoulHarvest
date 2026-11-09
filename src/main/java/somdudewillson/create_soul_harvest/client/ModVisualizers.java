@@ -10,6 +10,7 @@ public class ModVisualizers {
 		ModPartialModels.init();
 		SimpleBlockEntityVisualizer.builder(ModBlockEntities.POTENTIA_EXTRACTOR_BE.get())
 				.factory(OrientedRotatingVisual.of(ModPartialModels.POTENTIA_EXTRACTOR_HEAD))
+				.skipVanillaRender(be -> true)
 				.apply();
 	}
 }

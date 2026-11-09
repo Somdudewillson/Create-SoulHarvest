@@ -23,7 +23,7 @@ public class ModBlocks {
 	public static final BlockRegistryBuilderFactory BLOCK_BUILDER_FACTORY = new BlockRegistryBuilderFactory(SoulHarvestMod.MOD_ID, BLOCKS, ModItems.ITEMS);
 
 	public static final DeferredHolder<Block, PotentiaExtractorBlock> POTENTIA_EXTRACTOR = BLOCKS.register("potentia_extractor",
-			() -> new PotentiaExtractorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).strength(2.5f).requiresCorrectToolForDrops()));
+			() -> new PotentiaExtractorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).strength(2.5f).requiresCorrectToolForDrops().noOcclusion()));
 
 	@Deprecated
 	public static final DeferredHolder<Block, PotentiaExtractorBlock> SOUL_EXTRACTOR = POTENTIA_EXTRACTOR;

@@ -1,9 +1,10 @@
 {
-	"format_version": "1.21.6",
+	"format_version": "1.9.0",
 	"credit": "Made with Blockbench",
-	"parent": "block/block",
+	"parent": "create:block/block",
 	"textures": {
-		"4": "create_soul_harvest:block/machines/potentia_extractor"
+		"4": "create_soul_harvest:block/machines/potentia_extractor",
+		"particle": "create_soul_harvest:block/machines/potentia_extractor"
 	},
 	"elements": [
 		{
