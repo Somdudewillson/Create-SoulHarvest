@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class SoulExtractorBlockEntity extends KineticBlockEntity {
+public class PotentiaExtractorBlockEntity extends KineticBlockEntity {
 
 	protected float currentExtractionPoints = 0.0f;
 	protected long currentOutputRate = 0L;
@@ -79,12 +79,12 @@ public class SoulExtractorBlockEntity extends KineticBlockEntity {
 		}
 	};
 
-	public SoulExtractorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+	public PotentiaExtractorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
-	public SoulExtractorBlockEntity(BlockPos pos, BlockState state) {
-		super(ModBlockEntities.SOUL_EXTRACTOR_BE.get(), pos, state);
+	public PotentiaExtractorBlockEntity(BlockPos pos, BlockState state) {
+		super(ModBlockEntities.POTENTIA_EXTRACTOR_BE.get(), pos, state);
 	}
 
 	public float getMinSpeed() {
@@ -95,7 +95,7 @@ public class SoulExtractorBlockEntity extends KineticBlockEntity {
 			}
 		} catch (Throwable ignored) {
 		}
-		return SoulExtractionMath.DEFAULT_MIN_RPM;
+		return PotentiaExtractionMath.DEFAULT_MIN_RPM;
 	}
 
 	public float getCurrentExtractionPoints() {
@@ -104,13 +104,13 @@ public class SoulExtractorBlockEntity extends KineticBlockEntity {
 				return 0.0f;
 			}
 			BlockState state = getBlockState();
-			if (state.getBlock() instanceof SoulExtractorBlock) {
-				Direction facing = state.getValue(SoulExtractorBlock.FACING);
+			if (state.getBlock() instanceof PotentiaExtractorBlock) {
+				Direction facing = state.getValue(PotentiaExtractorBlock.FACING);
 				if (!level.getBlockState(worldPosition.relative(facing)).is(ModTags.Blocks.SOUL_BUD_GROWTH_BLOCKS)) {
 					return 0.0f;
 				}
 			}
-			return SoulExtractionMath.calculatePoints(getSpeed(), getMinSpeed());
+			return PotentiaExtractionMath.calculatePoints(getSpeed(), getMinSpeed());
 		}
 		return currentExtractionPoints;
 	}
@@ -135,7 +135,7 @@ public class SoulExtractorBlockEntity extends KineticBlockEntity {
 
 	@Nullable
 	public IPotentiaHandler getPotentiaHandler(@Nullable Direction side) {
-		if (side == null || side == getBlockState().getValue(SoulExtractorBlock.FACING).getOpposite()) {
+		if (side == null || side == getBlockState().getValue(PotentiaExtractorBlock.FACING).getOpposite()) {
 			return virtualHandler;
 		}
 		return null;
@@ -178,71 +178,72 @@ public class SoulExtractorBlockEntity extends KineticBlockEntity {
 		}
 
 		BlockState state = getBlockState();
-		if (!(state.getBlock() instanceof SoulExtractorBlock)) {
+		if (!(state.getBlock() instanceof PotentiaExtractorBlock)) {
 			return;
 		}
 
-		Direction facing = state.getValue(SoulExtractorBlock.FACING);
-		BlockPos targetPos = worldPosition.relative(facing);
-
-		if (level.getBlockState(targetPos).is(ModTags.Blocks.SOUL_BUD_GROWTH_BLOCKS)) {
-			tickMultiblock(targetPos);
-		} else {
-			updateStatus(0.0f, 0L, false);
+		if (getSpeed() == 0 || isOverStressed() || !isSpeedRequirementFulfilled()) {
+			if (currentExtractionPoints != 0.0f || currentOutputRate != 0L) {
+				updateStatus(0.0f, 0L, false);
+			}
+			return;
 		}
-	}
 
-	private void tickMultiblock(BlockPos targetPos) {
-		List<SoulExtractorBlockEntity> group = new ArrayList<>();
-		BlockPos lowestPos = null;
+		Direction facing = state.getValue(PotentiaExtractorBlock.FACING);
+		BlockPos targetPos = worldPosition.relative(facing);
+		BlockState targetState = level.getBlockState(targetPos);
 
-		for (Direction d : Direction.values()) {
-			BlockPos adjPos = targetPos.relative(d);
-			if (!level.isLoaded(adjPos)) continue;
+		if (!targetState.is(ModTags.Blocks.SOUL_BUD_GROWTH_BLOCKS)) {
+			if (currentExtractionPoints != 0.0f || currentOutputRate != 0L) {
+				updateStatus(0.0f, 0L, false);
+			}
+			return;
+		}
 
-			BlockState adjState = level.getBlockState(adjPos);
-			if (adjState.getBlock() instanceof SoulExtractorBlock) {
-				Direction adjFacing = adjState.getValue(SoulExtractorBlock.FACING);
-				if (adjFacing == d.getOpposite()) {
-					BlockEntity be = level.getBlockEntity(adjPos);
-					if (be instanceof SoulExtractorBlockEntity extractor) {
-						group.add(extractor);
-						if (lowestPos == null || comparePos(adjPos, lowestPos) < 0) {
-							lowestPos = adjPos;
+		// Find all active extractors pointing at this growth block
+		List<PotentiaExtractorBlockEntity> activeExtractors = new ArrayList<>();
+		PotentiaExtractorBlockEntity lowestPosExtractor = null;
+
+		for (Direction dir : Direction.values()) {
+			BlockPos checkPos = targetPos.relative(dir);
+			BlockState checkState = level.getBlockState(checkPos);
+			if (checkState.getBlock() instanceof PotentiaExtractorBlock) {
+				Direction extFacing = checkState.getValue(PotentiaExtractorBlock.FACING);
+				if (checkPos.relative(extFacing).equals(targetPos)) {
+					BlockEntity be = level.getBlockEntity(checkPos);
+					if (be instanceof PotentiaExtractorBlockEntity extractor) {
+						if (extractor.getSpeed() != 0 && !extractor.isOverStressed() && extractor.isSpeedRequirementFulfilled()) {
+							activeExtractors.add(extractor);
+							if (lowestPosExtractor == null || comparePos(extractor.getBlockPos(), lowestPosExtractor.getBlockPos()) < 0) {
+								lowestPosExtractor = extractor;
+							}
 						}
 					}
 				}
 			}
 		}
 
-		boolean amController = lowestPos != null && lowestPos.equals(this.worldPosition);
-
-		if (amController && !group.isEmpty()) {
+		// Only the lowest-coordinate extractor processes multiblock calculations and notifies members
+		if (lowestPosExtractor == this) {
 			float totalPoints = 0.0f;
-			List<SoulExtractorBlockEntity> activeExtractors = new ArrayList<>();
-			List<Float> activePoints = new ArrayList<>();
+			float[] individualPoints = new float[activeExtractors.size()];
 
-			for (SoulExtractorBlockEntity extractor : group) {
-				if (extractor.isOverStressed() || !extractor.isSpeedRequirementFulfilled()) {
-					continue;
-				}
-				float pts = SoulExtractionMath.calculatePoints(extractor.getSpeed(), extractor.getMinSpeed());
-				if (pts > 0.0f) {
-					activeExtractors.add(extractor);
-					activePoints.add(pts);
-					totalPoints += pts;
-				}
+			for (int i = 0; i < activeExtractors.size(); i++) {
+				PotentiaExtractorBlockEntity extractor = activeExtractors.get(i);
+				float pts = PotentiaExtractionMath.calculatePoints(extractor.getSpeed(), extractor.getMinSpeed());
+				individualPoints[i] = pts;
+				totalPoints += pts;
 			}
 
-			long totalExtracted = SoulExtractionMath.calculateTotalPotentia(totalPoints, SoulExtractionMath.DEFAULT_MAX_POTENTIA_PER_TICK);
-			for (SoulExtractorBlockEntity extractor : group) {
-				boolean isCtrl = extractor == this;
-				float pts = (extractor.isOverStressed() || !extractor.isSpeedRequirementFulfilled())
-						? 0.0f
-						: SoulExtractionMath.calculatePoints(extractor.getSpeed(), extractor.getMinSpeed());
+			long totalExtracted = PotentiaExtractionMath.calculateTotalPotentia(totalPoints, PotentiaExtractionMath.DEFAULT_MAX_POTENTIA_PER_TICK);
+
+			for (int i = 0; i < activeExtractors.size(); i++) {
+				PotentiaExtractorBlockEntity extractor = activeExtractors.get(i);
+				float pts = individualPoints[i];
+				boolean isCtrl = (extractor == this);
 				long share = 0L;
-				if (totalExtracted > 0 && totalPoints > 0.0f && pts > 0.0f) {
-					share = SoulExtractionMath.calculateShare(pts, totalPoints, totalExtracted);
+				if (totalPoints > 0.0f && pts > 0.0f) {
+					share = PotentiaExtractionMath.calculateShare(pts, totalPoints, totalExtracted);
 				}
 				extractor.updateStatus(pts, share, isCtrl);
 				if (share > 0) {
@@ -257,7 +258,7 @@ public class SoulExtractorBlockEntity extends KineticBlockEntity {
 			return;
 		}
 
-		Direction facing = getBlockState().getValue(SoulExtractorBlock.FACING);
+		Direction facing = getBlockState().getValue(PotentiaExtractorBlock.FACING);
 		Direction outputSide = facing.getOpposite();
 		BlockPos outputPos = worldPosition.relative(outputSide);
 		if (!level.isLoaded(outputPos)) {
@@ -292,7 +293,7 @@ public class SoulExtractorBlockEntity extends KineticBlockEntity {
 			return true;
 		}
 
-		PotentiaTooltipHelper.langBuilder().translate("gui.goggles.soul_extractor")
+		PotentiaTooltipHelper.langBuilder().translate("gui.goggles.potentia_extractor")
 				.forGoggles(tooltip);
 
 		float points = getCurrentExtractionPoints();

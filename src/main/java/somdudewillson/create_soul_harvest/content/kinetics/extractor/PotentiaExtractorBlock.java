@@ -1,7 +1,7 @@
 package somdudewillson.create_soul_harvest.content.kinetics.extractor;
 
+import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
-import com.simibubi.create.content.kinetics.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.kinetics.simpleRelays.ICogWheel;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
@@ -20,15 +20,22 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import somdudewillson.create_soul_harvest.registry.ModBlockEntities;
 import somdudewillson.create_soul_harvest.registry.ModTags;
 
-public class SoulExtractorBlock extends DirectionalKineticBlock
-		implements SimpleWaterloggedBlock, ICogWheel, IBE<SoulExtractorBlockEntity> {
+public class PotentiaExtractorBlock extends DirectionalKineticBlock
+		implements SimpleWaterloggedBlock, ICogWheel, IBE<PotentiaExtractorBlockEntity> {
 
-	public SoulExtractorBlock(Properties properties) {
+	public PotentiaExtractorBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(super.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+		return AllShapes.CASING_11PX.get(state.getValue(FACING));
 	}
 
 	@Override
@@ -81,7 +88,7 @@ public class SoulExtractorBlock extends DirectionalKineticBlock
 			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		}
 		if (!world.isClientSide()) {
-			withBlockEntityDo(world, pos, SoulExtractorBlockEntity::onNeighborUpdate);
+			withBlockEntityDo(world, pos, PotentiaExtractorBlockEntity::onNeighborUpdate);
 		}
 		return state;
 	}
@@ -90,7 +97,7 @@ public class SoulExtractorBlock extends DirectionalKineticBlock
 	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block otherBlock, BlockPos neighborPos, boolean isMoving) {
 		super.neighborChanged(state, world, pos, otherBlock, neighborPos, isMoving);
 		if (!world.isClientSide()) {
-			withBlockEntityDo(world, pos, SoulExtractorBlockEntity::onNeighborUpdate);
+			withBlockEntityDo(world, pos, PotentiaExtractorBlockEntity::onNeighborUpdate);
 		}
 	}
 
@@ -101,12 +108,12 @@ public class SoulExtractorBlock extends DirectionalKineticBlock
 	}
 
 	@Override
-	public Class<SoulExtractorBlockEntity> getBlockEntityClass() {
-		return SoulExtractorBlockEntity.class;
+	public Class<PotentiaExtractorBlockEntity> getBlockEntityClass() {
+		return PotentiaExtractorBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends SoulExtractorBlockEntity> getBlockEntityType() {
-		return ModBlockEntities.SOUL_EXTRACTOR_BE.get();
+	public BlockEntityType<? extends PotentiaExtractorBlockEntity> getBlockEntityType() {
+		return ModBlockEntities.POTENTIA_EXTRACTOR_BE.get();
 	}
 }

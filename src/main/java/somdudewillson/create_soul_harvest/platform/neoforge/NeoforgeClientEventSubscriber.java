@@ -28,6 +28,7 @@ import somdudewillson.create_soul_harvest.client.texture.dynamic.CompositeItemBa
 import somdudewillson.create_soul_harvest.client.texture.palette.ClientPatternDumpCommand;
 import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextureManager;
 import somdudewillson.create_soul_harvest.compat.jei.SoulHarvestJeiHelper;
+import somdudewillson.create_soul_harvest.content.kinetics.extractor.PotentiaExtractorRenderer;
 import somdudewillson.create_soul_harvest.content.recipe.RecipeSoulTracker;
 import somdudewillson.create_soul_harvest.registry.ModParticleTypes;
 
@@ -37,6 +38,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import somdudewillson.create_soul_harvest.registry.ModBlockEntities;
 import somdudewillson.create_soul_harvest.registry.ModCreativeTabs;
 import somdudewillson.create_soul_harvest.registry.ModEntityTypes;
 
@@ -61,6 +63,7 @@ public class NeoforgeClientEventSubscriber {
 		event.registerEntityRenderer(ModEntityTypes.SPELL_THINKER.get(), NoopRenderer::new);
 		event.registerEntityRenderer(ModEntityTypes.CONTAGION_CHARGE.get(), p -> new ThrownItemRenderer<>(p, 0.75F, true));
 		event.registerEntityRenderer(ModEntityTypes.FIREBOLT.get(), NoopRenderer::new);
+		event.registerBlockEntityRenderer(ModBlockEntities.POTENTIA_EXTRACTOR_BE.get(), PotentiaExtractorRenderer::new);
 	}
 
 	@SubscribeEvent

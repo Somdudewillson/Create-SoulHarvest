@@ -14,7 +14,7 @@ import somdudewillson.redsparklib.common.data.builder.BlockRegistryBuilder.Block
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.block.*;
 import somdudewillson.create_soul_harvest.content.conduit.PotentiaConduitBlock;
-import somdudewillson.create_soul_harvest.content.kinetics.extractor.SoulExtractorBlock;
+import somdudewillson.create_soul_harvest.content.kinetics.extractor.PotentiaExtractorBlock;
 import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirBlock;
 
 public class ModBlocks {
@@ -22,8 +22,11 @@ public class ModBlocks {
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(Registries.BLOCK, SoulHarvestMod.MOD_ID);
 	public static final BlockRegistryBuilderFactory BLOCK_BUILDER_FACTORY = new BlockRegistryBuilderFactory(SoulHarvestMod.MOD_ID, BLOCKS, ModItems.ITEMS);
 
-	public static final DeferredHolder<Block, SoulExtractorBlock> SOUL_EXTRACTOR = BLOCKS.register("soul_extractor",
-			() -> new SoulExtractorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).strength(2.5f).requiresCorrectToolForDrops()));
+	public static final DeferredHolder<Block, PotentiaExtractorBlock> POTENTIA_EXTRACTOR = BLOCKS.register("potentia_extractor",
+			() -> new PotentiaExtractorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).strength(2.5f).requiresCorrectToolForDrops()));
+
+	@Deprecated
+	public static final DeferredHolder<Block, PotentiaExtractorBlock> SOUL_EXTRACTOR = POTENTIA_EXTRACTOR;
 
 	public static final DeferredHolder<Block, PotentiaConduitBlock> POTENTIA_CONDUIT = BLOCKS.register("potentia_conduit",
 			() -> new PotentiaConduitBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.COPPER).strength(1.5f).noOcclusion()));

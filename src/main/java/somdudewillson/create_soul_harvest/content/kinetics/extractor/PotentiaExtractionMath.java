@@ -1,6 +1,6 @@
 package somdudewillson.create_soul_harvest.content.kinetics.extractor;
 
-public class SoulExtractionMath {
+public class PotentiaExtractionMath {
 
 	public static final float DEFAULT_MIN_RPM = 30.0f;
 	public static final float MAX_RPM = 256.0f;
@@ -18,7 +18,7 @@ public class SoulExtractionMath {
 
 	/**
 	 * Calculates extraction points for a single extractor based on input RPM and minimum required RPM.
-	 * Returns 0 if |RPM| < minRpm. Scales with diminishing returns up to MAX_RPM.
+	 * Returns 0 if {@code |RPM| < minRpm}. Scales with diminishing returns up to MAX_RPM.
 	 */
 	public static float calculatePoints(float rpm, float minRpm) {
 		float absRpm = Math.abs(rpm);

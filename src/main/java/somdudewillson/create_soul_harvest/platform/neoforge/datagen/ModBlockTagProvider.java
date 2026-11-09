@@ -47,7 +47,7 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				.addTag(ModTags.Blocks.FORGE_INHIBITS_SPAWNERS);
 		tag(ModTags.Blocks.FORGE_INHIBITS_SPAWNERS)
 				.replace(false)
-				.add(ModBlocks.SOUL_EXTRACTOR.get())
+				.add(ModBlocks.POTENTIA_EXTRACTOR.get())
 				.addTag(ModTags.Blocks.SOUL_BUD_BLOCKS);
 		
 		// Create tags

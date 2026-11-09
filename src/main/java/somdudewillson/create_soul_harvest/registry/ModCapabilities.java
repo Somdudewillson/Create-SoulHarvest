@@ -66,7 +66,7 @@ public class ModCapabilities {
 
 		event.registerBlockEntity(
 				POTENTIA_HANDLER,
-				ModBlockEntities.SOUL_EXTRACTOR_BE.get(),
+				ModBlockEntities.POTENTIA_EXTRACTOR_BE.get(),
 				(be, side) -> be.getPotentiaHandler(side)
 		);
 

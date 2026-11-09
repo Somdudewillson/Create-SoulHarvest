@@ -49,8 +49,8 @@ public class ModItems {
 			() -> new BlockItem(ModBlocks.MAGIC_GLASS.get(), new Item.Properties()));
 	public static final DeferredHolder<Item, BlockItem> DENSE_HYPOTHETICAL = registerWithTab("dense_hypothetical",
 			() -> new BlockItem(ModBlocks.DENSE_HYPOTHETICAL.get(), new Item.Properties()));
-	public static final DeferredHolder<Item, BlockItem> SOUL_EXTRACTOR = registerWithTab("soul_extractor",
-			() -> new BlockItem(ModBlocks.SOUL_EXTRACTOR.get(), new Item.Properties()));
+	public static final DeferredHolder<Item, BlockItem> POTENTIA_EXTRACTOR = registerWithTab("potentia_extractor",
+			() -> new BlockItem(ModBlocks.POTENTIA_EXTRACTOR.get(), new Item.Properties()));
 	public static final DeferredHolder<Item, BlockItem> POTENTIA_CONDUIT = registerWithTab("potentia_conduit",
 			() -> new BlockItem(ModBlocks.POTENTIA_CONDUIT.get(), new Item.Properties()));
 	public static final DeferredHolder<Item, BlockItem> POTENTIA_RESERVOIR = registerWithTab("potentia_reservoir",

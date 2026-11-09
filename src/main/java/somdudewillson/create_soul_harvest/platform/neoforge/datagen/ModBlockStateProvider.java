@@ -100,6 +100,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		// Wither Slurry (particle texture)
 		simpleBlock(ModBlocks.WITHER_SLURRY.get(),
 				models().getBuilder("wither_slurry").texture("particle", modLoc("block/wither_slurry_still")));
+
+		// Potentia Extractor
+		ModelFile potentiaExtractorModel = models().getExistingFile(modLoc("block/potentia_extractor/block"));
+		directionalBlock(ModBlocks.POTENTIA_EXTRACTOR.get(), potentiaExtractorModel);
 	}
 }
 //?}

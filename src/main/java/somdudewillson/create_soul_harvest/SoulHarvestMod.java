@@ -2,6 +2,7 @@ package somdudewillson.create_soul_harvest;
 
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.resources.ResourceLocation;
+import somdudewillson.create_soul_harvest.client.ModVisualizers;
 import somdudewillson.create_soul_harvest.config.graph.ModDependencyGraph;
 import somdudewillson.create_soul_harvest.content.ponder.SoulHarvestPonderPlugin;
 import somdudewillson.create_soul_harvest.platform.Platform;
@@ -36,6 +37,7 @@ public class SoulHarvestMod {
 		LOGGER.debug("{}: { version: {}; friendly_name: {} }", MOD_ID, MOD_VERSION, MOD_FRIENDLY_NAME);
 		
 		PonderIndex.addPlugin(new SoulHarvestPonderPlugin());
+		ModVisualizers.init();
 	}
 
 	public static Platform xplat() {

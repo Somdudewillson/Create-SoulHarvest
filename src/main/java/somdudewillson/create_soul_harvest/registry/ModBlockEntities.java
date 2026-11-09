@@ -8,7 +8,7 @@ import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.block.AbsoluteIceBlockEntity;
 import somdudewillson.create_soul_harvest.content.block.AnimaGlassBlockEntity;
 import somdudewillson.create_soul_harvest.content.block.MidasCoreBlockEntity;
-import somdudewillson.create_soul_harvest.content.kinetics.extractor.SoulExtractorBlockEntity;
+import somdudewillson.create_soul_harvest.content.kinetics.extractor.PotentiaExtractorBlockEntity;
 import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirBlockEntity;
 
 public class ModBlockEntities {
@@ -24,8 +24,11 @@ public class ModBlockEntities {
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AbsoluteIceBlockEntity>> ABSOLUTE_ICE_BE = BLOCK_ENTITY_TYPES.register("absolute_ice",
 			() -> BlockEntityType.Builder.of(AbsoluteIceBlockEntity::new, ModBlocks.ABSOLUTE_ICE.get()).build(null));
 
-	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SoulExtractorBlockEntity>> SOUL_EXTRACTOR_BE = BLOCK_ENTITY_TYPES.register("soul_extractor",
-			() -> BlockEntityType.Builder.of(SoulExtractorBlockEntity::new, ModBlocks.SOUL_EXTRACTOR.get()).build(null));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PotentiaExtractorBlockEntity>> POTENTIA_EXTRACTOR_BE = BLOCK_ENTITY_TYPES.register("potentia_extractor",
+			() -> BlockEntityType.Builder.of(PotentiaExtractorBlockEntity::new, ModBlocks.POTENTIA_EXTRACTOR.get()).build(null));
+
+	@Deprecated
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PotentiaExtractorBlockEntity>> SOUL_EXTRACTOR_BE = POTENTIA_EXTRACTOR_BE;
 
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PotentiaReservoirBlockEntity>> POTENTIA_RESERVOIR_BE = BLOCK_ENTITY_TYPES.register("potentia_reservoir",
 			() -> BlockEntityType.Builder.of(PotentiaReservoirBlockEntity::new, ModBlocks.POTENTIA_RESERVOIR.get()).build(null));
