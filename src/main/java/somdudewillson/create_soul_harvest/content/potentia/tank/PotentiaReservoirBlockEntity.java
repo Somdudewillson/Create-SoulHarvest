@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.content.potentia.IPotentiaHandler;
 import somdudewillson.create_soul_harvest.content.potentia.PotentiaTank;
 import somdudewillson.create_soul_harvest.content.potentia.PotentiaTooltipHelper;
-import somdudewillson.create_soul_harvest.content.potentia.SoulPotentiaStack;
 import somdudewillson.create_soul_harvest.registry.ModBlockEntities;
 
 import java.util.List;

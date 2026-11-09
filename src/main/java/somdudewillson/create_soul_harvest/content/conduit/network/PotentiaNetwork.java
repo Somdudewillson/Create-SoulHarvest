@@ -87,20 +87,34 @@ public class PotentiaNetwork {
 		return network;
 	}
 
-	public static void distributeFrom(Level level, BlockPos supplierPos, Direction pushSide, IPotentiaHandler supplier) {
+	public static long distributeStack(Level level, BlockPos supplierPos, Direction pushSide, SoulPotentiaStack stack) {
+		if (stack == null || stack.isEmpty()) {
+			return 0L;
+		}
 		BlockPos startPipe = supplierPos.relative(pushSide);
 		if (!(level.getBlockState(startPipe).getBlock() instanceof PotentiaConduitBlock)) {
-			return;
+			return 0L;
 		}
 
 		PotentiaNetwork network = getOrCreate(level, startPipe);
-		network.distribute(level, supplierPos, supplier);
+		return network.distribute(level, supplierPos, stack);
 	}
 
-	public void distribute(Level level, BlockPos supplierPos, IPotentiaHandler supplier) {
+	public static void distributeFrom(Level level, BlockPos supplierPos, Direction pushSide, IPotentiaHandler supplier) {
 		SoulPotentiaStack sample = supplier.drain(1000L, IPotentiaHandler.PotentiaAction.SIMULATE);
 		if (sample.isEmpty()) {
 			return;
+		}
+
+		long accepted = distributeStack(level, supplierPos, pushSide, sample);
+		if (accepted > 0) {
+			supplier.drain(accepted, IPotentiaHandler.PotentiaAction.EXECUTE);
+		}
+	}
+
+	public long distribute(Level level, BlockPos supplierPos, SoulPotentiaStack stack) {
+		if (stack == null || stack.isEmpty()) {
+			return 0L;
 		}
 
 		List<ConsumerTarget> validConsumers = new ArrayList<>();
@@ -118,38 +132,40 @@ public class PotentiaNetwork {
 			}
 
 			// Type and collision checking
-			if (!handler.isPotentiaValid(0, sample)) {
+			if (!handler.isPotentiaValid(0, stack)) {
 				continue;
 			}
 
-			long simulatedAccept = handler.fill(sample.copy(), IPotentiaHandler.PotentiaAction.SIMULATE);
+			long simulatedAccept = handler.fill(stack.copy(), IPotentiaHandler.PotentiaAction.SIMULATE);
 			if (simulatedAccept > 0) {
 				validConsumers.add(new ConsumerTarget(handler, simulatedAccept));
 			}
 		}
 
 		if (validConsumers.isEmpty()) {
-			return;
+			return 0L;
 		}
 
-		long toDistribute = sample.getAmount();
+		long toDistribute = stack.getAmount();
 		long remaining = toDistribute;
+		long totalAccepted = 0L;
 
 		for (int i = 0; i < validConsumers.size(); i++) {
 			ConsumerTarget target = validConsumers.get(i);
 			long share = Math.min(target.maxAccepted(), Math.max(1L, remaining / (validConsumers.size() - i)));
-			SoulPotentiaStack offer = sample.copy();
+			SoulPotentiaStack offer = stack.copy();
 			offer.setAmount(share);
 
 			long accepted = target.handler().fill(offer, IPotentiaHandler.PotentiaAction.EXECUTE);
 			if (accepted > 0) {
-				supplier.drain(accepted, IPotentiaHandler.PotentiaAction.EXECUTE);
+				totalAccepted += accepted;
 				remaining -= accepted;
 			}
 			if (remaining <= 0) {
 				break;
 			}
 		}
+		return totalAccepted;
 	}
 
 	private record ConsumerTarget(IPotentiaHandler handler, long maxAccepted) {}
