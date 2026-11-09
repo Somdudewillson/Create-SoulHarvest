@@ -1,8 +1,12 @@
 package somdudewillson.create_soul_harvest.content.conduit;
 
+import com.simibubi.create.content.equipment.wrench.IWrenchableWithBracket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -14,18 +18,22 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.content.conduit.network.PotentiaNetwork;
 import somdudewillson.create_soul_harvest.content.potentia.IPotentiaHandler;
 import somdudewillson.create_soul_harvest.content.potentia.IPotentiaTransporter;
 import somdudewillson.create_soul_harvest.content.potentia.PotentiaHelper;
+import somdudewillson.create_soul_harvest.registry.ModBlocks;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 
-public class PotentiaConduitBlock extends Block implements SimpleWaterloggedBlock, IPotentiaTransporter {
+public class PotentiaConduitBlock extends Block implements SimpleWaterloggedBlock, IPotentiaTransporter, IWrenchableWithBracket {
 
 	public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
 	public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
@@ -126,10 +134,66 @@ public class PotentiaConduitBlock extends Block implements SimpleWaterloggedBloc
 		}
 	}
 
+	@Override
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
+		if (tryRemoveBracket(context))
+			return InteractionResult.SUCCESS;
+
+		Level world = context.getLevel();
+		BlockPos pos = context.getClickedPos();
+		Direction clickedFace = context.getClickedFace();
+
+		Direction.Axis axis = getStraightAxis(state);
+		if (axis == null) {
+			Vec3 clickLocation = context.getClickLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
+			double closest = Double.MAX_VALUE;
+			Direction argClosest = Direction.UP;
+			for (Direction direction : Direction.values()) {
+				if (clickedFace.getAxis() == direction.getAxis())
+					continue;
+				Vec3 centerOf = Vec3.atCenterOf(direction.getNormal());
+				double distance = centerOf.distanceToSqr(clickLocation);
+				if (distance < closest) {
+					closest = distance;
+					argClosest = direction;
+				}
+			}
+			axis = argClosest.getAxis();
+		}
+
+		if (clickedFace.getAxis() == axis)
+			return InteractionResult.PASS;
+
+		if (!world.isClientSide()) {
+			BlockState windowedState = ModBlocks.WINDOWED_POTENTIA_CONDUIT.get().defaultBlockState()
+					.setValue(WindowedPotentiaConduitBlock.AXIS, axis)
+					.setValue(WindowedPotentiaConduitBlock.WATERLOGGED, state.getValue(WATERLOGGED));
+			world.setBlock(pos, windowedState, 3);
+			PotentiaNetwork.invalidate(pos);
+		}
+		return InteractionResult.SUCCESS;
+	}
+
+	@Nullable
+	public static Direction.Axis getStraightAxis(BlockState state) {
+		boolean x = state.getValue(EAST) && state.getValue(WEST) && !state.getValue(UP) && !state.getValue(DOWN) && !state.getValue(NORTH) && !state.getValue(SOUTH);
+		boolean y = state.getValue(UP) && state.getValue(DOWN) && !state.getValue(EAST) && !state.getValue(WEST) && !state.getValue(NORTH) && !state.getValue(SOUTH);
+		boolean z = state.getValue(NORTH) && state.getValue(SOUTH) && !state.getValue(EAST) && !state.getValue(WEST) && !state.getValue(UP) && !state.getValue(DOWN);
+		if (x) return Direction.Axis.X;
+		if (y) return Direction.Axis.Y;
+		if (z) return Direction.Axis.Z;
+		return null;
+	}
+
+	@Override
+	public Optional<ItemStack> removeBracket(BlockGetter world, BlockPos pos, boolean inOnReplacedContext) {
+		return Optional.empty();
+	}
+
 	public static boolean canConnectTo(LevelAccessor level, BlockPos targetPos, Direction sideOnTarget) {
 		BlockState targetState = level.getBlockState(targetPos);
-		if (targetState.getBlock() instanceof PotentiaConduitBlock) {
-			return true;
+		if (targetState.getBlock() instanceof IPotentiaTransporter transporter) {
+			return transporter.canConnect(targetState, sideOnTarget);
 		}
 		if (level instanceof Level l) {
 			IPotentiaHandler handler = PotentiaHelper.getHandler(l, targetPos, sideOnTarget);

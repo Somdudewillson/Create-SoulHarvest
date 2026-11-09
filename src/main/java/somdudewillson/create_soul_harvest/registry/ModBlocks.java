@@ -14,6 +14,7 @@ import somdudewillson.redsparklib.common.data.builder.BlockRegistryBuilder.Block
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.block.*;
 import somdudewillson.create_soul_harvest.content.conduit.PotentiaConduitBlock;
+import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlock;
 import somdudewillson.create_soul_harvest.content.kinetics.extractor.PotentiaExtractorBlock;
 import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirBlock;
 
@@ -30,6 +31,9 @@ public class ModBlocks {
 
 	public static final DeferredHolder<Block, PotentiaConduitBlock> POTENTIA_CONDUIT = BLOCKS.register("potentia_conduit",
 			() -> new PotentiaConduitBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.COPPER).strength(1.5f).noOcclusion()));
+
+	public static final DeferredHolder<Block, WindowedPotentiaConduitBlock> WINDOWED_POTENTIA_CONDUIT = BLOCKS.register("windowed_potentia_conduit",
+			() -> new WindowedPotentiaConduitBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.COPPER).strength(1.5f).noOcclusion()));
 
 	public static final DeferredHolder<Block, PotentiaReservoirBlock> POTENTIA_RESERVOIR = BLOCKS.register("potentia_reservoir",
 			() -> new PotentiaReservoirBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.COPPER).strength(2.0f)));

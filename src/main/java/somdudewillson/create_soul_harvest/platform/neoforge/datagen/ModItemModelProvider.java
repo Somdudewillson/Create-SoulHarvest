@@ -38,6 +38,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 		withExistingParent("magic_glass", modLoc("block/magic_glass"));
 		withExistingParent("dense_hypothetical", modLoc("block/dense_hypothetical"));
 		withExistingParent("potentia_extractor", modLoc("block/potentia_extractor/item"));
+		withExistingParent("potentia_conduit", modLoc("block/potentia_conduit/item"));
 	}
 }
 //?}

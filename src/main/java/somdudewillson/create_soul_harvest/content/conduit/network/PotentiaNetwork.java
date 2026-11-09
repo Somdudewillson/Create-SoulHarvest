@@ -4,8 +4,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import somdudewillson.create_soul_harvest.content.conduit.PotentiaConduitBlock;
+import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlock;
+import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlockEntity;
 import somdudewillson.create_soul_harvest.content.potentia.IPotentiaHandler;
+import somdudewillson.create_soul_harvest.content.potentia.IPotentiaTransporter;
 import somdudewillson.create_soul_harvest.content.potentia.PotentiaHelper;
 import somdudewillson.create_soul_harvest.content.potentia.SoulPotentiaStack;
 
@@ -55,7 +57,7 @@ public class PotentiaNetwork {
 		while (!frontier.isEmpty() && network.conduitPositions.size() < MAX_NETWORK_SIZE) {
 			BlockPos current = frontier.poll();
 			BlockState currentState = level.getBlockState(current);
-			if (!(currentState.getBlock() instanceof PotentiaConduitBlock conduit)) {
+			if (!(currentState.getBlock() instanceof IPotentiaTransporter conduit)) {
 				continue;
 			}
 
@@ -70,9 +72,11 @@ public class PotentiaNetwork {
 				}
 
 				BlockState neighborState = level.getBlockState(neighborPos);
-				if (neighborState.getBlock() instanceof PotentiaConduitBlock) {
-					if (network.conduitPositions.add(neighborPos)) {
-						frontier.add(neighborPos);
+				if (neighborState.getBlock() instanceof IPotentiaTransporter neighborTransporter) {
+					if (neighborTransporter.canConnect(neighborState, d.getOpposite())) {
+						if (network.conduitPositions.add(neighborPos)) {
+							frontier.add(neighborPos);
+						}
 					}
 				} else {
 					Direction sideOnNeighbor = d.getOpposite();
@@ -92,7 +96,7 @@ public class PotentiaNetwork {
 			return 0L;
 		}
 		BlockPos startPipe = supplierPos.relative(pushSide);
-		if (!(level.getBlockState(startPipe).getBlock() instanceof PotentiaConduitBlock)) {
+		if (!(level.getBlockState(startPipe).getBlock() instanceof IPotentiaTransporter)) {
 			return 0L;
 		}
 
@@ -165,6 +169,19 @@ public class PotentiaNetwork {
 				break;
 			}
 		}
+
+		if (totalAccepted > 0) {
+			for (BlockPos pos : conduitPositions) {
+				if (level.isLoaded(pos) && level.getBlockEntity(pos) instanceof WindowedPotentiaConduitBlockEntity windowedBe) {
+					BlockState state = level.getBlockState(pos);
+					if (state.hasProperty(WindowedPotentiaConduitBlock.AXIS)) {
+						Direction flowDir = Direction.get(Direction.AxisDirection.POSITIVE, state.getValue(WindowedPotentiaConduitBlock.AXIS));
+						windowedBe.recordFlow(stack, flowDir);
+					}
+				}
+			}
+		}
+
 		return totalAccepted;
 	}
 

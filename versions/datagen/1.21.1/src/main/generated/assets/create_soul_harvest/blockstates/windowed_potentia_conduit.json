@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "create_soul_harvest:block/potentia_conduit/window",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "create_soul_harvest:block/potentia_conduit/window"
+    },
+    "axis=z": {
+      "model": "create_soul_harvest:block/potentia_conduit/window",
+      "x": 90
+    }
+  }
+}

@@ -8,6 +8,7 @@ import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.block.AbsoluteIceBlockEntity;
 import somdudewillson.create_soul_harvest.content.block.AnimaGlassBlockEntity;
 import somdudewillson.create_soul_harvest.content.block.MidasCoreBlockEntity;
+import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlockEntity;
 import somdudewillson.create_soul_harvest.content.kinetics.extractor.PotentiaExtractorBlockEntity;
 import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirBlockEntity;
 
@@ -32,4 +33,7 @@ public class ModBlockEntities {
 
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PotentiaReservoirBlockEntity>> POTENTIA_RESERVOIR_BE = BLOCK_ENTITY_TYPES.register("potentia_reservoir",
 			() -> BlockEntityType.Builder.of(PotentiaReservoirBlockEntity::new, ModBlocks.POTENTIA_RESERVOIR.get()).build(null));
+
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WindowedPotentiaConduitBlockEntity>> WINDOWED_POTENTIA_CONDUIT_BE = BLOCK_ENTITY_TYPES.register("windowed_potentia_conduit",
+			() -> BlockEntityType.Builder.of(WindowedPotentiaConduitBlockEntity::new, ModBlocks.WINDOWED_POTENTIA_CONDUIT.get()).build(null));
 }

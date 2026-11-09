@@ -1,0 +1,387 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/lu_x"
+      },
+      "when": {
+        "down": "false",
+        "north": "false",
+        "south": "true",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/ru_x"
+      },
+      "when": {
+        "down": "false",
+        "north": "true",
+        "south": "false",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/ld_x"
+      },
+      "when": {
+        "down": "true",
+        "north": "false",
+        "south": "true",
+        "up": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/rd_x"
+      },
+      "when": {
+        "down": "true",
+        "north": "true",
+        "south": "false",
+        "up": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/ud_x"
+      },
+      "when": {
+        "down": "true",
+        "north": "false",
+        "south": "false",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/u_x"
+      },
+      "when": {
+        "down": "false",
+        "north": "false",
+        "south": "false",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/d_x"
+      },
+      "when": {
+        "down": "true",
+        "north": "false",
+        "south": "false",
+        "up": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/lr_x"
+      },
+      "when": {
+        "down": "false",
+        "north": "true",
+        "south": "true",
+        "up": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/l_x"
+      },
+      "when": {
+        "down": "false",
+        "north": "false",
+        "south": "true",
+        "up": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/r_x"
+      },
+      "when": {
+        "down": "false",
+        "north": "true",
+        "south": "false",
+        "up": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/lu_y"
+      },
+      "when": {
+        "east": "true",
+        "north": "true",
+        "south": "false",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/ru_y"
+      },
+      "when": {
+        "east": "false",
+        "north": "true",
+        "south": "false",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/ld_y"
+      },
+      "when": {
+        "east": "true",
+        "north": "false",
+        "south": "true",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/rd_y"
+      },
+      "when": {
+        "east": "false",
+        "north": "false",
+        "south": "true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/ud_y"
+      },
+      "when": {
+        "east": "false",
+        "north": "true",
+        "south": "true",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/u_y"
+      },
+      "when": {
+        "east": "false",
+        "north": "true",
+        "south": "false",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/d_y"
+      },
+      "when": {
+        "east": "false",
+        "north": "false",
+        "south": "true",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/lr_y"
+      },
+      "when": {
+        "east": "true",
+        "north": "false",
+        "south": "false",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/l_y"
+      },
+      "when": {
+        "east": "true",
+        "north": "false",
+        "south": "false",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/r_y"
+      },
+      "when": {
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/lu_z"
+      },
+      "when": {
+        "down": "false",
+        "east": "true",
+        "up": "true",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/ru_z"
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "up": "true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/ld_z"
+      },
+      "when": {
+        "down": "true",
+        "east": "true",
+        "up": "false",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/rd_z"
+      },
+      "when": {
+        "down": "true",
+        "east": "false",
+        "up": "false",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/ud_z"
+      },
+      "when": {
+        "down": "true",
+        "east": "false",
+        "up": "true",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/u_z"
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "up": "true",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/d_z"
+      },
+      "when": {
+        "down": "true",
+        "east": "false",
+        "up": "false",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/lr_z"
+      },
+      "when": {
+        "down": "false",
+        "east": "true",
+        "up": "false",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/l_z"
+      },
+      "when": {
+        "down": "false",
+        "east": "true",
+        "up": "false",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/r_z"
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "up": "false",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/connection/north",
+        "x": 90
+      },
+      "when": {
+        "down": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/connection/north",
+        "x": 270
+      },
+      "when": {
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/connection/north"
+      },
+      "when": {
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/connection/north",
+        "y": 180
+      },
+      "when": {
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/connection/north",
+        "y": 270
+      },
+      "when": {
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create_soul_harvest:block/potentia_conduit/connection/north",
+        "y": 90
+      },
+      "when": {
+        "east": "true"
+      }
+    }
+  ]
+}
