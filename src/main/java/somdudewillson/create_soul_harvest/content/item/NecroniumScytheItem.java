@@ -28,7 +28,7 @@ import com.google.common.collect.Multimap;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ForgeMod;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import org.jetbrains.annotations.Nullable;
 *///?}
 import somdudewillson.create_soul_harvest.registry.ModDamageSources;
