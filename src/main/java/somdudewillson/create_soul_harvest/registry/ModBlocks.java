@@ -13,11 +13,23 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import somdudewillson.redsparklib.common.data.builder.BlockRegistryBuilder.BlockRegistryBuilderFactory;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.block.*;
+import somdudewillson.create_soul_harvest.content.conduit.PotentiaConduitBlock;
+import somdudewillson.create_soul_harvest.content.kinetics.extractor.SoulExtractorBlock;
+import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirBlock;
 
 public class ModBlocks {
 
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(Registries.BLOCK, SoulHarvestMod.MOD_ID);
 	public static final BlockRegistryBuilderFactory BLOCK_BUILDER_FACTORY = new BlockRegistryBuilderFactory(SoulHarvestMod.MOD_ID, BLOCKS, ModItems.ITEMS);
+
+	public static final DeferredHolder<Block, SoulExtractorBlock> SOUL_EXTRACTOR = BLOCKS.register("soul_extractor",
+			() -> new SoulExtractorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).strength(2.5f).requiresCorrectToolForDrops()));
+
+	public static final DeferredHolder<Block, PotentiaConduitBlock> POTENTIA_CONDUIT = BLOCKS.register("potentia_conduit",
+			() -> new PotentiaConduitBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.COPPER).strength(1.5f).noOcclusion()));
+
+	public static final DeferredHolder<Block, PotentiaReservoirBlock> POTENTIA_RESERVOIR = BLOCKS.register("potentia_reservoir",
+			() -> new PotentiaReservoirBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.COPPER).strength(2.0f)));
 
 	public static final DeferredHolder<Block, SoulBudBlock> SOUL_BUD_SMALL = BLOCKS.register("soul_bud_small",
 			() -> new SoulBudBlock(3, 4, ModBlocks.SOUL_BUD_MEDIUM::get,

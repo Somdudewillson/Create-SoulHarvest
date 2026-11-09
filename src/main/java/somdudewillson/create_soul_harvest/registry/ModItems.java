@@ -49,6 +49,12 @@ public class ModItems {
 			() -> new BlockItem(ModBlocks.MAGIC_GLASS.get(), new Item.Properties()));
 	public static final DeferredHolder<Item, BlockItem> DENSE_HYPOTHETICAL = registerWithTab("dense_hypothetical",
 			() -> new BlockItem(ModBlocks.DENSE_HYPOTHETICAL.get(), new Item.Properties()));
+	public static final DeferredHolder<Item, BlockItem> SOUL_EXTRACTOR = registerWithTab("soul_extractor",
+			() -> new BlockItem(ModBlocks.SOUL_EXTRACTOR.get(), new Item.Properties()));
+	public static final DeferredHolder<Item, BlockItem> POTENTIA_CONDUIT = registerWithTab("potentia_conduit",
+			() -> new BlockItem(ModBlocks.POTENTIA_CONDUIT.get(), new Item.Properties()));
+	public static final DeferredHolder<Item, BlockItem> POTENTIA_RESERVOIR = registerWithTab("potentia_reservoir",
+			() -> new BlockItem(ModBlocks.POTENTIA_RESERVOIR.get(), new Item.Properties()));
 	public static final DeferredHolder<Item, BucketItem> LIQUID_SOUL_CRYSTAL_BUCKET = registerWithTab("liquid_soul_crystal_bucket",
 			() -> new BucketItem(ModFluids.LIQUID_SOUL_CRYSTAL.get(),
 					new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));

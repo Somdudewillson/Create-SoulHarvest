@@ -15,6 +15,9 @@
   "block.create_soul_harvest.magic_glass": "Anima Glass",
   "block.create_soul_harvest.biocide_gas": "Biocide Gas",
   "block.create_soul_harvest.dense_hypothetical": "Dense Hypothetical Block",
+  "block.create_soul_harvest.soul_extractor": "Soul Extractor",
+  "block.create_soul_harvest.potentia_conduit": "Potentia Conduit",
+  "block.create_soul_harvest.potentia_reservoir": "Potentia Reservoir",
   "block.create_soul_harvest.liquid_soul_crystal": "Liquid Soul Crystal",
   "block.create_soul_harvest.wither_slurry": "Wither Slurry",
 
