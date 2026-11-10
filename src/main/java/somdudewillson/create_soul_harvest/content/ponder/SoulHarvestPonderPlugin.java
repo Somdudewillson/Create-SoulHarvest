@@ -26,6 +26,7 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 	
 	public static ResourceLocation SOUL_CRYSTAL = tag("soul_crystal");
 	public static ResourceLocation MAGIC_GOLD = tag("magic_gold");
+	public static ResourceLocation POTENTIA = tag("potentia");
 
 	@Override
 	public String getModId() {
@@ -78,6 +79,13 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 				.item(ModBlocks.GOLD_FOAM.get())
 				.register();
 		
+		helper.registerTag(POTENTIA)
+				.addToIndex()
+				.item(ModBlocks.POTENTIA_EXTRACTOR.get(), true, false)
+				.title("Potentia Manipulators")
+				.description("Components which help relaying and making use of Potentia")
+				.register();
+		
 		
 		helper.addToTag(SOUL_CRYSTAL)
 				.add(ModBlocks.SOUL_CLUSTER.getId())
@@ -92,15 +100,11 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 				.add(ModBlocks.GOLD_FOAM.getId())
 				.add(ModItems.MAGIC_GOLD.getId());
 		
-		helper.registerTag("potentia")
-				.addToIndex()
-				.item(ModBlocks.POTENTIA_EXTRACTOR.get(), true, false)
-				.title("Potentia Manipulators")
-				.description("Components which help relaying and making use of Potentia")
-				.item(ModItems.POTENTIA_CONDUIT.get())
-				.item(ModBlocks.POTENTIA_GROWTH_CATALYST.get())
-				.item(ModBlocks.POTENTIA_RESERVOIR.get())
-				.register();
+		helper.addToTag(POTENTIA)
+				.add(ModBlocks.POTENTIA_EXTRACTOR.getId())
+				.add(ModBlocks.POTENTIA_CONDUIT.getId())
+				.add(ModBlocks.POTENTIA_GROWTH_CATALYST.getId())
+				.add(ModBlocks.POTENTIA_RESERVOIR.getId());
 		
 		helper.addToTag(AllCreatePonderTags.CREATIVE)
 				.add(ModBlocks.POTENTIA_RESERVOIR.getId());
