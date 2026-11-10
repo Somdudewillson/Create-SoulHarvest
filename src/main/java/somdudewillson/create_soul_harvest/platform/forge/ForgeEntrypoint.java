@@ -66,7 +66,10 @@ public class ForgeEntrypoint {
 	}
 
 	public static void onCommonSetup(net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent event) {
-		event.enqueueWork(ModFluids::registerFluidInteractions);
+		event.enqueueWork(() -> {
+			ModFluids.registerFluidInteractions();
+			ModBlocks.registerStressValues();
+		});
 	}
 }
 *///?}

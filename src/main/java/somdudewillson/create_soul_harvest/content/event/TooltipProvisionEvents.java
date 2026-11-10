@@ -49,6 +49,7 @@ public class TooltipProvisionEvents {
 		registerStandardTooltip(ModItems.SOUL_DEPOSIT_SEED);
 		registerStandardTooltipBlock(ModBlocks.MIDAS_CORE);
 		registerStandardTooltipBlock(ModBlocks.ABSOLUTE_ICE);
+		registerStandardTooltipBlock(ModBlocks.POTENTIA_EXTRACTOR);
 		
 		registerTooltip(ModItems.SOUL_BOOK_SIMPLE, FontHelper.Palette.STANDARD_CREATE, SoulBookItem.SoulBookTooltipModifier::new);
 		registerTooltip(ModItems.SOUL_BOOK_STANDARD, FontHelper.Palette.STANDARD_CREATE, SoulBookItem.SoulBookTooltipModifier::new);

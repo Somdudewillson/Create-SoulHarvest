@@ -12,12 +12,14 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import somdudewillson.redsparklib.common.data.builder.BlockRegistryBuilder.BlockRegistryBuilderFactory;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.config.SoulHarvestConfig;
 import somdudewillson.create_soul_harvest.content.block.*;
 import somdudewillson.create_soul_harvest.content.conduit.PotentiaConduitBlock;
 import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlock;
 import somdudewillson.create_soul_harvest.content.kinetics.extractor.PotentiaExtractorBlock;
 import somdudewillson.create_soul_harvest.content.potentia.catalyst.PotentiaGrowthCatalystBlock;
 import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirBlock;
+import com.simibubi.create.api.stress.BlockStressValues;
 
 public class ModBlocks {
 
@@ -157,4 +159,8 @@ public class ModBlocks {
 							.noLootTable()
 							.liquid()
 							.sound(SoundType.EMPTY)));
+
+	public static void registerStressValues() {
+		BlockStressValues.IMPACTS.register(POTENTIA_EXTRACTOR.get(), SoulHarvestConfig::getExtractorStressImpact);
+	}
 }

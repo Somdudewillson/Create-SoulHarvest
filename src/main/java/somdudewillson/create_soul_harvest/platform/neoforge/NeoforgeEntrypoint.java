@@ -54,7 +54,10 @@ public class NeoforgeEntrypoint {
 	}
 
 	public static void onCommonSetup(net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event) {
-		event.enqueueWork(ModFluids::registerFluidInteractions);
+		event.enqueueWork(() -> {
+			ModFluids.registerFluidInteractions();
+			ModBlocks.registerStressValues();
+		});
 	}
 }
 //?}

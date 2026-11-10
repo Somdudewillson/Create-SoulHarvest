@@ -40,6 +40,8 @@ public class SoulHarvestConfig {
 	public static LongValue CATALYST_PASSIVE_DEPLETION_PER_TICK;
 	public static final double CATALYST_THRESHOLD_MULT = 0.5;
 
+	public static DoubleValue EXTRACTOR_STRESS_IMPACT;
+
 	public static void register(ItemDependencyGraph graph) {
 		//? neoforge {
 		ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -113,6 +115,14 @@ public class SoulHarvestConfig {
 
 		builder.pop();
 
+		builder.comment("Potentia Extractor").push("potentiaExtractor");
+
+		EXTRACTOR_STRESS_IMPACT = builder
+				.comment("Stress impact of the Potentia Extractor at 1 RPM (in Stress Units)")
+				.defineInRange("stressImpact", 8.0, 0.0, 1024.0);
+
+		builder.pop();
+
 		COMMON_SPEC = builder.build();
 
 		// Bind config options to items and groups
@@ -136,6 +146,10 @@ public class SoulHarvestConfig {
 
 	public static long getCatalystPassiveDepletionPerTick() {
 		return isLoaded() && CATALYST_PASSIVE_DEPLETION_PER_TICK != null ? CATALYST_PASSIVE_DEPLETION_PER_TICK.get() : 1L;
+	}
+
+	public static double getExtractorStressImpact() {
+		return isLoaded() && EXTRACTOR_STRESS_IMPACT != null ? EXTRACTOR_STRESS_IMPACT.get() : 8.0;
 	}
 
 	//? neoforge {

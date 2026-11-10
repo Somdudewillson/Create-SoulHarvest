@@ -6,6 +6,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -287,10 +288,8 @@ public class PotentiaExtractorBlockEntity extends KineticBlockEntity {
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-
 		if (isOverStressed() || (!isSpeedRequirementFulfilled() && getSpeed() != 0)) {
-			return true;
+			return super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 		}
 
 		PotentiaTooltipHelper.langBuilder().translate("gui.goggles.potentia_extractor")
@@ -340,6 +339,13 @@ public class PotentiaExtractorBlockEntity extends KineticBlockEntity {
 		PotentiaTooltipHelper.langBuilder().text(ChatFormatting.GOLD,
 				PotentiaTooltipHelper.getPotentiaTypeDisplayName(new SoulPotentiaStack(1, getProducedPotentiaType())))
 				.forGoggles(tooltip, 1);
+
+		int sizeBefore = tooltip.size();
+		if (super.addToGoggleTooltip(tooltip, isPlayerSneaking)) {
+			if (sizeBefore > 0) {
+				tooltip.add(sizeBefore, CommonComponents.EMPTY);
+			}
+		}
 
 		return true;
 	}
