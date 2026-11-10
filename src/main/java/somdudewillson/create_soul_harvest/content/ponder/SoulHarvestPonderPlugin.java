@@ -38,6 +38,7 @@ import somdudewillson.create_soul_harvest.content.conduit.network.PotentiaNetwor
 import somdudewillson.create_soul_harvest.content.kinetics.extractor.PotentiaExtractionMath;
 import somdudewillson.create_soul_harvest.content.kinetics.extractor.PotentiaExtractorBlockEntity;
 import somdudewillson.create_soul_harvest.content.potentia.IPotentiaTransporter;
+import somdudewillson.create_soul_harvest.content.potentia.catalyst.PotentiaGrowthCatalystBlock;
 import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirBlock;
 import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirBlockEntity;
 import somdudewillson.create_soul_harvest.content.potentia.tank.ReservoirMode;
@@ -69,7 +70,8 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 					ModBlocks.SOUL_BUD_LARGE.getId(),
 					ModBlocks.SOUL_CLUSTER.getId()
 				)
-			.addStoryBoard(SoulHarvestMod.id("soul_cluster/ponder_soul_cluster"), SoulHarvestPonderPlugin::soulClusterGrowthProgram);
+			.addStoryBoard(SoulHarvestMod.id("soul_cluster/ponder_soul_cluster"), SoulHarvestPonderPlugin::soulClusterGrowthProgram)
+			.addStoryBoard(SoulHarvestMod.id("potentia/ponder_potentia_growth"), SoulHarvestPonderPlugin::potentiaGrowthProgram);
 		
 		helper.forComponents(
 					ModItems.MAGIC_GOLD.getId(),
@@ -90,6 +92,10 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 					ModBlocks.POTENTIA_EXTRACTOR.getId()
 				)
 			.addStoryBoard(SoulHarvestMod.id("potentia/ponder_potentia_extractor"), SoulHarvestPonderPlugin::potentiaExtractorProgram);
+		helper.forComponents(
+					ModBlocks.POTENTIA_GROWTH_CATALYST.getId()
+				)
+			.addStoryBoard(SoulHarvestMod.id("potentia/ponder_potentia_growth"), SoulHarvestPonderPlugin::potentiaGrowthProgram);
 	}
 
 	@Override
@@ -129,7 +135,8 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 				.add(ModBlocks.SOUL_BUD_MEDIUM.getId())
 				.add(ModBlocks.SOUL_BUD_SMALL.getId())
 				.add(ModItems.SOUL_DEPOSIT_SEED.getId())
-				.add(ModItems.SOUL_SHARD.getId());
+				.add(ModItems.SOUL_SHARD.getId())
+				.add(ModItems.POTENTIA_GROWTH_CATALYST.getId());
 		
 		helper.addToTag(MAGIC_GOLD)
 				.add(ModBlocks.MIDAS_CORE.getId())
@@ -574,6 +581,140 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
 			.text("However, this incurs diminishing returns");
+		scene.idle(20*4);
+	}
+	
+	protected static void potentiaGrowthProgram(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+		
+		BlockPos reservoir = util.grid().at(5, 2, 2);
+		BlockPos catalyst = util.grid().at(2, 2, 2);
+		Selection crystals = util.select().position(2,3,2)
+				.add(util.select().position(2,2,3))
+				.add(util.select().position(2,2,1))
+				.add(util.select().position(1,2,2))
+				.add(util.select().position(2,1,2));
+		
+		scene.title("potentia_growth", "Growing Soul Crystals with Potentia");
+		scene.configureBasePlate(0, 0, 5);
+		scene.setSceneOffsetY(1);
+		scene.world().showSection(util.select().layer(0), Direction.UP);
+		scene.idle(15);
+		scene.world().showSection(util.select().position(catalyst), Direction.EAST);
+		scene.world().modifyBlock(catalyst, s->s.setValue(PotentiaGrowthCatalystBlock.LIT, false), false);
+		scene.idle(15);
+
+		scene.overlay().showOutlineWithText(util.select().position(catalyst), 20*4)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("A Potentia Growth Catalyst can be used to grow Soul Crystals without a spawner");
+		scene.idle(20*4);
+		scene.idle(15);
+		
+		scene.rotateCameraY(25f);
+		scene.idle(3);
+		for (int i = 3; i <= 4; i++) {
+			scene.world().showSection(util.select().position(i, 2, 2),  Direction.WEST);
+			scene.idle(3);
+		}
+		scene.idle(5);
+		scene.world().showSection(util.select().position(reservoir), Direction.DOWN);
+		scene.idle(3);
+		propagateConduitUpdates(scene, reservoir);
+		scene.world().modifyBlock(catalyst, s -> s.setValue(PotentiaGrowthCatalystBlock.LIT, true), false);
+		scene.overlay().showText(20*4)
+			.pointAt(util.vector().topOf(3, 2, 2))
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("It must be supplied with Potentia to operate");
+		scene.idle(20*4);
+		scene.idle(15);
+		scene.rotateCameraY(-25f);
+		scene.overlay().showText(20*4)
+			.pointAt(util.vector().topOf(catalyst))
+			.placeNearTarget()
+			.text("An active Growth Catalyst emits light");
+		scene.idle(20*4);
+		scene.idle(15);
+		
+		ItemStack seed = new ItemStack(ModItems.SOUL_DEPOSIT_SEED.get());
+		scene.overlay().showControls(util.vector().blockSurface(catalyst, Direction.WEST), Pointing.LEFT, 20).rightClick()
+			.withItem(seed);
+		scene.idle(5);
+		scene.world().setBlock(
+				catalyst.west(), 
+				ModBlocks.SOUL_BUD_SMALL.get().defaultBlockState()
+					.setValue(SoulBudBlock.FACING, Direction.WEST)
+					.setValue(SoulBudBlock.ACTIVE, true), 
+				false);
+		scene.world().showSection(util.select().position(catalyst.west()), null);
+		scene.idle(35);
+		scene.overlay().showOutlineWithText(util.select().position(catalyst.west()), 20*4)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("Soul Crystals may be planted on an active Growth Catalyst");
+		scene.idle(20*4);
+		scene.idle(25);
+		scene.effects().indicateSuccess(catalyst);
+		scene.world().setBlock(
+				catalyst.west(), 
+				ModBlocks.SOUL_BUD_MEDIUM.get().defaultBlockState()
+					.setValue(SoulBudBlock.FACING, Direction.WEST)
+					.setValue(SoulBudBlock.ACTIVE, true), 
+				false);
+		scene.overlay().showOutlineWithText(util.select().position(catalyst), 20*4)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("Each Soul Crystal growth tick will consume Potentia from the Catalyst's internal buffer");
+		scene.idle(20*1);
+		scene.effects().indicateSuccess(catalyst);
+		scene.world().setBlock(
+				catalyst.west(), 
+				ModBlocks.SOUL_BUD_LARGE.get().defaultBlockState()
+					.setValue(SoulBudBlock.FACING, Direction.WEST)
+					.setValue(SoulBudBlock.ACTIVE, true), 
+				false);
+		scene.idle(20*1);
+		scene.effects().indicateSuccess(catalyst);
+		scene.world().restoreBlocks(util.select().position(catalyst.west()));
+		scene.idle(20*2);
+		scene.idle(25);
+		scene.overlay().showOutlineWithText(util.select().position(catalyst.west()), 20*4)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("Additionally, each Soul Crystal attached to the Catalyst will drain a small amount of Potentia continously");
+		scene.idle(20*4);
+		scene.idle(15);
+
+		scene.overlay().showControls(util.vector().blockSurface(catalyst, Direction.NORTH), Pointing.RIGHT, 20).rightClick()
+			.withItem(seed);
+		scene.idle(5);
+		scene.world().showSection(util.select().position(catalyst.north()), null);
+		scene.idle(30);
+		scene.rotateCameraY(-45f);
+		scene.idle(5);
+		scene.overlay().showControls(util.vector().blockSurface(catalyst, Direction.SOUTH), Pointing.LEFT, 20).rightClick()
+			.withItem(seed);
+		scene.idle(5);
+		scene.world().showSection(util.select().position(catalyst.south()), null);
+		scene.idle(30);
+		scene.rotateCameraY(45f);
+		scene.idle(5);
+		scene.overlay().showControls(util.vector().blockSurface(catalyst, Direction.UP), Pointing.RIGHT, 20).rightClick()
+			.withItem(seed);
+		scene.idle(5);
+		scene.world().showSection(util.select().position(catalyst.above()), null);
+		scene.idle(30);
+		scene.overlay().showControls(util.vector().blockSurface(catalyst, Direction.DOWN), Pointing.LEFT, 20).rightClick()
+			.withItem(seed);
+		scene.idle(5);
+		scene.world().showSection(util.select().position(catalyst.below()), null);
+		scene.idle(30);
+		scene.overlay().showOutlineWithText(crystals, 20*4)
+			.colored(PonderPalette.GREEN)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("Up to five Soul Crystals may be planted on a single Catalyst");
 		scene.idle(20*4);
 	}
 	

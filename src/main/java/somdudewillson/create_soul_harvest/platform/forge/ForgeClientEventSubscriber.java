@@ -23,6 +23,7 @@ import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextu
 import somdudewillson.create_soul_harvest.compat.jei.SoulHarvestJeiHelper;
 import somdudewillson.create_soul_harvest.content.conduit.client.WindowedPotentiaConduitRenderer;
 import somdudewillson.create_soul_harvest.content.kinetics.extractor.PotentiaExtractorRenderer;
+import somdudewillson.create_soul_harvest.content.potentia.catalyst.PotentiaGrowthCatalystBlock;
 import somdudewillson.create_soul_harvest.content.potentia.catalyst.PotentiaGrowthCatalystBlockEntity;
 import somdudewillson.create_soul_harvest.content.potentia.client.PotentiaColorHelper;
 import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirRenderer;
@@ -90,9 +91,13 @@ public class ForgeClientEventSubscriber {
 	public static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
 		event.register(
 				(state, level, pos, tintIndex) -> {
-					if (tintIndex == 0 && level != null && pos != null) {
-						if (level.getBlockEntity(pos) instanceof PotentiaGrowthCatalystBlockEntity be) {
-							return be.getCrystalColor();
+					if (tintIndex == 0) {
+						if (level != null && pos != null && level.getBlockEntity(pos) instanceof PotentiaGrowthCatalystBlockEntity be) {
+							return be.getCrystalColor(state);
+						}
+						if (state != null && state.hasProperty(PotentiaGrowthCatalystBlock.LIT)
+								&& !state.getValue(PotentiaGrowthCatalystBlock.LIT)) {
+							return PotentiaGrowthCatalystBlockEntity.dimColor(PotentiaColorHelper.DEFAULT_PRIMARY, 0.35f);
 						}
 					}
 					return PotentiaColorHelper.DEFAULT_PRIMARY;

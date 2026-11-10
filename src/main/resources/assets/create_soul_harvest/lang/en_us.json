@@ -241,6 +241,15 @@
   "create_soul_harvest.ponder.potentia_extractor.text_3": "The Extractor has no internal buffer - any excess potentia extracted will be lost",
   "create_soul_harvest.ponder.potentia_extractor.text_4": "Additional Extractors may be placed to increase yield",
   "create_soul_harvest.ponder.potentia_extractor.text_5": "However, this incurs diminishing returns",
+  
+  "create_soul_harvest.ponder.potentia_growth.header": "Growing Soul Crystals with Potentia",
+  "create_soul_harvest.ponder.potentia_growth.text_1": "A Potentia Growth Catalyst can be used to grow Soul Crystals without a spawner",
+  "create_soul_harvest.ponder.potentia_growth.text_2": "It must be supplied with Potentia to operate",
+  "create_soul_harvest.ponder.potentia_growth.text_3": "An active Growth Catalyst emits light",
+  "create_soul_harvest.ponder.potentia_growth.text_4": "Soul Crystals may be planted on an active Growth Catalyst",
+  "create_soul_harvest.ponder.potentia_growth.text_5": "Each Soul Crystal growth tick will consume Potentia from the Catalyst's internal buffer",
+  "create_soul_harvest.ponder.potentia_growth.text_6": "Additionally, each Soul Crystal attached to the Catalyst will drain a small amount of Potentia continously",
+  "create_soul_harvest.ponder.potentia_growth.text_7": "Up to five Soul Crystals may be planted on a single Catalyst",
 
 
   "create_soul_harvest.jei.glyph_page_chance_per_page": "12.5% Chance (1 in 8)",

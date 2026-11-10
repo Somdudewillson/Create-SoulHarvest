@@ -52,6 +52,13 @@ public class PotentiaGrowthCatalystBlockEntity extends SmartBlockEntity implemen
 		@Override
 		public long fill(SoulPotentiaStack resource, PotentiaAction action) {
 			if (resource == null || resource.isEmpty()) return 0L;
+			if (isVirtual()) {
+				if (action.execute() && resource.getEntityType() != null && !java.util.Objects.equals(buffer.getEntityType(), resource.getEntityType())) {
+					buffer = new SoulPotentiaStack(resource.getAmount(), resource.getEntityType());
+					notifyUpdate();
+				}
+				return resource.getAmount();
+			}
 			long capacity = getTankCapacity(0);
 			long currentAmount = buffer.getAmount();
 			boolean isMismatch = !buffer.isEmpty() && !SoulPotentiaStack.isSameType(buffer, resource);
@@ -95,7 +102,7 @@ public class PotentiaGrowthCatalystBlockEntity extends SmartBlockEntity implemen
 
 		@Override
 		public boolean canAccept(@Nullable Direction side) {
-			return side == null || side == getBlockState().getValue(PotentiaGrowthCatalystBlock.FACING);
+			return side == null || isVirtual() || side == getBlockState().getValue(PotentiaGrowthCatalystBlock.FACING);
 		}
 
 		@Override
@@ -159,14 +166,30 @@ public class PotentiaGrowthCatalystBlockEntity extends SmartBlockEntity implemen
 	}
 
 	public int getCrystalColor() {
+		return getCrystalColor(null);
+	}
+
+	public int getCrystalColor(@Nullable BlockState state) {
+		if (state == null) {
+			state = getBlockState();
+			if (state == null && level != null) {
+				state = level.getBlockState(worldPosition);
+			}
+		}
 		int primary = PotentiaColorHelper.getColors(buffer).primary();
-		if (!hasEnoughPotentia()) {
+		boolean lit;
+		if (isVirtual() || (state != null && state.hasProperty(PotentiaGrowthCatalystBlock.LIT))) {
+			lit = state != null && state.getValue(PotentiaGrowthCatalystBlock.LIT);
+		} else {
+			lit = hasEnoughPotentia();
+		}
+		if (!lit) {
 			return dimColor(primary, 0.35f);
 		}
 		return primary;
 	}
 
-	private static int dimColor(int rgb, float factor) {
+	public static int dimColor(int rgb, float factor) {
 		int r = (int) (((rgb >> 16) & 0xFF) * factor);
 		int g = (int) (((rgb >> 8) & 0xFF) * factor);
 		int b = (int) ((rgb & 0xFF) * factor);
@@ -175,7 +198,7 @@ public class PotentiaGrowthCatalystBlockEntity extends SmartBlockEntity implemen
 
 	@Nullable
 	public IPotentiaHandler getPotentiaHandler(@Nullable Direction side) {
-		if (side == null || side == getBlockState().getValue(PotentiaGrowthCatalystBlock.FACING)) {
+		if (side == null || isVirtual() || side == getBlockState().getValue(PotentiaGrowthCatalystBlock.FACING)) {
 			return potentiaHandler;
 		}
 		return null;
@@ -193,7 +216,7 @@ public class PotentiaGrowthCatalystBlockEntity extends SmartBlockEntity implemen
 	/*@Override
 	public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> cap, @Nullable Direction side) {
 		if (cap == somdudewillson.create_soul_harvest.registry.ModCapabilities.POTENTIA_HANDLER) {
-			if (side == null || side == getBlockState().getValue(PotentiaGrowthCatalystBlock.FACING)) {
+			if (side == null || isVirtual() || side == getBlockState().getValue(PotentiaGrowthCatalystBlock.FACING)) {
 				return potentiaCapability.cast();
 			}
 			return net.minecraftforge.common.util.LazyOptional.empty();
