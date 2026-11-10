@@ -205,6 +205,8 @@
   "tag.create_soul_harvest.contagion_immune": "Contagion Immune Entities",
   "tag.create_soul_harvest.biocide_immune": "Biocide Immune Entities",
   
+  "create_soul_harvest.ponder.tag.potentia": "Potentia Manipulators",
+  "create_soul_harvest.ponder.tag.potentia.description": "Components which help relaying and making use of Potentia",
   
   "create_soul_harvest.ponder.soul_cluster_growth.header": "Growing Soul Crystals",
   "create_soul_harvest.ponder.soul_cluster_growth.text_1": "Use a seed on any face of a spawner to plant a bud",
