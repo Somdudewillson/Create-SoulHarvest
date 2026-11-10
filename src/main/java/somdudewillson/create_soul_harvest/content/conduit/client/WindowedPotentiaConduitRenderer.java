@@ -13,7 +13,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix4f;
-import somdudewillson.create_soul_harvest.content.conduit.PotentiaConduitBlock;
 import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlock;
 import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlockEntity;
 import somdudewillson.create_soul_harvest.content.potentia.IPotentiaTransporter;
@@ -22,9 +21,12 @@ import somdudewillson.create_soul_harvest.content.potentia.client.PotentiaColorH
 
 public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<WindowedPotentiaConduitBlockEntity> {
 
-	private static final int SEGMENTS = 10;
+	private static final int SEGMENTS = 12;
 	private static final float BOLT_RADIUS = 0.13f;
 	private static final float BOLT_WIDTH = 0.025f;
+	private static final float BASE_JITTER = 0.08f;
+	private static final float PINCH_AMP = 0.8f;
+	private static final float SLOW_SPEED = 0.35f;
 
 	public WindowedPotentiaConduitRenderer(BlockEntityRendererProvider.Context context) {
 	}
@@ -69,6 +71,7 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 
 		float gameTime = (be.getLevel() != null ? be.getLevel().getGameTime() : 0) + partialTicks;
 		float time = gameTime * 0.35f * speedMult;
+		float slowTime = gameTime * SLOW_SPEED * speedMult;
 
 		Matrix4f matrix = ms.last().pose();
 		VertexConsumer builder = buffer.getBuffer(RenderType.lightning());
@@ -89,14 +92,14 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 			int alphaInt = (int) (alpha * 240.0f);
 
 			float baseAngle = (float) (b * (2.0 * Math.PI / 3.0));
-			renderSingleBolt(builder, matrix, b, baseAngle, time, blockSeed, red, green, blue, alphaInt, isNegContinuous, isPosContinuous);
+			renderSingleBolt(builder, matrix, b, baseAngle, time, slowTime, blockSeed, red, green, blue, alphaInt, isNegContinuous, isPosContinuous);
 		}
 
 		ms.popPose();
 	}
 
 	private void renderSingleBolt(VertexConsumer builder, Matrix4f matrix, int boltIndex, float baseAngle,
-								  float time, long blockSeed, int r, int g, int b, int a,
+								  float time, float slowTime, long blockSeed, int r, int g, int b, int a,
 								  boolean isNegContinuous, boolean isPosContinuous) {
 		float[] xPoints = new float[SEGMENTS + 1];
 		float[] yPoints = new float[SEGMENTS + 1];
@@ -113,14 +116,20 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 			float endTaper = isPosContinuous ? 1.0f : (float) Math.sin(Math.min(1.0f, (1.0f - progress) / 0.5f) * (Math.PI / 2));
 			float taper = Math.min(startTaper, endTaper);
 
+			// Traveling slow sine wave in the direction of moving potentia
+			float slowWave = (float) Math.sin(-progress * (2.0f * (float) Math.PI) + slowTime);
+			float pinchFactor = 1.0f + PINCH_AMP * Math.min(0, slowWave);
+			float jitterScale = BASE_JITTER * taper;
+
 			float angle = baseAngle + time * 2.5f + (float) Math.sin(progress * 7.0f + time * 3.0f) * 1.2f;
 
 			long jitterSeed = blockSeed ^ (boltIndex * 31337L) ^ (i * 1013L) ^ quantizedTime;
-			float jitterX = (hash(jitterSeed, 1) - 0.5f) * 0.08f * taper;
-			float jitterY = (hash(jitterSeed, 2) - 0.5f) * 0.08f * taper;
+			float jitterX = (hash(jitterSeed, 1) - 0.5f) * jitterScale;
+			float jitterY = (hash(jitterSeed, 2) - 0.5f) * jitterScale;
 
-			xPoints[i] = (float) Math.cos(angle) * (BOLT_RADIUS * taper) + jitterX;
-			yPoints[i] = (float) Math.sin(angle) * (BOLT_RADIUS * taper) + jitterY;
+			float currentRadius = BOLT_RADIUS * taper * pinchFactor;
+			xPoints[i] = (float) Math.cos(angle) * currentRadius + jitterX;
+			yPoints[i] = (float) Math.sin(angle) * currentRadius + jitterY;
 			zPoints[i] = z;
 		}
 
