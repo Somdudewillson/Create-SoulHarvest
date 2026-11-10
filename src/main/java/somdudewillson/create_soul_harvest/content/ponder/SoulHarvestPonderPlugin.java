@@ -26,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.block.SoulBudBlock;
@@ -77,6 +78,10 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 					ModBlocks.POTENTIA_RESERVOIR.getId()
 				)
 			.addStoryBoard(SoulHarvestMod.id("potentia/ponder_potentia_creative_reservoir"), SoulHarvestPonderPlugin::creativeReservoirProgram);
+		helper.forComponents(
+					ModBlocks.POTENTIA_CONDUIT.getId()
+				)
+			.addStoryBoard(SoulHarvestMod.id("potentia/ponder_potentia_conduit"), SoulHarvestPonderPlugin::potentiaConduitProgram);
 	}
 
 	@Override
@@ -324,6 +329,7 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 		
 		scene.title("creative_reservoir", "Creative Potentia Reservoirs");
 		scene.configureBasePlate(0, 0, 5);
+		scene.setSceneOffsetY(1);
 		scene.world().showSection(util.select().layer(0), Direction.UP);
 		scene.idle(15);
 		scene.world().showSection(util.select().layer(1), Direction.DOWN);
@@ -365,6 +371,118 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 			.modifyBlockEntity(reservoirA, PotentiaReservoirBlockEntity.class, e->e.setFilter(egg));
 		propagateConduitUpdates(scene, reservoirA);
 		scene.idle(25);
+	}
+	
+	protected static void potentiaConduitProgram(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+		
+		BlockPos reservoirA = util.grid().at(0, 1, 0);
+		BlockPos reservoirB = util.grid().at(4, 1, 6);
+		BlockPos wrenchedConduit = util.grid().at(4, 1, 4);
+		Selection horizontalPipe = util.select().fromTo(0,1,1, 0,1,3)
+				.add(util.select().fromTo(0,1,3, 4,1,3))
+				.add(util.select().fromTo(4,1,3, 4,1,5));
+		Selection verticalPipe = util.select().fromTo(1,1,2, 1,3,2)
+				.add(util.select().fromTo(1,3,2, 1,3,3));
+		
+		scene.title("potentia_conduit", "Moving Potentia with Conduits");
+		scene.configureBasePlate(0, 1, 5);
+		scene.setSceneOffsetY(1);
+		scene.world().showSection(util.select().layer(0), Direction.UP);
+		scene.idle(15);
+		scene.world().showSection(util.select().position(reservoirA), Direction.DOWN);
+		scene.idle(5);
+		scene.world().showSection(util.select().position(reservoirB), Direction.DOWN);
+		scene.rotateCameraY(-20f);
+		scene.idle(10);
+		scene.world()
+			.modifyBlock(reservoirA, s->s.setValue(PotentiaReservoirBlock.MODE, ReservoirMode.SUPPLY), false);
+		scene.world()
+			.modifyBlockEntity(reservoirA, PotentiaReservoirBlockEntity.class, e->e.setMode(ReservoirMode.SUPPLY));
+		scene.idle(10);
+
+		for (int i = 1; i <= 3; i++) {
+			scene.world().showSection(util.select().position(0, 1, i),  Direction.EAST);
+			scene.idle(3);
+		}
+		for (int i = 1; i <= 4; i++) {
+			scene.world().showSection(util.select().position(i, 1, 3),  Direction.WEST);
+			scene.idle(3);
+		}
+		for (int i = 4; i <= 5; i++) {
+			scene.world().showSection(util.select().position(4, 1, i),  Direction.WEST);
+			scene.idle(3);
+		}
+		propagateConduitUpdates(scene, reservoirA);
+		scene.idle(15);
+		
+		scene.overlay().showText(20*4)
+			.pointAt(horizontalPipe.getCenter())
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("Potentia Conduits can connect two or more potentia sources and targets");
+		scene.idle(20*4);
+		scene.idle(15);
+		
+		scene.addKeyframe();
+		ItemStack wrench = new ItemStack(AllItems.WRENCH.get());
+		scene.overlay().showControls(util.vector().blockSurface(wrenchedConduit, Direction.UP), Pointing.RIGHT, 20).rightClick()
+			.withItem(wrench);
+		scene.idle(5);
+		scene.world()
+			.modifyBlock(wrenchedConduit, s->ModBlocks.WINDOWED_POTENTIA_CONDUIT.get().defaultBlockState()
+					.setValue(WindowedPotentiaConduitBlock.AXIS, PotentiaConduitBlock.getStraightAxis(s)), true);
+		propagateConduitUpdates(scene, reservoirA);
+		scene.overlay().showOutlineWithText(util.select().position(wrenchedConduit), 20*4)
+				.placeNearTarget()
+				.text("Using a wrench, a straight conduit segment can be given a window");
+		scene.idle(20*4);
+		scene.idle(15);
+		
+
+		Vec3 center = util.vector().centerOf(1, 1, 2);
+		AABB bb = new AABB(center, center).inflate(1 / 6f);
+		AABB bb1 = bb.move(-0.5, 0, 0);
+		AABB bb2 = bb.move(0, 0, 0.5);
+
+		scene.addKeyframe();
+		scene.world().showSection(verticalPipe, Direction.DOWN);
+		scene.idle(10);
+		scene.overlay().chaseBoundingBoxOutline(PonderPalette.RED, bb1, bb, 1);
+		scene.overlay().chaseBoundingBoxOutline(PonderPalette.RED, bb2, bb, 1);
+		scene.idle(1);
+		scene.overlay().chaseBoundingBoxOutline(PonderPalette.RED, bb1, bb1, 50);
+		scene.overlay().chaseBoundingBoxOutline(PonderPalette.RED, bb2, bb2, 50);
+		scene.idle(10);
+		scene.overlay().showText(20*4)
+			.attachKeyFrame()
+			.pointAt(util.vector().centerOf(1, 1, 2))
+			.placeNearTarget()
+			.colored(PonderPalette.RED)
+			.text("Windowed conduits will not connect to any other adjacent conduit segments");
+		scene.idle(20*4);
+		scene.idle(15);
+		scene.world().hideSection(verticalPipe, Direction.UP);
+		scene.idle(20);
+
+		scene.overlay().showOutline(PonderPalette.GREEN, new Object(), util.select().position(reservoirA), 100);
+		scene.idle(5);
+		scene.overlay().showOutline(PonderPalette.GREEN, new Object(), util.select().position(reservoirB), 100);
+		scene.idle(5);
+		scene.overlay().showText(20*4)
+			.attachKeyFrame()
+			.independent()
+			.text("Once source and target are connected by conduits, the endpoints gradually transfer their contents");
+		scene.overlay().showLine(PonderPalette.GREEN, util.vector().blockSurface(reservoirA, Direction.WEST),
+								 util.vector().blockSurface(reservoirB, Direction.EAST), 80);
+		scene.idle(20*4);
+		scene.idle(15);
+
+		scene.overlay().showText(20*5)
+			.text("Thus, the Conduit blocks themselves never 'physically' contain any potentia")
+			.placeNearTarget()
+			.pointAt(util.vector().topOf(2, 1, 3));
+		scene.idle(20*4);
 	}
 	
 	// --- Helpers

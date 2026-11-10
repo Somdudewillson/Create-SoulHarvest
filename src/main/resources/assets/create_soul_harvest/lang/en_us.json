@@ -223,8 +223,15 @@
   
   "create_soul_harvest.ponder.creative_reservoir.header": "Creative Potentia Reservoirs",
   "create_soul_harvest.ponder.creative_reservoir.text_1": "Creative Potentia Reservoirs can be used to void incoming potentia...",
-  "create_soul_harvest.ponder.creative_reservoir.text_2": "or produce a bottomless supply.",
-  "create_soul_harvest.ponder.creative_reservoir.text_3": "The reservoir can be filtered with an appropriate item.",
+  "create_soul_harvest.ponder.creative_reservoir.text_2": "or produce a bottomless supply",
+  "create_soul_harvest.ponder.creative_reservoir.text_3": "The reservoir can be filtered with an appropriate item",
+  
+  "create_soul_harvest.ponder.potentia_conduit.header": "Moving Potentia with Conduits",
+  "create_soul_harvest.ponder.potentia_conduit.text_1": "Potentia Conduits can connect two or more potentia sources and targets",
+  "create_soul_harvest.ponder.potentia_conduit.text_2": "Using a wrench, a straight conduit segment can be given a window",
+  "create_soul_harvest.ponder.potentia_conduit.text_3": "Windowed conduits will not connect to any other adjacent conduit segments",
+  "create_soul_harvest.ponder.potentia_conduit.text_4": "Once source and target are connected by conduits, the endpoints gradually transfer their content",
+  "create_soul_harvest.ponder.potentia_conduit.text_5": "Thus, the Conduit blocks themselves never 'physically' contain any potentia",
 
 
   "create_soul_harvest.jei.glyph_page_chance_per_page": "12.5% Chance (1 in 8)",

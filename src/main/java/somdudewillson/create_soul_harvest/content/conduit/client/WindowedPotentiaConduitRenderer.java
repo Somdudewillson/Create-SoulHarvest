@@ -2,6 +2,7 @@ package somdudewillson.create_soul_harvest.content.conduit.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -69,9 +70,9 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 		boolean invert = flowDir != null && (flowDir == Direction.SOUTH || flowDir == Direction.UP || flowDir == Direction.EAST);
 		float speedMult = invert ? -1.0f : 1.0f;
 
-		float gameTime = (be.getLevel() != null ? be.getLevel().getGameTime() : 0) + partialTicks;
-		float time = gameTime * 0.35f * speedMult;
-		float slowTime = gameTime * SLOW_SPEED * speedMult;
+		float renderTime = be.getLevel() != null ? AnimationTickHolder.getRenderTime(be.getLevel()) : AnimationTickHolder.getRenderTime();
+		float time = renderTime * 0.35f * speedMult;
+		float slowTime = renderTime * SLOW_SPEED * speedMult;
 
 		Matrix4f matrix = ms.last().pose();
 		VertexConsumer builder = buffer.getBuffer(RenderType.lightning());
