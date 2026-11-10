@@ -48,6 +48,7 @@ public final class VanillaRecipeGen {
 		registerSoulDepositSeedRecipes(recipeOutput);
 		registerCookingRecipes(recipeOutput);
 		registerNecroniumRecipes(recipeOutput);
+		registerPotentiaRecipes(recipeOutput);
 	}
 
 	public static void registerBiofuelRecipes(RecipeOutput recipeOutput) {
@@ -284,6 +285,23 @@ public final class VanillaRecipeGen {
 				.define('B', Items.GLASS_BOTTLE)
 				.unlockedBy("has_bottle_or_waste", InventoryChangeTrigger.TriggerInstance.hasItems(Items.GLASS_BOTTLE, ModItems.NECRONIUM_WASTE.get()))
 				.save(recipeOutput, SoulHarvestMod.id("fill_necronium_waste_bottle"));
+	}
+
+	public static void registerPotentiaRecipes(RecipeOutput recipeOutput) {
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.POTENTIA_CONDUIT.get(), 6)
+				.pattern("#")
+				.pattern("L")
+				.pattern("#")
+				.define('#', ModItems.SOUL_SHARD.get())
+				.define('L', ModItems.INLAID_LAPIS.get())
+				.unlockedBy("has_soul_shard", has(ModItems.SOUL_SHARD.get()))
+				.save(recipeOutput, SoulHarvestMod.id("potentia_conduit_vertical"));
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.POTENTIA_CONDUIT.get(), 6)
+				.pattern("#L#")
+				.define('#', ModItems.SOUL_SHARD.get())
+				.define('L', ModItems.INLAID_LAPIS.get())
+				.unlockedBy("has_soul_shard", has(ModItems.SOUL_SHARD.get()))
+				.save(recipeOutput, SoulHarvestMod.id("potentia_conduit_horizontal"));
 	}
 }
 //?}

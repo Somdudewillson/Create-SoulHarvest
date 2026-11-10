@@ -200,6 +200,32 @@ public final class CreateRecipeGen {
 				.patternLine("    |")
 				.disallowMirrored()
 				.build(recipeOutput, SoulHarvestMod.id("craft_necronium_scythe"));
+
+		// Potentia Extractor
+		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.POTENTIA_EXTRACTOR.get(), 1)
+				.key('^', ModItems.SOUL_SHARD.get())
+				.key('+', ModItems.SOUL_MECHANISM.get())
+				.key('B', AllItems.BRASS_INGOT)
+				.key('|', AllBlocks.MECHANICAL_PUMP)
+				.key('-', ModItems.INLAID_LAPIS.get())
+				.patternLine(" ^ ")
+				.patternLine("^B^")
+				.patternLine("+|+")
+				.patternLine("B-B")
+				.disallowMirrored()
+				.build(recipeOutput, SoulHarvestMod.id("craft_potentia_extractor"));
+
+		// Potentia Growth Catalyst
+		MechanicalCraftingRecipeBuilder.shapedRecipe(ModItems.POTENTIA_GROWTH_CATALYST.get(), 1)
+				.key('+', ModItems.SOUL_SHARD.get())
+				.key('B', AllItems.BRASS_INGOT)
+				.key('-', ModItems.INLAID_LAPIS.get())
+				.patternLine("B--B")
+				.patternLine("++++")
+				.patternLine("++++")
+				.patternLine("B++B")
+				.disallowMirrored()
+				.build(recipeOutput, SoulHarvestMod.id("craft_potentia_growth_catalyst"));
 	}
 
 	public static void registerCompactingRecipes(RecipeOutput recipeOutput) {
