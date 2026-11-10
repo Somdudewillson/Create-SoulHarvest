@@ -22,10 +22,17 @@ import somdudewillson.create_soul_harvest.registry.ModBlocks;
 import somdudewillson.create_soul_harvest.registry.ModItems;
 
 public class SoulHarvestPonderPlugin implements PonderPlugin {
+	
+	public static ResourceLocation SOUL_CRYSTAL = tag("soul_crystal");
+	public static ResourceLocation MAGIC_GOLD = tag("magic_gold");
 
 	@Override
 	public String getModId() {
 		return SoulHarvestMod.MOD_ID;
+	}
+	
+	protected static ResourceLocation tag(String path) {
+		return ResourceLocation.fromNamespaceAndPath(SoulHarvestMod.MOD_ID, path);
 	}
 
 	@Override
@@ -49,11 +56,11 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 
 	@Override
 	public void registerTags(PonderTagRegistrationHelper<ResourceLocation> helper) {
-		helper.registerTag("soul_crystal")
+		helper.registerTag(SOUL_CRYSTAL)
 				.addToIndex()
 				.item(ModBlocks.SOUL_CLUSTER.get(), true, false)
 				.title("Soul Crystals")
-				.description("Components involved in Soul Shard production")
+				.description("Components which help produce Soul Shards")
 				.item(ModItems.SOUL_DEPOSIT_SEED.get())
 				.item(ModItems.SOUL_SHARD.get())
 				.item(ModBlocks.SOUL_BUD_SMALL.get())
@@ -61,14 +68,28 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 				.item(ModBlocks.SOUL_BUD_LARGE.get())
 				.register();
 		
-		helper.registerTag("magic_gold")
+		helper.registerTag(MAGIC_GOLD)
 				.addToIndex()
 				.item(ModBlocks.MIDAS_CORE.get(), true, false)
-				.title("Soul Crystals")
-				.description("Components involved in Anima Gold production")
+				.title("Anima Gold")
+				.description("Components which help produce Anima Gold")
 				.item(ModItems.MAGIC_GOLD.get())
 				.item(ModBlocks.GOLD_FOAM.get())
 				.register();
+		
+		
+		helper.addToTag(SOUL_CRYSTAL)
+				.add(ModBlocks.SOUL_CLUSTER.getId())
+				.add(ModBlocks.SOUL_BUD_LARGE.getId())
+				.add(ModBlocks.SOUL_BUD_MEDIUM.getId())
+				.add(ModBlocks.SOUL_BUD_SMALL.getId())
+				.add(ModItems.SOUL_DEPOSIT_SEED.getId())
+				.add(ModItems.SOUL_SHARD.getId());
+		
+		helper.addToTag(MAGIC_GOLD)
+				.add(ModBlocks.MIDAS_CORE.getId())
+				.add(ModBlocks.GOLD_FOAM.getId())
+				.add(ModItems.MAGIC_GOLD.getId());
 	}
 	
 	protected static void soulClusterGrowthProgram(SceneBuilder builder, SceneBuildingUtil util) {
