@@ -1,7 +1,6 @@
 {
 	"format_version": "1.9.0",
 	"credit": "Made with Blockbench",
-	"parent": "block/block",
 	"textures": {
 		"0": "create_soul_harvest:block/machines/potentia_crystal",
 		"particle": "create_soul_harvest:block/machines/potentia_crystal"

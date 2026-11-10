@@ -3,7 +3,7 @@ package somdudewillson.create_soul_harvest.content.potentia.tank;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import com.simibubi.create.foundation.blockEntity.behaviour.CenteredSideValueBoxTransform;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.minecraft.ChatFormatting;
@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.content.conduit.network.PotentiaNetwork;
 import somdudewillson.create_soul_harvest.content.potentia.IPotentiaHandler;
@@ -37,7 +38,7 @@ public class PotentiaReservoirBlockEntity extends SmartBlockEntity implements IH
 	protected FilteringBehaviour filtering;
 	@Nullable
 	protected ResourceLocation filterEntityType;
-	protected ReservoirMode mode = ReservoirMode.SUPPLY;
+	protected ReservoirMode mode = ReservoirMode.CONSUME;
 
 	protected final CreativePotentiaTank creativeTank = new CreativePotentiaTank(
 			DEFAULT_CAPACITY,
@@ -45,7 +46,7 @@ public class PotentiaReservoirBlockEntity extends SmartBlockEntity implements IH
 			this::getFilterEntityType
 	);
 
-	protected final LerpedFloat crystalLevel = LerpedFloat.linear().startWithValue(1.0f);
+	protected final LerpedFloat crystalLevel = LerpedFloat.linear().startWithValue(0.0f);
 
 	//? if forge {
 	/*protected net.minecraftforge.common.util.LazyOptional<IPotentiaHandler> potentiaCapability =
@@ -54,10 +55,24 @@ public class PotentiaReservoirBlockEntity extends SmartBlockEntity implements IH
 
 	public PotentiaReservoirBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
+		if (state.hasProperty(PotentiaReservoirBlock.MODE)) {
+			this.mode = state.getValue(PotentiaReservoirBlock.MODE);
+			this.crystalLevel.startWithValue(this.mode.isSupply() ? 1.0f : 0.0f);
+		}
 	}
 
 	public PotentiaReservoirBlockEntity(BlockPos pos, BlockState state) {
 		super(ModBlockEntities.POTENTIA_RESERVOIR_BE.get(), pos, state);
+		if (state.hasProperty(PotentiaReservoirBlock.MODE)) {
+			this.mode = state.getValue(PotentiaReservoirBlock.MODE);
+			this.crystalLevel.startWithValue(this.mode.isSupply() ? 1.0f : 0.0f);
+		}
+	}
+
+	@Override
+	public void onLoad() {
+		super.onLoad();
+		this.crystalLevel.startWithValue(getMode().isSupply() ? 1.0f : 0.0f);
 	}
 
 	public ReservoirMode getMode() {
@@ -109,7 +124,7 @@ public class PotentiaReservoirBlockEntity extends SmartBlockEntity implements IH
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-		filtering = new FilteringBehaviour(this, new CenteredSideValueBoxTransform((state, d) -> d.getAxis() == Direction.Axis.Y))
+		filtering = new FilteringBehaviour(this, new ReservoirValueBoxTransform())
 				.withPredicate(stack -> stack.getItem() instanceof SpawnEggItem)
 				.withCallback(this::onFilterChanged);
 		behaviours.add(filtering);
@@ -212,6 +227,7 @@ public class PotentiaReservoirBlockEntity extends SmartBlockEntity implements IH
 		if (compound.contains("Mode")) {
 			try {
 				this.mode = ReservoirMode.valueOf(compound.getString("Mode").toUpperCase(Locale.ROOT));
+				this.crystalLevel.startWithValue(this.mode.isSupply() ? 1.0f : 0.0f);
 			} catch (Exception ignored) {
 			}
 		}
@@ -237,6 +253,7 @@ public class PotentiaReservoirBlockEntity extends SmartBlockEntity implements IH
 		if (compound.contains("Mode")) {
 			try {
 				this.mode = ReservoirMode.valueOf(compound.getString("Mode").toUpperCase(Locale.ROOT));
+				this.crystalLevel.startWithValue(this.mode.isSupply() ? 1.0f : 0.0f);
 			} catch (Exception ignored) {
 			}
 		}
@@ -247,4 +264,16 @@ public class PotentiaReservoirBlockEntity extends SmartBlockEntity implements IH
 		}
 	}
 	*///?}
+
+	public static class ReservoirValueBoxTransform extends ValueBoxTransform.Sided {
+		@Override
+		protected Vec3 getSouthLocation() {
+			return new Vec3(8.0 / 16.0, 8.0 / 16.0, 16.05 / 16.0);
+		}
+
+		@Override
+		protected boolean isSideActive(BlockState state, Direction direction) {
+			return direction.getAxis() == Direction.Axis.Y;
+		}
+	}
 }
