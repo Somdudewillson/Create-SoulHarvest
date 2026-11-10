@@ -129,6 +129,10 @@ public class PotentiaReservoirBlockEntity extends SmartBlockEntity implements IH
 				.withCallback(this::onFilterChanged);
 		behaviours.add(filtering);
 	}
+	
+	public void setFilter(ItemStack stack) {
+		onFilterChanged(stack);
+	}
 
 	protected void onFilterChanged(ItemStack stack) {
 		if (stack.getItem() instanceof SpawnEggItem egg) {
@@ -161,7 +165,7 @@ public class PotentiaReservoirBlockEntity extends SmartBlockEntity implements IH
 		crystalLevel.chase(target, 0.2f, LerpedFloat.Chaser.EXP);
 		crystalLevel.tickChaser();
 
-		if (level != null && !level.isClientSide() && getMode().isSupply()) {
+		if (level != null && (!level.isClientSide() || isVirtual()) && getMode().isSupply()) {
 			for (Direction d : Direction.values()) {
 				BlockPos neighborPos = worldPosition.relative(d);
 				if (level.getBlockState(neighborPos).getBlock() instanceof IPotentiaTransporter) {

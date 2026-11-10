@@ -1,10 +1,18 @@
 package somdudewillson.create_soul_harvest.content.ponder;
 
+import java.util.ArrayDeque;
+import java.util.LinkedHashSet;
+import java.util.Queue;
+import java.util.Set;
+
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
 
 import net.createmod.catnip.math.Pointing;
 import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.WorldSectionElement;
+import net.createmod.ponder.api.level.PonderLevel;
 import net.createmod.ponder.api.registration.PonderPlugin;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
 import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
@@ -15,10 +23,19 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.block.SoulBudBlock;
+import somdudewillson.create_soul_harvest.content.conduit.PotentiaConduitBlock;
+import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlock;
+import somdudewillson.create_soul_harvest.content.conduit.network.PotentiaNetwork;
+import somdudewillson.create_soul_harvest.content.potentia.IPotentiaTransporter;
+import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirBlock;
+import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirBlockEntity;
+import somdudewillson.create_soul_harvest.content.potentia.tank.ReservoirMode;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 import somdudewillson.create_soul_harvest.registry.ModItems;
 
@@ -48,12 +65,18 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 					ModBlocks.SOUL_CLUSTER.getId()
 				)
 			.addStoryBoard(SoulHarvestMod.id("soul_cluster/ponder_soul_cluster"), SoulHarvestPonderPlugin::soulClusterGrowthProgram);
+		
 		helper.forComponents(
 					ModItems.MAGIC_GOLD.getId(),
 					ModBlocks.MIDAS_CORE.getId()
 				)
 			.addStoryBoard(SoulHarvestMod.id("midas_core/ponder_midas_core"), SoulHarvestPonderPlugin::midasCoreConvertProgram)
 			.addStoryBoard(SoulHarvestMod.id("midas_core/ponder_midas_core"), SoulHarvestPonderPlugin::midasCoreBoostProgram);
+		
+		helper.forComponents(
+					ModBlocks.POTENTIA_RESERVOIR.getId()
+				)
+			.addStoryBoard(SoulHarvestMod.id("potentia/ponder_potentia_creative_reservoir"), SoulHarvestPonderPlugin::creativeReservoirProgram);
 	}
 
 	@Override
@@ -291,5 +314,157 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 			scene.effects().createRedstoneParticles(subPos, 0xFFCF3D, 20);
 		}
 		scene.idle(25);
+	}
+	
+	protected static void creativeReservoirProgram(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+		
+		BlockPos reservoirA = util.grid().at(2, 1, 0);
+		BlockPos reservoirB = util.grid().at(2, 1, 4);
+		
+		scene.title("creative_reservoir", "Creative Potentia Reservoirs");
+		scene.configureBasePlate(0, 0, 5);
+		scene.world().showSection(util.select().layer(0), Direction.UP);
+		scene.idle(15);
+		scene.world().showSection(util.select().layer(1), Direction.DOWN);
+		scene.rotateCameraY(-20f);
+		scene.idle(15);
+		
+		scene.overlay().showOutlineWithText(util.select().position(reservoirB), 20*4)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("Creative Potentia Reservoirs can be used to void incoming potentia...");
+		scene.idle(20 * 4);
+		
+		ItemStack wrench = new ItemStack(AllItems.WRENCH.get());
+		scene.overlay().showControls(util.vector().blockSurface(reservoirA, Direction.UP), Pointing.RIGHT, 20).rightClick()
+			.withItem(wrench);
+		scene.idle(15);
+		scene.world()
+			.modifyBlock(reservoirA, s->s.setValue(PotentiaReservoirBlock.MODE, ReservoirMode.SUPPLY), false);
+		scene.world()
+			.modifyBlockEntity(reservoirA, PotentiaReservoirBlockEntity.class, e->e.setMode(ReservoirMode.SUPPLY));
+		propagateConduitUpdates(scene, reservoirA);
+		scene.idle(15);
+		scene.overlay().showOutlineWithText(util.select().position(reservoirA), 20*4)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("or produce a bottomless supply.");
+		scene.idle(20 * 4);
+		scene.idle(25);
+
+		scene.overlay().showOutlineWithText(util.select().position(reservoirA), 20*4)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("The reservoir can be filtered with an appropriate item.");
+		scene.idle(20 * 4);
+		ItemStack egg = new ItemStack(Items.GLOW_SQUID_SPAWN_EGG);
+		scene.overlay().showControls(util.vector().blockSurface(reservoirA, Direction.UP), Pointing.RIGHT, 20).rightClick()
+			.withItem(egg);
+		scene.world()
+			.modifyBlockEntity(reservoirA, PotentiaReservoirBlockEntity.class, e->e.setFilter(egg));
+		propagateConduitUpdates(scene, reservoirA);
+		scene.idle(25);
+	}
+	
+	// --- Helpers
+
+	public static void propagateConduitUpdates(SceneBuilder scene, BlockPos startPos) {
+		scene.addInstruction(s -> {
+			PonderLevel level = s.getWorld();
+			Set<BlockPos> toUpdate = collectConnectedConduits(level, startPos);
+			updateConduits(level, toUpdate);
+			s.forEach(WorldSectionElement.class, WorldSectionElement::queueRedraw);
+			PotentiaNetwork.invalidate(startPos);
+			triggerSupplierDistribution(level, startPos, toUpdate);
+		});
+	}
+
+	public static void propagateConduitUpdates(SceneBuilder scene, Selection selection) {
+		scene.addInstruction(s -> {
+			PonderLevel level = s.getWorld();
+			Set<BlockPos> toUpdate = new LinkedHashSet<>();
+			selection.forEach(pos -> {
+				if (level.getBlockState(pos).getBlock() instanceof IPotentiaTransporter) {
+					toUpdate.add(pos.immutable());
+				}
+			});
+			updateConduits(level, toUpdate);
+			s.forEach(WorldSectionElement.class, WorldSectionElement::queueRedraw);
+			for (BlockPos pos : toUpdate) {
+				PotentiaNetwork.invalidate(pos);
+			}
+			triggerSupplierDistribution(level, null, toUpdate);
+		});
+	}
+
+	private static void triggerSupplierDistribution(PonderLevel level, BlockPos startPos, Set<BlockPos> conduits) {
+		if (startPos != null && level.getBlockEntity(startPos) instanceof PotentiaReservoirBlockEntity reservoir && reservoir.getMode().isSupply()) {
+			for (Direction d : Direction.values()) {
+				BlockPos neighborPos = startPos.relative(d);
+				if (level.getBlockState(neighborPos).getBlock() instanceof IPotentiaTransporter) {
+					PotentiaNetwork.distributeFrom(level, startPos, d, reservoir.getPotentiaHandler(d));
+				}
+			}
+		}
+		for (BlockPos conduitPos : conduits) {
+			for (Direction d : Direction.values()) {
+				BlockPos neighborPos = conduitPos.relative(d);
+				if (level.getBlockEntity(neighborPos) instanceof PotentiaReservoirBlockEntity reservoir && reservoir.getMode().isSupply()) {
+					Direction pushDir = d.getOpposite();
+					PotentiaNetwork.distributeFrom(level, neighborPos, pushDir, reservoir.getPotentiaHandler(pushDir));
+				}
+			}
+		}
+	}
+
+	private static Set<BlockPos> collectConnectedConduits(PonderLevel level, BlockPos startPos) {
+		Set<BlockPos> toUpdate = new LinkedHashSet<>();
+		Queue<BlockPos> queue = new ArrayDeque<>();
+
+		if (level.getBlockState(startPos).getBlock() instanceof IPotentiaTransporter) {
+			toUpdate.add(startPos.immutable());
+			queue.add(startPos.immutable());
+		}
+
+		for (Direction dir : Direction.values()) {
+			BlockPos neighbor = startPos.relative(dir);
+			if (level.getBlockState(neighbor).getBlock() instanceof IPotentiaTransporter) {
+				if (toUpdate.add(neighbor.immutable())) {
+					queue.add(neighbor.immutable());
+				}
+			}
+		}
+
+		while (!queue.isEmpty() && toUpdate.size() < PotentiaNetwork.MAX_NETWORK_SIZE) {
+			BlockPos current = queue.poll();
+			for (Direction dir : Direction.values()) {
+				BlockPos neighbor = current.relative(dir);
+				if (!toUpdate.contains(neighbor) && level.getBlockState(neighbor).getBlock() instanceof IPotentiaTransporter) {
+					toUpdate.add(neighbor.immutable());
+					queue.add(neighbor.immutable());
+				}
+			}
+		}
+
+		return toUpdate;
+	}
+
+	private static boolean updateConduits(PonderLevel level, Set<BlockPos> positions) {
+		boolean anyChanged = false;
+		for (BlockPos pos : positions) {
+			BlockState current = level.getBlockState(pos);
+			BlockState updated = current;
+			if (current.getBlock() instanceof PotentiaConduitBlock) {
+				updated = PotentiaConduitBlock.updateBlockState(current, null, null, level, pos);
+			} else if (current.getBlock() instanceof WindowedPotentiaConduitBlock) {
+				updated = WindowedPotentiaConduitBlock.updateBlockState(current, level, pos);
+			}
+			if (updated != current) {
+				level.setBlockAndUpdate(pos, updated);
+				anyChanged = true;
+			}
+		}
+		return anyChanged;
 	}
 }

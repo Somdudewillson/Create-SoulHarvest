@@ -174,7 +174,7 @@ public class PotentiaExtractorBlockEntity extends KineticBlockEntity {
 	public void tick() {
 		super.tick();
 
-		if (level == null || level.isClientSide()) {
+		if (level == null || (level.isClientSide() && !isVirtual())) {
 			return;
 		}
 
