@@ -67,7 +67,7 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 		}
 
 		Direction flowDir = be.getCurrentFlowDirection();
-		boolean invert = flowDir != null && (flowDir == Direction.SOUTH || flowDir == Direction.UP || flowDir == Direction.EAST);
+		boolean invert = flowDir != null && flowDir == getLocalNegWorldDir(axis);
 		float speedMult = invert ? -1.0f : 1.0f;
 
 		float renderTime = be.getLevel() != null ? AnimationTickHolder.getRenderTime(be.getLevel()) : AnimationTickHolder.getRenderTime();

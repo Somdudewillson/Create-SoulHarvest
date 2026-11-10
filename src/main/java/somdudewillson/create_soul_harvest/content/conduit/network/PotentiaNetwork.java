@@ -20,6 +20,8 @@ public class PotentiaNetwork {
 
 	private final Set<BlockPos> conduitPositions = new HashSet<>();
 	private final List<Endpoint> endpoints = new ArrayList<>();
+	private final Map<BlockPos, List<BlockPos>> adjacency = new HashMap<>();
+	private final Map<BlockPos, Map<BlockPos, Integer>> distanceCache = new HashMap<>();
 
 	public record Endpoint(BlockPos pos, Direction sideOnHandler) {}
 
@@ -82,6 +84,8 @@ public class PotentiaNetwork {
 				BlockState neighborState = level.getBlockState(neighborPos);
 				if (neighborState.getBlock() instanceof IPotentiaTransporter neighborTransporter) {
 					if (neighborTransporter.canConnect(neighborState, d.getOpposite())) {
+						network.adjacency.computeIfAbsent(current, k -> new ArrayList<>()).add(neighborPos);
+						network.adjacency.computeIfAbsent(neighborPos, k -> new ArrayList<>()).add(current);
 						if (network.conduitPositions.add(neighborPos)) {
 							frontier.add(neighborPos);
 						}
@@ -179,11 +183,13 @@ public class PotentiaNetwork {
 		}
 
 		if (totalAccepted > 0) {
+			Map<BlockPos, Integer> distances = getDistancesFrom(supplierPos);
 			for (BlockPos pos : conduitPositions) {
 				if (level.isLoaded(pos) && level.getBlockEntity(pos) instanceof WindowedPotentiaConduitBlockEntity windowedBe) {
 					BlockState state = level.getBlockState(pos);
 					if (state.hasProperty(WindowedPotentiaConduitBlock.AXIS)) {
-						Direction flowDir = Direction.get(Direction.AxisDirection.POSITIVE, state.getValue(WindowedPotentiaConduitBlock.AXIS));
+						Direction.Axis axis = state.getValue(WindowedPotentiaConduitBlock.AXIS);
+						Direction flowDir = determineFlowDirection(supplierPos, pos, axis, distances);
 						windowedBe.recordFlow(stack, flowDir);
 					}
 				}
@@ -191,6 +197,76 @@ public class PotentiaNetwork {
 		}
 
 		return totalAccepted;
+	}
+
+	public Map<BlockPos, Integer> getDistancesFrom(BlockPos supplierPos) {
+		return distanceCache.computeIfAbsent(supplierPos, this::computeDistancesFrom);
+	}
+
+	private Map<BlockPos, Integer> computeDistancesFrom(BlockPos supplierPos) {
+		Map<BlockPos, Integer> distances = new HashMap<>();
+		Queue<BlockPos> queue = new ArrayDeque<>();
+		for (Direction d : Direction.values()) {
+			BlockPos p = supplierPos.relative(d);
+			if (conduitPositions.contains(p)) {
+				distances.put(p, 0);
+				queue.add(p);
+			}
+		}
+		while (!queue.isEmpty()) {
+			BlockPos current = queue.poll();
+			int dist = distances.get(current);
+			List<BlockPos> neighbors = adjacency.get(current);
+			if (neighbors != null) {
+				for (BlockPos next : neighbors) {
+					if (!distances.containsKey(next)) {
+						distances.put(next, dist + 1);
+						queue.add(next);
+					}
+				}
+			}
+		}
+		return distances;
+	}
+
+	public Direction determineFlowDirection(BlockPos supplierPos, BlockPos pos, Direction.Axis axis) {
+		return determineFlowDirection(supplierPos, pos, axis, getDistancesFrom(supplierPos));
+	}
+
+	public Direction determineFlowDirection(BlockPos supplierPos, BlockPos pos, Direction.Axis axis, Map<BlockPos, Integer> distances) {
+		BlockPos negPos = pos.relative(axis, -1);
+		BlockPos posPos = pos.relative(axis, 1);
+
+		if (supplierPos.equals(negPos)) {
+			return Direction.get(Direction.AxisDirection.POSITIVE, axis);
+		}
+		if (supplierPos.equals(posPos)) {
+			return Direction.get(Direction.AxisDirection.NEGATIVE, axis);
+		}
+
+		Integer negDist = distances.get(negPos);
+		Integer posDist = distances.get(posPos);
+
+		if (negDist != null && posDist != null) {
+			if (negDist < posDist) {
+				return Direction.get(Direction.AxisDirection.POSITIVE, axis);
+			} else if (posDist < negDist) {
+				return Direction.get(Direction.AxisDirection.NEGATIVE, axis);
+			}
+		} else if (negDist != null) {
+			return Direction.get(Direction.AxisDirection.POSITIVE, axis);
+		} else if (posDist != null) {
+			return Direction.get(Direction.AxisDirection.NEGATIVE, axis);
+		}
+
+		return Direction.get(Direction.AxisDirection.POSITIVE, axis);
+	}
+
+	void addConnectionForTest(BlockPos from, BlockPos to) {
+		conduitPositions.add(from);
+		conduitPositions.add(to);
+		adjacency.computeIfAbsent(from, k -> new ArrayList<>()).add(to);
+		adjacency.computeIfAbsent(to, k -> new ArrayList<>()).add(from);
 	}
 
 	private record ConsumerTarget(IPotentiaHandler handler, long maxAccepted) {}
