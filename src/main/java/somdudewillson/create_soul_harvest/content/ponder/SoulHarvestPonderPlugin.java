@@ -1,6 +1,7 @@
 package somdudewillson.create_soul_harvest.content.ponder;
 
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
+import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
 
 import net.createmod.catnip.math.Pointing;
 import net.createmod.ponder.api.PonderPalette;
@@ -69,6 +70,19 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 				.item(ModItems.MAGIC_GOLD.get())
 				.item(ModBlocks.GOLD_FOAM.get())
 				.register();
+		
+		helper.registerTag("potentia")
+				.addToIndex()
+				.item(ModBlocks.POTENTIA_EXTRACTOR.get(), true, false)
+				.title("Potentia Manipulators")
+				.description("Components which help relaying and making use of Potentia")
+				.item(ModItems.POTENTIA_CONDUIT.get())
+				.item(ModBlocks.POTENTIA_GROWTH_CATALYST.get())
+				.item(ModBlocks.POTENTIA_RESERVOIR.get())
+				.register();
+		
+		helper.addToTag(AllCreatePonderTags.CREATIVE)
+				.add(ModBlocks.POTENTIA_RESERVOIR.getId());
 	}
 	
 	protected static void soulClusterGrowthProgram(SceneBuilder builder, SceneBuildingUtil util) {
