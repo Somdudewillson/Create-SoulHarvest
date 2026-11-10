@@ -24,7 +24,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.function.Supplier;
-import somdudewillson.create_soul_harvest.registry.ModTags;
 
 public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 
@@ -74,7 +73,9 @@ public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 	public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
 		Direction direction = state.getValue(FACING);
 		BlockPos supportingPos = pos.relative(direction.getOpposite());
-		return level.getBlockState(supportingPos).isFaceSturdy(level, supportingPos, direction);
+		BlockState supportingState = level.getBlockState(supportingPos);
+		return supportingState.isFaceSturdy(level, supportingPos, direction)
+				|| SoulBudHelper.isGrowthCapabilityPresent(level, supportingPos, direction);
 	}
 
 	//? forge {
@@ -88,7 +89,7 @@ public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 		if (facing == state.getValue(FACING).getOpposite()) {
 			return !state.canSurvive(level, currentPos)
 					? Blocks.AIR.defaultBlockState()
-					: state.setValue(ACTIVE, facingState.is(ModTags.Blocks.SOUL_BUD_GROWTH_BLOCKS));
+					: state.setValue(ACTIVE, SoulBudHelper.isValidGrowthBlock(level, facingPos, facing.getOpposite()));
 		}
 		return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
 	}
@@ -99,7 +100,7 @@ public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 		BlockPos pos = context.getClickedPos();
 		Direction direction = context.getClickedFace();
 		BlockPos supportingPos = pos.relative(direction.getOpposite());
-		boolean active = level.getBlockState(supportingPos).is(ModTags.Blocks.SOUL_BUD_GROWTH_BLOCKS);
+		boolean active = SoulBudHelper.isValidGrowthBlock(level, supportingPos, direction);
 		return this.defaultBlockState()
 				.setValue(WATERLOGGED, level.getFluidState(pos).getType() == Fluids.WATER)
 				.setValue(FACING, direction)
@@ -125,16 +126,18 @@ public class SoulBudBlock extends Block implements SimpleWaterloggedBlock {
 		if (nextStageBlock == null) return;
 		Direction attachedFace = state.getValue(FACING).getOpposite();
 		BlockPos attachedPos = pos.relative(attachedFace);
-		BlockState attachedState = level.getBlockState(attachedPos);
+		Direction growthSide = state.getValue(FACING);
 
-		if (attachedState.is(ModTags.Blocks.SOUL_BUD_GROWTH_BLOCKS)) {
+		if (SoulBudHelper.isValidGrowthBlock(level, attachedPos, growthSide)) {
 			Block nextBlock = nextStageBlock.get();
 			if (nextBlock != null) {
-				BlockState nextState = nextBlock.defaultBlockState()
-						.setValue(FACING, state.getValue(FACING))
-						.setValue(WATERLOGGED, state.getValue(WATERLOGGED))
-						.setValue(ACTIVE, true);
-				level.setBlockAndUpdate(pos, nextState);
+				if (SoulBudHelper.onBudGrow(level, attachedPos, growthSide)) {
+					BlockState nextState = nextBlock.defaultBlockState()
+							.setValue(FACING, state.getValue(FACING))
+							.setValue(WATERLOGGED, state.getValue(WATERLOGGED))
+							.setValue(ACTIVE, true);
+					level.setBlockAndUpdate(pos, nextState);
+				}
 			}
 		}
 	}

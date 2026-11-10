@@ -16,6 +16,7 @@ import somdudewillson.create_soul_harvest.content.block.*;
 import somdudewillson.create_soul_harvest.content.conduit.PotentiaConduitBlock;
 import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlock;
 import somdudewillson.create_soul_harvest.content.kinetics.extractor.PotentiaExtractorBlock;
+import somdudewillson.create_soul_harvest.content.potentia.catalyst.PotentiaGrowthCatalystBlock;
 import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirBlock;
 
 public class ModBlocks {
@@ -37,6 +38,15 @@ public class ModBlocks {
 
 	public static final DeferredHolder<Block, PotentiaReservoirBlock> POTENTIA_RESERVOIR = BLOCKS.register("potentia_reservoir",
 			() -> new PotentiaReservoirBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.COPPER).strength(2.0f).noOcclusion()));
+
+	public static final DeferredHolder<Block, PotentiaGrowthCatalystBlock> POTENTIA_GROWTH_CATALYST = BLOCKS.register("potentia_growth_catalyst",
+			() -> new PotentiaGrowthCatalystBlock(BlockBehaviour.Properties.of()
+					.mapColor(MapColor.COLOR_MAGENTA)
+					.sound(SoundType.NETHERITE_BLOCK)
+					.strength(2.5f)
+					.requiresCorrectToolForDrops()
+					.noOcclusion()
+					.lightLevel(s -> s.getValue(PotentiaGrowthCatalystBlock.LIT) ? 10 : 0)));
 
 	public static final DeferredHolder<Block, SoulBudBlock> SOUL_BUD_SMALL = BLOCKS.register("soul_bud_small",
 			() -> new SoulBudBlock(3, 4, ModBlocks.SOUL_BUD_MEDIUM::get,

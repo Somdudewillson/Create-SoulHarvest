@@ -55,6 +55,8 @@ public class ModItems {
 			() -> new BlockItem(ModBlocks.POTENTIA_CONDUIT.get(), new Item.Properties()));
 	public static final DeferredHolder<Item, BlockItem> POTENTIA_RESERVOIR = registerWithTab("potentia_reservoir",
 			() -> new BlockItem(ModBlocks.POTENTIA_RESERVOIR.get(), new Item.Properties()));
+	public static final DeferredHolder<Item, BlockItem> POTENTIA_GROWTH_CATALYST = registerWithTab("potentia_growth_catalyst",
+			() -> new BlockItem(ModBlocks.POTENTIA_GROWTH_CATALYST.get(), new Item.Properties()));
 	public static final DeferredHolder<Item, BucketItem> LIQUID_SOUL_CRYSTAL_BUCKET = registerWithTab("liquid_soul_crystal_bucket",
 			() -> new BucketItem(ModFluids.LIQUID_SOUL_CRYSTAL.get(),
 					new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));

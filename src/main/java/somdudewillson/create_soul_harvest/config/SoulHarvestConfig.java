@@ -35,6 +35,11 @@ public class SoulHarvestConfig {
 	public static DoubleValue ENHANCED_ONLY_DROPS_MULT;
 	public static DoubleValue XP_DROP_MULT;
 
+	public static LongValue CATALYST_GROWTH_CONSUMPTION;
+	public static DoubleValue CATALYST_CAPACITY_GROWTH_TICKS;
+	public static LongValue CATALYST_PASSIVE_DEPLETION_PER_TICK;
+	public static final double CATALYST_THRESHOLD_MULT = 0.5;
+
 	public static void register(ItemDependencyGraph graph) {
 		//? neoforge {
 		ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -90,6 +95,22 @@ public class SoulHarvestConfig {
 
 		builder.pop();
 
+		builder.comment("Potentia Growth Catalyst").push("growthCatalyst");
+
+		CATALYST_GROWTH_CONSUMPTION = builder
+				.comment("Potentia consumed (in mB) per soul bud stage advancement")
+				.defineInRange("growthConsumption", 4700L, 1L, 100000L);
+
+		CATALYST_CAPACITY_GROWTH_TICKS = builder
+				.comment("Catalyst tank capacity in terms of growth ticks")
+				.defineInRange("capacityGrowthTicks", 1.5, 0.1, 100.0);
+
+		CATALYST_PASSIVE_DEPLETION_PER_TICK = builder
+				.comment("Passive potentia depletion per tick per attached soul bud block (mB/t)")
+				.defineInRange("passiveDepletionPerTick", 1L, 0L, 100L);
+
+		builder.pop();
+
 		builder.pop();
 
 		COMMON_SPEC = builder.build();
@@ -98,6 +119,23 @@ public class SoulHarvestConfig {
 		graph.bindConfigToGroup(safe(ENABLE_SPELLS), "spells");
 		graph.bindConfigToGroup(safe(ENABLE_ENHANCED_SPELLS), "spells_t2");
 		graph.bindConfig(safe(ENABLE_ABSOLUTE_ICE), ModBlocks.ABSOLUTE_ICE.getId());
+	}
+
+	public static long getCatalystGrowthConsumption() {
+		return isLoaded() && CATALYST_GROWTH_CONSUMPTION != null ? CATALYST_GROWTH_CONSUMPTION.get() : 4700L;
+	}
+
+	public static long getCatalystCapacity() {
+		double mult = isLoaded() && CATALYST_CAPACITY_GROWTH_TICKS != null ? CATALYST_CAPACITY_GROWTH_TICKS.get() : 1.5;
+		return (long) Math.round(getCatalystGrowthConsumption() * mult);
+	}
+
+	public static long getCatalystThreshold() {
+		return (long) Math.round(getCatalystGrowthConsumption() * CATALYST_THRESHOLD_MULT);
+	}
+
+	public static long getCatalystPassiveDepletionPerTick() {
+		return isLoaded() && CATALYST_PASSIVE_DEPLETION_PER_TICK != null ? CATALYST_PASSIVE_DEPLETION_PER_TICK.get() : 1L;
 	}
 
 	//? neoforge {

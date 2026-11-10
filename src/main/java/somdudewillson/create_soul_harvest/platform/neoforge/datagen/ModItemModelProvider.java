@@ -39,6 +39,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 		withExistingParent("dense_hypothetical", modLoc("block/dense_hypothetical"));
 		withExistingParent("potentia_extractor", modLoc("block/potentia_extractor/item"));
 		withExistingParent("potentia_conduit", modLoc("block/potentia_conduit/item"));
+		withExistingParent("potentia_growth_catalyst", modLoc("block/potentia_growth_catalyst/potentia_growth_catalyst"));
 	}
 }
 //?}

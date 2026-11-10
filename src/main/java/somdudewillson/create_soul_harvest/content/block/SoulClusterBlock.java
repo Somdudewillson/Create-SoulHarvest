@@ -9,7 +9,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
-import somdudewillson.create_soul_harvest.registry.ModTags;
 
 //? >= 1.21 {
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -48,7 +47,6 @@ public class SoulClusterBlock extends SoulBudBlock {
 		
 		Direction attachedFace = state.getValue(FACING).getOpposite();
 		BlockPos supportingPos = pos.relative(attachedFace);
-		BlockState supportingState = level.getBlockState(supportingPos);
 
 		boolean hasSilkTouch;
 		//? >= 1.21 {
@@ -58,7 +56,8 @@ public class SoulClusterBlock extends SoulBudBlock {
 		*///?}
 		if (hasSilkTouch) return;
 
-		if (supportingState.is(ModTags.Blocks.SOUL_BUD_GROWTH_BLOCKS)) {
+		Direction growthSide = state.getValue(FACING);
+		if (SoulBudHelper.isValidGrowthBlock(level, supportingPos, growthSide)) {
 			BlockState replantState = ModBlocks.SOUL_BUD_SMALL.get().defaultBlockState()
 					.setValue(FACING, state.getValue(FACING))
 					.setValue(WATERLOGGED, state.getValue(WATERLOGGED))

@@ -30,9 +30,14 @@ import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextu
 import somdudewillson.create_soul_harvest.compat.jei.SoulHarvestJeiHelper;
 import somdudewillson.create_soul_harvest.content.conduit.client.WindowedPotentiaConduitRenderer;
 import somdudewillson.create_soul_harvest.content.kinetics.extractor.PotentiaExtractorRenderer;
+import somdudewillson.create_soul_harvest.content.potentia.catalyst.PotentiaGrowthCatalystBlockEntity;
+import somdudewillson.create_soul_harvest.content.potentia.client.PotentiaColorHelper;
 import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirRenderer;
 import somdudewillson.create_soul_harvest.content.recipe.RecipeSoulTracker;
+import somdudewillson.create_soul_harvest.registry.ModBlocks;
+import somdudewillson.create_soul_harvest.registry.ModItems;
 import somdudewillson.create_soul_harvest.registry.ModParticleTypes;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -94,6 +99,29 @@ public class NeoforgeClientEventSubscriber {
 	@SubscribeEvent
 	public static void onModifyBakingResult(ModelEvent.ModifyBakingResult event) {
 		CompositeItemBakedModel.wrapTargetModels(event.getModels());
+	}
+
+	@SubscribeEvent
+	public static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
+		event.register(
+				(state, level, pos, tintIndex) -> {
+					if (tintIndex == 0 && level != null && pos != null) {
+						if (level.getBlockEntity(pos) instanceof PotentiaGrowthCatalystBlockEntity be) {
+							return be.getCrystalColor();
+						}
+					}
+					return PotentiaColorHelper.DEFAULT_PRIMARY;
+				},
+				ModBlocks.POTENTIA_GROWTH_CATALYST.get()
+		);
+	}
+
+	@SubscribeEvent
+	public static void registerItemColors(RegisterColorHandlersEvent.Item event) {
+		event.register(
+				(stack, tintIndex) -> tintIndex == 0 ? PotentiaColorHelper.DEFAULT_PRIMARY : 0xFFFFFF,
+				ModItems.POTENTIA_GROWTH_CATALYST.get()
+		);
 	}
 
 	@EventBusSubscriber(modid = SoulHarvestMod.MOD_ID, value = Dist.CLIENT)

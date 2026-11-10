@@ -3,6 +3,7 @@ package somdudewillson.create_soul_harvest.registry;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.content.capability.ISoulBudGrowthHandler;
 import somdudewillson.create_soul_harvest.content.capability.ISoulHolder;
 import somdudewillson.create_soul_harvest.content.capability.ItemStackSoulHolder;
 import somdudewillson.create_soul_harvest.content.potentia.IPotentiaHandler;
@@ -43,6 +44,9 @@ public class ModCapabilities {
 	public static final BlockCapability<IPotentiaTransporter, Direction> POTENTIA_TRANSPORTER =
 			BlockCapability.createSided(SoulHarvestMod.id("potentia_transporter"), IPotentiaTransporter.class);
 
+	public static final BlockCapability<ISoulBudGrowthHandler, Direction> SOUL_BUD_GROWTH_HANDLER =
+			BlockCapability.createSided(SoulHarvestMod.id("soul_bud_growth_handler"), ISoulBudGrowthHandler.class);
+
 	public static void register(IEventBus modBus) {
 		modBus.addListener(ModCapabilities::onRegisterCapabilities);
 	}
@@ -76,6 +80,18 @@ public class ModCapabilities {
 				(be, side) -> be.getPotentiaHandler(side)
 		);
 
+		event.registerBlockEntity(
+				POTENTIA_HANDLER,
+				ModBlockEntities.POTENTIA_GROWTH_CATALYST_BE.get(),
+				(be, side) -> be.getPotentiaHandler(side)
+		);
+
+		event.registerBlockEntity(
+				SOUL_BUD_GROWTH_HANDLER,
+				ModBlockEntities.POTENTIA_GROWTH_CATALYST_BE.get(),
+				(be, side) -> be.getGrowthHandler(side)
+		);
+
 		event.registerBlock(
 				POTENTIA_TRANSPORTER,
 				(level, pos, state, be, side) -> state.getBlock() instanceof IPotentiaTransporter transporter ? transporter : null,
@@ -93,6 +109,9 @@ public class ModCapabilities {
 			CapabilityManager.get(new CapabilityToken<>() {});
 
 	public static final Capability<IPotentiaTransporter> POTENTIA_TRANSPORTER =
+			CapabilityManager.get(new CapabilityToken<>() {});
+
+	public static final Capability<ISoulBudGrowthHandler> SOUL_BUD_GROWTH_HANDLER =
 			CapabilityManager.get(new CapabilityToken<>() {});
 
 	public static void register(IEventBus modBus) {

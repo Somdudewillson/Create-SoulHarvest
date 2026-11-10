@@ -9,6 +9,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import somdudewillson.create_soul_harvest.content.block.SoulBudBlock;
+import somdudewillson.create_soul_harvest.content.block.SoulBudHelper;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 import somdudewillson.create_soul_harvest.registry.ModTags;
 
@@ -24,8 +25,8 @@ public class SoulDepositSeedItem extends Item {
 		BlockPos spawnerPos = context.getClickedPos();
 		BlockState clickedState = level.getBlockState(spawnerPos);
 
-		if (clickedState.is(ModTags.Blocks.SOUL_BUD_GROWTH_BLOCKS)) {
-			Direction clickedFace = context.getClickedFace();
+		Direction clickedFace = context.getClickedFace();
+		if (SoulBudHelper.isValidGrowthBlock(level, spawnerPos, clickedFace)) {
 			BlockPos budPos = spawnerPos.relative(clickedFace);
 
 			if (level.getBlockState(budPos).canBeReplaced()) {

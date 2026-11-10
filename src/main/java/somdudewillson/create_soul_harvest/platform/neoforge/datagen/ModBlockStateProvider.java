@@ -105,6 +105,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		ModelFile potentiaExtractorModel = models().getExistingFile(modLoc("block/potentia_extractor/block"));
 		directionalBlock(ModBlocks.POTENTIA_EXTRACTOR.get(), potentiaExtractorModel);
 
+		// Potentia Growth Catalyst
+		ModelFile potentiaGrowthCatalystModel = models().getExistingFile(modLoc("block/potentia_growth_catalyst/potentia_growth_catalyst"));
+		directionalBlock(ModBlocks.POTENTIA_GROWTH_CATALYST.get(), potentiaGrowthCatalystModel);
+
 		// Potentia Conduit & Windowed Potentia Conduit
 		PotentiaConduitStateGen.generate(this);
 	}

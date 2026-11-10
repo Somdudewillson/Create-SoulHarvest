@@ -19,11 +19,13 @@
   "block.create_soul_harvest.potentia_conduit": "Potentia Conduit",
   "block.create_soul_harvest.windowed_potentia_conduit": "Windowed Potentia Conduit",
   "block.create_soul_harvest.potentia_reservoir": "Creative Potentia Reservoir",
+  "block.create_soul_harvest.potentia_growth_catalyst": "Potentia Growth Catalyst",
   "block.create_soul_harvest.liquid_soul_crystal": "Liquid Soul Crystal",
   "block.create_soul_harvest.wither_slurry": "Wither Slurry",
 
   "item.create_soul_harvest.liquid_soul_crystal_bucket": "Liquid Soul Crystal Bucket",
   "item.create_soul_harvest.wither_slurry_bucket": "Wither Slurry Bucket",
+  "item.create_soul_harvest.potentia_growth_catalyst": "Potentia Growth Catalyst",
 
   "item.create_soul_harvest.soul_bud_small": "Small Soul Crystal Bud",
   "item.create_soul_harvest.soul_bud_medium": "Medium Soul Crystal Bud",
@@ -322,6 +324,8 @@
 
   "create_soul_harvest.gui.goggles.potentia_extractor": "Potentia Extractor:",
   "create_soul_harvest.gui.goggles.potentia_reservoir": "Creative Potentia Reservoir:",
+  "create_soul_harvest.gui.goggles.potentia_growth_catalyst": "Potentia Growth Catalyst:",
+  "create_soul_harvest.gui.goggles.potentia_growth_catalyst.no_type": "None",
   "create_soul_harvest.gui.goggles.potentia_reservoir.mode": "Mode:",
   "create_soul_harvest.gui.goggles.potentia_reservoir.untyped_supply": "Untyped (Infinite Supply)",
   "create_soul_harvest.gui.goggles.potentia_reservoir.accept_all": "All Potentia (Void Sink)",
