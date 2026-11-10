@@ -104,6 +104,11 @@ public class PotentiaExtractorBlockEntity extends KineticBlockEntity {
 			if (getSpeed() == 0 || isOverStressed() || !isSpeedRequirementFulfilled()) {
 				return 0.0f;
 			}
+			if (isVirtual()) {
+				return currentExtractionPoints > 0.0f
+						? currentExtractionPoints
+						: PotentiaExtractionMath.calculatePoints(getSpeed(), getMinSpeed());
+			}
 			BlockState state = getBlockState();
 			if (state.getBlock() instanceof PotentiaExtractorBlock) {
 				Direction facing = state.getValue(PotentiaExtractorBlock.FACING);
@@ -120,6 +125,14 @@ public class PotentiaExtractorBlockEntity extends KineticBlockEntity {
 		if (level != null && level.isClientSide()) {
 			if (getSpeed() == 0 || isOverStressed() || !isSpeedRequirementFulfilled()) {
 				return 0L;
+			}
+			if (isVirtual()) {
+				return currentOutputRate > 0L
+						? currentOutputRate
+						: PotentiaExtractionMath.calculateTotalPotentia(
+								PotentiaExtractionMath.calculatePoints(getSpeed(), getMinSpeed()),
+								PotentiaExtractionMath.DEFAULT_MAX_POTENTIA_PER_TICK
+						);
 			}
 		}
 		return currentOutputRate;
@@ -149,9 +162,13 @@ public class PotentiaExtractorBlockEntity extends KineticBlockEntity {
 	@Override
 	public void onSpeedChanged(float previousSpeed) {
 		super.onSpeedChanged(previousSpeed);
-		if (level != null && !level.isClientSide()) {
+		if (level != null && (!level.isClientSide() || isVirtual())) {
 			if (getSpeed() == 0 || !isSpeedRequirementFulfilled()) {
 				updateStatus(0.0f, 0L, this.isController);
+			} else if (isVirtual()) {
+				float points = PotentiaExtractionMath.calculatePoints(getSpeed(), getMinSpeed());
+				long rate = PotentiaExtractionMath.calculateTotalPotentia(points, PotentiaExtractionMath.DEFAULT_MAX_POTENTIA_PER_TICK);
+				updateStatus(points, rate, true);
 			}
 		}
 	}
@@ -186,6 +203,62 @@ public class PotentiaExtractorBlockEntity extends KineticBlockEntity {
 		if (getSpeed() == 0 || isOverStressed() || !isSpeedRequirementFulfilled()) {
 			if (currentExtractionPoints != 0.0f || currentOutputRate != 0L) {
 				updateStatus(0.0f, 0L, false);
+			}
+			return;
+		}
+
+		if (isVirtual()) {
+			Direction facing = state.getValue(PotentiaExtractorBlock.FACING);
+			BlockPos targetPos = worldPosition.relative(facing);
+			BlockState targetState = level.getBlockState(targetPos);
+
+			float points = PotentiaExtractionMath.calculatePoints(getSpeed(), getMinSpeed());
+			long outputRate = 0L;
+			boolean isCtrl = true;
+
+			if (targetState.is(ModTags.Blocks.SOUL_BUD_GROWTH_BLOCKS)) {
+				List<PotentiaExtractorBlockEntity> activeExtractors = new ArrayList<>();
+				for (Direction dir : Direction.values()) {
+					BlockPos checkPos = targetPos.relative(dir);
+					BlockState checkState = level.getBlockState(checkPos);
+					if (checkState.getBlock() instanceof PotentiaExtractorBlock) {
+						Direction extFacing = checkState.getValue(PotentiaExtractorBlock.FACING);
+						if (checkPos.relative(extFacing).equals(targetPos)) {
+							BlockEntity be = level.getBlockEntity(checkPos);
+							if (be instanceof PotentiaExtractorBlockEntity extractor) {
+								if (extractor.getSpeed() != 0 && !extractor.isOverStressed() && extractor.isSpeedRequirementFulfilled()) {
+									activeExtractors.add(extractor);
+								}
+							}
+						}
+					}
+				}
+
+				if (activeExtractors.size() > 1) {
+					float totalPoints = 0.0f;
+					for (PotentiaExtractorBlockEntity extractor : activeExtractors) {
+						totalPoints += PotentiaExtractionMath.calculatePoints(extractor.getSpeed(), extractor.getMinSpeed());
+					}
+					long totalExtracted = PotentiaExtractionMath.calculateTotalPotentia(totalPoints, PotentiaExtractionMath.DEFAULT_MAX_POTENTIA_PER_TICK);
+					outputRate = PotentiaExtractionMath.calculateShare(points, totalPoints, totalExtracted);
+
+					PotentiaExtractorBlockEntity lowest = activeExtractors.get(0);
+					for (int i = 1; i < activeExtractors.size(); i++) {
+						if (comparePos(activeExtractors.get(i).getBlockPos(), lowest.getBlockPos()) < 0) {
+							lowest = activeExtractors.get(i);
+						}
+					}
+					isCtrl = (lowest == this);
+				} else {
+					outputRate = PotentiaExtractionMath.calculateTotalPotentia(points, PotentiaExtractionMath.DEFAULT_MAX_POTENTIA_PER_TICK);
+				}
+			} else {
+				outputRate = PotentiaExtractionMath.calculateTotalPotentia(points, PotentiaExtractionMath.DEFAULT_MAX_POTENTIA_PER_TICK);
+			}
+
+			updateStatus(points, outputRate, isCtrl);
+			if (outputRate > 0) {
+				pushPotentia(outputRate, getProducedPotentiaType());
 			}
 			return;
 		}

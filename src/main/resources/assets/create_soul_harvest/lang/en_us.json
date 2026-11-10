@@ -232,6 +232,13 @@
   "create_soul_harvest.ponder.potentia_conduit.text_3": "Windowed conduits will not connect to any other adjacent conduit segments",
   "create_soul_harvest.ponder.potentia_conduit.text_4": "Once source and target are connected by conduits, the endpoints gradually transfer their content",
   "create_soul_harvest.ponder.potentia_conduit.text_5": "Thus, the Conduit blocks themselves never 'physically' contain any potentia",
+  
+  "create_soul_harvest.ponder.potentia_extractor.header": "Extracting Potentia",
+  "create_soul_harvest.ponder.potentia_extractor.text_1": "When facing a spawner and powered, an Extractor will extract potentia",
+  "create_soul_harvest.ponder.potentia_extractor.text_2": "The Extractor will automatically push potentia into connected Potentia Conduits",
+  "create_soul_harvest.ponder.potentia_extractor.text_3": "The Extractor has no internal buffer - any excess potentia extracted will be lost",
+  "create_soul_harvest.ponder.potentia_extractor.text_4": "Additional Extractors may be placed to increase yield",
+  "create_soul_harvest.ponder.potentia_extractor.text_5": "However, this incurs diminishing returns",
 
 
   "create_soul_harvest.jei.glyph_page_chance_per_page": "12.5% Chance (1 in 8)",

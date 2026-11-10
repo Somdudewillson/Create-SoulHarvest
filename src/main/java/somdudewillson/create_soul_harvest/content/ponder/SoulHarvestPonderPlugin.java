@@ -25,14 +25,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
 import somdudewillson.create_soul_harvest.content.block.SoulBudBlock;
 import somdudewillson.create_soul_harvest.content.conduit.PotentiaConduitBlock;
+import somdudewillson.create_soul_harvest.content.conduit.PotentiaConduitBlock.ConduitConnectionType;
 import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlock;
 import somdudewillson.create_soul_harvest.content.conduit.network.PotentiaNetwork;
+import somdudewillson.create_soul_harvest.content.kinetics.extractor.PotentiaExtractionMath;
+import somdudewillson.create_soul_harvest.content.kinetics.extractor.PotentiaExtractorBlockEntity;
 import somdudewillson.create_soul_harvest.content.potentia.IPotentiaTransporter;
 import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirBlock;
 import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirBlockEntity;
@@ -82,6 +86,10 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 					ModBlocks.POTENTIA_CONDUIT.getId()
 				)
 			.addStoryBoard(SoulHarvestMod.id("potentia/ponder_potentia_conduit"), SoulHarvestPonderPlugin::potentiaConduitProgram);
+		helper.forComponents(
+					ModBlocks.POTENTIA_EXTRACTOR.getId()
+				)
+			.addStoryBoard(SoulHarvestMod.id("potentia/ponder_potentia_extractor"), SoulHarvestPonderPlugin::potentiaExtractorProgram);
 	}
 
 	@Override
@@ -485,6 +493,90 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 		scene.idle(20*4);
 	}
 	
+	protected static void potentiaExtractorProgram(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+		
+		BlockPos reservoir = util.grid().at(3, 4, 0);
+		BlockPos spawner = util.grid().at(3, 1, 4);
+		BlockPos upperExtractor = util.grid().at(3, 2, 4);
+		BlockPos lowerExtractor = util.grid().at(3, 1, 3);
+		
+		scene.title("potentia_extractor", "Extracting Potentia");
+		scene.configureBasePlate(0, 1, 7);
+		scene.setSceneOffsetY(1);
+		scene.world().showSection(util.select().layer(0), Direction.UP);
+		scene.idle(15);
+		scene.world().showSection(util.select().position(spawner), Direction.DOWN);
+		scene.idle(5);
+		scene.rotateCameraY(-20f);
+		scene.idle(10);
+		
+		
+		scene.world().setKineticSpeed(util.select().position(upperExtractor), 0);
+		scene.world().setKineticSpeed(util.select().position(lowerExtractor), 0);
+		scene.world().showSection(util.select().position(upperExtractor), Direction.DOWN);
+		scene.idle(5);
+		scene.overlay().showOutlineWithText(util.select().position(upperExtractor), 20*4)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("When facing a spawner and powered, an Extractor will extract potentia");
+		scene.idle(5);
+		scene.world().setKineticSpeed(util.select().position(upperExtractor), 32);
+		scene.idle(5);
+		scene.effects().rotationSpeedIndicator(upperExtractor);
+		scene.idle(20*4);
+
+		scene.world()
+			.modifyBlock(util.grid().at(3, 4, 2), s->s.setValue(PotentiaConduitBlock.DOWN, ConduitConnectionType.NONE).setValue(PotentiaConduitBlock.CASING, false), false);
+		scene.world().showSection(util.select().position(3, 3, 4), Direction.DOWN);
+		scene.idle(3);
+		for (int i = 4; i >= 1; i--) {
+			scene.world().showSection(util.select().position(3, 4, i),  Direction.DOWN);
+			scene.idle(3);
+		}
+		scene.idle(5);
+		scene.world().showSection(util.select().position(reservoir), Direction.DOWN);
+		scene.idle(10);
+		scene.overlay().showText(20*4)
+			.pointAt(util.vector().topOf(3, 4, 4))
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("The Extractor will automatically push potentia into connected Potentia Conduits");
+		scene.idle(20*4);
+		scene.idle(5);
+		scene.overlay().showText(20*4)
+			.pointAt(util.vector().blockSurface(upperExtractor, Direction.WEST))
+			.colored(PonderPalette.RED)
+			.placeNearTarget()
+			.text("The Extractor has no internal buffer - any excess potentia extracted will be lost");
+		scene.idle(20*4);
+		scene.idle(15);
+		
+		
+		scene.world().showSection(util.select().position(lowerExtractor), Direction.SOUTH);
+		scene.world().setKineticSpeed(util.select().position(lowerExtractor), 32);
+		scene.idle(5);
+		for (int i = 1; i <= 3; i++) {
+			scene.world().showSection(util.select().position(3, i, 2),  Direction.SOUTH);
+			scene.idle(3);
+		}
+		scene.world().restoreBlocks(util.select().position(3, 4, 2));
+		scene.idle(10);
+		scene.overlay().showText(20*4)
+			.pointAt(util.vector().blockSurface(lowerExtractor, Direction.WEST))
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("Additional Extractors may be placed to increase yield");
+		scene.idle(20*4);
+		scene.idle(10);
+		scene.overlay().showText(20*4)
+			.pointAt(util.vector().blockSurface(lowerExtractor, Direction.WEST))
+			.colored(PonderPalette.RED)
+			.placeNearTarget()
+			.text("However, this incurs diminishing returns");
+		scene.idle(20*4);
+	}
+	
 	// --- Helpers
 
 	public static void propagateConduitUpdates(SceneBuilder scene, BlockPos startPos) {
@@ -517,20 +609,31 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 	}
 
 	private static void triggerSupplierDistribution(PonderLevel level, BlockPos startPos, Set<BlockPos> conduits) {
-		if (startPos != null && level.getBlockEntity(startPos) instanceof PotentiaReservoirBlockEntity reservoir && reservoir.getMode().isSupply()) {
-			for (Direction d : Direction.values()) {
-				BlockPos neighborPos = startPos.relative(d);
-				if (level.getBlockState(neighborPos).getBlock() instanceof IPotentiaTransporter) {
-					PotentiaNetwork.distributeFrom(level, startPos, d, reservoir.getPotentiaHandler(d));
-				}
-			}
+		if (startPos != null) {
+			distributeIfSupplier(level, startPos);
 		}
 		for (BlockPos conduitPos : conduits) {
 			for (Direction d : Direction.values()) {
-				BlockPos neighborPos = conduitPos.relative(d);
-				if (level.getBlockEntity(neighborPos) instanceof PotentiaReservoirBlockEntity reservoir && reservoir.getMode().isSupply()) {
-					Direction pushDir = d.getOpposite();
-					PotentiaNetwork.distributeFrom(level, neighborPos, pushDir, reservoir.getPotentiaHandler(pushDir));
+				distributeIfSupplier(level, conduitPos.relative(d));
+			}
+		}
+	}
+
+	private static void distributeIfSupplier(PonderLevel level, BlockPos pos) {
+		BlockEntity be = level.getBlockEntity(pos);
+		if (be instanceof PotentiaReservoirBlockEntity reservoir && reservoir.getMode().isSupply()) {
+			for (Direction d : Direction.values()) {
+				BlockPos neighborPos = pos.relative(d);
+				if (level.getBlockState(neighborPos).getBlock() instanceof IPotentiaTransporter) {
+					PotentiaNetwork.distributeFrom(level, pos, d, reservoir.getPotentiaHandler(d));
+				}
+			}
+		} else if (be instanceof PotentiaExtractorBlockEntity extractor) {
+			if (extractor.getSpeed() != 0 && !extractor.isOverStressed() && extractor.isSpeedRequirementFulfilled()) {
+				float pts = PotentiaExtractionMath.calculatePoints(extractor.getSpeed(), extractor.getMinSpeed());
+				long rate = PotentiaExtractionMath.calculateTotalPotentia(pts, PotentiaExtractionMath.DEFAULT_MAX_POTENTIA_PER_TICK);
+				if (rate > 0) {
+					extractor.pushPotentia(rate, extractor.getProducedPotentiaType());
 				}
 			}
 		}
