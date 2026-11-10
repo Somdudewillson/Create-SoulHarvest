@@ -6,6 +6,7 @@ import net.createmod.catnip.math.Pointing;
 import net.createmod.ponder.api.PonderPalette;
 import net.createmod.ponder.api.registration.PonderPlugin;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
+import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.createmod.ponder.api.scene.Selection;
@@ -44,6 +45,30 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 				)
 			.addStoryBoard(SoulHarvestMod.id("midas_core/ponder_midas_core"), SoulHarvestPonderPlugin::midasCoreConvertProgram)
 			.addStoryBoard(SoulHarvestMod.id("midas_core/ponder_midas_core"), SoulHarvestPonderPlugin::midasCoreBoostProgram);
+	}
+
+	@Override
+	public void registerTags(PonderTagRegistrationHelper<ResourceLocation> helper) {
+		helper.registerTag("soul_crystal")
+				.addToIndex()
+				.item(ModBlocks.SOUL_CLUSTER.get(), true, false)
+				.title("Soul Crystals")
+				.description("Components involved in Soul Shard production")
+				.item(ModItems.SOUL_DEPOSIT_SEED.get())
+				.item(ModItems.SOUL_SHARD.get())
+				.item(ModBlocks.SOUL_BUD_SMALL.get())
+				.item(ModBlocks.SOUL_BUD_MEDIUM.get())
+				.item(ModBlocks.SOUL_BUD_LARGE.get())
+				.register();
+		
+		helper.registerTag("magic_gold")
+				.addToIndex()
+				.item(ModBlocks.MIDAS_CORE.get(), true, false)
+				.title("Soul Crystals")
+				.description("Components involved in Anima Gold production")
+				.item(ModItems.MAGIC_GOLD.get())
+				.item(ModBlocks.GOLD_FOAM.get())
+				.register();
 	}
 	
 	protected static void soulClusterGrowthProgram(SceneBuilder builder, SceneBuildingUtil util) {
