@@ -205,6 +205,10 @@
   "tag.create_soul_harvest.contagion_immune": "Contagion Immune Entities",
   "tag.create_soul_harvest.biocide_immune": "Biocide Immune Entities",
   
+  "create_soul_harvest.ponder.tag.soul_crystal": "Soul Crystals",
+  "create_soul_harvest.ponder.tag.soul_crystal.description": "Components which help produce Soul Shards",
+  "create_soul_harvest.ponder.tag.magic_gold": "Anima Gold",
+  "create_soul_harvest.ponder.tag.magic_gold.description": "Components which help produce Anima Gold",
   "create_soul_harvest.ponder.tag.potentia": "Potentia Manipulators",
   "create_soul_harvest.ponder.tag.potentia.description": "Components which help relaying and making use of Potentia",
   

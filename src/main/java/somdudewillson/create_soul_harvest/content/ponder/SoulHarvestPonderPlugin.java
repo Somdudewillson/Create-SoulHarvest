@@ -105,11 +105,6 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 				.item(ModBlocks.SOUL_CLUSTER.get(), true, false)
 				.title("Soul Crystals")
 				.description("Components which help produce Soul Shards")
-				.item(ModItems.SOUL_DEPOSIT_SEED.get())
-				.item(ModItems.SOUL_SHARD.get())
-				.item(ModBlocks.SOUL_BUD_SMALL.get())
-				.item(ModBlocks.SOUL_BUD_MEDIUM.get())
-				.item(ModBlocks.SOUL_BUD_LARGE.get())
 				.register();
 		
 		helper.registerTag(MAGIC_GOLD)
@@ -117,8 +112,6 @@ public class SoulHarvestPonderPlugin implements PonderPlugin {
 				.item(ModBlocks.MIDAS_CORE.get(), true, false)
 				.title("Anima Gold")
 				.description("Components which help produce Anima Gold")
-				.item(ModItems.MAGIC_GOLD.get())
-				.item(ModBlocks.GOLD_FOAM.get())
 				.register();
 		
 		helper.registerTag(POTENTIA)
