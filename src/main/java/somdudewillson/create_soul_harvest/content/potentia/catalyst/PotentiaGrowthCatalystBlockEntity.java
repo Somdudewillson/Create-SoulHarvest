@@ -6,11 +6,15 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+
 import org.jetbrains.annotations.Nullable;
 import somdudewillson.create_soul_harvest.config.SoulHarvestConfig;
 import somdudewillson.create_soul_harvest.content.block.SoulBudBlock;
@@ -22,6 +26,7 @@ import somdudewillson.create_soul_harvest.content.potentia.client.PotentiaColorH
 import somdudewillson.create_soul_harvest.registry.ModBlockEntities;
 
 import java.util.List;
+import java.util.Objects;
 
 public class PotentiaGrowthCatalystBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation, Clearable {
 
@@ -53,7 +58,7 @@ public class PotentiaGrowthCatalystBlockEntity extends SmartBlockEntity implemen
 		public long fill(SoulPotentiaStack resource, PotentiaAction action) {
 			if (resource == null || resource.isEmpty()) return 0L;
 			if (isVirtual()) {
-				if (action.execute() && resource.getEntityType() != null && !java.util.Objects.equals(buffer.getEntityType(), resource.getEntityType())) {
+				if (action.execute() && resource.getEntityType() != null && !Objects.equals(buffer.getEntityType(), resource.getEntityType())) {
 					buffer = new SoulPotentiaStack(resource.getAmount(), resource.getEntityType());
 					notifyUpdate();
 				}
@@ -132,6 +137,16 @@ public class PotentiaGrowthCatalystBlockEntity extends SmartBlockEntity implemen
 			if (buffer.getAmount() >= cost) {
 				buffer.shrink(cost);
 				notifyUpdate();
+				
+				if (level instanceof ServerLevel serverLevel) {
+					Vec3 centerPos = getBlockPos().getCenter();
+					serverLevel.sendParticles(
+							ParticleTypes.HAPPY_VILLAGER, 
+							centerPos.x, centerPos.y, centerPos.z, 
+							25, 
+							0.4, 0.4, 0.4, 
+							0.05);
+				}
 				return true;
 			}
 			return false;
