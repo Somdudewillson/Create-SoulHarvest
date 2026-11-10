@@ -36,7 +36,7 @@ public class ModBlocks {
 			() -> new WindowedPotentiaConduitBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.COPPER).strength(1.5f).noOcclusion()));
 
 	public static final DeferredHolder<Block, PotentiaReservoirBlock> POTENTIA_RESERVOIR = BLOCKS.register("potentia_reservoir",
-			() -> new PotentiaReservoirBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.COPPER).strength(2.0f)));
+			() -> new PotentiaReservoirBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.COPPER).strength(2.0f).noOcclusion()));
 
 	public static final DeferredHolder<Block, SoulBudBlock> SOUL_BUD_SMALL = BLOCKS.register("soul_bud_small",
 			() -> new SoulBudBlock(3, 4, ModBlocks.SOUL_BUD_MEDIUM::get,

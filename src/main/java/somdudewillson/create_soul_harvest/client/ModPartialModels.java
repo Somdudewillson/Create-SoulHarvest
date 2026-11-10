@@ -6,6 +6,7 @@ import somdudewillson.create_soul_harvest.SoulHarvestMod;
 public class ModPartialModels {
 
 	public static final PartialModel POTENTIA_EXTRACTOR_HEAD = block("potentia_extractor/head");
+	public static final PartialModel POTENTIA_CRYSTAL = block("potentia_resevoir/potentia_crystal");
 
 	private static PartialModel block(String path) {
 		return PartialModel.of(SoulHarvestMod.id("block/" + path));

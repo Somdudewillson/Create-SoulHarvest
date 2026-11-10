@@ -322,6 +322,11 @@
 
   "create_soul_harvest.gui.goggles.potentia_extractor": "Potentia Extractor:",
   "create_soul_harvest.gui.goggles.potentia_reservoir": "Potentia Reservoir:",
+  "create_soul_harvest.gui.goggles.potentia_reservoir.mode": "Mode:",
+  "create_soul_harvest.gui.goggles.potentia_reservoir.untyped_supply": "Untyped (Infinite Supply)",
+  "create_soul_harvest.gui.goggles.potentia_reservoir.accept_all": "All Potentia (Void Sink)",
+  "create_soul_harvest.potentia_reservoir.mode.supply": "Supplier Mode",
+  "create_soul_harvest.potentia_reservoir.mode.consume": "Consumer Mode",
   "create_soul_harvest.gui.goggles.extraction_points_heading": "Extraction Points:",
   "create_soul_harvest.gui.goggles.multiblock_status_heading": "Multiblock Status:",
   "create_soul_harvest.gui.goggles.multiblock_controller": "Controller (Active)",

@@ -44,6 +44,7 @@ public class SoulHarvestMod {
 
 		ItemBlockRenderTypes.setRenderLayer(ModBlocks.POTENTIA_CONDUIT.get(), RenderType.cutoutMipped());
 		ItemBlockRenderTypes.setRenderLayer(ModBlocks.WINDOWED_POTENTIA_CONDUIT.get(), RenderType.cutoutMipped());
+		ItemBlockRenderTypes.setRenderLayer(ModBlocks.POTENTIA_RESERVOIR.get(), RenderType.cutoutMipped());
 	}
 
 	public static Platform xplat() {

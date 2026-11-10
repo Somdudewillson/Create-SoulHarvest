@@ -1,53 +1,57 @@
 package somdudewillson.create_soul_harvest.content.potentia.tank;
 
+import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import somdudewillson.create_soul_harvest.registry.ModBlockEntities;
 
-public class PotentiaReservoirBlock extends Block implements SimpleWaterloggedBlock, IBE<PotentiaReservoirBlockEntity> {
+public class PotentiaReservoirBlock extends Block implements IBE<PotentiaReservoirBlockEntity>, IWrenchable {
 
-	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+	public static final EnumProperty<ReservoirMode> MODE = EnumProperty.create("mode", ReservoirMode.class);
 
 	public PotentiaReservoirBlock(Properties properties) {
 		super(properties);
-		this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false));
+		this.registerDefaultState(this.stateDefinition.any()
+				.setValue(MODE, ReservoirMode.CONSUME));
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		boolean waterlogged = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-		return this.defaultBlockState().setValue(WATERLOGGED, waterlogged);
-	}
-
-	@Override
-	public FluidState getFluidState(BlockState state) {
-		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
-	}
-
-	@Override
-	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world,
-								  BlockPos pos, BlockPos neighbourPos) {
-		if (state.getValue(WATERLOGGED)) {
-			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
+		Level level = context.getLevel();
+		BlockPos pos = context.getClickedPos();
+		if (!level.isClientSide()) {
+			BlockState newState = state.cycle(MODE);
+			level.setBlock(pos, newState, 3);
+			IWrenchable.playRotateSound(level, pos);
+			if (level.getBlockEntity(pos) instanceof PotentiaReservoirBlockEntity be) {
+				be.setMode(newState.getValue(MODE));
+			}
+			Player player = context.getPlayer();
+			if (player != null) {
+				ReservoirMode mode = newState.getValue(MODE);
+				player.displayClientMessage(
+						Component.translatable("create_soul_harvest.potentia_reservoir.mode." + mode.getSerializedName()),
+						true
+				);
+			}
 		}
-		return state;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(WATERLOGGED);
+		builder.add(MODE);
 	}
 
 	@Override

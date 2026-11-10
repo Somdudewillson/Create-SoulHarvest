@@ -30,6 +30,7 @@ import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextu
 import somdudewillson.create_soul_harvest.compat.jei.SoulHarvestJeiHelper;
 import somdudewillson.create_soul_harvest.content.conduit.client.WindowedPotentiaConduitRenderer;
 import somdudewillson.create_soul_harvest.content.kinetics.extractor.PotentiaExtractorRenderer;
+import somdudewillson.create_soul_harvest.content.potentia.tank.PotentiaReservoirRenderer;
 import somdudewillson.create_soul_harvest.content.recipe.RecipeSoulTracker;
 import somdudewillson.create_soul_harvest.registry.ModParticleTypes;
 
@@ -66,6 +67,7 @@ public class NeoforgeClientEventSubscriber {
 		event.registerEntityRenderer(ModEntityTypes.FIREBOLT.get(), NoopRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntities.POTENTIA_EXTRACTOR_BE.get(), PotentiaExtractorRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntities.WINDOWED_POTENTIA_CONDUIT_BE.get(), WindowedPotentiaConduitRenderer::new);
+		event.registerBlockEntityRenderer(ModBlockEntities.POTENTIA_RESERVOIR_BE.get(), PotentiaReservoirRenderer::new);
 	}
 
 	@SubscribeEvent

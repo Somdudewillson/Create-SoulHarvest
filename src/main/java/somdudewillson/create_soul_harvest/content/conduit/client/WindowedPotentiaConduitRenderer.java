@@ -13,12 +13,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix4f;
-import somdudewillson.create_soul_harvest.client.texture.palette.MobPalette;
-import somdudewillson.create_soul_harvest.client.texture.palette.MobPatternTextureManager;
 import somdudewillson.create_soul_harvest.content.conduit.PotentiaConduitBlock;
 import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlock;
 import somdudewillson.create_soul_harvest.content.conduit.WindowedPotentiaConduitBlockEntity;
 import somdudewillson.create_soul_harvest.content.potentia.IPotentiaTransporter;
+import somdudewillson.create_soul_harvest.content.potentia.client.PotentiaColorHelper;
+import somdudewillson.create_soul_harvest.content.potentia.client.PotentiaColorHelper.PotentiaColors;
 
 public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<WindowedPotentiaConduitBlockEntity> {
 
@@ -48,14 +48,10 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 			return;
 		}
 
-		// Determine bolt colors based on entity palette
+		// Determine bolt colors based on entity palette via unified PotentiaColorHelper
 		ResourceLocation entityType = be.getCurrentEntityType();
-		MobPalette palette = null;
-		if (entityType != null) {
-			palette = MobPatternTextureManager.getPalette(entityType);
-		}
-
-		int[] boltColors = getBoltColors(palette);
+		PotentiaColors colors = PotentiaColorHelper.getColors(entityType);
+		int[] boltColors = new int[] { colors.primary(), colors.secondary(), colors.accent() };
 
 		ms.pushPose();
 		ms.translate(0.5f, 0.5f, 0.5f);
@@ -206,30 +202,6 @@ public class WindowedPotentiaConduitRenderer implements BlockEntityRenderer<Wind
 		//?} else {
 		/*builder.vertex(matrix, x, y, z).color(r, g, b, a).endVertex();
 		*///?}
-	}
-
-	private static int[] getBoltColors(MobPalette palette) {
-		int primary = 0x00E5FF;    // Vibrant Soul Cyan
-		int secondary = 0x9D4EDD;  // Amethyst Purple
-		int accent = 0x72EFDD;     // Soul Fire Teal
-
-		if (palette != null) {
-			if (palette.getMostFrequentCommonColor() != null) {
-				primary = palette.getMostFrequentCommonColor().toRgbInt();
-			}
-			if (!palette.rareColors().isEmpty()) {
-				secondary = palette.rareColors().get(0).toRgbInt();
-			} else if (palette.getLeastFrequentCommonColor() != null) {
-				secondary = palette.getLeastFrequentCommonColor().toRgbInt();
-			}
-			if (palette.rareColors().size() > 1) {
-				accent = palette.rareColors().get(1).toRgbInt();
-			} else {
-				accent = primary;
-			}
-		}
-
-		return new int[] { primary, secondary, accent };
 	}
 
 	private static float hash(long seed, int salt) {
