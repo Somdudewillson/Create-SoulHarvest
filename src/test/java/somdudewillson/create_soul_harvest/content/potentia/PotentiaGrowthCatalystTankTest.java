@@ -1,11 +1,15 @@
 package somdudewillson.create_soul_harvest.content.potentia;
 
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.junit.jupiter.api.Test;
 import somdudewillson.create_soul_harvest.config.SoulHarvestConfig;
 import somdudewillson.create_soul_harvest.content.capability.ISoulBudGrowthHandler;
 import somdudewillson.create_soul_harvest.content.potentia.client.PotentiaColorHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -140,7 +144,7 @@ public class PotentiaGrowthCatalystTankTest {
 	@Test
 	public void testDefaultCapacitiesAndThresholds() {
 		assertEquals(4700L, SoulHarvestConfig.getCatalystGrowthConsumption());
-		assertEquals(7050L, SoulHarvestConfig.getCatalystCapacity());
+		assertEquals(11750L, SoulHarvestConfig.getCatalystCapacity());
 		assertEquals(2350L, SoulHarvestConfig.getCatalystThreshold());
 	}
 
@@ -156,9 +160,9 @@ public class PotentiaGrowthCatalystTankTest {
 		assertEquals(ZOMBIE, catalyst.getBuffer().getEntityType());
 
 		// Fill up to capacity
-		long filledMore = catalyst.fill(new SoulPotentiaStack(10000L, ZOMBIE), IPotentiaHandler.PotentiaAction.EXECUTE);
-		assertEquals(6050L, filledMore); // 7050 - 1000 = 6050
-		assertEquals(7050L, catalyst.getBuffer().getAmount());
+		long filledMore = catalyst.fill(new SoulPotentiaStack(20000L, ZOMBIE), IPotentiaHandler.PotentiaAction.EXECUTE);
+		assertEquals(10750L, filledMore); // 11750 - 1000 = 10750
+		assertEquals(11750L, catalyst.getBuffer().getAmount());
 	}
 
 	@Test
@@ -182,14 +186,14 @@ public class PotentiaGrowthCatalystTankTest {
 		TestCatalystHandler catalyst = new TestCatalystHandler();
 
 		// Fill completely with Zombie potentia
-		catalyst.fill(new SoulPotentiaStack(7050L, ZOMBIE), IPotentiaHandler.PotentiaAction.EXECUTE);
-		assertEquals(7050L, catalyst.getBuffer().getAmount());
+		catalyst.fill(new SoulPotentiaStack(11750L, ZOMBIE), IPotentiaHandler.PotentiaAction.EXECUTE);
+		assertEquals(11750L, catalyst.getBuffer().getAmount());
 		assertEquals(ZOMBIE, catalyst.getBuffer().getEntityType());
 
 		// Push 100 Skeleton potentia into full tank -> converts buffer type to Skeleton!
 		long accepted = catalyst.fill(new SoulPotentiaStack(100L, SKELETON), IPotentiaHandler.PotentiaAction.EXECUTE);
 		assertEquals(1L, accepted);
-		assertEquals(7050L, catalyst.getBuffer().getAmount());
+		assertEquals(11750L, catalyst.getBuffer().getAmount());
 		assertEquals(SKELETON, catalyst.getBuffer().getEntityType());
 	}
 
@@ -245,5 +249,26 @@ public class PotentiaGrowthCatalystTankTest {
 		catalyst.fill(new SoulPotentiaStack(5000L, ZOMBIE), IPotentiaHandler.PotentiaAction.EXECUTE);
 		int brightColor = catalyst.getCrystalColor();
 		assertEquals(PotentiaColorHelper.getColors(ZOMBIE).primary(), brightColor);
+	}
+
+	@Test
+	public void testGoggleTooltipDisplay() {
+		List<Component> emptyTooltip = new ArrayList<>();
+		PotentiaTooltipHelper.addToGoggles(
+				PotentiaTooltipHelper.langBuilder().translate("gui.goggles.potentia_growth_catalyst"),
+				emptyTooltip, 0
+		);
+		PotentiaTooltipHelper.appendTankTooltip(emptyTooltip, SoulPotentiaStack.EMPTY, SoulHarvestConfig.getCatalystCapacity());
+		// Expect catalyst header + contents heading + empty capacity line
+		assertEquals(3, emptyTooltip.size());
+
+		List<Component> filledTooltip = new ArrayList<>();
+		PotentiaTooltipHelper.addToGoggles(
+				PotentiaTooltipHelper.langBuilder().translate("gui.goggles.potentia_growth_catalyst"),
+				filledTooltip, 0
+		);
+		PotentiaTooltipHelper.appendTankTooltip(filledTooltip, new SoulPotentiaStack(5000L, ZOMBIE), SoulHarvestConfig.getCatalystCapacity());
+		// Expect catalyst header + contents heading + amount/capacity line + type line
+		assertEquals(4, filledTooltip.size());
 	}
 }

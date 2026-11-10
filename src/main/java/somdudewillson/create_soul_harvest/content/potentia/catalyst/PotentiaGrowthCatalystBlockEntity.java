@@ -267,29 +267,12 @@ public class PotentiaGrowthCatalystBlockEntity extends SmartBlockEntity implemen
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		PotentiaTooltipHelper.langBuilder().translate("gui.goggles.potentia_growth_catalyst")
-				.forGoggles(tooltip);
+		PotentiaTooltipHelper.addToGoggles(
+				PotentiaTooltipHelper.langBuilder().translate("gui.goggles.potentia_growth_catalyst"),
+				tooltip, 0
+		);
 
-		if (buffer == null || buffer.isEmpty()) {
-			PotentiaTooltipHelper.addToGoggles(
-					PotentiaTooltipHelper.langBuilder()
-							.translate("gui.goggles.potentia_type_heading")
-							.style(ChatFormatting.GRAY)
-							.space()
-							.text(ChatFormatting.DARK_GRAY,
-									Component.translatable("create_soul_harvest.gui.goggles.potentia_growth_catalyst.no_type").getString()),
-					tooltip, 1
-			);
-		} else {
-			PotentiaTooltipHelper.addToGoggles(
-					PotentiaTooltipHelper.langBuilder()
-							.translate("gui.goggles.potentia_type_heading")
-							.style(ChatFormatting.GRAY)
-							.space()
-							.text(ChatFormatting.GOLD, PotentiaTooltipHelper.getPotentiaTypeDisplayName(buffer)),
-					tooltip, 1
-			);
-		}
+		PotentiaTooltipHelper.appendTankTooltip(tooltip, buffer, SoulHarvestConfig.getCatalystCapacity());
 		return true;
 	}
 

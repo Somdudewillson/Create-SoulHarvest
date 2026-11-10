@@ -50,7 +50,7 @@ public class PotentiaTooltipHelper {
 
 	public static void addToGoggles(LangBuilder builder, List<Component> tooltip, int indent) {
 		try {
-			if (Minecraft.getInstance() != null) {
+			if (Minecraft.getInstance() != null && Minecraft.getInstance().font != null) {
 				if (indent > 0) {
 					builder.forGoggles(tooltip, indent);
 				} else {

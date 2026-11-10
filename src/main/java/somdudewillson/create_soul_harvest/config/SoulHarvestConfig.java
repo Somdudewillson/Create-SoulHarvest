@@ -103,7 +103,7 @@ public class SoulHarvestConfig {
 
 		CATALYST_CAPACITY_GROWTH_TICKS = builder
 				.comment("Catalyst tank capacity in terms of growth ticks")
-				.defineInRange("capacityGrowthTicks", 1.5, 0.1, 100.0);
+				.defineInRange("capacityGrowthTicks", 2.5, 0.1, 100.0);
 
 		CATALYST_PASSIVE_DEPLETION_PER_TICK = builder
 				.comment("Passive potentia depletion per tick per attached soul bud block (mB/t)")
@@ -126,7 +126,7 @@ public class SoulHarvestConfig {
 	}
 
 	public static long getCatalystCapacity() {
-		double mult = isLoaded() && CATALYST_CAPACITY_GROWTH_TICKS != null ? CATALYST_CAPACITY_GROWTH_TICKS.get() : 1.5;
+		double mult = isLoaded() && CATALYST_CAPACITY_GROWTH_TICKS != null ? CATALYST_CAPACITY_GROWTH_TICKS.get() : 2.5;
 		return (long) Math.round(getCatalystGrowthConsumption() * mult);
 	}
 
