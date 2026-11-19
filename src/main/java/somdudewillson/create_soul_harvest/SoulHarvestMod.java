@@ -1,12 +1,7 @@
 package somdudewillson.create_soul_harvest;
 
-import net.createmod.ponder.foundation.PonderIndex;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
-import somdudewillson.create_soul_harvest.client.ModVisualizers;
 import somdudewillson.create_soul_harvest.config.graph.ModDependencyGraph;
-import somdudewillson.create_soul_harvest.content.ponder.SoulHarvestPonderPlugin;
 import somdudewillson.create_soul_harvest.platform.Platform;
 import somdudewillson.create_soul_harvest.registry.ModBlocks;
 
@@ -38,13 +33,18 @@ public class SoulHarvestMod {
 	public static void onInitializeClient() {
 		LOGGER.info("Initializing {} Client on {}", MOD_ID, SoulHarvestMod.xplat().loader());
 		LOGGER.debug("{}: { version: {}; friendly_name: {} }", MOD_ID, MOD_VERSION, MOD_FRIENDLY_NAME);
-		
-		PonderIndex.addPlugin(new SoulHarvestPonderPlugin());
-		ModVisualizers.init();
+		ClientHandler.init();
+	}
 
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.POTENTIA_CONDUIT.get(), RenderType.cutoutMipped());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.WINDOWED_POTENTIA_CONDUIT.get(), RenderType.cutoutMipped());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.POTENTIA_RESERVOIR.get(), RenderType.cutoutMipped());
+	private static class ClientHandler {
+		private static void init() {
+			net.createmod.ponder.foundation.PonderIndex.addPlugin(new somdudewillson.create_soul_harvest.content.ponder.SoulHarvestPonderPlugin());
+			somdudewillson.create_soul_harvest.client.ModVisualizers.init();
+
+			net.minecraft.client.renderer.ItemBlockRenderTypes.setRenderLayer(ModBlocks.POTENTIA_CONDUIT.get(), net.minecraft.client.renderer.RenderType.cutoutMipped());
+			net.minecraft.client.renderer.ItemBlockRenderTypes.setRenderLayer(ModBlocks.WINDOWED_POTENTIA_CONDUIT.get(), net.minecraft.client.renderer.RenderType.cutoutMipped());
+			net.minecraft.client.renderer.ItemBlockRenderTypes.setRenderLayer(ModBlocks.POTENTIA_RESERVOIR.get(), net.minecraft.client.renderer.RenderType.cutoutMipped());
+		}
 	}
 
 	public static Platform xplat() {

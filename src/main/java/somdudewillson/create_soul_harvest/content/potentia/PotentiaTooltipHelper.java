@@ -2,7 +2,6 @@ package somdudewillson.create_soul_harvest.content.potentia;
 
 import net.createmod.catnip.lang.LangBuilder;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -50,17 +49,27 @@ public class PotentiaTooltipHelper {
 
 	public static void addToGoggles(LangBuilder builder, List<Component> tooltip, int indent) {
 		try {
-			if (Minecraft.getInstance() != null && Minecraft.getInstance().font != null) {
-				if (indent > 0) {
-					builder.forGoggles(tooltip, indent);
-				} else {
-					builder.forGoggles(tooltip);
-				}
+			if (SoulHarvestMod.xplat().isClient() && ClientHandler.addToGoggles(builder, tooltip, indent)) {
 				return;
 			}
 		} catch (Throwable ignored) {
 		}
 		tooltip.add(builder.component());
+	}
+
+	private static class ClientHandler {
+		private static boolean addToGoggles(LangBuilder builder, List<Component> tooltip, int indent) {
+			net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
+			if (mc != null && mc.font != null) {
+				if (indent > 0) {
+					builder.forGoggles(tooltip, indent);
+				} else {
+					builder.forGoggles(tooltip);
+				}
+				return true;
+			}
+			return false;
+		}
 	}
 
 	public static String getPotentiaTypeDisplayName(SoulPotentiaStack potentia) {

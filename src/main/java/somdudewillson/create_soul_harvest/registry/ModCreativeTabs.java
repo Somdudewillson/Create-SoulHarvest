@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -268,26 +267,16 @@ public class ModCreativeTabs {
 
 	public static void refreshCreativeTabs() {
 		try {
-			var mc = Minecraft.getInstance();
-			if (mc.level != null && mc.getConnection() != null) {
-				mc.execute(() -> {
-					try {
-						CreativeModeTab.ItemDisplayParameters params = new CreativeModeTab.ItemDisplayParameters(
-								mc.getConnection().enabledFeatures(),
-								mc.options.operatorItemsTab().get(),
-								mc.level.registryAccess()
-						);
-						if (MAIN_TAB != null && MAIN_TAB.get() != null) {
-							MAIN_TAB.get().buildContents(params);
-						}
-						if (SOUL_ITEMS_TAB != null && SOUL_ITEMS_TAB.get() != null) {
-							SOUL_ITEMS_TAB.get().buildContents(params);
-						}
-					} catch (Throwable ignored) {
-					}
-				});
+			if (SoulHarvestMod.xplat().isClient()) {
+				ClientHandler.refreshCreativeTabs();
 			}
 		} catch (Throwable ignored) {
+		}
+	}
+
+	private static class ClientHandler {
+		private static void refreshCreativeTabs() {
+			somdudewillson.create_soul_harvest.client.SoulDataClientHelper.refreshCreativeTabs();
 		}
 	}
 }
