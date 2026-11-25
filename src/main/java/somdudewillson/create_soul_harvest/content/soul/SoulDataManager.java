@@ -106,9 +106,8 @@ public class SoulDataManager {
 		return false;
 	}
 
-
 	@SuppressWarnings("unchecked")
-	public static int determineTier(EntityType<?> entityType, ResourceLocation entityId) {
+	public static int determineTier(EntityType<?> entityType, ResourceLocation entityId, @Nullable ServerLevel level) {
 		List<PartialSoulData> partials = rawPartialData.get(entityId);
 		if (partials != null) {
 			for (PartialSoulData p : partials) {
@@ -127,10 +126,41 @@ public class SoulDataManager {
 		}
 		
 		// --- Heuristic time! Values calibrated from vanilla mob properties.
-		if (!LivingEntity.class.isAssignableFrom(entityType.getBaseClass())) return 0;
+		if (entityType == EntityType.PLAYER) return 0;
+		if (!DefaultAttributes.hasSupplier(entityType)) return 0;
 		AttributeSupplier defaultAttributes = DefaultAttributes.getSupplier((EntityType<? extends LivingEntity>) entityType);
-		double health = defaultAttributes.getBaseValue(Attributes.MAX_HEALTH);
-		double damage = defaultAttributes.getBaseValue(Attributes.ATTACK_DAMAGE);
+		if (defaultAttributes == null) return 0;
+
+		boolean isMonster = false;
+		boolean isAnimal = false;
+		boolean isEnemy = false;
+		if (level != null) {
+			Entity entity = null;
+			try {
+				entity = entityType.create(level);
+				if (entity != null) {
+					if (!(entity instanceof LivingEntity)) {
+						return 0;
+					}
+					isMonster = entity instanceof Monster;
+					isAnimal = entity instanceof Animal;
+					isEnemy = entity instanceof Enemy;
+				}
+			} catch (Exception e) {
+				SoulHarvestMod.LOGGER.debug("Failed to instantiate entity {} for tier heuristic: {}", entityId, e.getMessage());
+			} finally {
+				if (entity != null) {
+					entity.discard();
+				}
+			}
+		}
+
+		double health = defaultAttributes.hasAttribute(Attributes.MAX_HEALTH)
+				? defaultAttributes.getBaseValue(Attributes.MAX_HEALTH)
+				: 0.0;
+		double damage = defaultAttributes.hasAttribute(Attributes.ATTACK_DAMAGE)
+				? defaultAttributes.getBaseValue(Attributes.ATTACK_DAMAGE)
+				: 0.0;
 		
 		float opinionT1 = 1.431f;
 		float opinionT2 = -0.112f;
@@ -138,9 +168,9 @@ public class SoulDataManager {
 		if (entityType.getCategory().isFriendly()) { opinionT1 += +1.717f; opinionT2 += -0.672f; opinionT3 += -1.036f; }
 		if (entityType.getCategory() == MobCategory.MONSTER) { opinionT1 += -1.694f; opinionT2 += +0.522f; }
 		if (entityType.getCategory() == MobCategory.AXOLOTLS || entityType.getCategory() == MobCategory.UNDERGROUND_WATER_CREATURE || entityType.getCategory() == MobCategory.WATER_CREATURE || entityType.getCategory() == MobCategory.WATER_AMBIENT) { opinionT2 += -0.013f; }
-		if (Monster.class.isAssignableFrom(entityType.getBaseClass())) { opinionT1 += -0.086f; opinionT3 += +0.016f; }
-		if (Animal.class.isAssignableFrom(entityType.getBaseClass())) { opinionT1 += +0.813f; }
-		if (Enemy.class.isAssignableFrom(entityType.getBaseClass())) { opinionT1 += -1.403f; opinionT2 += +0.379f; }
+		if (isMonster) { opinionT1 += -0.086f; opinionT3 += +0.016f; }
+		if (isAnimal) { opinionT1 += +0.813f; }
+		if (isEnemy) { opinionT1 += -1.403f; opinionT2 += +0.379f; }
 		if (entityType.is(Tags.EntityTypes.BOSSES)) { opinionT2 += -1.873f; opinionT3 += +1.542f; }
 		if (entityType.fireImmune()) { opinionT1 += -0.011f; }
 		if (defaultAttributes.hasAttribute(Attributes.ATTACK_DAMAGE)) { opinionT1 += -0.513f; opinionT2 += +0.409f; }
@@ -188,16 +218,11 @@ public class SoulDataManager {
 		};
 	}
 
-	@Nullable
-	public static SoulData loadEntityData(EntityType<?> entityType, @Nullable RegistryAccess registryAccess) {
-		return loadEntityData(entityType, registryAccess, true);
-	}
-
 	//? forge {
 	/*@SuppressWarnings("deprecation")
 	*///?}
 	@Nullable
-	public static SoulData loadEntityData(EntityType<?> entityType, @Nullable RegistryAccess registryAccess, boolean queueForSampling) {
+	public static SoulData loadEntityData(EntityType<?> entityType, @Nullable RegistryAccess registryAccess, boolean queueForSampling, @Nullable ServerLevel level) {
 		ResourceLocation entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
 		if (entityId == null) return null;
 
@@ -210,7 +235,7 @@ public class SoulDataManager {
 			soulData = new SoulData(full.tier(), full.progressPerKill(), full.xp(), full.pools().values());
 			wasFullData = true;
 		} else {
-			int tier = determineTier(entityType, entityId);
+			int tier = determineTier(entityType, entityId, level);
 			if (tier <= 0) {
 				return null;
 			}
@@ -296,9 +321,11 @@ public class SoulDataManager {
 		boolean changed = false;
 
 		RegistryAccess nullableRegistryAccess = null;
+		ServerLevel overworld = null;
 		if (server != null) {
 			DROP_CACHE.load(server);
 			nullableRegistryAccess = server.registryAccess();
+			overworld = server.overworld();
 		}
 		pendingSamplingQueue.clear();
 
@@ -309,10 +336,14 @@ public class SoulDataManager {
 			ResourceLocation entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
 			if (entityId == null) continue;
 
-			SoulData soulData = loadEntityData(entityType, nullableRegistryAccess, true);
-			if (soulData != null) {
-				changed |= !soulData.equals(resolvedData.get(entityId));
-				newResolved.put(entityId, soulData);
+			try {
+				SoulData soulData = loadEntityData(entityType, nullableRegistryAccess, true, overworld);
+				if (soulData != null) {
+					changed |= !soulData.equals(resolvedData.get(entityId));
+					newResolved.put(entityId, soulData);
+				}
+			} catch (Exception e) {
+				SoulHarvestMod.LOGGER.warn("Failed to resolve soul data for entity {}: {}", entityId, e.getMessage());
 			}
 		}
 		
