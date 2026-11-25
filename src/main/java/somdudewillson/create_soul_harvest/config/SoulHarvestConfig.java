@@ -29,6 +29,7 @@ public class SoulHarvestConfig {
 	public static BooleanValue ENABLE_ENHANCED_SPELLS;
 	public static BooleanValue ENABLE_ABSOLUTE_ICE;
 	
+	public static BooleanValue SCANNING_HAS_EGG_ONLY;
 	public static IntValue SCANNING_DEFAULT_ROLLS;
 	public static DoubleValue SCANNING_ROLLS_MULT;
 	
@@ -66,7 +67,11 @@ public class SoulHarvestConfig {
 		builder.pop();
 
 		
-		builder.comment("Entity Scanning Values").push("entityScanning");
+		builder.comment("Entity Scanning").push("entityScanning");
+
+		SCANNING_HAS_EGG_ONLY = builder
+				.comment("Only scan mobs with spawn eggs")
+				.define("scanHasEggOnly", false);
 
 		SCANNING_DEFAULT_ROLLS = builder
 				.comment("Default number of sampling rolls per entity")

@@ -17,8 +17,10 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.storage.loot.LootParams;
 import somdudewillson.create_soul_harvest.SoulHarvestMod;
+import somdudewillson.create_soul_harvest.config.SoulHarvestConfig;
 import somdudewillson.create_soul_harvest.content.event.SoulHarvestDataEvents;
 import somdudewillson.create_soul_harvest.content.recipe.RecipeSoulTracker;
 import somdudewillson.create_soul_harvest.content.recipe.grinding.MobGrindingDynamicData;
@@ -130,6 +132,10 @@ public class SoulDataManager {
 		if (!DefaultAttributes.hasSupplier(entityType)) return 0;
 		AttributeSupplier defaultAttributes = DefaultAttributes.getSupplier((EntityType<? extends LivingEntity>) entityType);
 		if (defaultAttributes == null) return 0;
+		
+		if (SoulHarvestConfig.SCANNING_HAS_EGG_ONLY.get() && SpawnEggItem.byId(entityType) == null) {
+			return 0;
+		}
 
 		boolean isMonster = false;
 		boolean isAnimal = false;
